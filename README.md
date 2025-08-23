@@ -12,15 +12,66 @@ A powerful autofill plugin for form field automation using the Gofakeit API.
 - 🌐 **API Integration**: Seamless integration with Gofakeit API
 - 🛠️ **Extensible**: Easy to add new input types and functions
 
-## Quick Start
-
-### Installation
+## Installation
 
 ```bash
 npm install
 ```
 
-### Development
+## Usage
+
+### Basic Autofill
+
+```typescript
+import { autofillAll } from 'gofakeit'
+
+// Autofill all form fields on the page
+await autofillAll()
+```
+
+### Autofill Specific Container
+
+```typescript
+import { autofillContainer } from 'gofakeit'
+
+const form = document.getElementById('myForm')
+await autofillContainer(form)
+```
+
+### Autofill Single Element
+
+```typescript
+import { autofillElement } from 'gofakeit'
+
+const input = document.getElementById('email')
+await autofillElement(input)
+```
+
+### API Functions
+
+```typescript
+import { callFunc } from 'gofakeit'
+
+// Fetch specific data
+const data = await callFunc('person')
+```
+
+### Function List
+
+```typescript
+// Get available functions and utilities
+import { hasFunc, getFuncs, type Func } from 'gofakeit'
+
+// Check if a function exists
+const isValid = hasFunc('person')
+
+// Get all available functions
+const allFunctions = getFuncs()
+```
+
+## Development
+
+### Quick Start
 
 Start the development server with hot reload:
 
@@ -65,55 +116,83 @@ npm run lint
 npm run lint:fix
 ```
 
-## Usage
+### Project Structure
 
-### Basic Autofill
-
-```typescript
-import { autofillAll } from 'gofakeit'
-
-// Autofill all form fields on the page
-await autofillAll()
+```
+src/
+├── api.ts              # API integration functions
+├── autofill.ts         # Core autofill logic
+├── field-error.ts      # Error handling and tooltips
+├── funcs.ts            # Function list and utilities
+├── index.ts            # Main exports
+├── input-datetime.ts   # Date/time input handlers
+├── input-misc.ts       # Checkbox, radio, select handlers
+├── input-number.ts     # Number and range input handlers
+├── input-text.ts       # Text and textarea handlers
+├── styles.ts           # Styling constants and design tokens
+└── test/               # Test files
+    ├── setup.ts        # Test environment setup
+    ├── api.test.ts     # API function tests
+    ├── autofill-all.test.ts
+    ├── autofill-container.test.ts
+    ├── autofill-element.test.ts
+    ├── field-error.test.ts
+    └── input-types.test.ts
 ```
 
-### Autofill Specific Container
+### Adding Tests
+
+Create new test files in `src/test/` following the existing pattern:
 
 ```typescript
-import { autofillContainer } from 'gofakeit'
+import { describe, it, expect } from 'vitest'
+import { yourFunction } from '../your-module'
 
-const form = document.getElementById('myForm')
-await autofillContainer(form)
+describe('Your Function', () => {
+  it('should work correctly', () => {
+    expect(yourFunction()).toBe(expected)
+  })
+})
 ```
 
-### Autofill Single Element
+### Building for Distribution
 
-```typescript
-import { autofillElement } from 'gofakeit'
+The build process creates:
 
-const input = document.getElementById('email')
-await autofillElement(input)
-```
+- `dist/index.js` - ES module build
+- `dist/index.cjs` - CommonJS build  
+- `dist/index.d.ts` - TypeScript declarations
+
+## API Reference
+
+### Core Functions
+
+- `autofillAll()` - Autofill all form fields on the page
+- `autofillContainer(container)` - Autofill fields in a specific container
+- `autofillElement(element)` - Autofill a single form element
+- `isFormField(element)` - Check if an element is a form field
+- `hasFormFields(container)` - Check if a container has form fields
 
 ### API Functions
 
-```typescript
-import { callFunc, fetchRandomString } from 'gofakeit'
+- `callFunc(functionName)` - Fetch data from Gofakeit API
 
-// Fetch specific data
-const data = await callFunc('person')
-```
+### Misc Functions
 
-### Function list
-```typescript
-// Get available functions and utilities
-import { hasFunc, getFuncs, type Func } from 'gofakeit'
+- `hasFunc(name)` - Check if a function exists in the available list
+- `getFuncs()` - Get all available functions
+- `Func` - TypeScript interface for function entries
 
-// Check if a function exists
-const isValid = hasFunc('person')
+### Input Handlers
 
-// Get all available functions
-const allFunctions = getFuncs()
-```
+- `handleTextInput(element, functionName)` - Handle text input fields
+- `handleTextarea(element, functionName)` - Handle textarea elements
+- `handleNumberInput(element, functionName)` - Handle number input fields
+- `handleRangeInput(element)` - Handle range input fields
+- `handleDateTimeInput(element, functionName)` - Handle date/time input fields
+- `handleCheckbox(element, functionName)` - Handle checkbox fields
+- `handleRadio(element, functionName)` - Handle radio button fields
+- `handleSelectWithFunction(element, functionName)` - Handle select dropdowns
 
 ## Contributing
 
