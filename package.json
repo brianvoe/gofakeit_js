@@ -1,6 +1,6 @@
 {
   "name": "gofakeit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Gofakeit autofill plugin for form field automation",
   "author": "Brian Voelker <brian@webiswhatido.com>",
   "license": "MIT",

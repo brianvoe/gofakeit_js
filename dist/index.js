@@ -565,6 +565,7 @@ export {
   K as autofillAll,
   Q as autofillContainer,
   _ as autofillElement,
+  d as callFunc,
   J as getFuncs,
   v as hasFunc
 };
