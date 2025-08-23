@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gofakeit Autofill Example</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            color: #555;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background: #0056b3;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        
+        .btn-success {
+            background: #28a745;
+        }
+        
+        .btn-success:hover {
+            background: #1e7e34;
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .field-note {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .checkbox-group, .radio-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .checkbox-item, .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .checkbox-item input, .radio-item input {
+            width: auto;
+        }
+        
+        .checkbox-item label, .radio-item label {
+            margin: 0;
+            font-weight: normal;
+        }
+        
+        .section {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .section h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        
+        .status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .status.success {
+            background: #28a745;
+        }
+        
+        .status.error {
+            background: #dc3545;
+        }
+        
+        .status.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="status" class="status"></div>
+    
+    <h1>🎯 Gofakeit Autofill Example</h1>
+    
+    <div class="controls">
+        <button class="btn" onclick="autofillAll()">🚀 Autofill All Fields</button>
+        <button class="btn btn-secondary" onclick="autofillContainer('personal-info')">👤 Autofill Personal Info</button>
+        <button class="btn btn-secondary" onclick="autofillContainer('contact-info')">📞 Autofill Contact Info</button>
+        <button class="btn btn-secondary" onclick="autofillContainer('address-info')">🏠 Autofill Address Info</button>
+        <button class="btn btn-secondary" onclick="autofillContainer('preferences')">⚙️ Autofill Preferences</button>
+        <button class="btn btn-success" onclick="clearAll()">🧹 Clear All</button>
+    </div>
+
+    <div class="container">
+        <div class="section" id="personal-info">
+            <h3>👤 Personal Information</h3>
+            <div class="row">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" data-gofakeit="true" placeholder="Enter first name">
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" data-gofakeit="true" placeholder="Enter last name">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" data-gofakeit="true" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" data-gofakeit="true" placeholder="Enter phone number">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ssn">Social Security Number</label>
+                <input type="text" id="ssn" data-gofakeit="true" placeholder="XXX-XX-XXXX">
+            </div>
+            <div class="form-group">
+                <label for="dateOfBirth">Date of Birth</label>
+                <input type="date" id="dateOfBirth" data-gofakeit="true">
+            </div>
+        </div>
+
+        <div class="section" id="contact-info">
+            <h3>📞 Contact Information</h3>
+            <div class="form-group">
+                <label for="company">Company</label>
+                <input type="text" id="company" data-gofakeit="true" placeholder="Enter company name">
+            </div>
+            <div class="form-group">
+                <label for="jobTitle">Job Title</label>
+                <input type="text" id="jobTitle" data-gofakeit="true" placeholder="Enter job title">
+            </div>
+            <div class="form-group">
+                <label for="website">Website</label>
+                <input type="url" id="website" data-gofakeit="true" placeholder="https://example.com">
+            </div>
+        </div>
+
+        <div class="section" id="address-info">
+            <h3>🏠 Address Information</h3>
+            <div class="form-group">
+                <label for="street">Street Address</label>
+                <input type="text" id="street" data-gofakeit="true" placeholder="Enter street address">
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" data-gofakeit="true" placeholder="Enter city">
+                </div>
+                <div class="form-group">
+                    <label for="state">State</label>
+                    <input type="text" id="state" data-gofakeit="true" placeholder="Enter state">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="zipCode">ZIP Code</label>
+                    <input type="text" id="zipCode" data-gofakeit="true" placeholder="Enter ZIP code">
+                </div>
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <input type="text" id="country" data-gofakeit="true" placeholder="Enter country">
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="preferences">
+            <h3>⚙️ Preferences & Settings</h3>
+            <div class="form-group">
+                <label for="favoriteColor">Favorite Color</label>
+                <input type="color" id="favoriteColor" data-gofakeit="true">
+            </div>
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" data-gofakeit="true" min="0" max="120" placeholder="Enter age">
+            </div>
+            <div class="form-group">
+                <label for="salary">Salary Range</label>
+                <input type="range" id="salary" data-gofakeit="true" min="20000" max="200000" step="5000">
+                <div class="field-note">Drag to select salary range</div>
+            </div>
+            <div class="form-group">
+                <label for="bio">Bio</label>
+                <textarea id="bio" data-gofakeit="true" rows="4" placeholder="Tell us about yourself"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Programming Languages</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lang1" data-gofakeit="true">
+                        <label for="lang1">JavaScript</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lang2" data-gofakeit="true">
+                        <label for="lang2">Python</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lang3" data-gofakeit="true">
+                        <label for="lang3">Go</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lang4" data-gofakeit="true">
+                        <label for="lang4">Rust</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Experience Level</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" name="experience" id="exp1" data-gofakeit="true">
+                        <label for="exp1">Beginner</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="experience" id="exp2" data-gofakeit="true">
+                        <label for="exp2">Intermediate</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="experience" id="exp3" data-gofakeit="true">
+                        <label for="exp3">Advanced</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="timezone">Timezone</label>
+                <select id="timezone" data-gofakeit="true">
+                    <option value="">Select timezone</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🎲 Custom Function Examples</h3>
+            <div class="row">
+                <div class="form-group">
+                    <label for="uuid">UUID</label>
+                    <input type="text" id="uuid" data-gofakeit="uuid" placeholder="Will generate UUID">
+                </div>
+                <div class="form-group">
+                    <label for="creditCard">Credit Card</label>
+                    <input type="text" id="creditCard" data-gofakeit="creditcard" placeholder="Will generate credit card">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="bitcoinAddress">Bitcoin Address</label>
+                    <input type="text" id="bitcoinAddress" data-gofakeit="bitcoinaddress" placeholder="Will generate Bitcoin address">
+                </div>
+                <div class="form-group">
+                    <label for="ipAddress">IP Address</label>
+                    <input type="text" id="ipAddress" data-gofakeit="ipv4address" placeholder="Will generate IP address">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="loremIpsum">Lorem Ipsum Paragraph</label>
+                <textarea id="loremIpsum" data-gofakeit="loremipsumparagraph" rows="3" placeholder="Will generate Lorem Ipsum text"></textarea>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🚫 Excluded Fields (data-gofakeit="false")</h3>
+            <div class="row">
+                <div class="form-group">
+                    <label for="excludedField1">Excluded Field 1</label>
+                    <input type="text" id="excludedField1" data-gofakeit="false" placeholder="This field will NOT be filled">
+                </div>
+                <div class="form-group">
+                    <label for="excludedField2">Excluded Field 2</label>
+                    <input type="text" id="excludedField2" data-gofakeit="false" placeholder="This field will NOT be filled">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { autofillAll, autofillContainer } from './src/index.ts';
+        
+        // Make functions available globally
+        window.autofillAll = async () => {
+            try {
+                await autofillAll();
+                showStatus('✅ All fields filled successfully!', 'success');
+            } catch (error) {
+                showStatus('❌ Error filling fields: ' + error.message, 'error');
+            }
+        };
+        
+        window.autofillContainer = async (containerId) => {
+            try {
+                const container = document.getElementById(containerId);
+                if (container) {
+                    await autofillContainer(container);
+                    showStatus(`✅ ${containerId} section filled successfully!`, 'success');
+                } else {
+                    showStatus('❌ Container not found: ' + containerId, 'error');
+                }
+            } catch (error) {
+                showStatus('❌ Error filling container: ' + error.message, 'error');
+            }
+        };
+        
+        window.clearAll = () => {
+            const inputs = document.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    input.checked = false;
+                } else {
+                    input.value = '';
+                }
+            });
+            showStatus('🧹 All fields cleared!', 'success');
+        };
+        
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type} show`;
+            
+            setTimeout(() => {
+                status.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Initialize the page
+        console.log('🎯 Gofakeit Autofill Example loaded!');
+        console.log('Try clicking the autofill buttons to see the magic happen!');
+    </script>
+</body>
+</html>
