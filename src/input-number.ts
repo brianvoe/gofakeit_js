@@ -1,11 +1,11 @@
-import { fetchGofakeitData } from './api';
+import { callFunc } from './api';
 import { handleError } from './autofill';
 
 // Handle number input elements
 export async function handleNumberInput(element: HTMLInputElement, gofakeitFunc: string): Promise<{ success: boolean, usedFunc: string }> {
   // Use number function if 'true' is passed, otherwise use the provided function
   const functionToCall = gofakeitFunc === 'true' ? 'number' : gofakeitFunc;
-  const response = await fetchGofakeitData(functionToCall);
+  const response = await callFunc(functionToCall);
   
   if (!response.success) {
     console.warn(`[Gofakeit Autofill] Error for function ${functionToCall}:`, response.error);
@@ -33,7 +33,7 @@ export async function handleRangeInput(element: HTMLInputElement): Promise<{ suc
   
   // Use number function with min/max parameters
   const functionToCall = `number?min=${min}&max=${max}`;
-  const response = await fetchGofakeitData(functionToCall);
+  const response = await callFunc(functionToCall);
   
   if (!response.success) {
     console.warn(`[Gofakeit Autofill] Error for range input:`, response.error);

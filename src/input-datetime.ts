@@ -1,4 +1,4 @@
-import { fetchGofakeitData } from './api';
+import { callFunc } from './api';
 import { handleError } from './autofill';
 
 // Get ISO week number for a date
@@ -23,7 +23,7 @@ export async function handleDateTimeInput(element: HTMLInputElement, gofakeitFun
       case 'date': {
         // Use the provided function or default to 'date'
         const dateFunc = gofakeitFunc === 'true' ? 'date' : gofakeitFunc;
-        const dateResponse = await fetchGofakeitData(dateFunc);
+        const dateResponse = await callFunc(dateFunc);
         
         if (!dateResponse.success) {
           console.warn(`[Gofakeit Autofill] Error for ${inputType} input:`, dateResponse.error);
@@ -52,8 +52,8 @@ export async function handleDateTimeInput(element: HTMLInputElement, gofakeitFun
         
       case 'time': {
         // Use gofakeit hour and minute functions to create time format
-        const hourResponse = await fetchGofakeitData('hour');
-        const minuteResponse = await fetchGofakeitData('minute');
+        const hourResponse = await callFunc('hour');
+        const minuteResponse = await callFunc('minute');
         
         if (!hourResponse.success || !minuteResponse.success) {
           console.warn('[Gofakeit Autofill] Error getting hour or minute:', hourResponse.error || minuteResponse.error);
@@ -73,7 +73,7 @@ export async function handleDateTimeInput(element: HTMLInputElement, gofakeitFun
       case 'datetime-local': {
         // Use the provided function or default to 'date' (which includes time)
         const datetimeFunc = gofakeitFunc === 'true' ? 'date' : gofakeitFunc;
-        const datetimeResponse = await fetchGofakeitData(datetimeFunc);
+        const datetimeResponse = await callFunc(datetimeFunc);
         
         if (!datetimeResponse.success) {
           console.warn(`[Gofakeit Autofill] Error for ${inputType} input:`, datetimeResponse.error);
@@ -102,8 +102,8 @@ export async function handleDateTimeInput(element: HTMLInputElement, gofakeitFun
         
       case 'month': {
         // Use gofakeit year and month functions
-        const yearResponse = await fetchGofakeitData('year');
-        const monthResponse = await fetchGofakeitData('month');
+        const yearResponse = await callFunc('year');
+        const monthResponse = await callFunc('month');
         
         if (!yearResponse.success || !monthResponse.success) {
           console.warn('[Gofakeit Autofill] Error getting year or month:', yearResponse.error || monthResponse.error);
@@ -125,7 +125,7 @@ export async function handleDateTimeInput(element: HTMLInputElement, gofakeitFun
         
         if (weekFunc === 'date' || weekFunc.startsWith('daterange')) {
           // Use date/daterange function and extract week from the result
-          const weekDateResponse = await fetchGofakeitData(weekFunc);
+          const weekDateResponse = await callFunc(weekFunc);
           
           if (!weekDateResponse.success) {
             console.warn('[Gofakeit Autofill] Error getting date for week:', weekDateResponse.error);
@@ -154,8 +154,8 @@ export async function handleDateTimeInput(element: HTMLInputElement, gofakeitFun
           }
         } else {
           // Use gofakeit year and number range for week (1-53)
-          const weekYearResponse = await fetchGofakeitData('year');
-          const weekResponse = await fetchGofakeitData('number?min=1&max=53');
+          const weekYearResponse = await callFunc('year');
+          const weekResponse = await callFunc('number?min=1&max=53');
           
           if (!weekYearResponse.success || !weekResponse.success) {
             console.warn('[Gofakeit Autofill] Error getting year or week:', weekYearResponse.error || weekResponse.error);

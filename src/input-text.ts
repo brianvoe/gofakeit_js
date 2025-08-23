@@ -1,4 +1,4 @@
-import { fetchGofakeitData } from './api';
+import { callFunc } from './api';
 import { handleError } from './autofill';
 
 // Handle text input elements (text, email, tel, password, search, url, color)
@@ -32,7 +32,7 @@ export async function handleTextInput(element: HTMLInputElement, gofakeitFunc: s
     }
   }
   
-  const response = await fetchGofakeitData(functionToCall);
+  const response = await callFunc(functionToCall);
   
   if (!response.success) {
     console.warn(`[Gofakeit Autofill] Error for function ${functionToCall}:`, response.error);
@@ -56,7 +56,7 @@ export async function handleTextInput(element: HTMLInputElement, gofakeitFunc: s
 export async function handleTextarea(element: HTMLTextAreaElement, gofakeitFunc: string): Promise<{ success: boolean, usedFunc: string }> {
   // Use sentence function if 'true' is passed, otherwise use the provided function
   const functionToCall = gofakeitFunc === 'true' ? 'sentence' : gofakeitFunc;
-  const response = await fetchGofakeitData(functionToCall);
+  const response = await callFunc(functionToCall);
   
   if (!response.success) {
     console.warn(`[Gofakeit Autofill] Error for function ${functionToCall}:`, response.error);

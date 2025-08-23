@@ -7,6 +7,11 @@ export {
   autofillElement
 } from './autofill';
 
+// API functions
+export {
+  callFunc,
+} from './api';
+
 // Function list and utilities
 export {
   hasFunc,

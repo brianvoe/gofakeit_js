@@ -9,7 +9,7 @@ export interface ApiResponse {
 }
 
 // Fetch data from gofakeit API
-export async function fetchGofakeitData(func: string): Promise<ApiResponse> {
+export async function callFunc(func: string): Promise<ApiResponse> {
   // Check if the function contains query parameters
   const questionMarkIndex = func.indexOf('?');
   

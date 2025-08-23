@@ -1,4 +1,4 @@
-import { fetchGofakeitData, fetchRandomString } from './api';
+import { callFunc, fetchRandomString } from './api';
 import { handleError } from './autofill';
 
 // Handle checkbox input elements
@@ -28,7 +28,7 @@ export async function handleCheckbox(element: HTMLInputElement, gofakeitFunc: st
     // Select random checkboxes using API
     const selectedIndices = new Set<number>();
     for (let i = 0; i < numToSelect; i++) {
-      const boolResponse = await fetchGofakeitData('bool');
+      const boolResponse = await callFunc('bool');
       if (boolResponse.success) {
         const shouldSelect = boolResponse.data!.toLowerCase() === 'true' || boolResponse.data!.toLowerCase() === '1';
         if (shouldSelect) {
@@ -47,7 +47,7 @@ export async function handleCheckbox(element: HTMLInputElement, gofakeitFunc: st
     }
   } else {
     // For custom functions, use the response to determine which checkboxes to select
-    const response = await fetchGofakeitData(functionToCall);
+    const response = await callFunc(functionToCall);
     
     if (!response.success) {
       console.warn(`[Gofakeit Autofill] Error for function ${functionToCall}:`, response.error);
@@ -99,7 +99,7 @@ export async function handleRadio(element: HTMLInputElement, gofakeitFunc: strin
     });
     
     // Select a random radio button using API
-    const boolResponse = await fetchGofakeitData('bool');
+    const boolResponse = await callFunc('bool');
     if (boolResponse.success) {
       const shouldSelect = boolResponse.data!.toLowerCase() === 'true' || boolResponse.data!.toLowerCase() === '1';
       if (shouldSelect) {
@@ -110,7 +110,7 @@ export async function handleRadio(element: HTMLInputElement, gofakeitFunc: strin
     }
   } else {
     // For custom functions, use the response to determine which radio button to select
-    const response = await fetchGofakeitData(functionToCall);
+    const response = await callFunc(functionToCall);
     
     if (!response.success) {
       console.warn(`[Gofakeit Autofill] Error for function ${functionToCall}:`, response.error);
@@ -198,7 +198,7 @@ export async function handleSelectWithFunction(element: HTMLSelectElement, gofak
     response = await fetchRandomString(options);
   } else {
     // Use custom function
-    response = await fetchGofakeitData(gofakeitFunc);
+    response = await callFunc(gofakeitFunc);
   }
   
   if (!response.success) {
