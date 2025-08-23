@@ -6,10 +6,11 @@ A powerful autofill plugin for form field automation using the Gofakeit API.
 
 - 🚀 **Fast Development**: Built with Vite for lightning-fast development and building
 - 🧪 **Comprehensive Testing**: Full test suite with Vitest and jsdom
-- 📦 **Modern Build**: ES modules and CommonJS support
+- 📦 **Modern Build**: ES modules and CommonJS support with minification
 - 🔧 **TypeScript**: Full TypeScript support with type definitions
-- 🎯 **Form Detection**: Intelligent form field detection and autofilling
+- 🎯 **Smart Form Detection**: Intelligent form field detection with smart-fill mode
 - 🌐 **API Integration**: Seamless integration with Gofakeit API
+- 🛠️ **Extensible**: Easy to add new input types and functions
 
 ## Quick Start
 
@@ -27,7 +28,7 @@ Start the development server with hot reload:
 npm run dev
 ```
 
-This will start a development server at `http://localhost:5173` with the test form.
+This will start a development server at `http://localhost:5173` with an interactive example page demonstrating all autofill features.
 
 ### Building
 
@@ -96,81 +97,23 @@ await autofillElement(input)
 ### API Functions
 
 ```typescript
-import { fetchGofakeitData } from 'gofakeit'
+import { callFunc, fetchRandomString } from 'gofakeit'
 
 // Fetch specific data
-const data = await fetchGofakeitData('person')
-
-// Get available functions from the hardcoded list
-import { FUNC_SHORT } from 'gofakeit'
+const data = await callFunc('person')
 ```
 
-## Development
-
-### Project Structure
-
-```
-src/
-├── api.ts              # API integration functions
-├── autofill.ts         # Core autofill logic
-├── field-error.ts      # Error handling
-├── funcs.ts            # Function list and utilities
-├── index.ts            # Main exports
-├── input-*.ts          # Input type handlers
-├── styles.ts           # Styling constants
-└── test/               # Test files
-    ├── setup.ts        # Test environment setup
-    ├── autofill.test.ts
-    └── api.test.ts
-```
-
-### Adding Tests
-
-Create new test files in `src/test/` following the existing pattern:
-
+### Function list
 ```typescript
-import { describe, it, expect } from 'vitest'
-import { yourFunction } from '../your-module'
+// Get available functions and utilities
+import { hasFunc, getFuncs, type Func } from 'gofakeit'
 
-describe('Your Function', () => {
-  it('should work correctly', () => {
-    expect(yourFunction()).toBe(expected)
-  })
-})
+// Check if a function exists
+const isValid = hasFunc('person')
+
+// Get all available functions
+const allFunctions = getFuncs()
 ```
-
-### Building for Distribution
-
-The build process creates:
-
-- `dist/index.js` - ES module build
-- `dist/index.cjs` - CommonJS build  
-- `dist/index.d.ts` - TypeScript declarations
-
-## API Reference
-
-### Core Functions
-
-- `autofillAll()` - Autofill all form fields on the page
-- `autofillContainer(container)` - Autofill fields in a specific container
-- `autofillElement(element)` - Autofill a single form element
-- `isFormField(element)` - Check if an element is a form field
-- `hasFormFields(container)` - Check if a container has form fields
-
-### API Functions
-
-- `fetchGofakeitData(functionName)` - Fetch data from Gofakeit API
-- `fetchRandomString()` - Get a random string
-- `FUNC_SHORT` - Hardcoded list of available functions
-
-### Input Handlers
-
-- `handleTextInput(element)` - Handle text input fields
-- `handleNumberInput(element)` - Handle number input fields
-- `handleDateTimeInput(element)` - Handle date/time input fields
-- `handleCheckbox(element)` - Handle checkbox fields
-- `handleRadio(element)` - Handle radio button fields
-- `handleSelectWithFunction(element)` - Handle select dropdowns
 
 ## Contributing
 
