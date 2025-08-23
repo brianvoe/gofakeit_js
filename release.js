@@ -129,7 +129,7 @@ async function main() {
   log('✅ Package.json updated!', 'green');
   
   // Step 5: NPM login (commented out for testing)
-  log('\n🔐 Step 5: NPM login... (SKIPPED)', 'yellow');
+  log('\n🔐 Step 5: NPM login...', 'yellow');
   if (!exec('npm login')) {
     log('❌ NPM login failed. Aborting release.', 'red');
     process.exit(1);
@@ -137,7 +137,7 @@ async function main() {
   log('✅ NPM login successful!', 'green');
   
   // Step 6: NPM publish (commented out for testing)
-  log('\n📤 Step 6: Publishing to NPM... (SKIPPED)', 'yellow');
+  log('\n📤 Step 6: Publishing to NPM...', 'yellow');
   if (!exec('npm publish')) {
     log('❌ NPM publish failed. Aborting release.', 'red');
     process.exit(1);
