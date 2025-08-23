@@ -8,6 +8,7 @@ export const GOFAKEIT_COLORS = {
 	info: '#209cee',
 	text: '#ffffff',
 	border: '#686868',
+	background: '#ffffff',
 };
 
 export const GOFAKEIT_SPACING = {
@@ -19,4 +20,9 @@ export const GOFAKEIT_SPACING = {
 export const GOFAKEIT_BORDER = {
 	radius: 6, // px
 	width: 2, // px
+};
+
+export const GOFAKEIT_FONT = {
+	size: 14, // px
+	family: 'Helvetica, Arial, sans-serif',
 };

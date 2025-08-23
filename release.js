@@ -128,25 +128,21 @@ async function main() {
   writePackageJson(packageJson);
   log('✅ Package.json updated!', 'green');
   
-
-  
   // Step 5: NPM login (commented out for testing)
   log('\n🔐 Step 5: NPM login... (SKIPPED)', 'yellow');
-  // if (!exec('npm login')) {
-  //   log('❌ NPM login failed. Aborting release.', 'red');
-  //   process.exit(1);
-  // }
-  // log('✅ NPM login successful!', 'green');
+  if (!exec('npm login')) {
+    log('❌ NPM login failed. Aborting release.', 'red');
+    process.exit(1);
+  }
+  log('✅ NPM login successful!', 'green');
   
   // Step 6: NPM publish (commented out for testing)
   log('\n📤 Step 6: Publishing to NPM... (SKIPPED)', 'yellow');
-  // if (!exec('npm publish')) {
-  //   log('❌ NPM publish failed. Aborting release.', 'red');
-  //   process.exit(1);
-  // }
-  // log('✅ Package published to NPM!', 'green');
-  
-
+  if (!exec('npm publish')) {
+    log('❌ NPM publish failed. Aborting release.', 'red');
+    process.exit(1);
+  }
+  log('✅ Package published to NPM!', 'green');
   
   log('\n🎉 Release completed successfully!', 'bright');
   log(`📦 Version ${newVersion} is now published on NPM`, 'green');

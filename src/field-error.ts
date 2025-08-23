@@ -1,3 +1,5 @@
+import { GOFAKEIT_COLORS, GOFAKEIT_SPACING, GOFAKEIT_BORDER, GOFAKEIT_FONT } from './styles';
+
 // Show error message as a floating tooltip over a form field
 export function showFieldError(element: Element, message: string): void {
   // Remove any existing error message
@@ -12,13 +14,13 @@ export function showFieldError(element: Element, message: string): void {
   tooltip.style.cssText = `
     position: absolute;
     z-index: 10001;
-    color: var(--color-error);
-    font-size: var(--font-size);
-    font-family: var(--font-family);
-    background-color: var(--color-background);
-    padding: var(--spacing-quarter) var(--spacing-half);
-    border-radius: var(--border-radius);
-    border: 1px solid var(--color-error);
+    color: ${GOFAKEIT_COLORS.error};
+    font-size: ${GOFAKEIT_FONT.size}px;
+    font-family: ${GOFAKEIT_FONT.family};
+    background-color: ${GOFAKEIT_COLORS.background};
+    padding: ${GOFAKEIT_SPACING.quarter}px ${GOFAKEIT_SPACING.half}px;
+    border-radius: ${GOFAKEIT_BORDER.radius}px;
+    border: 1px solid ${GOFAKEIT_COLORS.error};
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     max-width: 300px;
     word-wrap: break-word;

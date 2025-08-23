@@ -299,7 +299,7 @@ function showResults(successfulCount: number, failedCount: number, context: stri
 // Handle error display and field highlighting
 export function handleError(element: Element, error: string, functionName?: string): void {
   if (element instanceof HTMLElement) {
-    element.style.border = `2px solid var(--color-error)`;
+    element.style.border = `2px solid ${GOFAKEIT_COLORS.error}`;
     
     setTimeout(() => {
       element.style.border = '';
