@@ -1,30 +1,30 @@
-const S = [{ value: "phraseadverb", display: "Adverb Phrase", category: "word" }, { value: "country", display: "Country", category: "address" }, { value: "latituderange", display: "Latitude Range", category: "address" }, { value: "longituderange", display: "Longitude Range", category: "address" }, { value: "bs", display: "BS", category: "company" }, { value: "hackerabbreviation", display: "Hacker Abbreviation", category: "hacker" }, { value: "hackeringverb", display: "Hackering Verb", category: "hacker" }, { value: "uint64", display: "Uint64", category: "number" }, { value: "hobby", display: "Hobby", category: "person" }, { value: "errorhttpclient", display: "HTTP client error", category: "error" }, { value: "programminglanguage", display: "Programming Language", category: "language" }, { value: "minecraftarmortier", display: "Minecraft armor tier", category: "minecraft" }, { value: "songname", display: "Song Name", category: "song" }, { value: "nouncommon", display: "Noun Common", category: "word" }, { value: "nouncollectivepeople", display: "Noun Collective People", category: "word" }, { value: "verbaction", display: "Action Verb", category: "word" }, { value: "celebrityactor", display: "Celebrity Actor", category: "celebrity" }, { value: "safecolor", display: "Safe Color", category: "color" }, { value: "minecraftvillagerstation", display: "Minecraft villager station", category: "minecraft" }, { value: "company", display: "Company", category: "company" }, { value: "productaudience", display: "Product Audience", category: "product" }, { value: "beerhop", display: "Beer Hop", category: "beer" }, { value: "hackerverb", display: "Hacker Verb", category: "hacker" }, { value: "int32", display: "Int32", category: "number" }, { value: "longitude", display: "Longitude", category: "address" }, { value: "beeryeast", display: "Beer Yeast", category: "beer" }, { value: "emojicategory", display: "Emoji Category", category: "emoji" }, { value: "snack", display: "Snack", category: "food" }, { value: "minecraftbiome", display: "Minecraft biome", category: "minecraft" }, { value: "flipacoin", display: "Flip A Coin", category: "misc" }, { value: "uintrange", display: "UintRange", category: "number" }, { value: "verbhelping", display: "Helping Verb", category: "word" }, { value: "blurb", display: "Blurb", category: "company" }, { value: "emoji", display: "Emoji", category: "emoji" }, { value: "uintn", display: "UintN", category: "number" }, { value: "price", display: "Price", category: "payment" }, { value: "adjectiveproper", display: "Proper Adjective", category: "word" }, { value: "nouncountable", display: "Noun Countable", category: "word" }, { value: "username", display: "Username", category: "auth" }, { value: "buzzword", display: "Buzzword", category: "company" }, { value: "map", display: "Map", category: "generate" }, { value: "loremipsumsentence", display: "Lorem Ipsum Sentence", category: "word" }, { value: "moviegenre", display: "Genre", category: "movie" }, { value: "int16", display: "Int16", category: "number" }, { value: "namesuffix", display: "Name Suffix", category: "person" }, { value: "weighted", display: "Weighted", category: "misc" }, { value: "emojidescription", display: "Emoji Description", category: "emoji" }, { value: "minecraftanimal", display: "Minecraft animal", category: "minecraft" }, { value: "shuffleints", display: "Shuffle Ints", category: "number" }, { value: "creditcardtype", display: "Credit Card Type", category: "payment" }, { value: "bitcoinaddress", display: "Bitcoin Address", category: "payment" }, { value: "drink", display: "Drink", category: "food" }, { value: "intrange", display: "IntRange", category: "number" }, { value: "currencylong", display: "Currency Long", category: "payment" }, { value: "teams", display: "Teams", category: "person" }, { value: "adjectivequantitative", display: "Quantitative Adjective", category: "word" }, { value: "adjectivepossessive", display: "Possessive Adjective", category: "word" }, { value: "bird", display: "Bird", category: "animal" }, { value: "pastdate", display: "PastDate", category: "time" }, { value: "ipv4address", display: "IPv4 Address", category: "internet" }, { value: "shufflestrings", display: "Shuffle Strings", category: "string" }, { value: "verblinking", display: "Linking Verb", category: "word" }, { value: "interjection", display: "Interjection", category: "word" }, { value: "second", display: "Second", category: "time" }, { value: "pronounpossessive", display: "Pronoun Possessive", category: "word" }, { value: "errorobject", display: "Error object word", category: "error" }, { value: "middlename", display: "Middle Name", category: "person" }, { value: "email_text", display: "Random text email Document", category: "template" }, { value: "streetnumber", display: "Street Number", category: "address" }, { value: "minute", display: "Minute", category: "time" }, { value: "productupc", display: "Product UPC", category: "product" }, { value: "template", display: "Template", category: "template" }, { value: "pronoun", display: "Pronoun", category: "word" }, { value: "zip", display: "Zip", category: "address" }, { value: "day", display: "Day", category: "time" }, { value: "json", display: "JSON", category: "file" }, { value: "xml", display: "XML", category: "file" }, { value: "lunch", display: "Lunch", category: "food" }, { value: "connectiveexamplify", display: "Connective Examplify", category: "word" }, { value: "productname", display: "Product Name", category: "product" }, { value: "productusecase", display: "Product Use Case", category: "product" }, { value: "productsuffix", display: "Product Suffix", category: "product" }, { value: "randomstring", display: "Random String", category: "string" }, { value: "timezone", display: "Timezone", category: "time" }, { value: "dessert", display: "Dessert", category: "food" }, { value: "imagejpeg", display: "Image JPEG", category: "image" }, { value: "creditcardnumber", display: "Credit Card Number", category: "payment" }, { value: "nouncollectivething", display: "Noun Collective Thing", category: "word" }, { value: "verbintransitive", display: "Intransitive Verb", category: "word" }, { value: "streetsuffix", display: "Street Suffix", category: "address" }, { value: "isin", display: "ISIN", category: "finance" }, { value: "person", display: "Person", category: "person" }, { value: "cartransmissiontype", display: "Car Transmission Type", category: "car" }, { value: "email", display: "Email", category: "person" }, { value: "productbenefit", display: "Product Benefit", category: "product" }, { value: "lettern", display: "LetterN", category: "string" }, { value: "adverb", display: "Adverb", category: "word" }, { value: "preposition", display: "Preposition", category: "word" }, { value: "prepositiondouble", display: "Preposition Double", category: "word" }, { value: "timezonefull", display: "Timezone Full", category: "time" }, { value: "errordatabase", display: "Database error", category: "error" }, { value: "fileextension", display: "File Extension", category: "file" }, { value: "cusip", display: "CUSIP", category: "finance" }, { value: "movie", display: "Movie", category: "movie" }, { value: "nameprefix", display: "Name Prefix", category: "person" }, { value: "product", display: "Product", category: "product" }, { value: "connectivelisting", display: "Connective Listing", category: "word" }, { value: "timezoneabv", display: "Timezone Abbreviation", category: "time" }, { value: "lastname", display: "Last Name", category: "person" }, { value: "vowel", display: "Vowel", category: "string" }, { value: "markdown", display: "Random markdown document", category: "template" }, { value: "connectivetime", display: "Connective Time", category: "word" }, { value: "phrase", display: "Phrase", category: "word" }, { value: "countryabr", display: "Country Abbreviation", category: "address" }, { value: "beermalt", display: "Beer Malt", category: "beer" }, { value: "nouncollectiveanimal", display: "Noun Collective Animal", category: "word" }, { value: "emojialias", display: "Emoji Alias", category: "emoji" }, { value: "httpstatuscode", display: "HTTP Status Code", category: "internet" }, { value: "adjectiveindefinite", display: "Indefinite Adjective", category: "word" }, { value: "question", display: "Question", category: "word" }, { value: "cat", display: "Cat", category: "animal" }, { value: "carmaker", display: "Car Maker", category: "car" }, { value: "ipv6address", display: "IPv6 Address", category: "internet" }, { value: "httpstatuscodesimple", display: "HTTP Status Code Simple", category: "internet" }, { value: "minecraftarmorpart", display: "Minecraft armor part", category: "minecraft" }, { value: "minecraftmobneutral", display: "Minecraft mob neutral", category: "minecraft" }, { value: "currencyshort", display: "Currency Short", category: "payment" }, { value: "achaccount", display: "ACH Account Number", category: "payment" }, { value: "song", display: "Song", category: "song" }, { value: "prepositionsimple", display: "Preposition Simple", category: "word" }, { value: "verbtransitive", display: "Transitive Verb", category: "word" }, { value: "slogan", display: "Slogan", category: "company" }, { value: "loglevel", display: "Log Level", category: "internet" }, { value: "currency", display: "Currency", category: "payment" }, { value: "creditcardcvv", display: "Credit Card CVV", category: "payment" }, { value: "phoneformatted", display: "Phone Formatted", category: "person" }, { value: "adjective", display: "Adjective", category: "word" }, { value: "connectivecomplaint", display: "Connective Complaint", category: "word" }, { value: "productcategory", display: "Product Category", category: "product" }, { value: "beeralcohol", display: "Beer Alcohol", category: "beer" }, { value: "date", display: "Date", category: "time" }, { value: "nanosecond", display: "Nanosecond", category: "time" }, { value: "language", display: "Language", category: "language" }, { value: "productisbn", display: "Product ISBN", category: "product" }, { value: "hexcolor", display: "Hex Color", category: "color" }, { value: "daterange", display: "DateRange", category: "time" }, { value: "minecraftvillagerjob", display: "Minecraft villager job", category: "minecraft" }, { value: "noundeterminer", display: "Noun Determiner", category: "word" }, { value: "password", display: "Password", category: "auth" }, { value: "job", display: "Job", category: "company" }, { value: "safariuseragent", display: "Safari User Agent", category: "internet" }, { value: "randomint", display: "Random Int", category: "number" }, { value: "hexuint", display: "HexUint", category: "number" }, { value: "comment", display: "Comment", category: "word" }, { value: "state", display: "State", category: "address" }, { value: "breakfast", display: "Breakfast", category: "food" }, { value: "dinner", display: "Dinner", category: "food" }, { value: "banktype", display: "Bank Type", category: "payment" }, { value: "streetname", display: "Street Name", category: "address" }, { value: "errorgrpc", display: "gRPC error", category: "error" }, { value: "operauseragent", display: "Opera User Agent", category: "internet" }, { value: "minecraftmobboss", display: "Minecraft mob boss", category: "minecraft" }, { value: "float32", display: "Float32", category: "number" }, { value: "songgenre", display: "Genre", category: "song" }, { value: "phrasenoun", display: "Noun Phrase", category: "word" }, { value: "monthstring", display: "Month String", category: "time" }, { value: "loremipsumword", display: "Lorem Ipsum Word", category: "word" }, { value: "productmaterial", display: "Product Material", category: "product" }, { value: "adjectiveinterrogative", display: "Interrogative Adjective", category: "word" }, { value: "booktitle", display: "Title", category: "book" }, { value: "uint32", display: "Uint32", category: "number" }, { value: "phrasepreposition", display: "Preposition Phrase", category: "word" }, { value: "animal", display: "Animal", category: "animal" }, { value: "fruit", display: "Fruit", category: "food" }, { value: "regex", display: "Regex", category: "generate" }, { value: "minecraftweapon", display: "Minecraft weapon", category: "minecraft" }, { value: "beeribu", display: "Beer IBU", category: "beer" }, { value: "minecraftmobhostile", display: "Minecraft mob hostile", category: "minecraft" }, { value: "randomuint", display: "Random Uint", category: "number" }, { value: "achrouting", display: "ACH Routing Number", category: "payment" }, { value: "bankname", display: "Bank Name", category: "payment" }, { value: "gender", display: "Gender", category: "person" }, { value: "pronoundemonstrative", display: "Pronoun Demonstrative", category: "word" }, { value: "pronounrelative", display: "Pronoun Relative", category: "word" }, { value: "street", display: "Street", category: "address" }, { value: "year", display: "Year", category: "time" }, { value: "gamertag", display: "Gamertag", category: "game" }, { value: "int", display: "Int", category: "number" }, { value: "cartype", display: "Car Type", category: "car" }, { value: "timezoneoffset", display: "Timezone Offset", category: "time" }, { value: "name", display: "Name", category: "person" }, { value: "hackernoun", display: "Hacker Noun", category: "hacker" }, { value: "inputname", display: "Input Name", category: "html" }, { value: "float32range", display: "Float32 Range", category: "number" }, { value: "beerstyle", display: "Beer Style", category: "beer" }, { value: "book", display: "Book", category: "book" }, { value: "celebritybusiness", display: "Celebrity Business", category: "celebrity" }, { value: "month", display: "Month", category: "time" }, { value: "macaddress", display: "MAC Address", category: "internet" }, { value: "uint8", display: "Uint8", category: "number" }, { value: "firstname", display: "First Name", category: "person" }, { value: "adjectivedescriptive", display: "Descriptive Adjective", category: "word" }, { value: "dog", display: "Dog", category: "animal" }, { value: "beername", display: "Beer Name", category: "beer" }, { value: "vegetable", display: "Vegetable", category: "food" }, { value: "useragent", display: "User Agent", category: "internet" }, { value: "minecraftore", display: "Minecraft ore", category: "minecraft" }, { value: "nounconcrete", display: "Noun Concrete", category: "word" }, { value: "verb", display: "Verb", category: "word" }, { value: "stateabr", display: "State Abbreviation", category: "address" }, { value: "error", display: "Error", category: "error" }, { value: "loremipsumparagraph", display: "Lorem Ipsum Paragraph", category: "word" }, { value: "digit", display: "Digit", category: "string" }, { value: "numerify", display: "Numerify", category: "string" }, { value: "hipstersentence", display: "Hipster Sentence", category: "hipster" }, { value: "hipsterparagraph", display: "Hipster Paragraph", category: "hipster" }, { value: "float64", display: "Float64", category: "number" }, { value: "sentencesimple", display: "Simple Sentence", category: "word" }, { value: "farmanimal", display: "Farm Animal", category: "animal" }, { value: "carmodel", display: "Car Model", category: "car" }, { value: "dice", display: "Dice", category: "game" }, { value: "minecraftvillagerlevel", display: "Minecraft villager level", category: "minecraft" }, { value: "productfeature", display: "Product Feature", category: "product" }, { value: "lexify", display: "Lexify", category: "string" }, { value: "word", display: "Word", category: "word" }, { value: "httpversion", display: "HTTP Version", category: "internet" }, { value: "companysuffix", display: "Company Suffix", category: "company" }, { value: "errorhttp", display: "HTTP error", category: "error" }, { value: "connectivecomparative", display: "Connective Comparitive", category: "word" }, { value: "carfueltype", display: "Car Fuel Type", category: "car" }, { value: "letter", display: "Letter", category: "string" }, { value: "adjectivedemonstrative", display: "Demonstrative Adjective", category: "word" }, { value: "streetprefix", display: "Street Prefix", category: "address" }, { value: "rgbcolor", display: "RGB Color", category: "color" }, { value: "sql", display: "SQL", category: "database" }, { value: "fixed_width", display: "Fixed Width", category: "generate" }, { value: "imagepng", display: "Image PNG", category: "image" }, { value: "domainsuffix", display: "Domain Suffix", category: "internet" }, { value: "languageabbreviation", display: "Language Abbreviation", category: "language" }, { value: "uint", display: "Uint", category: "number" }, { value: "bookauthor", display: "Author", category: "book" }, { value: "joblevel", display: "Job Level", category: "company" }, { value: "filemimetype", display: "File Mime Type", category: "file" }, { value: "domainname", display: "Domain Name", category: "internet" }, { value: "number", display: "Number", category: "number" }, { value: "productdimension", display: "Product Dimension", category: "product" }, { value: "adverbplace", display: "Adverb Place", category: "word" }, { value: "phraseverb", display: "Verb Phrase", category: "word" }, { value: "appname", display: "App Name", category: "app" }, { value: "celebritysport", display: "Celebrity Sport", category: "celebrity" }, { value: "hour", display: "Hour", category: "time" }, { value: "hipsterword", display: "Hipster Word", category: "hipster" }, { value: "languagebcp", display: "Language BCP", category: "language" }, { value: "minecraftdye", display: "Minecraft dye", category: "minecraft" }, { value: "moviename", display: "Movie Name", category: "movie" }, { value: "float64range", display: "Float64 Range", category: "number" }, { value: "emojitag", display: "Emoji Tag", category: "emoji" }, { value: "url", display: "URL", category: "internet" }, { value: "creditcardexp", display: "Credit Card Exp", category: "payment" }, { value: "adverbmanner", display: "Adverb Manner", category: "word" }, { value: "adverbtimeindefinite", display: "Adverb Time Indefinite", category: "word" }, { value: "adverbfrequencydefinite", display: "Adverb Frequency Definite", category: "word" }, { value: "connectivecasual", display: "Connective Casual", category: "word" }, { value: "nounproper", display: "Noun Proper", category: "word" }, { value: "bookgenre", display: "Genre", category: "book" }, { value: "timezoneregion", display: "Timezone Region", category: "time" }, { value: "hackeradjective", display: "Hacker Adjective", category: "hacker" }, { value: "httpmethod", display: "HTTP Method", category: "internet" }, { value: "minecrafttool", display: "Minecraft tool", category: "minecraft" }, { value: "minecraftfood", display: "Minecraft food", category: "minecraft" }, { value: "minecraftweather", display: "Minecraft weather", category: "minecraft" }, { value: "petname", display: "Pet Name", category: "animal" }, { value: "beerblg", display: "Beer BLG", category: "beer" }, { value: "csv", display: "CSV", category: "file" }, { value: "hackerphrase", display: "Hacker Phrase", category: "hacker" }, { value: "school", display: "School", category: "school" }, { value: "prepositioncompound", display: "Preposition Compound", category: "word" }, { value: "address", display: "Address", category: "address" }, { value: "futuredate", display: "FutureDate", category: "time" }, { value: "adverbtimedefinite", display: "Adverb Time Definite", category: "word" }, { value: "pronounreflective", display: "Pronoun Reflective", category: "word" }, { value: "appauthor", display: "App Author", category: "app" }, { value: "jobdescriptor", display: "Job Descriptor", category: "company" }, { value: "errorhttpserver", display: "HTTP server error", category: "error" }, { value: "int64", display: "Int64", category: "number" }, { value: "noununcountable", display: "Noun Uncountable", category: "word" }, { value: "color", display: "Color", category: "color" }, { value: "nicecolors", display: "Nice Colors", category: "color" }, { value: "jobtitle", display: "Job Title", category: "company" }, { value: "chromeuseragent", display: "Chrome User Agent", category: "internet" }, { value: "minecraftmobpassive", display: "Minecraft mob passive", category: "minecraft" }, { value: "latitude", display: "Latitude", category: "address" }, { value: "appversion", display: "App Version", category: "app" }, { value: "car", display: "Car", category: "car" }, { value: "uint16", display: "Uint16", category: "number" }, { value: "adverbdegree", display: "Adverb Degree", category: "word" }, { value: "svg", display: "Image SVG", category: "html" }, { value: "int8", display: "Int8", category: "number" }, { value: "digitn", display: "DigitN", category: "string" }, { value: "adverbfrequencyindefinite", display: "Adverb Frequency Indefinite", category: "word" }, { value: "noun", display: "Noun", category: "word" }, { value: "pronounobject", display: "Pronoun Object", category: "word" }, { value: "errorruntime", display: "Runtime error", category: "error" }, { value: "errorvalidation", display: "Validation error", category: "error" }, { value: "firefoxuseragent", display: "Firefox User Agent", category: "internet" }, { value: "uuid", display: "UUID", category: "misc" }, { value: "creditcard", display: "Credit Card", category: "payment" }, { value: "phone", display: "Phone", category: "person" }, { value: "intn", display: "IntN", category: "number" }, { value: "bitcoinprivatekey", display: "Bitcoin Private Key", category: "payment" }, { value: "pronounpersonal", display: "Pronoun Personal", category: "word" }, { value: "sentence", display: "Sentence", category: "word" }, { value: "generate", display: "Generate", category: "generate" }, { value: "ssn", display: "SSN", category: "person" }, { value: "connective", display: "Connective", category: "word" }, { value: "pronounindefinite", display: "Pronoun Indefinite", category: "word" }, { value: "quote", display: "Quote", category: "word" }, { value: "animaltype", display: "Animal Type", category: "animal" }, { value: "weekday", display: "Weekday", category: "time" }, { value: "pronouninterrogative", display: "Pronoun Interrogative", category: "word" }, { value: "paragraph", display: "Paragraph", category: "word" }, { value: "city", display: "City", category: "address" }, { value: "minecraftwood", display: "Minecraft wood", category: "minecraft" }, { value: "bool", display: "Boolean", category: "misc" }, { value: "productdescription", display: "Product Description", category: "product" }, { value: "songartist", display: "Song Artist", category: "song" }, { value: "nounabstract", display: "Noun Abstract", category: "word" }], N = new Set(
-  S.map((e) => e.value.toLowerCase())
+const F = [{ value: "phraseadverb", display: "Adverb Phrase", category: "word" }, { value: "country", display: "Country", category: "address" }, { value: "latituderange", display: "Latitude Range", category: "address" }, { value: "longituderange", display: "Longitude Range", category: "address" }, { value: "bs", display: "BS", category: "company" }, { value: "hackerabbreviation", display: "Hacker Abbreviation", category: "hacker" }, { value: "hackeringverb", display: "Hackering Verb", category: "hacker" }, { value: "uint64", display: "Uint64", category: "number" }, { value: "hobby", display: "Hobby", category: "person" }, { value: "errorhttpclient", display: "HTTP client error", category: "error" }, { value: "programminglanguage", display: "Programming Language", category: "language" }, { value: "minecraftarmortier", display: "Minecraft armor tier", category: "minecraft" }, { value: "songname", display: "Song Name", category: "song" }, { value: "nouncommon", display: "Noun Common", category: "word" }, { value: "nouncollectivepeople", display: "Noun Collective People", category: "word" }, { value: "verbaction", display: "Action Verb", category: "word" }, { value: "celebrityactor", display: "Celebrity Actor", category: "celebrity" }, { value: "safecolor", display: "Safe Color", category: "color" }, { value: "minecraftvillagerstation", display: "Minecraft villager station", category: "minecraft" }, { value: "company", display: "Company", category: "company" }, { value: "productaudience", display: "Product Audience", category: "product" }, { value: "beerhop", display: "Beer Hop", category: "beer" }, { value: "hackerverb", display: "Hacker Verb", category: "hacker" }, { value: "int32", display: "Int32", category: "number" }, { value: "longitude", display: "Longitude", category: "address" }, { value: "beeryeast", display: "Beer Yeast", category: "beer" }, { value: "emojicategory", display: "Emoji Category", category: "emoji" }, { value: "snack", display: "Snack", category: "food" }, { value: "minecraftbiome", display: "Minecraft biome", category: "minecraft" }, { value: "flipacoin", display: "Flip A Coin", category: "misc" }, { value: "uintrange", display: "UintRange", category: "number" }, { value: "verbhelping", display: "Helping Verb", category: "word" }, { value: "blurb", display: "Blurb", category: "company" }, { value: "emoji", display: "Emoji", category: "emoji" }, { value: "uintn", display: "UintN", category: "number" }, { value: "price", display: "Price", category: "payment" }, { value: "adjectiveproper", display: "Proper Adjective", category: "word" }, { value: "nouncountable", display: "Noun Countable", category: "word" }, { value: "username", display: "Username", category: "auth" }, { value: "buzzword", display: "Buzzword", category: "company" }, { value: "map", display: "Map", category: "generate" }, { value: "loremipsumsentence", display: "Lorem Ipsum Sentence", category: "word" }, { value: "moviegenre", display: "Genre", category: "movie" }, { value: "int16", display: "Int16", category: "number" }, { value: "namesuffix", display: "Name Suffix", category: "person" }, { value: "weighted", display: "Weighted", category: "misc" }, { value: "emojidescription", display: "Emoji Description", category: "emoji" }, { value: "minecraftanimal", display: "Minecraft animal", category: "minecraft" }, { value: "shuffleints", display: "Shuffle Ints", category: "number" }, { value: "creditcardtype", display: "Credit Card Type", category: "payment" }, { value: "bitcoinaddress", display: "Bitcoin Address", category: "payment" }, { value: "drink", display: "Drink", category: "food" }, { value: "intrange", display: "IntRange", category: "number" }, { value: "currencylong", display: "Currency Long", category: "payment" }, { value: "teams", display: "Teams", category: "person" }, { value: "adjectivequantitative", display: "Quantitative Adjective", category: "word" }, { value: "adjectivepossessive", display: "Possessive Adjective", category: "word" }, { value: "bird", display: "Bird", category: "animal" }, { value: "pastdate", display: "PastDate", category: "time" }, { value: "ipv4address", display: "IPv4 Address", category: "internet" }, { value: "shufflestrings", display: "Shuffle Strings", category: "string" }, { value: "verblinking", display: "Linking Verb", category: "word" }, { value: "interjection", display: "Interjection", category: "word" }, { value: "second", display: "Second", category: "time" }, { value: "pronounpossessive", display: "Pronoun Possessive", category: "word" }, { value: "errorobject", display: "Error object word", category: "error" }, { value: "middlename", display: "Middle Name", category: "person" }, { value: "email_text", display: "Random text email Document", category: "template" }, { value: "streetnumber", display: "Street Number", category: "address" }, { value: "minute", display: "Minute", category: "time" }, { value: "productupc", display: "Product UPC", category: "product" }, { value: "template", display: "Template", category: "template" }, { value: "pronoun", display: "Pronoun", category: "word" }, { value: "zip", display: "Zip", category: "address" }, { value: "day", display: "Day", category: "time" }, { value: "json", display: "JSON", category: "file" }, { value: "xml", display: "XML", category: "file" }, { value: "lunch", display: "Lunch", category: "food" }, { value: "connectiveexamplify", display: "Connective Examplify", category: "word" }, { value: "productname", display: "Product Name", category: "product" }, { value: "productusecase", display: "Product Use Case", category: "product" }, { value: "productsuffix", display: "Product Suffix", category: "product" }, { value: "randomstring", display: "Random String", category: "string" }, { value: "timezone", display: "Timezone", category: "time" }, { value: "dessert", display: "Dessert", category: "food" }, { value: "imagejpeg", display: "Image JPEG", category: "image" }, { value: "creditcardnumber", display: "Credit Card Number", category: "payment" }, { value: "nouncollectivething", display: "Noun Collective Thing", category: "word" }, { value: "verbintransitive", display: "Intransitive Verb", category: "word" }, { value: "streetsuffix", display: "Street Suffix", category: "address" }, { value: "isin", display: "ISIN", category: "finance" }, { value: "person", display: "Person", category: "person" }, { value: "cartransmissiontype", display: "Car Transmission Type", category: "car" }, { value: "email", display: "Email", category: "person" }, { value: "productbenefit", display: "Product Benefit", category: "product" }, { value: "lettern", display: "LetterN", category: "string" }, { value: "adverb", display: "Adverb", category: "word" }, { value: "preposition", display: "Preposition", category: "word" }, { value: "prepositiondouble", display: "Preposition Double", category: "word" }, { value: "timezonefull", display: "Timezone Full", category: "time" }, { value: "errordatabase", display: "Database error", category: "error" }, { value: "fileextension", display: "File Extension", category: "file" }, { value: "cusip", display: "CUSIP", category: "finance" }, { value: "movie", display: "Movie", category: "movie" }, { value: "nameprefix", display: "Name Prefix", category: "person" }, { value: "product", display: "Product", category: "product" }, { value: "connectivelisting", display: "Connective Listing", category: "word" }, { value: "timezoneabv", display: "Timezone Abbreviation", category: "time" }, { value: "lastname", display: "Last Name", category: "person" }, { value: "vowel", display: "Vowel", category: "string" }, { value: "markdown", display: "Random markdown document", category: "template" }, { value: "connectivetime", display: "Connective Time", category: "word" }, { value: "phrase", display: "Phrase", category: "word" }, { value: "countryabr", display: "Country Abbreviation", category: "address" }, { value: "beermalt", display: "Beer Malt", category: "beer" }, { value: "nouncollectiveanimal", display: "Noun Collective Animal", category: "word" }, { value: "emojialias", display: "Emoji Alias", category: "emoji" }, { value: "httpstatuscode", display: "HTTP Status Code", category: "internet" }, { value: "adjectiveindefinite", display: "Indefinite Adjective", category: "word" }, { value: "question", display: "Question", category: "word" }, { value: "cat", display: "Cat", category: "animal" }, { value: "carmaker", display: "Car Maker", category: "car" }, { value: "ipv6address", display: "IPv6 Address", category: "internet" }, { value: "httpstatuscodesimple", display: "HTTP Status Code Simple", category: "internet" }, { value: "minecraftarmorpart", display: "Minecraft armor part", category: "minecraft" }, { value: "minecraftmobneutral", display: "Minecraft mob neutral", category: "minecraft" }, { value: "currencyshort", display: "Currency Short", category: "payment" }, { value: "achaccount", display: "ACH Account Number", category: "payment" }, { value: "song", display: "Song", category: "song" }, { value: "prepositionsimple", display: "Preposition Simple", category: "word" }, { value: "verbtransitive", display: "Transitive Verb", category: "word" }, { value: "slogan", display: "Slogan", category: "company" }, { value: "loglevel", display: "Log Level", category: "internet" }, { value: "currency", display: "Currency", category: "payment" }, { value: "creditcardcvv", display: "Credit Card CVV", category: "payment" }, { value: "phoneformatted", display: "Phone Formatted", category: "person" }, { value: "adjective", display: "Adjective", category: "word" }, { value: "connectivecomplaint", display: "Connective Complaint", category: "word" }, { value: "productcategory", display: "Product Category", category: "product" }, { value: "beeralcohol", display: "Beer Alcohol", category: "beer" }, { value: "date", display: "Date", category: "time" }, { value: "nanosecond", display: "Nanosecond", category: "time" }, { value: "language", display: "Language", category: "language" }, { value: "productisbn", display: "Product ISBN", category: "product" }, { value: "hexcolor", display: "Hex Color", category: "color" }, { value: "daterange", display: "DateRange", category: "time" }, { value: "minecraftvillagerjob", display: "Minecraft villager job", category: "minecraft" }, { value: "noundeterminer", display: "Noun Determiner", category: "word" }, { value: "password", display: "Password", category: "auth" }, { value: "job", display: "Job", category: "company" }, { value: "safariuseragent", display: "Safari User Agent", category: "internet" }, { value: "randomint", display: "Random Int", category: "number" }, { value: "hexuint", display: "HexUint", category: "number" }, { value: "comment", display: "Comment", category: "word" }, { value: "state", display: "State", category: "address" }, { value: "breakfast", display: "Breakfast", category: "food" }, { value: "dinner", display: "Dinner", category: "food" }, { value: "banktype", display: "Bank Type", category: "payment" }, { value: "streetname", display: "Street Name", category: "address" }, { value: "errorgrpc", display: "gRPC error", category: "error" }, { value: "operauseragent", display: "Opera User Agent", category: "internet" }, { value: "minecraftmobboss", display: "Minecraft mob boss", category: "minecraft" }, { value: "float32", display: "Float32", category: "number" }, { value: "songgenre", display: "Genre", category: "song" }, { value: "phrasenoun", display: "Noun Phrase", category: "word" }, { value: "monthstring", display: "Month String", category: "time" }, { value: "loremipsumword", display: "Lorem Ipsum Word", category: "word" }, { value: "productmaterial", display: "Product Material", category: "product" }, { value: "adjectiveinterrogative", display: "Interrogative Adjective", category: "word" }, { value: "booktitle", display: "Title", category: "book" }, { value: "uint32", display: "Uint32", category: "number" }, { value: "phrasepreposition", display: "Preposition Phrase", category: "word" }, { value: "animal", display: "Animal", category: "animal" }, { value: "fruit", display: "Fruit", category: "food" }, { value: "regex", display: "Regex", category: "generate" }, { value: "minecraftweapon", display: "Minecraft weapon", category: "minecraft" }, { value: "beeribu", display: "Beer IBU", category: "beer" }, { value: "minecraftmobhostile", display: "Minecraft mob hostile", category: "minecraft" }, { value: "randomuint", display: "Random Uint", category: "number" }, { value: "achrouting", display: "ACH Routing Number", category: "payment" }, { value: "bankname", display: "Bank Name", category: "payment" }, { value: "gender", display: "Gender", category: "person" }, { value: "pronoundemonstrative", display: "Pronoun Demonstrative", category: "word" }, { value: "pronounrelative", display: "Pronoun Relative", category: "word" }, { value: "street", display: "Street", category: "address" }, { value: "year", display: "Year", category: "time" }, { value: "gamertag", display: "Gamertag", category: "game" }, { value: "int", display: "Int", category: "number" }, { value: "cartype", display: "Car Type", category: "car" }, { value: "timezoneoffset", display: "Timezone Offset", category: "time" }, { value: "name", display: "Name", category: "person" }, { value: "hackernoun", display: "Hacker Noun", category: "hacker" }, { value: "inputname", display: "Input Name", category: "html" }, { value: "float32range", display: "Float32 Range", category: "number" }, { value: "beerstyle", display: "Beer Style", category: "beer" }, { value: "book", display: "Book", category: "book" }, { value: "celebritybusiness", display: "Celebrity Business", category: "celebrity" }, { value: "month", display: "Month", category: "time" }, { value: "macaddress", display: "MAC Address", category: "internet" }, { value: "uint8", display: "Uint8", category: "number" }, { value: "firstname", display: "First Name", category: "person" }, { value: "adjectivedescriptive", display: "Descriptive Adjective", category: "word" }, { value: "dog", display: "Dog", category: "animal" }, { value: "beername", display: "Beer Name", category: "beer" }, { value: "vegetable", display: "Vegetable", category: "food" }, { value: "useragent", display: "User Agent", category: "internet" }, { value: "minecraftore", display: "Minecraft ore", category: "minecraft" }, { value: "nounconcrete", display: "Noun Concrete", category: "word" }, { value: "verb", display: "Verb", category: "word" }, { value: "stateabr", display: "State Abbreviation", category: "address" }, { value: "error", display: "Error", category: "error" }, { value: "loremipsumparagraph", display: "Lorem Ipsum Paragraph", category: "word" }, { value: "digit", display: "Digit", category: "string" }, { value: "numerify", display: "Numerify", category: "string" }, { value: "hipstersentence", display: "Hipster Sentence", category: "hipster" }, { value: "hipsterparagraph", display: "Hipster Paragraph", category: "hipster" }, { value: "float64", display: "Float64", category: "number" }, { value: "sentencesimple", display: "Simple Sentence", category: "word" }, { value: "farmanimal", display: "Farm Animal", category: "animal" }, { value: "carmodel", display: "Car Model", category: "car" }, { value: "dice", display: "Dice", category: "game" }, { value: "minecraftvillagerlevel", display: "Minecraft villager level", category: "minecraft" }, { value: "productfeature", display: "Product Feature", category: "product" }, { value: "lexify", display: "Lexify", category: "string" }, { value: "word", display: "Word", category: "word" }, { value: "httpversion", display: "HTTP Version", category: "internet" }, { value: "companysuffix", display: "Company Suffix", category: "company" }, { value: "errorhttp", display: "HTTP error", category: "error" }, { value: "connectivecomparative", display: "Connective Comparitive", category: "word" }, { value: "carfueltype", display: "Car Fuel Type", category: "car" }, { value: "letter", display: "Letter", category: "string" }, { value: "adjectivedemonstrative", display: "Demonstrative Adjective", category: "word" }, { value: "streetprefix", display: "Street Prefix", category: "address" }, { value: "rgbcolor", display: "RGB Color", category: "color" }, { value: "sql", display: "SQL", category: "database" }, { value: "fixed_width", display: "Fixed Width", category: "generate" }, { value: "imagepng", display: "Image PNG", category: "image" }, { value: "domainsuffix", display: "Domain Suffix", category: "internet" }, { value: "languageabbreviation", display: "Language Abbreviation", category: "language" }, { value: "uint", display: "Uint", category: "number" }, { value: "bookauthor", display: "Author", category: "book" }, { value: "joblevel", display: "Job Level", category: "company" }, { value: "filemimetype", display: "File Mime Type", category: "file" }, { value: "domainname", display: "Domain Name", category: "internet" }, { value: "number", display: "Number", category: "number" }, { value: "productdimension", display: "Product Dimension", category: "product" }, { value: "adverbplace", display: "Adverb Place", category: "word" }, { value: "phraseverb", display: "Verb Phrase", category: "word" }, { value: "appname", display: "App Name", category: "app" }, { value: "celebritysport", display: "Celebrity Sport", category: "celebrity" }, { value: "hour", display: "Hour", category: "time" }, { value: "hipsterword", display: "Hipster Word", category: "hipster" }, { value: "languagebcp", display: "Language BCP", category: "language" }, { value: "minecraftdye", display: "Minecraft dye", category: "minecraft" }, { value: "moviename", display: "Movie Name", category: "movie" }, { value: "float64range", display: "Float64 Range", category: "number" }, { value: "emojitag", display: "Emoji Tag", category: "emoji" }, { value: "url", display: "URL", category: "internet" }, { value: "creditcardexp", display: "Credit Card Exp", category: "payment" }, { value: "adverbmanner", display: "Adverb Manner", category: "word" }, { value: "adverbtimeindefinite", display: "Adverb Time Indefinite", category: "word" }, { value: "adverbfrequencydefinite", display: "Adverb Frequency Definite", category: "word" }, { value: "connectivecasual", display: "Connective Casual", category: "word" }, { value: "nounproper", display: "Noun Proper", category: "word" }, { value: "bookgenre", display: "Genre", category: "book" }, { value: "timezoneregion", display: "Timezone Region", category: "time" }, { value: "hackeradjective", display: "Hacker Adjective", category: "hacker" }, { value: "httpmethod", display: "HTTP Method", category: "internet" }, { value: "minecrafttool", display: "Minecraft tool", category: "minecraft" }, { value: "minecraftfood", display: "Minecraft food", category: "minecraft" }, { value: "minecraftweather", display: "Minecraft weather", category: "minecraft" }, { value: "petname", display: "Pet Name", category: "animal" }, { value: "beerblg", display: "Beer BLG", category: "beer" }, { value: "csv", display: "CSV", category: "file" }, { value: "hackerphrase", display: "Hacker Phrase", category: "hacker" }, { value: "school", display: "School", category: "school" }, { value: "prepositioncompound", display: "Preposition Compound", category: "word" }, { value: "address", display: "Address", category: "address" }, { value: "futuredate", display: "FutureDate", category: "time" }, { value: "adverbtimedefinite", display: "Adverb Time Definite", category: "word" }, { value: "pronounreflective", display: "Pronoun Reflective", category: "word" }, { value: "appauthor", display: "App Author", category: "app" }, { value: "jobdescriptor", display: "Job Descriptor", category: "company" }, { value: "errorhttpserver", display: "HTTP server error", category: "error" }, { value: "int64", display: "Int64", category: "number" }, { value: "noununcountable", display: "Noun Uncountable", category: "word" }, { value: "color", display: "Color", category: "color" }, { value: "nicecolors", display: "Nice Colors", category: "color" }, { value: "jobtitle", display: "Job Title", category: "company" }, { value: "chromeuseragent", display: "Chrome User Agent", category: "internet" }, { value: "minecraftmobpassive", display: "Minecraft mob passive", category: "minecraft" }, { value: "latitude", display: "Latitude", category: "address" }, { value: "appversion", display: "App Version", category: "app" }, { value: "car", display: "Car", category: "car" }, { value: "uint16", display: "Uint16", category: "number" }, { value: "adverbdegree", display: "Adverb Degree", category: "word" }, { value: "svg", display: "Image SVG", category: "html" }, { value: "int8", display: "Int8", category: "number" }, { value: "digitn", display: "DigitN", category: "string" }, { value: "adverbfrequencyindefinite", display: "Adverb Frequency Indefinite", category: "word" }, { value: "noun", display: "Noun", category: "word" }, { value: "pronounobject", display: "Pronoun Object", category: "word" }, { value: "errorruntime", display: "Runtime error", category: "error" }, { value: "errorvalidation", display: "Validation error", category: "error" }, { value: "firefoxuseragent", display: "Firefox User Agent", category: "internet" }, { value: "uuid", display: "UUID", category: "misc" }, { value: "creditcard", display: "Credit Card", category: "payment" }, { value: "phone", display: "Phone", category: "person" }, { value: "intn", display: "IntN", category: "number" }, { value: "bitcoinprivatekey", display: "Bitcoin Private Key", category: "payment" }, { value: "pronounpersonal", display: "Pronoun Personal", category: "word" }, { value: "sentence", display: "Sentence", category: "word" }, { value: "generate", display: "Generate", category: "generate" }, { value: "ssn", display: "SSN", category: "person" }, { value: "connective", display: "Connective", category: "word" }, { value: "pronounindefinite", display: "Pronoun Indefinite", category: "word" }, { value: "quote", display: "Quote", category: "word" }, { value: "animaltype", display: "Animal Type", category: "animal" }, { value: "weekday", display: "Weekday", category: "time" }, { value: "pronouninterrogative", display: "Pronoun Interrogative", category: "word" }, { value: "paragraph", display: "Paragraph", category: "word" }, { value: "city", display: "City", category: "address" }, { value: "minecraftwood", display: "Minecraft wood", category: "minecraft" }, { value: "bool", display: "Boolean", category: "misc" }, { value: "productdescription", display: "Product Description", category: "product" }, { value: "songartist", display: "Song Artist", category: "song" }, { value: "nounabstract", display: "Noun Abstract", category: "word" }], I = new Set(
+  F.map((e) => e.value.toLowerCase())
 );
 function v(e) {
-  return N.has(e.toLowerCase());
+  return I.has(e.toLowerCase());
 }
-function J() {
-  return S;
+function Z() {
+  return F;
 }
 const h = {
   primary: "#ffa000",
   error: "#ff3860",
   background: "#ffffff"
-}, A = {
+}, x = {
   // px
   half: 12,
   // px
   quarter: 8
   // px
-}, $ = {
+}, G = {
   radius: 6
-}, x = {
+}, S = {
   size: 14,
   // px
   family: "Helvetica, Arial, sans-serif"
 };
-function M(e, t) {
+function j(e, t) {
   const o = document.querySelector(".gofakeit-error-tooltip");
   o && o.remove();
   const a = document.createElement("div");
@@ -32,11 +32,11 @@ function M(e, t) {
     position: absolute;
     z-index: 10001;
     color: ${h.error};
-    font-size: ${x.size}px;
-    font-family: ${x.family};
+    font-size: ${S.size}px;
+    font-family: ${S.family};
     background-color: ${h.background};
-    padding: ${A.quarter}px ${A.half}px;
-    border-radius: ${$.radius}px;
+    padding: ${x.quarter}px ${x.half}px;
+    border-radius: ${G.radius}px;
     border: 1px solid ${h.error};
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     max-width: 300px;
@@ -70,7 +70,7 @@ function M(e, t) {
     }, 300);
   }, 5e3);
 }
-const k = "https://api.gofakeit.com/funcs";
+const E = "https://api.gofakeit.com/funcs";
 async function d(e) {
   const t = e.indexOf("?");
   if (t !== -1) {
@@ -79,14 +79,14 @@ async function d(e) {
       const i = parseFloat(l);
       r[n] = isNaN(i) ? l : i;
     }
-    return E("POST", `${k}/${o}`, r);
+    return k("POST", `${E}/${o}`, r);
   } else
-    return E("GET", `${k}/${e}`);
+    return k("GET", `${E}/${e}`);
 }
-async function I(e) {
-  return E("POST", `${k}/randomstring`, { strs: e });
+async function H(e) {
+  return k("POST", `${E}/randomstring`, { strs: e });
 }
-async function E(e, t, o) {
+async function k(e, t, o) {
   try {
     const a = {
       method: e,
@@ -111,13 +111,13 @@ async function E(e, t, o) {
     };
   }
 }
-function G(e) {
+function R(e) {
   const t = new Date(e.getTime());
   t.setUTCHours(0, 0, 0, 0), t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7));
   const o = new Date(t.getUTCFullYear(), 0, 4);
   return Math.ceil(((t.getTime() - o.getTime()) / 864e5 - 3 + (o.getUTCDay() || 7)) / 7);
 }
-async function j(e, t) {
+async function D(e, t) {
   const o = e.type.toLowerCase();
   try {
     switch (o) {
@@ -176,7 +176,7 @@ async function j(e, t) {
           try {
             const s = r.data, n = s.match(/^(\d{4}-\d{2}-\d{2})/);
             if (n) {
-              const l = new Date(n[1]), i = l.getFullYear(), c = G(l);
+              const l = new Date(n[1]), i = l.getFullYear(), c = R(l);
               e.value = `${i}-W${c.toString().padStart(2, "0")}`;
             } else
               return console.warn("[Gofakeit Autofill] Could not parse date for week from response:", s), { success: !1, usedFunc: a };
@@ -200,7 +200,7 @@ async function j(e, t) {
     return console.warn(`[Gofakeit Autofill] Unexpected error handling ${o} input:`, a), { success: !1, usedFunc: t };
   }
 }
-async function R(e, t) {
+async function U(e, t) {
   const o = e.type.toLowerCase();
   let a = t;
   if (t === "true")
@@ -229,12 +229,12 @@ async function R(e, t) {
   const r = await d(a);
   return r.success ? (e.value = r.data, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: a }) : (console.warn(`[Gofakeit Autofill] Error for function ${a}:`, r.error), r.status === 400 && p(e, "", a), { success: !1, usedFunc: a });
 }
-async function H(e, t) {
+async function B(e, t) {
   const o = t === "true" ? "sentence" : t, a = await d(o);
   return a.success ? (e.value = a.data, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: o }) : (console.warn(`[Gofakeit Autofill] Error for function ${o}:`, a.error), a.status === 400 && p(e, "", o), { success: !1, usedFunc: o });
 }
-async function D(e, t) {
-  const o = B(e);
+async function z(e, t) {
+  const o = O(e);
   if (o.length === 0)
     return console.warn("[Gofakeit Autofill] No checkbox group found for element:", e), { success: !1, usedFunc: "bool" };
   const a = t === "true" ? "bool" : t;
@@ -269,8 +269,8 @@ async function D(e, t) {
   }
   return { success: !0, usedFunc: a };
 }
-async function U(e, t) {
-  const o = z(e);
+async function q(e, t) {
+  const o = V(e);
   if (o.length === 0)
     return console.warn("[Gofakeit Autofill] No radio group found for element:", e), { success: !1, usedFunc: "bool" };
   const a = t === "true" ? "bool" : t;
@@ -300,22 +300,22 @@ async function U(e, t) {
   }
   return { success: !0, usedFunc: a };
 }
-function B(e) {
+function O(e) {
   if (e.type !== "checkbox") return [e];
   const t = e.name, o = e.closest("form, div, fieldset") || document;
   return t ? Array.from(o.querySelectorAll(`input[type="checkbox"][name="${t}"]`)) : Array.from(o.querySelectorAll('input[type="checkbox"]'));
 }
-function z(e) {
+function V(e) {
   if (e.type !== "radio") return [e];
   const t = e.name, o = e.closest("form, div, fieldset") || document;
   return t ? Array.from(o.querySelectorAll(`input[type="radio"][name="${t}"]`)) : Array.from(o.querySelectorAll('input[type="radio"]'));
 }
-async function q(e, t) {
+async function _(e, t) {
   const o = Array.from(e.options).map((r) => r.value).filter((r) => r !== "");
   if (o.length === 0)
     return console.warn("[Gofakeit Autofill] Select element has no valid options:", e), { success: !1, usedFunc: t };
   let a;
-  if (t === "true" ? a = await I(o) : a = await d(t), !a.success)
+  if (t === "true" ? a = await H(o) : a = await d(t), !a.success)
     return console.warn("[Gofakeit Autofill] Error for select:", a.error), a.status === 400 && p(e, "Failed to get selection"), { success: !1, usedFunc: t };
   if (e.multiple)
     if (Array.from(e.options).forEach((r) => r.selected = !1), t === "true") {
@@ -337,35 +337,51 @@ async function q(e, t) {
     e.value = a.data;
   return e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: t === "true" ? "random" : t };
 }
-async function O(e, t) {
+async function Y(e, t) {
   const o = t === "true" ? "number" : t, a = await d(o);
   return a.success ? (e.value = a.data, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: o }) : (console.warn(`[Gofakeit Autofill] Error for function ${o}:`, a.error), a.status === 400 && p(e, "", o), { success: !1, usedFunc: o });
 }
-async function V(e) {
+async function W(e) {
   const t = parseFloat(e.min) || 0, o = parseFloat(e.max) || 100, a = `number?min=${t}&max=${o}`, r = await d(a);
   return r.success ? (e.value = r.data, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: a }) : (console.warn("[Gofakeit Autofill] Error for range input:", r.error), r.status === 400 && p(e, "Failed to get random number for range"), { success: !1, usedFunc: a });
 }
-async function K() {
-  const e = T(), t = await C(), a = (t ? e : e.filter((s) => s.hasAttribute("data-gofakeit"))).filter((s) => !F(s));
+async function ee(e) {
+  if (!e)
+    return J();
+  if (e instanceof HTMLElement && A(e))
+    return T(e);
+  if (e instanceof HTMLInputElement || e instanceof HTMLTextAreaElement || e instanceof HTMLSelectElement) {
+    const t = await L(e);
+    return t || f("Failed to autofill the specified element", "error"), t;
+  }
+  if (e instanceof HTMLElement) {
+    const t = X(e);
+    if (t)
+      return T(t);
+  }
+  return !1;
+}
+async function J() {
+  const e = P(), t = await C(), a = (t ? e : e.filter((s) => s.hasAttribute("data-gofakeit"))).filter((s) => !M(s));
   if (a.length === 0) {
     f(t ? "No form fields found to autofill" : "No data-gofakeit fields exist. Turn on Smart-fill to fill this page.", "info");
     return;
   }
   console.log(`[Gofakeit] Found ${a.length} elements to generate data for`), f(`Starting data generation for ${a.length} fields...`, "info");
-  const r = await L(a);
-  P(r.success, r.failed, "Autofill");
+  const r = await N(a);
+  $(r.success, r.failed, "Autofill");
 }
-async function Q(e) {
-  const t = T(e), o = await C(), r = (o ? t : t.filter((n) => n.hasAttribute("data-gofakeit"))).filter((n) => !F(n));
+async function T(e) {
+  const t = P(e), o = await C(), r = (o ? t : t.filter((n) => n.hasAttribute("data-gofakeit"))).filter((n) => !M(n));
   if (r.length === 0) {
     f(o ? "No form fields found in this container" : "No data-gofakeit fields exist in this section. Turn on Smart-fill to fill it.", "info");
     return;
   }
   console.log(`[Gofakeit] Found ${r.length} elements to generate data for in container`), f(`Starting data generation for ${r.length} fields...`, "info");
-  const s = await L(r);
-  P(s.success, s.failed, "Container autofill");
+  const s = await N(r);
+  $(s.success, s.failed, "Container autofill");
 }
-async function _(e) {
+async function L(e) {
   const t = e.getAttribute("data-gofakeit");
   if (typeof t == "string" && t.trim().toLowerCase() === "false")
     return !1;
@@ -374,36 +390,36 @@ async function _(e) {
     return !1;
   try {
     if (e instanceof HTMLSelectElement) {
-      const a = t && t !== "true" ? t : "true", { success: r, usedFunc: s } = await q(e, a);
+      const a = t && t !== "true" ? t : "true", { success: r, usedFunc: s } = await _(e, a);
       return r && m(e, s), r;
     }
     if (e instanceof HTMLTextAreaElement) {
-      const a = t && t !== "true" ? t : "sentence", { success: r, usedFunc: s } = await H(e, a);
+      const a = t && t !== "true" ? t : "sentence", { success: r, usedFunc: s } = await B(e, a);
       return r && m(e, s), r;
     }
     if (e instanceof HTMLInputElement) {
       const a = e.type.toLowerCase();
       if (a === "checkbox") {
-        const l = t && t !== "true" ? t : "true", { success: i, usedFunc: c } = await D(e, l);
+        const l = t && t !== "true" ? t : "true", { success: i, usedFunc: c } = await z(e, l);
         return i && m(e, c), i;
       }
       if (a === "radio") {
-        const l = t && t !== "true" ? t : "true", { success: i, usedFunc: c } = await U(e, l);
+        const l = t && t !== "true" ? t : "true", { success: i, usedFunc: c } = await q(e, l);
         return i && m(e, c), i;
       }
       if (a === "number") {
-        const l = t && t !== "true" ? t : await w(e), { success: i, usedFunc: c } = await O(e, l);
+        const l = t && t !== "true" ? t : await w(e), { success: i, usedFunc: c } = await Y(e, l);
         return i && m(e, c), i;
       }
       if (a === "range") {
-        const { success: l, usedFunc: i } = await V(e);
+        const { success: l, usedFunc: i } = await W(e);
         return l && m(e, i), l;
       }
       if (a === "date" || a === "time" || a === "datetime-local" || a === "month" || a === "week") {
-        const l = t && t !== "true" ? t : await w(e), { success: i, usedFunc: c } = await j(e, l);
+        const l = t && t !== "true" ? t : await w(e), { success: i, usedFunc: c } = await D(e, l);
         return i && m(e, c), i;
       }
-      const r = t && t !== "true" ? t : await w(e), { success: s, usedFunc: n } = await R(e, r);
+      const r = t && t !== "true" ? t : await w(e), { success: s, usedFunc: n } = await U(e, r);
       return s && m(e, n), s;
     }
     return console.warn("[Gofakeit] Unsupported element type:", e), !1;
@@ -411,7 +427,7 @@ async function _(e) {
     return console.error("[Gofakeit] Unexpected error generating data for element:", e, a), !1;
   }
 }
-function T(e) {
+function P(e) {
   const t = "input, textarea, select", o = e ? e.querySelectorAll(t) : document.querySelectorAll(t), a = [];
   return o.forEach((r) => {
     if (r instanceof HTMLInputElement) {
@@ -426,11 +442,11 @@ function T(e) {
     }
   }), a;
 }
-function F(e) {
+function M(e) {
   const t = e.getAttribute && e.getAttribute("data-gofakeit");
   return typeof t == "string" && t.trim().toLowerCase() === "false";
 }
-function Y(e) {
+function K(e) {
   const t = [], o = /* @__PURE__ */ new Set();
   for (const a of e) {
     if (a instanceof HTMLInputElement) {
@@ -446,12 +462,12 @@ function Y(e) {
   }
   return t;
 }
-async function L(e) {
+async function N(e) {
   let t = 0, o = 0;
-  const a = Y(e);
+  const a = K(e);
   for (const r of a)
     try {
-      await _(r) ? (t++, setTimeout(() => {
+      await L(r) ? (t++, setTimeout(() => {
         r instanceof HTMLInputElement || r instanceof HTMLTextAreaElement ? r.value === "" && console.warn("[Gofakeit Autofill] Value was cleared for element:", r) : r instanceof HTMLSelectElement && r.value === "" && console.warn("[Gofakeit Autofill] Value was cleared for select:", r);
       }, 1e3)) : o++;
     } catch (s) {
@@ -459,7 +475,7 @@ async function L(e) {
     }
   return { success: t, failed: o };
 }
-function P(e, t, o) {
+function $(e, t, o) {
   e > 0 && (console.log(`[Gofakeit] ${o} completed successfully for ${e} fields`), f(`Successfully generated data for ${e} fields!`, "success")), t > 0 && (console.error(`[Gofakeit] ${o} failed for ${t} fields`), f(`Failed to generate data for ${t} fields.`, "error")), e === 0 && t === 0 && (console.log(`[Gofakeit] ${o} - no fields were processed`), f("No fields were processed.", "info"));
 }
 function p(e, t, o) {
@@ -467,7 +483,10 @@ function p(e, t, o) {
     e.style.border = "";
   }, 5e3));
   const a = o ? `Invalid function: ${o}` : t;
-  M(e, a);
+  j(e, a);
+}
+function A(e) {
+  return e.querySelectorAll("input[data-gofakeit], textarea[data-gofakeit], select[data-gofakeit]").length > 0;
 }
 function m(e, t) {
   if (!(e instanceof HTMLElement)) return;
@@ -520,7 +539,7 @@ async function C() {
     }
   });
 }
-function W(e) {
+function Q(e) {
   const t = [], o = e.id, a = e.getAttribute("aria-labelledby");
   if (a && a.split(/\s+/).forEach((n) => {
     const l = document.getElementById(n);
@@ -537,7 +556,7 @@ function W(e) {
   return s && s.tagName === "LABEL" && s.textContent && t.push(s.textContent), t.join(" ").toLowerCase();
 }
 async function w(e) {
-  const t = e.type.toLowerCase(), o = (e.name || "").toLowerCase(), a = (e.id || "").toLowerCase(), r = (e.placeholder || "").toLowerCase(), s = (e.autocomplete || "").toLowerCase(), n = (e.getAttribute("aria-label") || "").toLowerCase(), l = W(e), i = `${o} ${a} ${r} ${s} ${n} ${l}`, c = (y, g = "word") => v(y) ? y : g;
+  const t = e.type.toLowerCase(), o = (e.name || "").toLowerCase(), a = (e.id || "").toLowerCase(), r = (e.placeholder || "").toLowerCase(), s = (e.autocomplete || "").toLowerCase(), n = (e.getAttribute("aria-label") || "").toLowerCase(), l = Q(e), i = `${o} ${a} ${r} ${s} ${n} ${l}`, c = (y, g = "word") => v(y) ? y : g;
   if (t === "email" || /email/.test(i)) return c("email");
   if (t === "password" || /password|pass/.test(i)) return c("password");
   if (t === "tel" || /phone|tel|mobile/.test(i)) return c("phone");
@@ -558,15 +577,24 @@ async function w(e) {
   }
   return /credit\s*card|card\b|cc\b/.test(i) && /(number|no|num)/.test(i) || /card[-_ ]?number|credit[-_ ]?card[-_ ]?number/.test(i) || n.includes("credit card number") || r.includes("••••") || e.maxLength >= 16 && e.maxLength <= 19 && /card|credit/.test(i) ? "creditcardnumber" : /\bcvv\b|\bcvc\b|security\s*code|card\s*code|\bcid\b|\bcv2\b/.test(i) && v("creditcardcvv") ? "creditcardcvv" : (/\bexp(iry|iration)?\b|valid\s*(thru|through)|mm\s*\/\s*yy|yy\s*\/\s*mm|mm\s*yy|yy\s*mm|expiry\s*date|exp\.?\s*date/.test(i) || /\b\d{2}\s*\/\s*\d{2}\b/.test((e.value || "").toLowerCase())) && v("creditcardexp") ? "creditcardexp" : t === "date" || /\bdate\b|\bdob\b|birthday/.test(i) || t === "time" || /\btime\b/.test(i) || t === "datetime-local" || /\bdatetime\b|appointment/.test(i) ? c("date") : (/\baccount\b\s*(?:number|no)\b|\bacct\b/.test(i) || /\baccount\s*number\b/.test(r)) && v("achaccount") ? "achaccount" : /routing\s*(number|no)|\baba\b/.test(i) && v("achrouting") ? "achrouting" : /(^|\b)(apartment|apt|suite|unit|floor|bldg|building|room|ste|address[-_ ]?line[-_ ]?2|address2|addr2|line[-_ ]?2)(\b|$)/.test(i) ? c("unit") : /first\s*name|firstname|first_name|given/.test(i) ? c("firstname") : /last\s*name|lastname|last_name|surname|family/.test(i) ? c("lastname") : /full\s*name|fullname/.test(i) ? c("name") : /city/.test(i) ? c("city") : /state|province|region/.test(i) ? c("state") : /\bpostal\b|\bpostal[-_ ]?code\b|\bpostcode\b|\bzip\b|\bzip[-_ ]?code\b/.test(i) ? v("postcode") ? "postcode" : "zip" : /address|street/.test(i) ? c("street") : /company|organization|org/.test(i) ? c("company") : /job|title|role/.test(i) ? c("jobtitle", c("job")) : /website|domain/.test(i) ? c("url") : /username|user\b/.test(i) ? c("username") : (t === "search" || v("word"), "word");
 }
+function X(e) {
+  if (A(e))
+    return e;
+  let t = e.parentElement;
+  for (; t; ) {
+    if (A(t))
+      return t;
+    t = t.parentElement;
+  }
+  return null;
+}
 function f(e, t = "info") {
   console.log(`[Gofakeit ${t.toUpperCase()}] ${e}`);
 }
 export {
-  K as autofillAll,
-  Q as autofillContainer,
-  _ as autofillElement,
+  ee as autofill,
   d as callFunc,
-  J as getFuncs,
+  Z as getFuncs,
   v as hasFunc
 };
 //# sourceMappingURL=index.js.map
