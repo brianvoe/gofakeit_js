@@ -2,9 +2,7 @@
 
 // Core autofill functions - public API
 export {
-  autofillAll,
-  autofillContainer,
-  autofillElement
+  autofill
 } from './autofill';
 
 // API functions

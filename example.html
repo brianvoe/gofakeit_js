@@ -386,11 +386,11 @@
     <div class="sidebar">
         <div class="controls">
             <h3 style="margin-top: 0; color: #333;">🎮 Controls</h3>
-            <button class="btn" onclick="autofillAll()">🚀 Autofill All Fields</button>
-            <button class="btn btn-secondary" onclick="autofillContainer('personal-info')">👤 Personal Info</button>
-            <button class="btn btn-secondary" onclick="autofillContainer('contact-info')">📞 Contact Info</button>
-            <button class="btn btn-secondary" onclick="autofillContainer('address-info')">🏠 Address Info</button>
-            <button class="btn btn-secondary" onclick="autofillContainer('preferences')">⚙️ Preferences</button>
+                    <button class="btn" onclick="autofill()">🚀 Autofill All Fields</button>
+        <button class="btn btn-secondary" onclick="autofill('personal-info')">👤 Personal Info</button>
+        <button class="btn btn-secondary" onclick="autofill('contact-info')">📞 Contact Info</button>
+        <button class="btn btn-secondary" onclick="autofill('address-info')">🏠 Address Info</button>
+        <button class="btn btn-secondary" onclick="autofill('preferences')">⚙️ Preferences</button>
             <button class="btn btn-success" onclick="clearAll()">🧹 Clear All</button>
         </div>
         
@@ -406,35 +406,39 @@
     </div>
 
     <script type="module">
-        import { autofillAll, autofillContainer } from './src/index.ts';
+        import { autofill } from './src/index.ts';
         
         // Make functions available globally
-        window.autofillAll = async () => {
+        window.autofill = async (target) => {
             try {
-                await autofillAll();
-                showStatus('✅ All fields filled successfully!', 'success');
-            } catch (error) {
-                showStatus('❌ Error filling fields: ' + error.message, 'error');
-            }
-        };
-        
-        window.autofillContainer = async (containerId) => {
-            try {
-                const container = document.getElementById(containerId);
-                if (container) {
-                    // Scroll to the section
-                    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    
-                    // Wait a moment for the scroll to complete, then autofill
-                    setTimeout(async () => {
-                        await autofillContainer(container);
-                        showStatus(`✅ ${containerId} section filled successfully!`, 'success');
-                    }, 500);
+                if (target) {
+                    // If target is a string, treat it as an element ID
+                    if (typeof target === 'string') {
+                        const element = document.getElementById(target);
+                        if (!element) {
+                            showStatus('❌ Element not found: ' + target, 'error');
+                            return;
+                        }
+                        
+                        // Scroll to the section
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        
+                        // Wait a moment for the scroll to complete, then autofill
+                        setTimeout(async () => {
+                            await autofill(element);
+                            showStatus(`✅ ${target} section filled successfully!`, 'success');
+                        }, 500);
+                    } else {
+                        await autofill(target);
+                        showStatus('✅ Element filled successfully!', 'success');
+                    }
                 } else {
-                    showStatus('❌ Container not found: ' + containerId, 'error');
+                    // No target - autofill all
+                    await autofill();
+                    showStatus('✅ All fields filled successfully!', 'success');
                 }
             } catch (error) {
-                showStatus('❌ Error filling container: ' + error.message, 'error');
+                showStatus('❌ Error filling fields: ' + error.message, 'error');
             }
         };
         

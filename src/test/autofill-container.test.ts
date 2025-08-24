@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { autofillContainer } from '../autofill'
+import { autofill } from '../autofill'
 
 describe('Autofill Container', () => {
   let originalBody: string
@@ -54,7 +54,7 @@ describe('Autofill Container', () => {
     const container2 = document.getElementById('container2') as HTMLElement
 
     // Fill container 1
-    await autofillContainer(container1)
+    await autofill(container1)
 
     // Check that container 1 fields are filled
     const container1Fields = container1.querySelectorAll('input[data-gofakeit="true"]')
@@ -76,7 +76,7 @@ describe('Autofill Container', () => {
     const container2 = document.getElementById('container2') as HTMLElement
 
     // Fill container 2
-    await autofillContainer(container2)
+    await autofill(container2)
 
     // Check that container 2 fields are filled
     const container2Fields = container2.querySelectorAll('input[data-gofakeit="true"]')
@@ -91,7 +91,7 @@ describe('Autofill Container', () => {
     const container3 = document.getElementById('container3') as HTMLElement
 
     // Fill container 3
-    await autofillContainer(container3)
+    await autofill(container3)
 
     // Check textarea
     const textarea = container3.querySelector('textarea[name="bio"]') as HTMLTextAreaElement
@@ -113,7 +113,7 @@ describe('Autofill Container', () => {
     const container4 = document.getElementById('container4') as HTMLElement
 
     // Should not throw an error
-    await expect(autofillContainer(container4)).resolves.not.toThrow()
+    await expect(autofill(container4)).resolves.not.toThrow()
 
     // Fields should remain empty (with smart fill disabled, they won't be filled)
     const fields = container4.querySelectorAll('input')
@@ -142,7 +142,7 @@ describe('Autofill Container', () => {
     const innerContainer2 = document.getElementById('innerContainer2') as HTMLElement
 
     // Fill only inner container 1
-    await autofillContainer(innerContainer1)
+    await autofill(innerContainer1)
 
     // Check that only inner container 1 is filled
     const field1 = innerContainer1.querySelector('input[name="inner1"]') as HTMLInputElement
@@ -157,7 +157,7 @@ describe('Autofill Container', () => {
     document.body.appendChild(emptyContainer)
 
     // Should not throw an error
-    await expect(autofillContainer(emptyContainer)).resolves.not.toThrow()
+    await expect(autofill(emptyContainer)).resolves.not.toThrow()
 
     document.body.removeChild(emptyContainer)
   })

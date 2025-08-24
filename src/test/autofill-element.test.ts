@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { autofillElement, isFormField, hasFormFields } from '../autofill'
+import { autofill, isFormField, hasFormFields } from '../autofill'
 
 describe('Autofill Single Element', () => {
   let originalBody: string
@@ -22,7 +22,7 @@ describe('Autofill Single Element', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -36,7 +36,7 @@ describe('Autofill Single Element', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -50,7 +50,7 @@ describe('Autofill Single Element', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -64,7 +64,7 @@ describe('Autofill Single Element', () => {
       input.setAttribute('data-gofakeit', 'false')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(false)
       expect(input.value).toBe('')
@@ -78,7 +78,7 @@ describe('Autofill Single Element', () => {
       textarea.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(textarea)
 
-      const result = await autofillElement(textarea)
+      const result = await autofill(textarea)
       
       expect(result).toBe(true)
       expect(textarea.value).toBeTruthy()
@@ -109,7 +109,7 @@ describe('Autofill Single Element', () => {
       
       document.body.appendChild(select)
 
-      const result = await autofillElement(select)
+      const result = await autofill(select)
       
       expect(result).toBe(true)
       expect(select.value).toBeTruthy()
@@ -125,7 +125,7 @@ describe('Autofill Single Element', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -142,7 +142,7 @@ describe('Autofill Single Element', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -161,7 +161,7 @@ describe('Autofill Single Element', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -175,7 +175,7 @@ describe('Autofill Single Element', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -191,7 +191,7 @@ describe('Autofill Single Element', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       // Checkbox state is random, so we just verify it's a boolean
@@ -206,7 +206,7 @@ describe('Autofill Single Element', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       // Radio state is random, so we just verify it's a boolean
@@ -220,7 +220,7 @@ describe('Autofill Single Element', () => {
       div.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(div)
 
-      const result = await autofillElement(div)
+      const result = await autofill(div)
       
       expect(result).toBe(false)
     })
@@ -230,7 +230,7 @@ describe('Autofill Single Element', () => {
       span.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(span)
 
-      const result = await autofillElement(span)
+      const result = await autofill(span)
       
       expect(result).toBe(false)
     })
@@ -244,7 +244,7 @@ describe('Autofill Single Element', () => {
       input.setAttribute('data-gofakeit', 'company')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -258,7 +258,7 @@ describe('Autofill Single Element', () => {
       input.setAttribute('data-gofakeit', 'number?min=18&max=65')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()

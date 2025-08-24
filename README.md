@@ -20,32 +20,26 @@ npm install
 
 ## Usage
 
-### Basic Autofill
+### Unified Autofill Function
+
+The `autofill()` function is the main entry point that handles all autofill scenarios:
 
 ```typescript
-import { autofillAll } from 'gofakeit'
+import { autofill } from 'gofakeit'
 
 // Autofill all form fields on the page
-await autofillAll()
-```
+await autofill()
 
-### Autofill Specific Container
-
-```typescript
-import { autofillContainer } from 'gofakeit'
-
+// Autofill all fields within a specific container
 const form = document.getElementById('myForm')
-await autofillContainer(form)
-```
+await autofill(form)
 
-### Autofill Single Element
-
-```typescript
-import { autofillElement } from 'gofakeit'
-
+// Autofill a single form element
 const input = document.getElementById('email')
-await autofillElement(input)
+await autofill(input)
 ```
+
+
 
 ### API Functions
 
@@ -167,9 +161,10 @@ The build process creates:
 
 ### Core Functions
 
-- `autofillAll()` - Autofill all form fields on the page
-- `autofillContainer(container)` - Autofill fields in a specific container
-- `autofillElement(element)` - Autofill a single form element
+- `autofill(target?)` - Unified autofill function that handles all scenarios:
+  - `autofill()` - Autofill all form fields on the page
+  - `autofill(container)` - Autofill fields in a specific container
+  - `autofill(element)` - Autofill a single form element
 - `isFormField(element)` - Check if an element is a form field
 - `hasFormFields(container)` - Check if a container has form fields
 

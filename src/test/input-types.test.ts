@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { autofillElement } from '../autofill'
+import { autofill } from '../autofill'
 
 describe('Input Types Testing', () => {
   let originalBody: string
@@ -22,7 +22,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -36,7 +36,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -51,7 +51,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -65,7 +65,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -79,7 +79,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -93,7 +93,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -107,7 +107,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -123,7 +123,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -140,7 +140,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -158,7 +158,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -172,7 +172,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -186,7 +186,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -200,7 +200,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -214,7 +214,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -230,7 +230,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       // File inputs may or may not be filled depending on implementation
       expect(typeof result).toBe('boolean')
@@ -245,7 +245,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       // Button inputs may or may not be handled depending on implementation
       expect(typeof result).toBe('boolean')
@@ -258,7 +258,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       // Submit inputs may or may not be handled depending on implementation
       expect(typeof result).toBe('boolean')
@@ -271,7 +271,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       // Reset inputs may or may not be handled depending on implementation
       expect(typeof result).toBe('boolean')
@@ -286,7 +286,7 @@ describe('Input Types Testing', () => {
       input.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(input)
 
-      const result = await autofillElement(input)
+      const result = await autofill(input)
       
       expect(result).toBe(true)
       expect(input.value).toBeTruthy()
@@ -301,7 +301,7 @@ describe('Input Types Testing', () => {
       textarea.setAttribute('data-gofakeit', 'true')
       document.body.appendChild(textarea)
 
-      const result = await autofillElement(textarea)
+      const result = await autofill(textarea)
       
       expect(result).toBe(true)
       expect(textarea.value).toBeTruthy()
@@ -314,7 +314,7 @@ describe('Input Types Testing', () => {
       textarea.setAttribute('data-gofakeit', 'paragraph')
       document.body.appendChild(textarea)
 
-      const result = await autofillElement(textarea)
+      const result = await autofill(textarea)
       
       expect(result).toBe(true)
       expect(textarea.value).toBeTruthy()
@@ -345,7 +345,7 @@ describe('Input Types Testing', () => {
       
       document.body.appendChild(select)
 
-      const result = await autofillElement(select)
+      const result = await autofill(select)
       
       expect(result).toBe(true)
       expect(select.value).toBeTruthy()
@@ -374,7 +374,7 @@ describe('Input Types Testing', () => {
       
       document.body.appendChild(select)
 
-      const result = await autofillElement(select)
+      const result = await autofill(select)
       
       expect(result).toBe(true)
       // The language function might not be available, so we just check the result

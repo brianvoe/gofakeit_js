@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { autofillAll } from '../autofill'
+import { autofill } from '../autofill'
 
 describe('Autofill All Fields', () => {
   let originalBody: string
@@ -88,7 +88,7 @@ describe('Autofill All Fields', () => {
     })
 
     // Run autofill all
-    await autofillAll()
+    await autofill()
 
     // Check that fields with data-gofakeit="true" were filled
     const filledFields = [
@@ -133,13 +133,13 @@ describe('Autofill All Fields', () => {
     `
 
     // Should not throw an error
-    await expect(autofillAll()).resolves.not.toThrow()
+    await expect(autofill()).resolves.not.toThrow()
   })
 
   it('should handle empty page gracefully', async () => {
     document.body.innerHTML = ''
 
     // Should not throw an error
-    await expect(autofillAll()).resolves.not.toThrow()
+    await expect(autofill()).resolves.not.toThrow()
   })
 })

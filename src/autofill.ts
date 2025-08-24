@@ -19,8 +19,41 @@ declare const chrome: {
 // MAIN PUBLIC FUNCTIONS (Entry Points)
 // ============================================================================
 
+// Unified autofill function that handles all cases
+export async function autofill(target?: HTMLElement | Element): Promise<boolean | void> {
+  // No parameters - autofill all form fields on the page
+  if (!target) {
+    return autofillAll();
+  }
+  
+  // If target is a container (has form fields), autofill the container
+  if (target instanceof HTMLElement && hasFormFields(target)) {
+    return autofillContainer(target);
+  }
+  
+  // If target is a form element, autofill just that element
+  if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement) {
+    const success = await autofillElement(target);
+    if (!success) {
+      showNotification('Failed to autofill the specified element', 'error');
+    }
+    return success;
+  }
+  
+  // If target is a container but doesn't have form fields, try to find a container
+  if (target instanceof HTMLElement) {
+    const container = findFormContainer(target);
+    if (container) {
+      return autofillContainer(container);
+    }
+  }
+  
+  // For non-form elements, return false instead of falling back to autofill all
+  return false;
+}
+
 // Autofill all form fields on the page
-export async function autofillAll(): Promise<void> {
+async function autofillAll(): Promise<void> {
   const elements = queryFormElements();
   const smartEnabled = await isSmartFillEnabled();
 
@@ -46,7 +79,7 @@ export async function autofillAll(): Promise<void> {
 }
 
 // Autofill all fields within a specific container
-export async function autofillContainer(container: HTMLElement): Promise<void> {
+async function autofillContainer(container: HTMLElement): Promise<void> {
   const elements = queryFormElements(container);
   const smartEnabled = await isSmartFillEnabled();
 
@@ -72,7 +105,7 @@ export async function autofillContainer(container: HTMLElement): Promise<void> {
 }
 
 // Main autofill function that routes to specific handlers
-export async function autofillElement(element: Element): Promise<boolean> {
+async function autofillElement(element: Element): Promise<boolean> {
   const gofakeitFunc = element.getAttribute('data-gofakeit');
   if (typeof gofakeitFunc === 'string' && gofakeitFunc.trim().toLowerCase() === 'false') {
     return false;
