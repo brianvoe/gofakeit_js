@@ -323,4 +323,57 @@ describe('Autofill Single Element', () => {
       })
     })
   })
+
+  describe('Edge Cases and Error Paths', () => {
+    it('should handle exceptions in datetime input processing', async () => {
+      const dateInput = document.createElement('input')
+      dateInput.type = 'date'
+      dateInput.setAttribute('data-gofakeit', 'date')
+      document.body.appendChild(dateInput)
+
+      const result = await autofill(dateInput)
+      expect(result).toBe(true)
+    })
+
+    it('should handle minute API failures in time input', async () => {
+      const timeInput = document.createElement('input')
+      timeInput.type = 'time'
+      timeInput.setAttribute('data-gofakeit', 'true')
+      document.body.appendChild(timeInput)
+
+      const result = await autofill(timeInput)
+      expect(result).toBe(true)
+    })
+
+    it('should handle range input API errors gracefully', async () => {
+      const rangeInput = document.createElement('input')
+      rangeInput.type = 'range'
+      rangeInput.min = '1'
+      rangeInput.max = '10'
+      document.body.appendChild(rangeInput)
+
+      const result = await autofill(rangeInput)
+      expect(result).toBe(true)
+    })
+
+    it('should handle week input with year/number error gracefully', async () => {
+      const weekInput = document.createElement('input')
+      weekInput.type = 'week'
+      weekInput.setAttribute('data-gofakeit', 'custom')
+      document.body.appendChild(weekInput)
+
+      const result = await autofill(weekInput)
+      expect(result).toBe(true)
+    })
+
+    it('should handle week input with invalid date response gracefully', async () => {
+      const weekInput = document.createElement('input')
+      weekInput.type = 'week'
+      weekInput.setAttribute('data-gofakeit', 'date')
+      document.body.appendChild(weekInput)
+
+      const result = await autofill(weekInput)
+      expect(result).toBe(true)
+    })
+  })
 })
