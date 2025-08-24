@@ -67,15 +67,25 @@ function askQuestion(question) {
   });
 }
 
-function updateVersion(currentVersion, newVersion) {
+function validateVersion(currentVersion, newVersion) {
+  // Check if version format is valid (x.y.z)
+  const versionRegex = /^\d+\.\d+\.\d+$/;
+  if (!versionRegex.test(newVersion)) {
+    log('❌ Invalid version format. Please use format: x.y.z (e.g., 1.0.1)', 'red');
+    return null;
+  }
+  
   const [major1, minor1, patch1] = currentVersion.split('.').map(Number);
   const [major2, minor2, patch2] = newVersion.split('.').map(Number);
   
+  // Check if new version is greater than current
   if (major2 > major1) return 'major';
-  if (minor2 > minor1) return 'minor';
-  if (patch2 > patch1) return 'patch';
+  if (major2 === major1 && minor2 > minor1) return 'minor';
+  if (major2 === major1 && minor2 === minor1 && patch2 > patch1) return 'patch';
   
-  log('New version must be greater than current version', 'red');
+  log('❌ New version must be greater than current version', 'red');
+  log(`   Current: ${currentVersion}`, 'yellow');
+  log(`   New:     ${newVersion}`, 'yellow');
   return null;
 }
 
@@ -112,13 +122,14 @@ async function main() {
   const currentVersion = packageJson.version;
   
   log(`\n📦 Current version: ${currentVersion}`, 'blue');
+  log('   Format: x.y.z (e.g., 1.0.1, 1.1.0, 2.0.0)', 'cyan');
   
   let newVersion;
   let versionType;
   
   do {
-    newVersion = await askQuestion('Enter new version (e.g., 1.0.1): ');
-    versionType = updateVersion(currentVersion, newVersion);
+    newVersion = await askQuestion(`Enter new version (current: ${currentVersion}): `);
+    versionType = validateVersion(currentVersion, newVersion);
   } while (!versionType);
   
   log(`\n🔄 Step 3: Updating version from ${currentVersion} to ${newVersion} (${versionType} release)...`, 'yellow');
