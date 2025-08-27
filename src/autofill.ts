@@ -6,34 +6,33 @@ import { handleTextInput, handleTextarea } from './input-text';
 import { handleCheckbox, handleRadio, handleSelectWithFunction } from './input-misc';
 import { handleNumberInput, handleRangeInput } from './input-number';
 
-// Chrome API type declaration
-declare const chrome: {
-  storage: {
-    sync: {
-      get: (keys: any, callback: (items: any) => void) => void;
-    };
-  };
-};
+// Settings interface for autofill configuration
+export interface AutofillSettings {
+  smart?: boolean;
+}
 
 // ============================================================================
 // MAIN PUBLIC FUNCTIONS (Entry Points)
 // ============================================================================
 
 // Unified autofill function that handles all cases
-export async function autofill(target?: HTMLElement | Element): Promise<boolean | void> {
+export async function autofill(target?: HTMLElement | Element, settings?: AutofillSettings): Promise<boolean | void> {
+  const defaultSettings: AutofillSettings = { smart: true }; // Default to true for backward compatibility
+  const finalSettings = { ...defaultSettings, ...settings };
+  
   // No parameters - autofill all form fields on the page
   if (!target) {
-    return autofillAll();
+    return autofillAll(finalSettings);
   }
   
   // If target is a container (has form fields), autofill the container
   if (target instanceof HTMLElement && hasFormFields(target)) {
-    return autofillContainer(target);
+    return autofillContainer(target, finalSettings);
   }
   
   // If target is a form element, autofill just that element
   if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement) {
-    const success = await autofillElement(target);
+    const success = await autofillElement(target, finalSettings);
     if (!success) {
       showNotification('Failed to autofill the specified element', 'error');
     }
@@ -44,7 +43,7 @@ export async function autofill(target?: HTMLElement | Element): Promise<boolean 
   if (target instanceof HTMLElement) {
     const container = findFormContainer(target);
     if (container) {
-      return autofillContainer(container);
+      return autofillContainer(container, finalSettings);
     }
   }
   
@@ -53,9 +52,9 @@ export async function autofill(target?: HTMLElement | Element): Promise<boolean 
 }
 
 // Autofill all form fields on the page
-async function autofillAll(): Promise<void> {
+async function autofillAll(settings: AutofillSettings): Promise<void> {
   const elements = queryFormElements();
-  const smartEnabled = await isSmartFillEnabled();
+  const smartEnabled = settings.smart ?? true;
 
   const targetsBase = smartEnabled
     ? elements
@@ -74,14 +73,14 @@ async function autofillAll(): Promise<void> {
   console.log(`[Gofakeit] Found ${targets.length} elements to generate data for`);
   showNotification(`Starting data generation for ${targets.length} fields...`, 'info');
 
-  const results = await processElements(targets);
+  const results = await processElements(targets, settings);
   showResults(results.success, results.failed, 'Autofill');
 }
 
 // Autofill all fields within a specific container
-async function autofillContainer(container: HTMLElement): Promise<void> {
+async function autofillContainer(container: HTMLElement, settings: AutofillSettings): Promise<void> {
   const elements = queryFormElements(container);
-  const smartEnabled = await isSmartFillEnabled();
+  const smartEnabled = settings.smart ?? true;
 
   const targetsBase = smartEnabled
     ? elements
@@ -100,18 +99,18 @@ async function autofillContainer(container: HTMLElement): Promise<void> {
   console.log(`[Gofakeit] Found ${targets.length} elements to generate data for in container`);
   showNotification(`Starting data generation for ${targets.length} fields...`, 'info');
   
-  const results = await processElements(targets);
+  const results = await processElements(targets, settings);
   showResults(results.success, results.failed, 'Container autofill');
 }
 
 // Main autofill function that routes to specific handlers
-async function autofillElement(element: Element): Promise<boolean> {
+async function autofillElement(element: Element, settings: AutofillSettings): Promise<boolean> {
   const gofakeitFunc = element.getAttribute('data-gofakeit');
   if (typeof gofakeitFunc === 'string' && gofakeitFunc.trim().toLowerCase() === 'false') {
     return false;
   }
-  const smartEnabled = await isSmartFillEnabled();
   
+  const smartEnabled = settings.smart ?? true;
   if (!gofakeitFunc && !smartEnabled) {
     return false;
   }
@@ -266,7 +265,7 @@ function getUniqueElements(elements: Element[]): Element[] {
 }
 
 // Process multiple elements and track results
-async function processElements(elements: Element[]): Promise<{ success: number, failed: number }> {
+async function processElements(elements: Element[], settings: AutofillSettings): Promise<{ success: number, failed: number }> {
   let successfulCount = 0;
   let failedCount = 0;
   
@@ -275,7 +274,7 @@ async function processElements(elements: Element[]): Promise<{ success: number, 
 
   for (const element of uniqueElements) {
     try {
-      const success = await autofillElement(element);
+      const success = await autofillElement(element, settings);
       if (success) {
         successfulCount++;
         
@@ -436,18 +435,7 @@ function showFunctionBadge(element: Element, funcName: string): void {
   }, DISPLAY_MS);
 }
 
-// Read smart-fill setting
-async function isSmartFillEnabled(): Promise<boolean> {
-  return new Promise((resolve) => {
-    try {
-      chrome.storage.sync.get({ gofakeitSmartFill: true }, (items) => {
-        resolve(!!items.gofakeitSmartFill);
-      });
-    } catch {
-      resolve(false);
-    }
-  });
-}
+
 
 // Extract nearby/associated label text for context
 function getAssociatedLabelText(input: HTMLInputElement): string {
