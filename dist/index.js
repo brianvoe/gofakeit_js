@@ -1,42 +1,42 @@
-const F = [{ value: "phraseadverb", display: "Adverb Phrase", category: "word" }, { value: "country", display: "Country", category: "address" }, { value: "latituderange", display: "Latitude Range", category: "address" }, { value: "longituderange", display: "Longitude Range", category: "address" }, { value: "bs", display: "BS", category: "company" }, { value: "hackerabbreviation", display: "Hacker Abbreviation", category: "hacker" }, { value: "hackeringverb", display: "Hackering Verb", category: "hacker" }, { value: "uint64", display: "Uint64", category: "number" }, { value: "hobby", display: "Hobby", category: "person" }, { value: "errorhttpclient", display: "HTTP client error", category: "error" }, { value: "programminglanguage", display: "Programming Language", category: "language" }, { value: "minecraftarmortier", display: "Minecraft armor tier", category: "minecraft" }, { value: "songname", display: "Song Name", category: "song" }, { value: "nouncommon", display: "Noun Common", category: "word" }, { value: "nouncollectivepeople", display: "Noun Collective People", category: "word" }, { value: "verbaction", display: "Action Verb", category: "word" }, { value: "celebrityactor", display: "Celebrity Actor", category: "celebrity" }, { value: "safecolor", display: "Safe Color", category: "color" }, { value: "minecraftvillagerstation", display: "Minecraft villager station", category: "minecraft" }, { value: "company", display: "Company", category: "company" }, { value: "productaudience", display: "Product Audience", category: "product" }, { value: "beerhop", display: "Beer Hop", category: "beer" }, { value: "hackerverb", display: "Hacker Verb", category: "hacker" }, { value: "int32", display: "Int32", category: "number" }, { value: "longitude", display: "Longitude", category: "address" }, { value: "beeryeast", display: "Beer Yeast", category: "beer" }, { value: "emojicategory", display: "Emoji Category", category: "emoji" }, { value: "snack", display: "Snack", category: "food" }, { value: "minecraftbiome", display: "Minecraft biome", category: "minecraft" }, { value: "flipacoin", display: "Flip A Coin", category: "misc" }, { value: "uintrange", display: "UintRange", category: "number" }, { value: "verbhelping", display: "Helping Verb", category: "word" }, { value: "blurb", display: "Blurb", category: "company" }, { value: "emoji", display: "Emoji", category: "emoji" }, { value: "uintn", display: "UintN", category: "number" }, { value: "price", display: "Price", category: "payment" }, { value: "adjectiveproper", display: "Proper Adjective", category: "word" }, { value: "nouncountable", display: "Noun Countable", category: "word" }, { value: "username", display: "Username", category: "auth" }, { value: "buzzword", display: "Buzzword", category: "company" }, { value: "map", display: "Map", category: "generate" }, { value: "loremipsumsentence", display: "Lorem Ipsum Sentence", category: "word" }, { value: "moviegenre", display: "Genre", category: "movie" }, { value: "int16", display: "Int16", category: "number" }, { value: "namesuffix", display: "Name Suffix", category: "person" }, { value: "weighted", display: "Weighted", category: "misc" }, { value: "emojidescription", display: "Emoji Description", category: "emoji" }, { value: "minecraftanimal", display: "Minecraft animal", category: "minecraft" }, { value: "shuffleints", display: "Shuffle Ints", category: "number" }, { value: "creditcardtype", display: "Credit Card Type", category: "payment" }, { value: "bitcoinaddress", display: "Bitcoin Address", category: "payment" }, { value: "drink", display: "Drink", category: "food" }, { value: "intrange", display: "IntRange", category: "number" }, { value: "currencylong", display: "Currency Long", category: "payment" }, { value: "teams", display: "Teams", category: "person" }, { value: "adjectivequantitative", display: "Quantitative Adjective", category: "word" }, { value: "adjectivepossessive", display: "Possessive Adjective", category: "word" }, { value: "bird", display: "Bird", category: "animal" }, { value: "pastdate", display: "PastDate", category: "time" }, { value: "ipv4address", display: "IPv4 Address", category: "internet" }, { value: "shufflestrings", display: "Shuffle Strings", category: "string" }, { value: "verblinking", display: "Linking Verb", category: "word" }, { value: "interjection", display: "Interjection", category: "word" }, { value: "second", display: "Second", category: "time" }, { value: "pronounpossessive", display: "Pronoun Possessive", category: "word" }, { value: "errorobject", display: "Error object word", category: "error" }, { value: "middlename", display: "Middle Name", category: "person" }, { value: "email_text", display: "Random text email Document", category: "template" }, { value: "streetnumber", display: "Street Number", category: "address" }, { value: "minute", display: "Minute", category: "time" }, { value: "productupc", display: "Product UPC", category: "product" }, { value: "template", display: "Template", category: "template" }, { value: "pronoun", display: "Pronoun", category: "word" }, { value: "zip", display: "Zip", category: "address" }, { value: "day", display: "Day", category: "time" }, { value: "json", display: "JSON", category: "file" }, { value: "xml", display: "XML", category: "file" }, { value: "lunch", display: "Lunch", category: "food" }, { value: "connectiveexamplify", display: "Connective Examplify", category: "word" }, { value: "productname", display: "Product Name", category: "product" }, { value: "productusecase", display: "Product Use Case", category: "product" }, { value: "productsuffix", display: "Product Suffix", category: "product" }, { value: "randomstring", display: "Random String", category: "string" }, { value: "timezone", display: "Timezone", category: "time" }, { value: "dessert", display: "Dessert", category: "food" }, { value: "imagejpeg", display: "Image JPEG", category: "image" }, { value: "creditcardnumber", display: "Credit Card Number", category: "payment" }, { value: "nouncollectivething", display: "Noun Collective Thing", category: "word" }, { value: "verbintransitive", display: "Intransitive Verb", category: "word" }, { value: "streetsuffix", display: "Street Suffix", category: "address" }, { value: "isin", display: "ISIN", category: "finance" }, { value: "person", display: "Person", category: "person" }, { value: "cartransmissiontype", display: "Car Transmission Type", category: "car" }, { value: "email", display: "Email", category: "person" }, { value: "productbenefit", display: "Product Benefit", category: "product" }, { value: "lettern", display: "LetterN", category: "string" }, { value: "adverb", display: "Adverb", category: "word" }, { value: "preposition", display: "Preposition", category: "word" }, { value: "prepositiondouble", display: "Preposition Double", category: "word" }, { value: "timezonefull", display: "Timezone Full", category: "time" }, { value: "errordatabase", display: "Database error", category: "error" }, { value: "fileextension", display: "File Extension", category: "file" }, { value: "cusip", display: "CUSIP", category: "finance" }, { value: "movie", display: "Movie", category: "movie" }, { value: "nameprefix", display: "Name Prefix", category: "person" }, { value: "product", display: "Product", category: "product" }, { value: "connectivelisting", display: "Connective Listing", category: "word" }, { value: "timezoneabv", display: "Timezone Abbreviation", category: "time" }, { value: "lastname", display: "Last Name", category: "person" }, { value: "vowel", display: "Vowel", category: "string" }, { value: "markdown", display: "Random markdown document", category: "template" }, { value: "connectivetime", display: "Connective Time", category: "word" }, { value: "phrase", display: "Phrase", category: "word" }, { value: "countryabr", display: "Country Abbreviation", category: "address" }, { value: "beermalt", display: "Beer Malt", category: "beer" }, { value: "nouncollectiveanimal", display: "Noun Collective Animal", category: "word" }, { value: "emojialias", display: "Emoji Alias", category: "emoji" }, { value: "httpstatuscode", display: "HTTP Status Code", category: "internet" }, { value: "adjectiveindefinite", display: "Indefinite Adjective", category: "word" }, { value: "question", display: "Question", category: "word" }, { value: "cat", display: "Cat", category: "animal" }, { value: "carmaker", display: "Car Maker", category: "car" }, { value: "ipv6address", display: "IPv6 Address", category: "internet" }, { value: "httpstatuscodesimple", display: "HTTP Status Code Simple", category: "internet" }, { value: "minecraftarmorpart", display: "Minecraft armor part", category: "minecraft" }, { value: "minecraftmobneutral", display: "Minecraft mob neutral", category: "minecraft" }, { value: "currencyshort", display: "Currency Short", category: "payment" }, { value: "achaccount", display: "ACH Account Number", category: "payment" }, { value: "song", display: "Song", category: "song" }, { value: "prepositionsimple", display: "Preposition Simple", category: "word" }, { value: "verbtransitive", display: "Transitive Verb", category: "word" }, { value: "slogan", display: "Slogan", category: "company" }, { value: "loglevel", display: "Log Level", category: "internet" }, { value: "currency", display: "Currency", category: "payment" }, { value: "creditcardcvv", display: "Credit Card CVV", category: "payment" }, { value: "phoneformatted", display: "Phone Formatted", category: "person" }, { value: "adjective", display: "Adjective", category: "word" }, { value: "connectivecomplaint", display: "Connective Complaint", category: "word" }, { value: "productcategory", display: "Product Category", category: "product" }, { value: "beeralcohol", display: "Beer Alcohol", category: "beer" }, { value: "date", display: "Date", category: "time" }, { value: "nanosecond", display: "Nanosecond", category: "time" }, { value: "language", display: "Language", category: "language" }, { value: "productisbn", display: "Product ISBN", category: "product" }, { value: "hexcolor", display: "Hex Color", category: "color" }, { value: "daterange", display: "DateRange", category: "time" }, { value: "minecraftvillagerjob", display: "Minecraft villager job", category: "minecraft" }, { value: "noundeterminer", display: "Noun Determiner", category: "word" }, { value: "password", display: "Password", category: "auth" }, { value: "job", display: "Job", category: "company" }, { value: "safariuseragent", display: "Safari User Agent", category: "internet" }, { value: "randomint", display: "Random Int", category: "number" }, { value: "hexuint", display: "HexUint", category: "number" }, { value: "comment", display: "Comment", category: "word" }, { value: "state", display: "State", category: "address" }, { value: "breakfast", display: "Breakfast", category: "food" }, { value: "dinner", display: "Dinner", category: "food" }, { value: "banktype", display: "Bank Type", category: "payment" }, { value: "streetname", display: "Street Name", category: "address" }, { value: "errorgrpc", display: "gRPC error", category: "error" }, { value: "operauseragent", display: "Opera User Agent", category: "internet" }, { value: "minecraftmobboss", display: "Minecraft mob boss", category: "minecraft" }, { value: "float32", display: "Float32", category: "number" }, { value: "songgenre", display: "Genre", category: "song" }, { value: "phrasenoun", display: "Noun Phrase", category: "word" }, { value: "monthstring", display: "Month String", category: "time" }, { value: "loremipsumword", display: "Lorem Ipsum Word", category: "word" }, { value: "productmaterial", display: "Product Material", category: "product" }, { value: "adjectiveinterrogative", display: "Interrogative Adjective", category: "word" }, { value: "booktitle", display: "Title", category: "book" }, { value: "uint32", display: "Uint32", category: "number" }, { value: "phrasepreposition", display: "Preposition Phrase", category: "word" }, { value: "animal", display: "Animal", category: "animal" }, { value: "fruit", display: "Fruit", category: "food" }, { value: "regex", display: "Regex", category: "generate" }, { value: "minecraftweapon", display: "Minecraft weapon", category: "minecraft" }, { value: "beeribu", display: "Beer IBU", category: "beer" }, { value: "minecraftmobhostile", display: "Minecraft mob hostile", category: "minecraft" }, { value: "randomuint", display: "Random Uint", category: "number" }, { value: "achrouting", display: "ACH Routing Number", category: "payment" }, { value: "bankname", display: "Bank Name", category: "payment" }, { value: "gender", display: "Gender", category: "person" }, { value: "pronoundemonstrative", display: "Pronoun Demonstrative", category: "word" }, { value: "pronounrelative", display: "Pronoun Relative", category: "word" }, { value: "street", display: "Street", category: "address" }, { value: "year", display: "Year", category: "time" }, { value: "gamertag", display: "Gamertag", category: "game" }, { value: "int", display: "Int", category: "number" }, { value: "cartype", display: "Car Type", category: "car" }, { value: "timezoneoffset", display: "Timezone Offset", category: "time" }, { value: "name", display: "Name", category: "person" }, { value: "hackernoun", display: "Hacker Noun", category: "hacker" }, { value: "inputname", display: "Input Name", category: "html" }, { value: "float32range", display: "Float32 Range", category: "number" }, { value: "beerstyle", display: "Beer Style", category: "beer" }, { value: "book", display: "Book", category: "book" }, { value: "celebritybusiness", display: "Celebrity Business", category: "celebrity" }, { value: "month", display: "Month", category: "time" }, { value: "macaddress", display: "MAC Address", category: "internet" }, { value: "uint8", display: "Uint8", category: "number" }, { value: "firstname", display: "First Name", category: "person" }, { value: "adjectivedescriptive", display: "Descriptive Adjective", category: "word" }, { value: "dog", display: "Dog", category: "animal" }, { value: "beername", display: "Beer Name", category: "beer" }, { value: "vegetable", display: "Vegetable", category: "food" }, { value: "useragent", display: "User Agent", category: "internet" }, { value: "minecraftore", display: "Minecraft ore", category: "minecraft" }, { value: "nounconcrete", display: "Noun Concrete", category: "word" }, { value: "verb", display: "Verb", category: "word" }, { value: "stateabr", display: "State Abbreviation", category: "address" }, { value: "error", display: "Error", category: "error" }, { value: "loremipsumparagraph", display: "Lorem Ipsum Paragraph", category: "word" }, { value: "digit", display: "Digit", category: "string" }, { value: "numerify", display: "Numerify", category: "string" }, { value: "hipstersentence", display: "Hipster Sentence", category: "hipster" }, { value: "hipsterparagraph", display: "Hipster Paragraph", category: "hipster" }, { value: "float64", display: "Float64", category: "number" }, { value: "sentencesimple", display: "Simple Sentence", category: "word" }, { value: "farmanimal", display: "Farm Animal", category: "animal" }, { value: "carmodel", display: "Car Model", category: "car" }, { value: "dice", display: "Dice", category: "game" }, { value: "minecraftvillagerlevel", display: "Minecraft villager level", category: "minecraft" }, { value: "productfeature", display: "Product Feature", category: "product" }, { value: "lexify", display: "Lexify", category: "string" }, { value: "word", display: "Word", category: "word" }, { value: "httpversion", display: "HTTP Version", category: "internet" }, { value: "companysuffix", display: "Company Suffix", category: "company" }, { value: "errorhttp", display: "HTTP error", category: "error" }, { value: "connectivecomparative", display: "Connective Comparitive", category: "word" }, { value: "carfueltype", display: "Car Fuel Type", category: "car" }, { value: "letter", display: "Letter", category: "string" }, { value: "adjectivedemonstrative", display: "Demonstrative Adjective", category: "word" }, { value: "streetprefix", display: "Street Prefix", category: "address" }, { value: "rgbcolor", display: "RGB Color", category: "color" }, { value: "sql", display: "SQL", category: "database" }, { value: "fixed_width", display: "Fixed Width", category: "generate" }, { value: "imagepng", display: "Image PNG", category: "image" }, { value: "domainsuffix", display: "Domain Suffix", category: "internet" }, { value: "languageabbreviation", display: "Language Abbreviation", category: "language" }, { value: "uint", display: "Uint", category: "number" }, { value: "bookauthor", display: "Author", category: "book" }, { value: "joblevel", display: "Job Level", category: "company" }, { value: "filemimetype", display: "File Mime Type", category: "file" }, { value: "domainname", display: "Domain Name", category: "internet" }, { value: "number", display: "Number", category: "number" }, { value: "productdimension", display: "Product Dimension", category: "product" }, { value: "adverbplace", display: "Adverb Place", category: "word" }, { value: "phraseverb", display: "Verb Phrase", category: "word" }, { value: "appname", display: "App Name", category: "app" }, { value: "celebritysport", display: "Celebrity Sport", category: "celebrity" }, { value: "hour", display: "Hour", category: "time" }, { value: "hipsterword", display: "Hipster Word", category: "hipster" }, { value: "languagebcp", display: "Language BCP", category: "language" }, { value: "minecraftdye", display: "Minecraft dye", category: "minecraft" }, { value: "moviename", display: "Movie Name", category: "movie" }, { value: "float64range", display: "Float64 Range", category: "number" }, { value: "emojitag", display: "Emoji Tag", category: "emoji" }, { value: "url", display: "URL", category: "internet" }, { value: "creditcardexp", display: "Credit Card Exp", category: "payment" }, { value: "adverbmanner", display: "Adverb Manner", category: "word" }, { value: "adverbtimeindefinite", display: "Adverb Time Indefinite", category: "word" }, { value: "adverbfrequencydefinite", display: "Adverb Frequency Definite", category: "word" }, { value: "connectivecasual", display: "Connective Casual", category: "word" }, { value: "nounproper", display: "Noun Proper", category: "word" }, { value: "bookgenre", display: "Genre", category: "book" }, { value: "timezoneregion", display: "Timezone Region", category: "time" }, { value: "hackeradjective", display: "Hacker Adjective", category: "hacker" }, { value: "httpmethod", display: "HTTP Method", category: "internet" }, { value: "minecrafttool", display: "Minecraft tool", category: "minecraft" }, { value: "minecraftfood", display: "Minecraft food", category: "minecraft" }, { value: "minecraftweather", display: "Minecraft weather", category: "minecraft" }, { value: "petname", display: "Pet Name", category: "animal" }, { value: "beerblg", display: "Beer BLG", category: "beer" }, { value: "csv", display: "CSV", category: "file" }, { value: "hackerphrase", display: "Hacker Phrase", category: "hacker" }, { value: "school", display: "School", category: "school" }, { value: "prepositioncompound", display: "Preposition Compound", category: "word" }, { value: "address", display: "Address", category: "address" }, { value: "futuredate", display: "FutureDate", category: "time" }, { value: "adverbtimedefinite", display: "Adverb Time Definite", category: "word" }, { value: "pronounreflective", display: "Pronoun Reflective", category: "word" }, { value: "appauthor", display: "App Author", category: "app" }, { value: "jobdescriptor", display: "Job Descriptor", category: "company" }, { value: "errorhttpserver", display: "HTTP server error", category: "error" }, { value: "int64", display: "Int64", category: "number" }, { value: "noununcountable", display: "Noun Uncountable", category: "word" }, { value: "color", display: "Color", category: "color" }, { value: "nicecolors", display: "Nice Colors", category: "color" }, { value: "jobtitle", display: "Job Title", category: "company" }, { value: "chromeuseragent", display: "Chrome User Agent", category: "internet" }, { value: "minecraftmobpassive", display: "Minecraft mob passive", category: "minecraft" }, { value: "latitude", display: "Latitude", category: "address" }, { value: "appversion", display: "App Version", category: "app" }, { value: "car", display: "Car", category: "car" }, { value: "uint16", display: "Uint16", category: "number" }, { value: "adverbdegree", display: "Adverb Degree", category: "word" }, { value: "svg", display: "Image SVG", category: "html" }, { value: "int8", display: "Int8", category: "number" }, { value: "digitn", display: "DigitN", category: "string" }, { value: "adverbfrequencyindefinite", display: "Adverb Frequency Indefinite", category: "word" }, { value: "noun", display: "Noun", category: "word" }, { value: "pronounobject", display: "Pronoun Object", category: "word" }, { value: "errorruntime", display: "Runtime error", category: "error" }, { value: "errorvalidation", display: "Validation error", category: "error" }, { value: "firefoxuseragent", display: "Firefox User Agent", category: "internet" }, { value: "uuid", display: "UUID", category: "misc" }, { value: "creditcard", display: "Credit Card", category: "payment" }, { value: "phone", display: "Phone", category: "person" }, { value: "intn", display: "IntN", category: "number" }, { value: "bitcoinprivatekey", display: "Bitcoin Private Key", category: "payment" }, { value: "pronounpersonal", display: "Pronoun Personal", category: "word" }, { value: "sentence", display: "Sentence", category: "word" }, { value: "generate", display: "Generate", category: "generate" }, { value: "ssn", display: "SSN", category: "person" }, { value: "connective", display: "Connective", category: "word" }, { value: "pronounindefinite", display: "Pronoun Indefinite", category: "word" }, { value: "quote", display: "Quote", category: "word" }, { value: "animaltype", display: "Animal Type", category: "animal" }, { value: "weekday", display: "Weekday", category: "time" }, { value: "pronouninterrogative", display: "Pronoun Interrogative", category: "word" }, { value: "paragraph", display: "Paragraph", category: "word" }, { value: "city", display: "City", category: "address" }, { value: "minecraftwood", display: "Minecraft wood", category: "minecraft" }, { value: "bool", display: "Boolean", category: "misc" }, { value: "productdescription", display: "Product Description", category: "product" }, { value: "songartist", display: "Song Artist", category: "song" }, { value: "nounabstract", display: "Noun Abstract", category: "word" }], I = new Set(
-  F.map((e) => e.value.toLowerCase())
+const T = [{ value: "phraseadverb", display: "Adverb Phrase", category: "word" }, { value: "country", display: "Country", category: "address" }, { value: "latituderange", display: "Latitude Range", category: "address" }, { value: "longituderange", display: "Longitude Range", category: "address" }, { value: "bs", display: "BS", category: "company" }, { value: "hackerabbreviation", display: "Hacker Abbreviation", category: "hacker" }, { value: "hackeringverb", display: "Hackering Verb", category: "hacker" }, { value: "uint64", display: "Uint64", category: "number" }, { value: "hobby", display: "Hobby", category: "person" }, { value: "errorhttpclient", display: "HTTP client error", category: "error" }, { value: "programminglanguage", display: "Programming Language", category: "language" }, { value: "minecraftarmortier", display: "Minecraft armor tier", category: "minecraft" }, { value: "songname", display: "Song Name", category: "song" }, { value: "nouncommon", display: "Noun Common", category: "word" }, { value: "nouncollectivepeople", display: "Noun Collective People", category: "word" }, { value: "verbaction", display: "Action Verb", category: "word" }, { value: "celebrityactor", display: "Celebrity Actor", category: "celebrity" }, { value: "safecolor", display: "Safe Color", category: "color" }, { value: "minecraftvillagerstation", display: "Minecraft villager station", category: "minecraft" }, { value: "company", display: "Company", category: "company" }, { value: "productaudience", display: "Product Audience", category: "product" }, { value: "beerhop", display: "Beer Hop", category: "beer" }, { value: "hackerverb", display: "Hacker Verb", category: "hacker" }, { value: "int32", display: "Int32", category: "number" }, { value: "longitude", display: "Longitude", category: "address" }, { value: "beeryeast", display: "Beer Yeast", category: "beer" }, { value: "emojicategory", display: "Emoji Category", category: "emoji" }, { value: "snack", display: "Snack", category: "food" }, { value: "minecraftbiome", display: "Minecraft biome", category: "minecraft" }, { value: "flipacoin", display: "Flip A Coin", category: "misc" }, { value: "uintrange", display: "UintRange", category: "number" }, { value: "verbhelping", display: "Helping Verb", category: "word" }, { value: "blurb", display: "Blurb", category: "company" }, { value: "emoji", display: "Emoji", category: "emoji" }, { value: "uintn", display: "UintN", category: "number" }, { value: "price", display: "Price", category: "payment" }, { value: "adjectiveproper", display: "Proper Adjective", category: "word" }, { value: "nouncountable", display: "Noun Countable", category: "word" }, { value: "username", display: "Username", category: "auth" }, { value: "buzzword", display: "Buzzword", category: "company" }, { value: "map", display: "Map", category: "generate" }, { value: "loremipsumsentence", display: "Lorem Ipsum Sentence", category: "word" }, { value: "moviegenre", display: "Genre", category: "movie" }, { value: "int16", display: "Int16", category: "number" }, { value: "namesuffix", display: "Name Suffix", category: "person" }, { value: "weighted", display: "Weighted", category: "misc" }, { value: "emojidescription", display: "Emoji Description", category: "emoji" }, { value: "minecraftanimal", display: "Minecraft animal", category: "minecraft" }, { value: "shuffleints", display: "Shuffle Ints", category: "number" }, { value: "creditcardtype", display: "Credit Card Type", category: "payment" }, { value: "bitcoinaddress", display: "Bitcoin Address", category: "payment" }, { value: "drink", display: "Drink", category: "food" }, { value: "intrange", display: "IntRange", category: "number" }, { value: "currencylong", display: "Currency Long", category: "payment" }, { value: "teams", display: "Teams", category: "person" }, { value: "adjectivequantitative", display: "Quantitative Adjective", category: "word" }, { value: "adjectivepossessive", display: "Possessive Adjective", category: "word" }, { value: "bird", display: "Bird", category: "animal" }, { value: "pastdate", display: "PastDate", category: "time" }, { value: "ipv4address", display: "IPv4 Address", category: "internet" }, { value: "shufflestrings", display: "Shuffle Strings", category: "string" }, { value: "verblinking", display: "Linking Verb", category: "word" }, { value: "interjection", display: "Interjection", category: "word" }, { value: "second", display: "Second", category: "time" }, { value: "pronounpossessive", display: "Pronoun Possessive", category: "word" }, { value: "errorobject", display: "Error object word", category: "error" }, { value: "middlename", display: "Middle Name", category: "person" }, { value: "email_text", display: "Random text email Document", category: "template" }, { value: "streetnumber", display: "Street Number", category: "address" }, { value: "minute", display: "Minute", category: "time" }, { value: "productupc", display: "Product UPC", category: "product" }, { value: "template", display: "Template", category: "template" }, { value: "pronoun", display: "Pronoun", category: "word" }, { value: "zip", display: "Zip", category: "address" }, { value: "day", display: "Day", category: "time" }, { value: "json", display: "JSON", category: "file" }, { value: "xml", display: "XML", category: "file" }, { value: "lunch", display: "Lunch", category: "food" }, { value: "connectiveexamplify", display: "Connective Examplify", category: "word" }, { value: "productname", display: "Product Name", category: "product" }, { value: "productusecase", display: "Product Use Case", category: "product" }, { value: "productsuffix", display: "Product Suffix", category: "product" }, { value: "randomstring", display: "Random String", category: "string" }, { value: "timezone", display: "Timezone", category: "time" }, { value: "dessert", display: "Dessert", category: "food" }, { value: "imagejpeg", display: "Image JPEG", category: "image" }, { value: "creditcardnumber", display: "Credit Card Number", category: "payment" }, { value: "nouncollectivething", display: "Noun Collective Thing", category: "word" }, { value: "verbintransitive", display: "Intransitive Verb", category: "word" }, { value: "streetsuffix", display: "Street Suffix", category: "address" }, { value: "isin", display: "ISIN", category: "finance" }, { value: "person", display: "Person", category: "person" }, { value: "cartransmissiontype", display: "Car Transmission Type", category: "car" }, { value: "email", display: "Email", category: "person" }, { value: "productbenefit", display: "Product Benefit", category: "product" }, { value: "lettern", display: "LetterN", category: "string" }, { value: "adverb", display: "Adverb", category: "word" }, { value: "preposition", display: "Preposition", category: "word" }, { value: "prepositiondouble", display: "Preposition Double", category: "word" }, { value: "timezonefull", display: "Timezone Full", category: "time" }, { value: "errordatabase", display: "Database error", category: "error" }, { value: "fileextension", display: "File Extension", category: "file" }, { value: "cusip", display: "CUSIP", category: "finance" }, { value: "movie", display: "Movie", category: "movie" }, { value: "nameprefix", display: "Name Prefix", category: "person" }, { value: "product", display: "Product", category: "product" }, { value: "connectivelisting", display: "Connective Listing", category: "word" }, { value: "timezoneabv", display: "Timezone Abbreviation", category: "time" }, { value: "lastname", display: "Last Name", category: "person" }, { value: "vowel", display: "Vowel", category: "string" }, { value: "markdown", display: "Random markdown document", category: "template" }, { value: "connectivetime", display: "Connective Time", category: "word" }, { value: "phrase", display: "Phrase", category: "word" }, { value: "countryabr", display: "Country Abbreviation", category: "address" }, { value: "beermalt", display: "Beer Malt", category: "beer" }, { value: "nouncollectiveanimal", display: "Noun Collective Animal", category: "word" }, { value: "emojialias", display: "Emoji Alias", category: "emoji" }, { value: "httpstatuscode", display: "HTTP Status Code", category: "internet" }, { value: "adjectiveindefinite", display: "Indefinite Adjective", category: "word" }, { value: "question", display: "Question", category: "word" }, { value: "cat", display: "Cat", category: "animal" }, { value: "carmaker", display: "Car Maker", category: "car" }, { value: "ipv6address", display: "IPv6 Address", category: "internet" }, { value: "httpstatuscodesimple", display: "HTTP Status Code Simple", category: "internet" }, { value: "minecraftarmorpart", display: "Minecraft armor part", category: "minecraft" }, { value: "minecraftmobneutral", display: "Minecraft mob neutral", category: "minecraft" }, { value: "currencyshort", display: "Currency Short", category: "payment" }, { value: "achaccount", display: "ACH Account Number", category: "payment" }, { value: "song", display: "Song", category: "song" }, { value: "prepositionsimple", display: "Preposition Simple", category: "word" }, { value: "verbtransitive", display: "Transitive Verb", category: "word" }, { value: "slogan", display: "Slogan", category: "company" }, { value: "loglevel", display: "Log Level", category: "internet" }, { value: "currency", display: "Currency", category: "payment" }, { value: "creditcardcvv", display: "Credit Card CVV", category: "payment" }, { value: "phoneformatted", display: "Phone Formatted", category: "person" }, { value: "adjective", display: "Adjective", category: "word" }, { value: "connectivecomplaint", display: "Connective Complaint", category: "word" }, { value: "productcategory", display: "Product Category", category: "product" }, { value: "beeralcohol", display: "Beer Alcohol", category: "beer" }, { value: "date", display: "Date", category: "time" }, { value: "nanosecond", display: "Nanosecond", category: "time" }, { value: "language", display: "Language", category: "language" }, { value: "productisbn", display: "Product ISBN", category: "product" }, { value: "hexcolor", display: "Hex Color", category: "color" }, { value: "daterange", display: "DateRange", category: "time" }, { value: "minecraftvillagerjob", display: "Minecraft villager job", category: "minecraft" }, { value: "noundeterminer", display: "Noun Determiner", category: "word" }, { value: "password", display: "Password", category: "auth" }, { value: "job", display: "Job", category: "company" }, { value: "safariuseragent", display: "Safari User Agent", category: "internet" }, { value: "randomint", display: "Random Int", category: "number" }, { value: "hexuint", display: "HexUint", category: "number" }, { value: "comment", display: "Comment", category: "word" }, { value: "state", display: "State", category: "address" }, { value: "breakfast", display: "Breakfast", category: "food" }, { value: "dinner", display: "Dinner", category: "food" }, { value: "banktype", display: "Bank Type", category: "payment" }, { value: "streetname", display: "Street Name", category: "address" }, { value: "errorgrpc", display: "gRPC error", category: "error" }, { value: "operauseragent", display: "Opera User Agent", category: "internet" }, { value: "minecraftmobboss", display: "Minecraft mob boss", category: "minecraft" }, { value: "float32", display: "Float32", category: "number" }, { value: "songgenre", display: "Genre", category: "song" }, { value: "phrasenoun", display: "Noun Phrase", category: "word" }, { value: "monthstring", display: "Month String", category: "time" }, { value: "loremipsumword", display: "Lorem Ipsum Word", category: "word" }, { value: "productmaterial", display: "Product Material", category: "product" }, { value: "adjectiveinterrogative", display: "Interrogative Adjective", category: "word" }, { value: "booktitle", display: "Title", category: "book" }, { value: "uint32", display: "Uint32", category: "number" }, { value: "phrasepreposition", display: "Preposition Phrase", category: "word" }, { value: "animal", display: "Animal", category: "animal" }, { value: "fruit", display: "Fruit", category: "food" }, { value: "regex", display: "Regex", category: "generate" }, { value: "minecraftweapon", display: "Minecraft weapon", category: "minecraft" }, { value: "beeribu", display: "Beer IBU", category: "beer" }, { value: "minecraftmobhostile", display: "Minecraft mob hostile", category: "minecraft" }, { value: "randomuint", display: "Random Uint", category: "number" }, { value: "achrouting", display: "ACH Routing Number", category: "payment" }, { value: "bankname", display: "Bank Name", category: "payment" }, { value: "gender", display: "Gender", category: "person" }, { value: "pronoundemonstrative", display: "Pronoun Demonstrative", category: "word" }, { value: "pronounrelative", display: "Pronoun Relative", category: "word" }, { value: "street", display: "Street", category: "address" }, { value: "year", display: "Year", category: "time" }, { value: "gamertag", display: "Gamertag", category: "game" }, { value: "int", display: "Int", category: "number" }, { value: "cartype", display: "Car Type", category: "car" }, { value: "timezoneoffset", display: "Timezone Offset", category: "time" }, { value: "name", display: "Name", category: "person" }, { value: "hackernoun", display: "Hacker Noun", category: "hacker" }, { value: "inputname", display: "Input Name", category: "html" }, { value: "float32range", display: "Float32 Range", category: "number" }, { value: "beerstyle", display: "Beer Style", category: "beer" }, { value: "book", display: "Book", category: "book" }, { value: "celebritybusiness", display: "Celebrity Business", category: "celebrity" }, { value: "month", display: "Month", category: "time" }, { value: "macaddress", display: "MAC Address", category: "internet" }, { value: "uint8", display: "Uint8", category: "number" }, { value: "firstname", display: "First Name", category: "person" }, { value: "adjectivedescriptive", display: "Descriptive Adjective", category: "word" }, { value: "dog", display: "Dog", category: "animal" }, { value: "beername", display: "Beer Name", category: "beer" }, { value: "vegetable", display: "Vegetable", category: "food" }, { value: "useragent", display: "User Agent", category: "internet" }, { value: "minecraftore", display: "Minecraft ore", category: "minecraft" }, { value: "nounconcrete", display: "Noun Concrete", category: "word" }, { value: "verb", display: "Verb", category: "word" }, { value: "stateabr", display: "State Abbreviation", category: "address" }, { value: "error", display: "Error", category: "error" }, { value: "loremipsumparagraph", display: "Lorem Ipsum Paragraph", category: "word" }, { value: "digit", display: "Digit", category: "string" }, { value: "numerify", display: "Numerify", category: "string" }, { value: "hipstersentence", display: "Hipster Sentence", category: "hipster" }, { value: "hipsterparagraph", display: "Hipster Paragraph", category: "hipster" }, { value: "float64", display: "Float64", category: "number" }, { value: "sentencesimple", display: "Simple Sentence", category: "word" }, { value: "farmanimal", display: "Farm Animal", category: "animal" }, { value: "carmodel", display: "Car Model", category: "car" }, { value: "dice", display: "Dice", category: "game" }, { value: "minecraftvillagerlevel", display: "Minecraft villager level", category: "minecraft" }, { value: "productfeature", display: "Product Feature", category: "product" }, { value: "lexify", display: "Lexify", category: "string" }, { value: "word", display: "Word", category: "word" }, { value: "httpversion", display: "HTTP Version", category: "internet" }, { value: "companysuffix", display: "Company Suffix", category: "company" }, { value: "errorhttp", display: "HTTP error", category: "error" }, { value: "connectivecomparative", display: "Connective Comparitive", category: "word" }, { value: "carfueltype", display: "Car Fuel Type", category: "car" }, { value: "letter", display: "Letter", category: "string" }, { value: "adjectivedemonstrative", display: "Demonstrative Adjective", category: "word" }, { value: "streetprefix", display: "Street Prefix", category: "address" }, { value: "rgbcolor", display: "RGB Color", category: "color" }, { value: "sql", display: "SQL", category: "database" }, { value: "fixed_width", display: "Fixed Width", category: "generate" }, { value: "imagepng", display: "Image PNG", category: "image" }, { value: "domainsuffix", display: "Domain Suffix", category: "internet" }, { value: "languageabbreviation", display: "Language Abbreviation", category: "language" }, { value: "uint", display: "Uint", category: "number" }, { value: "bookauthor", display: "Author", category: "book" }, { value: "joblevel", display: "Job Level", category: "company" }, { value: "filemimetype", display: "File Mime Type", category: "file" }, { value: "domainname", display: "Domain Name", category: "internet" }, { value: "number", display: "Number", category: "number" }, { value: "productdimension", display: "Product Dimension", category: "product" }, { value: "adverbplace", display: "Adverb Place", category: "word" }, { value: "phraseverb", display: "Verb Phrase", category: "word" }, { value: "appname", display: "App Name", category: "app" }, { value: "celebritysport", display: "Celebrity Sport", category: "celebrity" }, { value: "hour", display: "Hour", category: "time" }, { value: "hipsterword", display: "Hipster Word", category: "hipster" }, { value: "languagebcp", display: "Language BCP", category: "language" }, { value: "minecraftdye", display: "Minecraft dye", category: "minecraft" }, { value: "moviename", display: "Movie Name", category: "movie" }, { value: "float64range", display: "Float64 Range", category: "number" }, { value: "emojitag", display: "Emoji Tag", category: "emoji" }, { value: "url", display: "URL", category: "internet" }, { value: "creditcardexp", display: "Credit Card Exp", category: "payment" }, { value: "adverbmanner", display: "Adverb Manner", category: "word" }, { value: "adverbtimeindefinite", display: "Adverb Time Indefinite", category: "word" }, { value: "adverbfrequencydefinite", display: "Adverb Frequency Definite", category: "word" }, { value: "connectivecasual", display: "Connective Casual", category: "word" }, { value: "nounproper", display: "Noun Proper", category: "word" }, { value: "bookgenre", display: "Genre", category: "book" }, { value: "timezoneregion", display: "Timezone Region", category: "time" }, { value: "hackeradjective", display: "Hacker Adjective", category: "hacker" }, { value: "httpmethod", display: "HTTP Method", category: "internet" }, { value: "minecrafttool", display: "Minecraft tool", category: "minecraft" }, { value: "minecraftfood", display: "Minecraft food", category: "minecraft" }, { value: "minecraftweather", display: "Minecraft weather", category: "minecraft" }, { value: "petname", display: "Pet Name", category: "animal" }, { value: "beerblg", display: "Beer BLG", category: "beer" }, { value: "csv", display: "CSV", category: "file" }, { value: "hackerphrase", display: "Hacker Phrase", category: "hacker" }, { value: "school", display: "School", category: "school" }, { value: "prepositioncompound", display: "Preposition Compound", category: "word" }, { value: "address", display: "Address", category: "address" }, { value: "futuredate", display: "FutureDate", category: "time" }, { value: "adverbtimedefinite", display: "Adverb Time Definite", category: "word" }, { value: "pronounreflective", display: "Pronoun Reflective", category: "word" }, { value: "appauthor", display: "App Author", category: "app" }, { value: "jobdescriptor", display: "Job Descriptor", category: "company" }, { value: "errorhttpserver", display: "HTTP server error", category: "error" }, { value: "int64", display: "Int64", category: "number" }, { value: "noununcountable", display: "Noun Uncountable", category: "word" }, { value: "color", display: "Color", category: "color" }, { value: "nicecolors", display: "Nice Colors", category: "color" }, { value: "jobtitle", display: "Job Title", category: "company" }, { value: "chromeuseragent", display: "Chrome User Agent", category: "internet" }, { value: "minecraftmobpassive", display: "Minecraft mob passive", category: "minecraft" }, { value: "latitude", display: "Latitude", category: "address" }, { value: "appversion", display: "App Version", category: "app" }, { value: "car", display: "Car", category: "car" }, { value: "uint16", display: "Uint16", category: "number" }, { value: "adverbdegree", display: "Adverb Degree", category: "word" }, { value: "svg", display: "Image SVG", category: "html" }, { value: "int8", display: "Int8", category: "number" }, { value: "digitn", display: "DigitN", category: "string" }, { value: "adverbfrequencyindefinite", display: "Adverb Frequency Indefinite", category: "word" }, { value: "noun", display: "Noun", category: "word" }, { value: "pronounobject", display: "Pronoun Object", category: "word" }, { value: "errorruntime", display: "Runtime error", category: "error" }, { value: "errorvalidation", display: "Validation error", category: "error" }, { value: "firefoxuseragent", display: "Firefox User Agent", category: "internet" }, { value: "uuid", display: "UUID", category: "misc" }, { value: "creditcard", display: "Credit Card", category: "payment" }, { value: "phone", display: "Phone", category: "person" }, { value: "intn", display: "IntN", category: "number" }, { value: "bitcoinprivatekey", display: "Bitcoin Private Key", category: "payment" }, { value: "pronounpersonal", display: "Pronoun Personal", category: "word" }, { value: "sentence", display: "Sentence", category: "word" }, { value: "generate", display: "Generate", category: "generate" }, { value: "ssn", display: "SSN", category: "person" }, { value: "connective", display: "Connective", category: "word" }, { value: "pronounindefinite", display: "Pronoun Indefinite", category: "word" }, { value: "quote", display: "Quote", category: "word" }, { value: "animaltype", display: "Animal Type", category: "animal" }, { value: "weekday", display: "Weekday", category: "time" }, { value: "pronouninterrogative", display: "Pronoun Interrogative", category: "word" }, { value: "paragraph", display: "Paragraph", category: "word" }, { value: "city", display: "City", category: "address" }, { value: "minecraftwood", display: "Minecraft wood", category: "minecraft" }, { value: "bool", display: "Boolean", category: "misc" }, { value: "productdescription", display: "Product Description", category: "product" }, { value: "songartist", display: "Song Artist", category: "song" }, { value: "nounabstract", display: "Noun Abstract", category: "word" }], $ = new Set(
+  T.map((e) => e.value.toLowerCase())
 );
 function v(e) {
-  return I.has(e.toLowerCase());
+  return $.has(e.toLowerCase());
 }
-function Z() {
-  return F;
+function X() {
+  return T;
 }
 const h = {
   primary: "#ffa000",
   error: "#ff3860",
   background: "#ffffff"
-}, x = {
+}, C = {
   // px
   half: 12,
   // px
   quarter: 8
   // px
-}, G = {
+}, I = {
   radius: 6
-}, S = {
+}, x = {
   size: 14,
   // px
   family: "Helvetica, Arial, sans-serif"
 };
-function j(e, t) {
-  const o = document.querySelector(".gofakeit-error-tooltip");
-  o && o.remove();
-  const a = document.createElement("div");
-  a.className = "gofakeit-error-tooltip", a.style.cssText = `
+function G(e, o) {
+  const a = document.querySelector(".gofakeit-error-tooltip");
+  a && a.remove();
+  const t = document.createElement("div");
+  t.className = "gofakeit-error-tooltip", t.style.cssText = `
     position: absolute;
     z-index: 10001;
     color: ${h.error};
-    font-size: ${S.size}px;
-    font-family: ${S.family};
+    font-size: ${x.size}px;
+    font-family: ${x.family};
     background-color: ${h.background};
-    padding: ${x.quarter}px ${x.half}px;
-    border-radius: ${G.radius}px;
+    padding: ${C.quarter}px ${C.half}px;
+    border-radius: ${I.radius}px;
     border: 1px solid ${h.error};
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     max-width: 300px;
@@ -45,57 +45,57 @@ function j(e, t) {
     transform: translateY(-10px);
     transition: opacity 0.3s ease, transform 0.3s ease;
     pointer-events: none;
-  `, a.textContent = t, document.body.appendChild(a);
+  `, t.textContent = o, document.body.appendChild(t);
   function r() {
-    const c = e.getBoundingClientRect(), u = window.pageYOffset || document.documentElement.scrollTop, y = window.pageXOffset || document.documentElement.scrollLeft, g = c.left + y, b = c.top + u - a.offsetHeight - 8;
-    a.style.left = `${g}px`, a.style.top = `${b}px`;
+    const l = e.getBoundingClientRect(), u = window.pageYOffset || document.documentElement.scrollTop, y = window.pageXOffset || document.documentElement.scrollLeft, g = l.left + y, b = l.top + u - t.offsetHeight - 8;
+    t.style.left = `${g}px`, t.style.top = `${b}px`;
   }
   r();
   const s = () => r(), n = () => r();
   window.addEventListener("scroll", s, { passive: !0 }), window.addEventListener("resize", n, { passive: !0 });
-  const l = document.querySelectorAll("*"), i = [];
-  l.forEach((c) => {
-    const u = window.getComputedStyle(c);
+  const c = document.querySelectorAll("*"), i = [];
+  c.forEach((l) => {
+    const u = window.getComputedStyle(l);
     if (u.overflow === "scroll" || u.overflowY === "scroll" || u.overflow === "auto" || u.overflowY === "auto") {
       const y = () => r();
-      c.addEventListener("scroll", y, { passive: !0 }), i.push({ element: c, handler: y });
+      l.addEventListener("scroll", y, { passive: !0 }), i.push({ element: l, handler: y });
     }
   }), requestAnimationFrame(() => {
-    a.style.opacity = "1", a.style.transform = "translateY(0)";
+    t.style.opacity = "1", t.style.transform = "translateY(0)";
   }), setTimeout(() => {
-    a.style.opacity = "0", a.style.transform = "translateY(-10px)", window.removeEventListener("scroll", s), window.removeEventListener("resize", n), i.forEach(({ element: c, handler: u }) => {
-      c.removeEventListener("scroll", u);
+    t.style.opacity = "0", t.style.transform = "translateY(-10px)", window.removeEventListener("scroll", s), window.removeEventListener("resize", n), i.forEach(({ element: l, handler: u }) => {
+      l.removeEventListener("scroll", u);
     }), setTimeout(() => {
-      a.parentElement && a.parentElement.removeChild(a);
+      t.parentElement && t.parentElement.removeChild(t);
     }, 300);
   }, 5e3);
 }
 const E = "https://api.gofakeit.com/funcs";
 async function d(e) {
-  const t = e.indexOf("?");
-  if (t !== -1) {
-    const o = e.substring(0, t), a = e.substring(t + 1), r = {}, s = new URLSearchParams(a);
-    for (const [n, l] of s.entries()) {
-      const i = parseFloat(l);
-      r[n] = isNaN(i) ? l : i;
+  const o = e.indexOf("?");
+  if (o !== -1) {
+    const a = e.substring(0, o), t = e.substring(o + 1), r = {}, s = new URLSearchParams(t);
+    for (const [n, c] of s.entries()) {
+      const i = parseFloat(c);
+      r[n] = isNaN(i) ? c : i;
     }
-    return k("POST", `${E}/${o}`, r);
+    return k("POST", `${E}/${a}`, r);
   } else
     return k("GET", `${E}/${e}`);
 }
-async function H(e) {
+async function j(e) {
   return k("POST", `${E}/randomstring`, { strs: e });
 }
-async function k(e, t, o) {
+async function k(e, o, a) {
   try {
-    const a = {
+    const t = {
       method: e,
       headers: {
         "Content-Type": "application/json"
       }
     };
-    e === "POST" && o && (a.body = JSON.stringify(o));
-    const r = await fetch(t, a);
+    e === "POST" && a && (t.body = JSON.stringify(a));
+    const r = await fetch(o, t);
     return r.ok ? {
       success: !0,
       data: await r.text()
@@ -104,84 +104,84 @@ async function k(e, t, o) {
       error: `HTTP error! status: ${r.status}`,
       status: r.status
     };
-  } catch (a) {
-    return console.error(`[Gofakeit Autofill] Error in ${e} request to ${t}:`, a), {
+  } catch (t) {
+    return console.error(`[Gofakeit Autofill] Error in ${e} request to ${o}:`, t), {
       success: !1,
-      error: a instanceof Error ? a.message : "Unknown error"
+      error: t instanceof Error ? t.message : "Unknown error"
     };
   }
 }
-function R(e) {
-  const t = new Date(e.getTime());
-  t.setUTCHours(0, 0, 0, 0), t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7));
-  const o = new Date(t.getUTCFullYear(), 0, 4);
-  return Math.ceil(((t.getTime() - o.getTime()) / 864e5 - 3 + (o.getUTCDay() || 7)) / 7);
+function H(e) {
+  const o = new Date(e.getTime());
+  o.setUTCHours(0, 0, 0, 0), o.setUTCDate(o.getUTCDate() + 4 - (o.getUTCDay() || 7));
+  const a = new Date(o.getUTCFullYear(), 0, 4);
+  return Math.ceil(((o.getTime() - a.getTime()) / 864e5 - 3 + (a.getUTCDay() || 7)) / 7);
 }
-async function D(e, t) {
-  const o = e.type.toLowerCase();
+async function R(e, o) {
+  const a = e.type.toLowerCase();
   try {
-    switch (o) {
+    switch (a) {
       case "date": {
-        const a = t === "true" ? "date" : t, r = await d(a);
+        const t = o === "true" ? "date" : o, r = await d(t);
         if (!r.success)
-          return console.warn(`[Gofakeit Autofill] Error for ${o} input:`, r.error), r.status === 400 && p(e, `Failed to get random ${o}`), { success: !1, usedFunc: a };
+          return console.warn(`[Gofakeit Autofill] Error for ${a} input:`, r.error), r.status === 400 && p(e, `Failed to get random ${a}`), { success: !1, usedFunc: t };
         try {
           const s = r.data, n = s.match(/^(\d{4}-\d{2}-\d{2})/);
           if (n)
             e.value = n[1];
           else
-            return console.warn("[Gofakeit Autofill] Could not parse date from response:", s), { success: !1, usedFunc: a };
+            return console.warn("[Gofakeit Autofill] Could not parse date from response:", s), { success: !1, usedFunc: t };
         } catch (s) {
-          return console.warn("[Gofakeit Autofill] Error parsing date response:", s), { success: !1, usedFunc: a };
+          return console.warn("[Gofakeit Autofill] Error parsing date response:", s), { success: !1, usedFunc: t };
         }
         break;
       }
       case "time": {
-        const a = await d("hour"), r = await d("minute");
-        if (!a.success || !r.success)
-          return console.warn("[Gofakeit Autofill] Error getting hour or minute:", a.error || r.error), (a.status === 400 || r.status === 400) && p(e, "Failed to get random time"), { success: !1, usedFunc: "hour/minute" };
-        const s = a.data.padStart(2, "0"), n = r.data.padStart(2, "0");
+        const t = await d("hour"), r = await d("minute");
+        if (!t.success || !r.success)
+          return console.warn("[Gofakeit Autofill] Error getting hour or minute:", t.error || r.error), (t.status === 400 || r.status === 400) && p(e, "Failed to get random time"), { success: !1, usedFunc: "hour/minute" };
+        const s = t.data.padStart(2, "0"), n = r.data.padStart(2, "0");
         e.value = `${s}:${n}`;
         break;
       }
       case "datetime-local": {
-        const a = t === "true" ? "date" : t, r = await d(a);
+        const t = o === "true" ? "date" : o, r = await d(t);
         if (!r.success)
-          return console.warn(`[Gofakeit Autofill] Error for ${o} input:`, r.error), r.status === 400 && p(e, `Failed to get random ${o}`), { success: !1, usedFunc: a };
+          return console.warn(`[Gofakeit Autofill] Error for ${a} input:`, r.error), r.status === 400 && p(e, `Failed to get random ${a}`), { success: !1, usedFunc: t };
         try {
           const s = r.data, n = s.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}):\d{2}/);
           if (n)
             e.value = n[1];
           else
-            return console.warn("[Gofakeit Autofill] Could not parse datetime from response:", s), { success: !1, usedFunc: a };
+            return console.warn("[Gofakeit Autofill] Could not parse datetime from response:", s), { success: !1, usedFunc: t };
         } catch (s) {
-          return console.warn("[Gofakeit Autofill] Error parsing datetime response:", s), { success: !1, usedFunc: a };
+          return console.warn("[Gofakeit Autofill] Error parsing datetime response:", s), { success: !1, usedFunc: t };
         }
         break;
       }
       case "month": {
-        const a = await d("year"), r = await d("month");
-        if (!a.success || !r.success)
-          return console.warn("[Gofakeit Autofill] Error getting year or month:", a.error || r.error), (a.status === 400 || r.status === 400) && p(e, "Failed to get random month"), { success: !1, usedFunc: "year/month" };
+        const t = await d("year"), r = await d("month");
+        if (!t.success || !r.success)
+          return console.warn("[Gofakeit Autofill] Error getting year or month:", t.error || r.error), (t.status === 400 || r.status === 400) && p(e, "Failed to get random month"), { success: !1, usedFunc: "year/month" };
         const s = r.data.padStart(2, "0");
-        e.value = `${a.data}-${s}`;
+        e.value = `${t.data}-${s}`;
         break;
       }
       case "week": {
-        const a = t === "true" ? "date" : t;
-        if (a === "date" || a.startsWith("daterange")) {
-          const r = await d(a);
+        const t = o === "true" ? "date" : o;
+        if (t === "date" || t.startsWith("daterange")) {
+          const r = await d(t);
           if (!r.success)
-            return console.warn("[Gofakeit Autofill] Error getting date for week:", r.error), r.status === 400 && p(e, "Failed to get random week"), { success: !1, usedFunc: a };
+            return console.warn("[Gofakeit Autofill] Error getting date for week:", r.error), r.status === 400 && p(e, "Failed to get random week"), { success: !1, usedFunc: t };
           try {
             const s = r.data, n = s.match(/^(\d{4}-\d{2}-\d{2})/);
             if (n) {
-              const l = new Date(n[1]), i = l.getFullYear(), c = R(l);
-              e.value = `${i}-W${c.toString().padStart(2, "0")}`;
+              const c = new Date(n[1]), i = c.getFullYear(), l = H(c);
+              e.value = `${i}-W${l.toString().padStart(2, "0")}`;
             } else
-              return console.warn("[Gofakeit Autofill] Could not parse date for week from response:", s), { success: !1, usedFunc: a };
+              return console.warn("[Gofakeit Autofill] Could not parse date for week from response:", s), { success: !1, usedFunc: t };
           } catch (s) {
-            return console.warn("[Gofakeit Autofill] Error parsing date for week:", s), { success: !1, usedFunc: a };
+            return console.warn("[Gofakeit Autofill] Error parsing date for week:", s), { success: !1, usedFunc: t };
           }
         } else {
           const r = await d("year"), s = await d("number?min=1&max=53");
@@ -193,330 +193,331 @@ async function D(e, t) {
         break;
       }
       default:
-        return console.warn("[Gofakeit Autofill] Unknown date/time input type:", o), { success: !1, usedFunc: t };
+        return console.warn("[Gofakeit Autofill] Unknown date/time input type:", a), { success: !1, usedFunc: o };
     }
-    return e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: t === "true" ? o : t };
-  } catch (a) {
-    return console.warn(`[Gofakeit Autofill] Unexpected error handling ${o} input:`, a), { success: !1, usedFunc: t };
+    return e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: o === "true" ? a : o };
+  } catch (t) {
+    return console.warn(`[Gofakeit Autofill] Unexpected error handling ${a} input:`, t), { success: !1, usedFunc: o };
   }
 }
-async function U(e, t) {
-  const o = e.type.toLowerCase();
-  let a = t;
-  if (t === "true")
-    switch (o) {
+async function D(e, o) {
+  const a = e.type.toLowerCase();
+  let t = o;
+  if (o === "true")
+    switch (a) {
       case "email":
-        a = "email";
+        t = "email";
         break;
       case "tel":
-        a = "phone";
+        t = "phone";
         break;
       case "password":
-        a = "password";
+        t = "password";
         break;
       case "search":
-        a = "word";
+        t = "word";
         break;
       case "url":
-        a = "url";
+        t = "url";
         break;
       case "color":
-        a = "hexcolor";
+        t = "hexcolor";
         break;
       default:
-        a = "word";
+        t = "word";
     }
-  const r = await d(a);
-  return r.success ? (e.value = r.data, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: a }) : (console.warn(`[Gofakeit Autofill] Error for function ${a}:`, r.error), r.status === 400 && p(e, "", a), { success: !1, usedFunc: a });
+  const r = await d(t);
+  return r.success ? (e.value = r.data, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: t }) : (console.warn(`[Gofakeit Autofill] Error for function ${t}:`, r.error), r.status === 400 && p(e, "", t), { success: !1, usedFunc: t });
 }
-async function B(e, t) {
-  const o = t === "true" ? "sentence" : t, a = await d(o);
-  return a.success ? (e.value = a.data, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: o }) : (console.warn(`[Gofakeit Autofill] Error for function ${o}:`, a.error), a.status === 400 && p(e, "", o), { success: !1, usedFunc: o });
+async function U(e, o) {
+  const a = o === "true" ? "sentence" : o, t = await d(a);
+  return t.success ? (e.value = t.data, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: a }) : (console.warn(`[Gofakeit Autofill] Error for function ${a}:`, t.error), t.status === 400 && p(e, "", a), { success: !1, usedFunc: a });
 }
-async function z(e, t) {
-  const o = O(e);
-  if (o.length === 0)
+async function B(e, o) {
+  const a = q(e);
+  if (a.length === 0)
     return console.warn("[Gofakeit Autofill] No checkbox group found for element:", e), { success: !1, usedFunc: "bool" };
-  const a = t === "true" ? "bool" : t;
-  if (t === "true") {
-    const r = Math.max(1, Math.ceil(o.length / 2));
-    o.forEach((n) => {
+  const t = o === "true" ? "bool" : o;
+  if (o === "true") {
+    const r = Math.max(1, Math.ceil(a.length / 2));
+    a.forEach((n) => {
       n.checked = !1, n.dispatchEvent(new Event("change", { bubbles: !0 }));
     });
     const s = /* @__PURE__ */ new Set();
     for (let n = 0; n < r; n++) {
-      const l = await d("bool");
-      if (l.success && (l.data.toLowerCase() === "true" || l.data.toLowerCase() === "1")) {
-        const c = Array.from({ length: o.length }, (u, y) => y).filter((u) => !s.has(u));
-        if (c.length > 0) {
-          const u = c[Math.floor(Math.random() * c.length)];
-          s.add(u), o[u].checked = !0, o[u].dispatchEvent(new Event("change", { bubbles: !0 }));
+      const c = await d("bool");
+      if (c.success && (c.data.toLowerCase() === "true" || c.data.toLowerCase() === "1")) {
+        const l = Array.from({ length: a.length }, (u, y) => y).filter((u) => !s.has(u));
+        if (l.length > 0) {
+          const u = l[Math.floor(Math.random() * l.length)];
+          s.add(u), a[u].checked = !0, a[u].dispatchEvent(new Event("change", { bubbles: !0 }));
         }
       }
     }
   } else {
-    const r = await d(a);
+    const r = await d(t);
     if (!r.success)
-      return console.warn(`[Gofakeit Autofill] Error for function ${a}:`, r.error), r.status === 400 && p(e, "", a), { success: !1, usedFunc: a };
-    o.forEach((n) => {
+      return console.warn(`[Gofakeit Autofill] Error for function ${t}:`, r.error), r.status === 400 && p(e, "", t), { success: !1, usedFunc: t };
+    a.forEach((n) => {
       n.checked = !1, n.dispatchEvent(new Event("change", { bubbles: !0 }));
     });
     const s = r.data.split(",").map((n) => n.trim());
-    o.forEach((n, l) => {
-      const i = s.includes(n.value) || s.includes(l.toString());
+    a.forEach((n, c) => {
+      const i = s.includes(n.value) || s.includes(c.toString());
       n.checked = i, n.dispatchEvent(new Event("change", { bubbles: !0 }));
     });
   }
-  return { success: !0, usedFunc: a };
+  return { success: !0, usedFunc: t };
 }
-async function q(e, t) {
-  const o = V(e);
-  if (o.length === 0)
+async function z(e, o) {
+  const a = O(e);
+  if (a.length === 0)
     return console.warn("[Gofakeit Autofill] No radio group found for element:", e), { success: !1, usedFunc: "bool" };
-  const a = t === "true" ? "bool" : t;
-  if (t === "true") {
-    o.forEach((s) => {
+  const t = o === "true" ? "bool" : o;
+  if (o === "true") {
+    a.forEach((s) => {
       s.checked = !1, s.dispatchEvent(new Event("change", { bubbles: !0 }));
     });
     const r = await d("bool");
     if (r.success && (r.data.toLowerCase() === "true" || r.data.toLowerCase() === "1")) {
-      const n = Math.floor(Math.random() * o.length);
-      o[n].checked = !0, o[n].dispatchEvent(new Event("change", { bubbles: !0 }));
+      const n = Math.floor(Math.random() * a.length);
+      a[n].checked = !0, a[n].dispatchEvent(new Event("change", { bubbles: !0 }));
     }
   } else {
-    const r = await d(a);
+    const r = await d(t);
     if (!r.success)
-      return console.warn(`[Gofakeit Autofill] Error for function ${a}:`, r.error), r.status === 400 && p(e, "", a), { success: !1, usedFunc: a };
-    o.forEach((l) => {
-      l.checked = !1, l.dispatchEvent(new Event("change", { bubbles: !0 }));
+      return console.warn(`[Gofakeit Autofill] Error for function ${t}:`, r.error), r.status === 400 && p(e, "", t), { success: !1, usedFunc: t };
+    a.forEach((c) => {
+      c.checked = !1, c.dispatchEvent(new Event("change", { bubbles: !0 }));
     });
     const s = r.data.trim();
-    let n = o.find((l) => l.value === s);
+    let n = a.find((c) => c.value === s);
     if (!n && !isNaN(Number(s))) {
-      const l = parseInt(s);
-      l >= 0 && l < o.length && (n = o[l]);
+      const c = parseInt(s);
+      c >= 0 && c < a.length && (n = a[c]);
     }
     n && (n.checked = !0, n.dispatchEvent(new Event("change", { bubbles: !0 })));
   }
-  return { success: !0, usedFunc: a };
+  return { success: !0, usedFunc: t };
+}
+function q(e) {
+  if (e.type !== "checkbox") return [e];
+  const o = e.name, a = e.closest("form, div, fieldset") || document;
+  return o ? Array.from(a.querySelectorAll(`input[type="checkbox"][name="${o}"]`)) : Array.from(a.querySelectorAll('input[type="checkbox"]'));
 }
 function O(e) {
-  if (e.type !== "checkbox") return [e];
-  const t = e.name, o = e.closest("form, div, fieldset") || document;
-  return t ? Array.from(o.querySelectorAll(`input[type="checkbox"][name="${t}"]`)) : Array.from(o.querySelectorAll('input[type="checkbox"]'));
-}
-function V(e) {
   if (e.type !== "radio") return [e];
-  const t = e.name, o = e.closest("form, div, fieldset") || document;
-  return t ? Array.from(o.querySelectorAll(`input[type="radio"][name="${t}"]`)) : Array.from(o.querySelectorAll('input[type="radio"]'));
+  const o = e.name, a = e.closest("form, div, fieldset") || document;
+  return o ? Array.from(a.querySelectorAll(`input[type="radio"][name="${o}"]`)) : Array.from(a.querySelectorAll('input[type="radio"]'));
 }
-async function _(e, t) {
-  const o = Array.from(e.options).map((r) => r.value).filter((r) => r !== "");
-  if (o.length === 0)
-    return console.warn("[Gofakeit Autofill] Select element has no valid options:", e), { success: !1, usedFunc: t };
-  let a;
-  if (t === "true" ? a = await H(o) : a = await d(t), !a.success)
-    return console.warn("[Gofakeit Autofill] Error for select:", a.error), a.status === 400 && p(e, "Failed to get selection"), { success: !1, usedFunc: t };
+async function V(e, o) {
+  const a = Array.from(e.options).map((r) => r.value).filter((r) => r !== "");
+  if (a.length === 0)
+    return console.warn("[Gofakeit Autofill] Select element has no valid options:", e), { success: !1, usedFunc: o };
+  let t;
+  if (o === "true" ? t = await j(a) : t = await d(o), !t.success)
+    return console.warn("[Gofakeit Autofill] Error for select:", t.error), t.status === 400 && p(e, "Failed to get selection"), { success: !1, usedFunc: o };
   if (e.multiple)
-    if (Array.from(e.options).forEach((r) => r.selected = !1), t === "true") {
-      const r = Math.min(Math.ceil(o.length / 2), o.length), s = [a.data], n = o.filter((l) => l !== a.data);
-      for (let l = 1; l < r && n.length > 0; l++) {
+    if (Array.from(e.options).forEach((r) => r.selected = !1), o === "true") {
+      const r = Math.min(Math.ceil(a.length / 2), a.length), s = [t.data], n = a.filter((c) => c !== t.data);
+      for (let c = 1; c < r && n.length > 0; c++) {
         const i = Math.floor(Math.random() * n.length);
         s.push(n.splice(i, 1)[0]);
       }
-      s.forEach((l) => {
-        const i = e.options.namedItem(l) || Array.from(e.options).find((c) => c.value === l);
+      s.forEach((c) => {
+        const i = e.options.namedItem(c) || Array.from(e.options).find((l) => l.value === c);
         i && (i.selected = !0);
       });
     } else
-      a.data.split(",").map((s) => s.trim()).filter((s) => s !== "").forEach((s) => {
-        const n = e.options.namedItem(s) || Array.from(e.options).find((l) => l.value === s);
+      t.data.split(",").map((s) => s.trim()).filter((s) => s !== "").forEach((s) => {
+        const n = e.options.namedItem(s) || Array.from(e.options).find((c) => c.value === s);
         n && (n.selected = !0);
       });
   else
-    e.value = a.data;
-  return e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: t === "true" ? "random" : t };
+    e.value = t.data;
+  return e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: o === "true" ? "random" : o };
 }
-async function Y(e, t) {
-  const o = t === "true" ? "number" : t, a = await d(o);
-  return a.success ? (e.value = a.data, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: o }) : (console.warn(`[Gofakeit Autofill] Error for function ${o}:`, a.error), a.status === 400 && p(e, "", o), { success: !1, usedFunc: o });
+async function _(e, o) {
+  const a = o === "true" ? "number" : o, t = await d(a);
+  return t.success ? (e.value = t.data, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: a }) : (console.warn(`[Gofakeit Autofill] Error for function ${a}:`, t.error), t.status === 400 && p(e, "", a), { success: !1, usedFunc: a });
 }
-async function W(e) {
-  const t = parseFloat(e.min) || 0, o = parseFloat(e.max) || 100, a = `number?min=${t}&max=${o}`, r = await d(a);
-  return r.success ? (e.value = r.data, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: a }) : (console.warn("[Gofakeit Autofill] Error for range input:", r.error), r.status === 400 && p(e, "Failed to get random number for range"), { success: !1, usedFunc: a });
+async function Y(e) {
+  const o = parseFloat(e.min) || 0, a = parseFloat(e.max) || 100, t = `number?min=${o}&max=${a}`, r = await d(t);
+  return r.success ? (e.value = r.data, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: t }) : (console.warn("[Gofakeit Autofill] Error for range input:", r.error), r.status === 400 && p(e, "Failed to get random number for range"), { success: !1, usedFunc: t });
 }
-async function ee(e) {
+async function Z(e, o) {
+  const t = { ...{ smart: !0 }, ...o };
   if (!e)
-    return J();
+    return W(t);
   if (e instanceof HTMLElement && A(e))
-    return T(e);
+    return S(e, t);
   if (e instanceof HTMLInputElement || e instanceof HTMLTextAreaElement || e instanceof HTMLSelectElement) {
-    const t = await L(e);
-    return t || f("Failed to autofill the specified element", "error"), t;
+    const r = await F(e, t);
+    return r || f("Failed to autofill the specified element", "error"), r;
   }
   if (e instanceof HTMLElement) {
-    const t = X(e);
-    if (t)
-      return T(t);
+    const r = Q(e);
+    if (r)
+      return S(r, t);
   }
   return !1;
 }
-async function J() {
-  const e = P(), t = await C(), a = (t ? e : e.filter((s) => s.hasAttribute("data-gofakeit"))).filter((s) => !M(s));
-  if (a.length === 0) {
-    f(t ? "No form fields found to autofill" : "No data-gofakeit fields exist. Turn on Smart-fill to fill this page.", "info");
-    return;
-  }
-  console.log(`[Gofakeit] Found ${a.length} elements to generate data for`), f(`Starting data generation for ${a.length} fields...`, "info");
-  const r = await N(a);
-  $(r.success, r.failed, "Autofill");
-}
-async function T(e) {
-  const t = P(e), o = await C(), r = (o ? t : t.filter((n) => n.hasAttribute("data-gofakeit"))).filter((n) => !M(n));
+async function W(e) {
+  const o = L(), a = e.smart ?? !0, r = (a ? o : o.filter((n) => n.hasAttribute("data-gofakeit"))).filter((n) => !P(n));
   if (r.length === 0) {
-    f(o ? "No form fields found in this container" : "No data-gofakeit fields exist in this section. Turn on Smart-fill to fill it.", "info");
+    f(a ? "No form fields found to autofill" : "No data-gofakeit fields exist. Turn on Smart-fill to fill this page.", "info");
     return;
   }
-  console.log(`[Gofakeit] Found ${r.length} elements to generate data for in container`), f(`Starting data generation for ${r.length} fields...`, "info");
-  const s = await N(r);
-  $(s.success, s.failed, "Container autofill");
+  console.log(`[Gofakeit] Found ${r.length} elements to generate data for`), f(`Starting data generation for ${r.length} fields...`, "info");
+  const s = await M(r, e);
+  N(s.success, s.failed, "Autofill");
 }
-async function L(e) {
-  const t = e.getAttribute("data-gofakeit");
-  if (typeof t == "string" && t.trim().toLowerCase() === "false")
+async function S(e, o) {
+  const a = L(e), t = o.smart ?? !0, s = (t ? a : a.filter((c) => c.hasAttribute("data-gofakeit"))).filter((c) => !P(c));
+  if (s.length === 0) {
+    f(t ? "No form fields found in this container" : "No data-gofakeit fields exist in this section. Turn on Smart-fill to fill it.", "info");
+    return;
+  }
+  console.log(`[Gofakeit] Found ${s.length} elements to generate data for in container`), f(`Starting data generation for ${s.length} fields...`, "info");
+  const n = await M(s, o);
+  N(n.success, n.failed, "Container autofill");
+}
+async function F(e, o) {
+  const a = e.getAttribute("data-gofakeit");
+  if (typeof a == "string" && a.trim().toLowerCase() === "false")
     return !1;
-  const o = await C();
-  if (!t && !o)
+  const t = o.smart ?? !0;
+  if (!a && !t)
     return !1;
   try {
     if (e instanceof HTMLSelectElement) {
-      const a = t && t !== "true" ? t : "true", { success: r, usedFunc: s } = await _(e, a);
-      return r && m(e, s), r;
-    }
-    if (e instanceof HTMLTextAreaElement) {
-      const a = t && t !== "true" ? t : "sentence", { success: r, usedFunc: s } = await B(e, a);
-      return r && m(e, s), r;
-    }
-    if (e instanceof HTMLInputElement) {
-      const a = e.type.toLowerCase();
-      if (a === "checkbox") {
-        const l = t && t !== "true" ? t : "true", { success: i, usedFunc: c } = await z(e, l);
-        return i && m(e, c), i;
-      }
-      if (a === "radio") {
-        const l = t && t !== "true" ? t : "true", { success: i, usedFunc: c } = await q(e, l);
-        return i && m(e, c), i;
-      }
-      if (a === "number") {
-        const l = t && t !== "true" ? t : await w(e), { success: i, usedFunc: c } = await Y(e, l);
-        return i && m(e, c), i;
-      }
-      if (a === "range") {
-        const { success: l, usedFunc: i } = await W(e);
-        return l && m(e, i), l;
-      }
-      if (a === "date" || a === "time" || a === "datetime-local" || a === "month" || a === "week") {
-        const l = t && t !== "true" ? t : await w(e), { success: i, usedFunc: c } = await D(e, l);
-        return i && m(e, c), i;
-      }
-      const r = t && t !== "true" ? t : await w(e), { success: s, usedFunc: n } = await U(e, r);
+      const r = a && a !== "true" ? a : "true", { success: s, usedFunc: n } = await V(e, r);
       return s && m(e, n), s;
     }
+    if (e instanceof HTMLTextAreaElement) {
+      const r = a && a !== "true" ? a : "sentence", { success: s, usedFunc: n } = await U(e, r);
+      return s && m(e, n), s;
+    }
+    if (e instanceof HTMLInputElement) {
+      const r = e.type.toLowerCase();
+      if (r === "checkbox") {
+        const i = a && a !== "true" ? a : "true", { success: l, usedFunc: u } = await B(e, i);
+        return l && m(e, u), l;
+      }
+      if (r === "radio") {
+        const i = a && a !== "true" ? a : "true", { success: l, usedFunc: u } = await z(e, i);
+        return l && m(e, u), l;
+      }
+      if (r === "number") {
+        const i = a && a !== "true" ? a : await w(e), { success: l, usedFunc: u } = await _(e, i);
+        return l && m(e, u), l;
+      }
+      if (r === "range") {
+        const { success: i, usedFunc: l } = await Y(e);
+        return i && m(e, l), i;
+      }
+      if (r === "date" || r === "time" || r === "datetime-local" || r === "month" || r === "week") {
+        const i = a && a !== "true" ? a : await w(e), { success: l, usedFunc: u } = await R(e, i);
+        return l && m(e, u), l;
+      }
+      const s = a && a !== "true" ? a : await w(e), { success: n, usedFunc: c } = await D(e, s);
+      return n && m(e, c), n;
+    }
     return console.warn("[Gofakeit] Unsupported element type:", e), !1;
-  } catch (a) {
-    return console.error("[Gofakeit] Unexpected error generating data for element:", e, a), !1;
+  } catch (r) {
+    return console.error("[Gofakeit] Unexpected error generating data for element:", e, r), !1;
   }
 }
-function P(e) {
-  const t = "input, textarea, select", o = e ? e.querySelectorAll(t) : document.querySelectorAll(t), a = [];
-  return o.forEach((r) => {
+function L(e) {
+  const o = "input, textarea, select", a = e ? e.querySelectorAll(o) : document.querySelectorAll(o), t = [];
+  return a.forEach((r) => {
     if (r instanceof HTMLInputElement) {
       if (r.type === "hidden" || r.disabled || r.readOnly) return;
-      a.push(r);
+      t.push(r);
     } else if (r instanceof HTMLTextAreaElement) {
       if (r.disabled || r.readOnly) return;
-      a.push(r);
+      t.push(r);
     } else if (r instanceof HTMLSelectElement) {
       if (r.disabled) return;
-      a.push(r);
+      t.push(r);
     }
-  }), a;
+  }), t;
 }
-function M(e) {
-  const t = e.getAttribute && e.getAttribute("data-gofakeit");
-  return typeof t == "string" && t.trim().toLowerCase() === "false";
+function P(e) {
+  const o = e.getAttribute && e.getAttribute("data-gofakeit");
+  return typeof o == "string" && o.trim().toLowerCase() === "false";
 }
-function K(e) {
-  const t = [], o = /* @__PURE__ */ new Set();
-  for (const a of e) {
-    if (a instanceof HTMLInputElement) {
-      const r = a.type.toLowerCase();
+function J(e) {
+  const o = [], a = /* @__PURE__ */ new Set();
+  for (const t of e) {
+    if (t instanceof HTMLInputElement) {
+      const r = t.type.toLowerCase();
       if (r === "checkbox" || r === "radio") {
-        const s = a.name;
-        if (s && o.has(s))
+        const s = t.name;
+        if (s && a.has(s))
           continue;
-        s && o.add(s);
+        s && a.add(s);
       }
     }
-    t.push(a);
+    o.push(t);
   }
-  return t;
+  return o;
 }
-async function N(e) {
-  let t = 0, o = 0;
-  const a = K(e);
-  for (const r of a)
+async function M(e, o) {
+  let a = 0, t = 0;
+  const r = J(e);
+  for (const s of r)
     try {
-      await L(r) ? (t++, setTimeout(() => {
-        r instanceof HTMLInputElement || r instanceof HTMLTextAreaElement ? r.value === "" && console.warn("[Gofakeit Autofill] Value was cleared for element:", r) : r instanceof HTMLSelectElement && r.value === "" && console.warn("[Gofakeit Autofill] Value was cleared for select:", r);
-      }, 1e3)) : o++;
-    } catch (s) {
-      o++, console.warn("[Gofakeit Autofill] Failed to autofill element:", r, s);
+      await F(s, o) ? (a++, setTimeout(() => {
+        s instanceof HTMLInputElement || s instanceof HTMLTextAreaElement ? s.value === "" && console.warn("[Gofakeit Autofill] Value was cleared for element:", s) : s instanceof HTMLSelectElement && s.value === "" && console.warn("[Gofakeit Autofill] Value was cleared for select:", s);
+      }, 1e3)) : t++;
+    } catch (n) {
+      t++, console.warn("[Gofakeit Autofill] Failed to autofill element:", s, n);
     }
-  return { success: t, failed: o };
+  return { success: a, failed: t };
 }
-function $(e, t, o) {
-  e > 0 && (console.log(`[Gofakeit] ${o} completed successfully for ${e} fields`), f(`Successfully generated data for ${e} fields!`, "success")), t > 0 && (console.error(`[Gofakeit] ${o} failed for ${t} fields`), f(`Failed to generate data for ${t} fields.`, "error")), e === 0 && t === 0 && (console.log(`[Gofakeit] ${o} - no fields were processed`), f("No fields were processed.", "info"));
+function N(e, o, a) {
+  e > 0 && (console.log(`[Gofakeit] ${a} completed successfully for ${e} fields`), f(`Successfully generated data for ${e} fields!`, "success")), o > 0 && (console.error(`[Gofakeit] ${a} failed for ${o} fields`), f(`Failed to generate data for ${o} fields.`, "error")), e === 0 && o === 0 && (console.log(`[Gofakeit] ${a} - no fields were processed`), f("No fields were processed.", "info"));
 }
-function p(e, t, o) {
+function p(e, o, a) {
   e instanceof HTMLElement && (e.style.border = `2px solid ${h.error}`, setTimeout(() => {
     e.style.border = "";
   }, 5e3));
-  const a = o ? `Invalid function: ${o}` : t;
-  j(e, a);
+  const t = a ? `Invalid function: ${a}` : o;
+  G(e, t);
 }
 function A(e) {
   return e.querySelectorAll("input[data-gofakeit], textarea[data-gofakeit], select[data-gofakeit]").length > 0;
 }
-function m(e, t) {
+function m(e, o) {
   if (!(e instanceof HTMLElement)) return;
-  const o = document.createElement("div");
-  o.textContent = t, o.style.position = "fixed", o.style.background = h.primary, o.style.color = "#000", o.style.fontFamily = "Arial, sans-serif", o.style.fontSize = "11px", o.style.padding = "3px 8px", o.style.borderRadius = "6px", o.style.boxShadow = "0 2px 6px rgba(0,0,0,0.25)", o.style.zIndex = "2147483647", o.style.opacity = "0", o.style.transform = "translateY(-6px)", o.style.transition = "opacity 200ms ease, transform 200ms ease", o.style.pointerEvents = "none";
-  const a = () => {
-    const i = e.getBoundingClientRect(), c = window.innerHeight || document.documentElement.clientHeight, u = window.innerWidth || document.documentElement.clientWidth;
-    if (i.bottom <= 0 || i.top >= c || i.right <= 0 || i.left >= u) {
-      o.style.display = "none";
+  const a = document.createElement("div");
+  a.textContent = o, a.style.position = "fixed", a.style.background = h.primary, a.style.color = "#000", a.style.fontFamily = "Arial, sans-serif", a.style.fontSize = "11px", a.style.padding = "3px 8px", a.style.borderRadius = "6px", a.style.boxShadow = "0 2px 6px rgba(0,0,0,0.25)", a.style.zIndex = "2147483647", a.style.opacity = "0", a.style.transform = "translateY(-6px)", a.style.transition = "opacity 200ms ease, transform 200ms ease", a.style.pointerEvents = "none";
+  const t = () => {
+    const i = e.getBoundingClientRect(), l = window.innerHeight || document.documentElement.clientHeight, u = window.innerWidth || document.documentElement.clientWidth;
+    if (i.bottom <= 0 || i.top >= l || i.right <= 0 || i.left >= u) {
+      a.style.display = "none";
       return;
     }
-    o.style.display === "none" && (o.style.display = "block");
+    a.style.display === "none" && (a.style.display = "block");
     const g = i.top - 8, b = i.left;
-    o.style.top = `${g}px`, o.style.left = `${b}px`;
+    a.style.top = `${g}px`, a.style.left = `${b}px`;
   };
-  document.body.appendChild(o), a(), requestAnimationFrame(() => {
-    o.style.opacity = "1", o.style.transform = "translateY(-12px)";
+  document.body.appendChild(a), t(), requestAnimationFrame(() => {
+    a.style.opacity = "1", a.style.transform = "translateY(-12px)";
   });
-  const r = () => a(), s = () => a();
+  const r = () => t(), s = () => t();
   window.addEventListener("scroll", r, !0), window.addEventListener("resize", s, !0);
   let n = null;
   if (typeof ResizeObserver < "u") {
-    n = new ResizeObserver(() => a());
+    n = new ResizeObserver(() => t());
     try {
       n.observe(e);
     } catch {
     }
   }
   setTimeout(() => {
-    o.style.opacity = "0", o.style.transform = "translateY(-6px)", setTimeout(() => {
+    a.style.opacity = "0", a.style.transform = "translateY(-6px)", setTimeout(() => {
       if (window.removeEventListener("scroll", r, !0), window.removeEventListener("resize", s, !0), n) {
         try {
           n.disconnect();
@@ -524,47 +525,36 @@ function m(e, t) {
         }
         n = null;
       }
-      o.parentNode && o.parentNode.removeChild(o);
+      a.parentNode && a.parentNode.removeChild(a);
     }, 220);
   }, 6e3);
 }
-async function C() {
-  return new Promise((e) => {
+function K(e) {
+  const o = [], a = e.id, t = e.getAttribute("aria-labelledby");
+  if (t && t.split(/\s+/).forEach((n) => {
+    const c = document.getElementById(n);
+    c && c.textContent && o.push(c.textContent);
+  }), a)
     try {
-      chrome.storage.sync.get({ gofakeitSmartFill: !0 }, (t) => {
-        e(!!t.gofakeitSmartFill);
-      });
-    } catch {
-      e(!1);
-    }
-  });
-}
-function Q(e) {
-  const t = [], o = e.id, a = e.getAttribute("aria-labelledby");
-  if (a && a.split(/\s+/).forEach((n) => {
-    const l = document.getElementById(n);
-    l && l.textContent && t.push(l.textContent);
-  }), o)
-    try {
-      const n = document.querySelector('label[for="' + o.replace(/"/g, '\\"') + '"]');
-      n && n.textContent && t.push(n.textContent);
+      const n = document.querySelector('label[for="' + a.replace(/"/g, '\\"') + '"]');
+      n && n.textContent && o.push(n.textContent);
     } catch {
     }
   const r = e.closest("label");
-  r && r.textContent && t.push(r.textContent);
+  r && r.textContent && o.push(r.textContent);
   const s = e.previousElementSibling;
-  return s && s.tagName === "LABEL" && s.textContent && t.push(s.textContent), t.join(" ").toLowerCase();
+  return s && s.tagName === "LABEL" && s.textContent && o.push(s.textContent), o.join(" ").toLowerCase();
 }
 async function w(e) {
-  const t = e.type.toLowerCase(), o = (e.name || "").toLowerCase(), a = (e.id || "").toLowerCase(), r = (e.placeholder || "").toLowerCase(), s = (e.autocomplete || "").toLowerCase(), n = (e.getAttribute("aria-label") || "").toLowerCase(), l = Q(e), i = `${o} ${a} ${r} ${s} ${n} ${l}`, c = (y, g = "word") => v(y) ? y : g;
-  if (t === "email" || /email/.test(i)) return c("email");
-  if (t === "password" || /password|pass/.test(i)) return c("password");
-  if (t === "tel" || /phone|tel|mobile/.test(i)) return c("phone");
-  if (t === "url" || /url|website/.test(i)) return c("url");
-  if (t === "color" || /color/.test(i)) return c("hexcolor");
-  if (t === "number" || /\b(?:age|qty|quantity|count|amount)\b/.test(i))
+  const o = e.type.toLowerCase(), a = (e.name || "").toLowerCase(), t = (e.id || "").toLowerCase(), r = (e.placeholder || "").toLowerCase(), s = (e.autocomplete || "").toLowerCase(), n = (e.getAttribute("aria-label") || "").toLowerCase(), c = K(e), i = `${a} ${t} ${r} ${s} ${n} ${c}`, l = (y, g = "word") => v(y) ? y : g;
+  if (o === "email" || /email/.test(i)) return l("email");
+  if (o === "password" || /password|pass/.test(i)) return l("password");
+  if (o === "tel" || /phone|tel|mobile/.test(i)) return l("phone");
+  if (o === "url" || /url|website/.test(i)) return l("url");
+  if (o === "color" || /color/.test(i)) return l("hexcolor");
+  if (o === "number" || /\b(?:age|qty|quantity|count|amount)\b/.test(i))
     return v("number") ? "number?min=1&max=9999" : "word";
-  if (t === "" || t === "text") {
+  if (o === "" || o === "text") {
     const y = (e.placeholder || "").trim();
     if (/^[+-]?\d+$/.test(y)) {
       const g = Math.min(y.replace(/[^0-9]/g, "").length || 1, 9);
@@ -575,26 +565,26 @@ async function w(e) {
       return `generate?str={number:0,100}.{generate:${"#".repeat(b)}}`;
     }
   }
-  return /credit\s*card|card\b|cc\b/.test(i) && /(number|no|num)/.test(i) || /card[-_ ]?number|credit[-_ ]?card[-_ ]?number/.test(i) || n.includes("credit card number") || r.includes("••••") || e.maxLength >= 16 && e.maxLength <= 19 && /card|credit/.test(i) ? "creditcardnumber" : /\bcvv\b|\bcvc\b|security\s*code|card\s*code|\bcid\b|\bcv2\b/.test(i) && v("creditcardcvv") ? "creditcardcvv" : (/\bexp(iry|iration)?\b|valid\s*(thru|through)|mm\s*\/\s*yy|yy\s*\/\s*mm|mm\s*yy|yy\s*mm|expiry\s*date|exp\.?\s*date/.test(i) || /\b\d{2}\s*\/\s*\d{2}\b/.test((e.value || "").toLowerCase())) && v("creditcardexp") ? "creditcardexp" : t === "date" || /\bdate\b|\bdob\b|birthday/.test(i) || t === "time" || /\btime\b/.test(i) || t === "datetime-local" || /\bdatetime\b|appointment/.test(i) ? c("date") : (/\baccount\b\s*(?:number|no)\b|\bacct\b/.test(i) || /\baccount\s*number\b/.test(r)) && v("achaccount") ? "achaccount" : /routing\s*(number|no)|\baba\b/.test(i) && v("achrouting") ? "achrouting" : /(^|\b)(apartment|apt|suite|unit|floor|bldg|building|room|ste|address[-_ ]?line[-_ ]?2|address2|addr2|line[-_ ]?2)(\b|$)/.test(i) ? c("unit") : /first\s*name|firstname|first_name|given/.test(i) ? c("firstname") : /last\s*name|lastname|last_name|surname|family/.test(i) ? c("lastname") : /full\s*name|fullname/.test(i) ? c("name") : /city/.test(i) ? c("city") : /state|province|region/.test(i) ? c("state") : /\bpostal\b|\bpostal[-_ ]?code\b|\bpostcode\b|\bzip\b|\bzip[-_ ]?code\b/.test(i) ? v("postcode") ? "postcode" : "zip" : /address|street/.test(i) ? c("street") : /company|organization|org/.test(i) ? c("company") : /job|title|role/.test(i) ? c("jobtitle", c("job")) : /website|domain/.test(i) ? c("url") : /username|user\b/.test(i) ? c("username") : (t === "search" || v("word"), "word");
+  return /credit\s*card|card\b|cc\b/.test(i) && /(number|no|num)/.test(i) || /card[-_ ]?number|credit[-_ ]?card[-_ ]?number/.test(i) || n.includes("credit card number") || r.includes("••••") || e.maxLength >= 16 && e.maxLength <= 19 && /card|credit/.test(i) ? "creditcardnumber" : /\bcvv\b|\bcvc\b|security\s*code|card\s*code|\bcid\b|\bcv2\b/.test(i) && v("creditcardcvv") ? "creditcardcvv" : (/\bexp(iry|iration)?\b|valid\s*(thru|through)|mm\s*\/\s*yy|yy\s*\/\s*mm|mm\s*yy|yy\s*mm|expiry\s*date|exp\.?\s*date/.test(i) || /\b\d{2}\s*\/\s*\d{2}\b/.test((e.value || "").toLowerCase())) && v("creditcardexp") ? "creditcardexp" : o === "date" || /\bdate\b|\bdob\b|birthday/.test(i) || o === "time" || /\btime\b/.test(i) || o === "datetime-local" || /\bdatetime\b|appointment/.test(i) ? l("date") : (/\baccount\b\s*(?:number|no)\b|\bacct\b/.test(i) || /\baccount\s*number\b/.test(r)) && v("achaccount") ? "achaccount" : /routing\s*(number|no)|\baba\b/.test(i) && v("achrouting") ? "achrouting" : /(^|\b)(apartment|apt|suite|unit|floor|bldg|building|room|ste|address[-_ ]?line[-_ ]?2|address2|addr2|line[-_ ]?2)(\b|$)/.test(i) ? l("unit") : /first\s*name|firstname|first_name|given/.test(i) ? l("firstname") : /last\s*name|lastname|last_name|surname|family/.test(i) ? l("lastname") : /full\s*name|fullname/.test(i) ? l("name") : /city/.test(i) ? l("city") : /state|province|region/.test(i) ? l("state") : /\bpostal\b|\bpostal[-_ ]?code\b|\bpostcode\b|\bzip\b|\bzip[-_ ]?code\b/.test(i) ? v("postcode") ? "postcode" : "zip" : /address|street/.test(i) ? l("street") : /company|organization|org/.test(i) ? l("company") : /job|title|role/.test(i) ? l("jobtitle", l("job")) : /website|domain/.test(i) ? l("url") : /username|user\b/.test(i) ? l("username") : (o === "search" || v("word"), "word");
 }
-function X(e) {
+function Q(e) {
   if (A(e))
     return e;
-  let t = e.parentElement;
-  for (; t; ) {
-    if (A(t))
-      return t;
-    t = t.parentElement;
+  let o = e.parentElement;
+  for (; o; ) {
+    if (A(o))
+      return o;
+    o = o.parentElement;
   }
   return null;
 }
-function f(e, t = "info") {
-  console.log(`[Gofakeit ${t.toUpperCase()}] ${e}`);
+function f(e, o = "info") {
+  console.log(`[Gofakeit ${o.toUpperCase()}] ${e}`);
 }
 export {
-  ee as autofill,
+  Z as autofill,
   d as callFunc,
-  Z as getFuncs,
+  X as getFuncs,
   v as hasFunc
 };
 //# sourceMappingURL=index.js.map
