@@ -2,7 +2,7 @@
 
 A powerful autofill plugin for form field automation using the Gofakeit API.
 
-![Tests](https://img.shields.io/badge/tests-91%20passed-brightgreen) ![Coverage](https://img.shields.io/badge/coverage-72.4%25-green) ![Test Files](https://img.shields.io/badge/test%20files-6-blue)
+![Tests](https://img.shields.io/badge/tests-102%20passed-brightgreen) ![Coverage](https://img.shields.io/badge/coverage-75.1%25-green)
 
 ## Features
 
@@ -26,19 +26,36 @@ npm install
 The `autofill()` function is the main entry point that handles all autofill scenarios:
 
 ```typescript
-import { autofill } from 'gofakeit'
+import { autofill, type AutofillSettings } from 'gofakeit'
 
-// Autofill all form fields on the page
+// Autofill all form fields on the page (with default settings)
 await autofill()
+
+// Autofill with custom settings
+await autofill(undefined, { smart: true }) // Enable smart-fill mode
+await autofill(undefined, { smart: false }) // Only fill fields with data-gofakeit attributes
 
 // Autofill all fields within a specific container
 const form = document.getElementById('myForm')
-await autofill(form)
+await autofill(form, { smart: true })
 
 // Autofill a single form element
 const input = document.getElementById('email')
-await autofill(input)
+await autofill(input, { smart: false })
 ```
+
+### Settings
+
+The `autofill()` function accepts an optional settings object:
+
+```typescript
+interface AutofillSettings {
+  smart?: boolean; // Default: true - Enable smart form field detection
+}
+```
+
+- **`smart: true`** (default): Automatically detects and fills form fields based on their type, name, placeholder, etc.
+- **`smart: false`**: Only fills fields that have explicit `data-gofakeit` attributes
 
 ### API Functions
 
