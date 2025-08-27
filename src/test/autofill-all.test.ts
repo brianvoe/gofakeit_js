@@ -142,4 +142,46 @@ describe('Autofill All Fields', () => {
     // Should not throw an error
     await expect(autofill()).resolves.not.toThrow()
   })
+
+  it('should respect smart setting when provided', async () => {
+    // Add some fields without data-gofakeit attributes
+    document.body.innerHTML = `
+      <form id="testForm">
+        <input type="text" name="smartField" placeholder="Smart detected field">
+        <input type="email" name="emailField" placeholder="Email field">
+        <input type="text" name="manualField" data-gofakeit="true" placeholder="Manual field">
+        <input type="text" name="excludedField" data-gofakeit="false" placeholder="Excluded field">
+      </form>
+    `
+
+    const form = document.getElementById('testForm') as HTMLFormElement
+
+    // Test smart mode (default)
+    await autofill(undefined, { smart: true })
+    
+    // Smart mode should fill all fields except excluded ones
+    const smartField = form.querySelector('[name="smartField"]') as HTMLInputElement
+    const emailField = form.querySelector('[name="emailField"]') as HTMLInputElement
+    const manualField = form.querySelector('[name="manualField"]') as HTMLInputElement
+    const excludedField = form.querySelector('[name="excludedField"]') as HTMLInputElement
+    
+    expect(smartField.value).not.toBe('')
+    expect(emailField.value).not.toBe('')
+    expect(manualField.value).not.toBe('')
+    expect(excludedField.value).toBe('') // Should remain empty
+
+    // Clear fields and test manual mode
+    smartField.value = ''
+    emailField.value = ''
+    manualField.value = ''
+    excludedField.value = ''
+
+    await autofill(undefined, { smart: false })
+    
+    // Manual mode should only fill fields with data-gofakeit attributes
+    expect(smartField.value).toBe('') // Should remain empty
+    expect(emailField.value).toBe('') // Should remain empty
+    expect(manualField.value).not.toBe('') // Should be filled
+    expect(excludedField.value).toBe('') // Should remain empty
+  })
 })
