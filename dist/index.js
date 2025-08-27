@@ -365,7 +365,7 @@ async function Z(e, o) {
 async function W(e) {
   const o = L(), a = e.smart ?? !0, r = (a ? o : o.filter((n) => n.hasAttribute("data-gofakeit"))).filter((n) => !P(n));
   if (r.length === 0) {
-    f(a ? "No form fields found to autofill" : "No data-gofakeit fields exist. Turn on Smart-fill to fill this page.", "info");
+    f(a ? "No form fields found to autofill" : "No data-gofakeit fields exist. Turn on Smart mode to fill all form fields.", "info");
     return;
   }
   console.log(`[Gofakeit] Found ${r.length} elements to generate data for`), f(`Starting data generation for ${r.length} fields...`, "info");
@@ -375,7 +375,7 @@ async function W(e) {
 async function S(e, o) {
   const a = L(e), t = o.smart ?? !0, s = (t ? a : a.filter((c) => c.hasAttribute("data-gofakeit"))).filter((c) => !P(c));
   if (s.length === 0) {
-    f(t ? "No form fields found in this container" : "No data-gofakeit fields exist in this section. Turn on Smart-fill to fill it.", "info");
+    f(t ? "No form fields found in this container" : "No data-gofakeit fields exist in this section. Turn on Smart mode to fill all form fields.", "info");
     return;
   }
   console.log(`[Gofakeit] Found ${s.length} elements to generate data for in container`), f(`Starting data generation for ${s.length} fields...`, "info");
