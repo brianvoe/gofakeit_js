@@ -7,7 +7,7 @@ vi.mock('../api', () => ({
   callFunc: vi.fn()
 }));
 
-describe('Autofill Settings', () => {
+describe('Autofill Smart Mode', () => {
   beforeEach(() => {
     // Clear all mocks before each test
     vi.clearAllMocks();

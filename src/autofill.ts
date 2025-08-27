@@ -54,16 +54,18 @@ export async function autofill(target?: HTMLElement | Element, settings?: Autofi
 // Autofill all form fields on the page
 async function autofillAll(settings: AutofillSettings): Promise<void> {
   const elements = queryFormElements();
-  const smartEnabled = settings.smart ?? true;
+  const smartMode = settings.smart ?? true;
 
-  const targetsBase = smartEnabled
+  // Smart mode: Fill ALL form fields (except those explicitly excluded)
+  // Manual mode: Only fill fields with data-gofakeit attributes
+  const targetsBase = smartMode
     ? elements
     : elements.filter((el) => (el as Element).hasAttribute('data-gofakeit'));
   const targets = targetsBase.filter((el) => !isDataGofakeitFalse(el));
 
   if (targets.length === 0) {
-    if (!smartEnabled) {
-      showNotification('No data-gofakeit fields exist. Turn on Smart-fill to fill this page.', 'info');
+    if (!smartMode) {
+      showNotification('No data-gofakeit fields exist. Turn on Smart mode to fill all form fields.', 'info');
     } else {
       showNotification('No form fields found to autofill', 'info');
     }
@@ -80,16 +82,18 @@ async function autofillAll(settings: AutofillSettings): Promise<void> {
 // Autofill all fields within a specific container
 async function autofillContainer(container: HTMLElement, settings: AutofillSettings): Promise<void> {
   const elements = queryFormElements(container);
-  const smartEnabled = settings.smart ?? true;
+  const smartMode = settings.smart ?? true;
 
-  const targetsBase = smartEnabled
+  // Smart mode: Fill ALL form fields in container (except those explicitly excluded)
+  // Manual mode: Only fill fields with data-gofakeit attributes
+  const targetsBase = smartMode
     ? elements
     : elements.filter((el) => (el as Element).hasAttribute('data-gofakeit'));
   const targets = targetsBase.filter((el) => !isDataGofakeitFalse(el));
 
   if (targets.length === 0) {
-    if (!smartEnabled) {
-      showNotification('No data-gofakeit fields exist in this section. Turn on Smart-fill to fill it.', 'info');
+    if (!smartMode) {
+      showNotification('No data-gofakeit fields exist in this section. Turn on Smart mode to fill all form fields.', 'info');
     } else {
       showNotification('No form fields found in this container', 'info');
     }
@@ -110,8 +114,10 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
     return false;
   }
   
-  const smartEnabled = settings.smart ?? true;
-  if (!gofakeitFunc && !smartEnabled) {
+  const smartMode = settings.smart ?? true;
+  // Smart mode: Fill any form field (even without data-gofakeit attribute)
+  // Manual mode: Only fill fields that have data-gofakeit attributes
+  if (!gofakeitFunc && !smartMode) {
     return false;
   }
 
