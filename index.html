@@ -106,6 +106,23 @@
             background: #1e7e34;
         }
         
+        .btn-info {
+            background: #17a2b8;
+        }
+        
+        .btn-info:hover {
+            background: #138496;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+        
         .sidebar {
             width: 300px;
             background: white;
@@ -386,19 +403,27 @@
     <div class="sidebar">
         <div class="controls">
             <h3 style="margin-top: 0; color: #333;">🎮 Controls</h3>
-                    <button class="btn" onclick="autofill()">🚀 Autofill All Fields</button>
-        <button class="btn btn-secondary" onclick="autofill('personal-info')">👤 Personal Info</button>
-        <button class="btn btn-secondary" onclick="autofill('contact-info')">📞 Contact Info</button>
-        <button class="btn btn-secondary" onclick="autofill('address-info')">🏠 Address Info</button>
-        <button class="btn btn-secondary" onclick="autofill('preferences')">⚙️ Preferences</button>
-            <button class="btn btn-success" onclick="clearAll()">🧹 Clear All</button>
+            <button class="btn" onclick="autofill()">🚀 Autofill All Fields</button>
+            <button class="btn btn-secondary" onclick="autofill('personal-info')">👤 Personal Info</button>
+            <button class="btn btn-secondary" onclick="autofill('contact-info')">📞 Contact Info</button>
+            <button class="btn btn-secondary" onclick="autofill('address-info')">🏠 Address Info</button>
+            <button class="btn btn-secondary" onclick="autofill('preferences')">⚙️ Preferences</button>
+            
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+                <h4 style="margin: 0 0 10px 0; color: #333; font-size: 14px;">🔧 Settings Examples</h4>
+                <button class="btn btn-info" onclick="autofillWithSettings('smart')" style="margin-bottom: 5px; width: 100%;">🧠 Smart Mode (Default)</button>
+                <button class="btn btn-warning" onclick="autofillWithSettings('manual')" style="margin-bottom: 5px; width: 100%;">🎯 Manual Mode (data-gofakeit only)</button>
+            </div>
+            
+            <button class="btn btn-success" onclick="clearAll()" style="margin-top: 15px;">🧹 Clear All</button>
         </div>
         
         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 20px;">
             <h4 style="margin-top: 0; color: #333;">💡 How to Use</h4>
             <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #666;">
                 <li>Click any button to autofill that section</li>
-                <li>Fields with <code>data-gofakeit="true"</code> will be filled</li>
+                <li><strong>Smart Mode</strong>: Automatically detects and fills all form fields</li>
+                <li><strong>Manual Mode</strong>: Only fills fields with <code>data-gofakeit</code> attributes</li>
                 <li>Fields with <code>data-gofakeit="false"</code> will be ignored</li>
                 <li>Custom functions can be specified like <code>data-gofakeit="uuid"</code></li>
             </ul>
@@ -437,6 +462,19 @@
                     await autofill();
                     showStatus('✅ All fields filled successfully!', 'success');
                 }
+            } catch (error) {
+                showStatus('❌ Error filling fields: ' + error.message, 'error');
+            }
+        };
+        
+        // New function to demonstrate settings
+        window.autofillWithSettings = async (mode) => {
+            try {
+                const settings = mode === 'manual' ? { smart: false } : { smart: true };
+                const modeText = mode === 'manual' ? 'Manual Mode' : 'Smart Mode';
+                
+                await autofill(undefined, settings);
+                showStatus(`✅ All fields filled with ${modeText}!`, 'success');
             } catch (error) {
                 showStatus('❌ Error filling fields: ' + error.message, 'error');
             }
