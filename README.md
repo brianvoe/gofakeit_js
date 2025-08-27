@@ -54,8 +54,8 @@ interface AutofillSettings {
 }
 ```
 
-- **`smart: true`** (default): Automatically detects and fills form fields based on their type, name, placeholder, etc.
-- **`smart: false`**: Only fills fields that have explicit `data-gofakeit` attributes
+- **`smart: true`** (default): Fills ALL form fields on the page, intelligently detecting appropriate data types based on field attributes (type, name, placeholder, etc.)
+- **`smart: false`**: Only fills fields that have explicit `data-gofakeit` attributes (manual mode)
 
 ### API Functions
 
