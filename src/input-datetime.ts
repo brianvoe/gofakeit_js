@@ -1,22 +1,25 @@
 import { callFunc } from './api';
-import { handleError } from './autofill';
+import { handleError, getDefaultFunctionForInputType } from './autofill';
 
 // Get function name for date/time input (for batch processing)
 export function getDateTimeInput(element: HTMLInputElement, gofakeitFunc: string): string {
   const inputType = element.type.toLowerCase();
   
-  // For inputs that use a single function
-  if (inputType === 'date' || inputType === 'datetime-local') {
-    return gofakeitFunc === 'true' ? 'date' : gofakeitFunc;
+  // For all date/time inputs, use local generate functions when gofakeitFunc is 'true'
+  if (inputType === 'date') {
+    return gofakeitFunc === 'true' ? 'generateDate' : gofakeitFunc;
   }
   
-  // For inputs that use multiple functions, we'll use generate functions
+  if (inputType === 'datetime-local') {
+    return gofakeitFunc === 'true' ? 'generateDateTime' : gofakeitFunc;
+  }
+  
   if (inputType === 'time') {
-    return 'generateTime';
+    return gofakeitFunc === 'true' ? 'generateTime' : gofakeitFunc;
   }
   
   if (inputType === 'month') {
-    return 'generateMonth';
+    return gofakeitFunc === 'true' ? 'generateMonth' : gofakeitFunc;
   }
   
   if (inputType === 'week') {
@@ -35,29 +38,38 @@ export function setDateTimeInput(element: HTMLInputElement, value: string): void
 
 // Generate time string (HH:MM format)
 export async function generateTime(): Promise<string> {
-  const hourResponse = await callFunc('hour');
-  const minuteResponse = await callFunc('minute');
-  
-  if (!hourResponse.success || !minuteResponse.success) {
-    throw new Error(`Failed to generate time: ${hourResponse.error || minuteResponse.error}`);
-  }
-  
-  const hour = hourResponse.data!.padStart(2, '0');
-  const minute = minuteResponse.data!.padStart(2, '0');
+  // Generate random hour and minute locally
+  const hour = Math.floor(Math.random() * 24).toString().padStart(2, '0');
+  const minute = Math.floor(Math.random() * 60).toString().padStart(2, '0');
   return `${hour}:${minute}`;
 }
 
 // Generate month string (YYYY-MM format)
 export async function generateMonth(): Promise<string> {
-  const yearResponse = await callFunc('year');
-  const monthResponse = await callFunc('month');
-  
-  if (!yearResponse.success || !monthResponse.success) {
-    throw new Error(`Failed to generate month: ${yearResponse.error || monthResponse.error}`);
-  }
-  
-  const month = monthResponse.data!.padStart(2, '0');
-  return `${yearResponse.data!}-${month}`;
+  // Generate random year and month locally
+  const year = Math.floor(Math.random() * 30) + 1990; // Random year between 1990-2020
+  const month = (Math.floor(Math.random() * 12) + 1).toString().padStart(2, '0');
+  return `${year}-${month}`;
+}
+
+// Generate date string (YYYY-MM-DD format)
+export async function generateDate(): Promise<string> {
+  // Generate random year, month, and day locally
+  const year = Math.floor(Math.random() * 30) + 1990; // Random year between 1990-2020
+  const month = (Math.floor(Math.random() * 12) + 1).toString().padStart(2, '0');
+  const day = (Math.floor(Math.random() * 28) + 1).toString().padStart(2, '0'); // Use 28 to avoid invalid dates
+  return `${year}-${month}-${day}`;
+}
+
+// Generate datetime string (YYYY-MM-DDTHH:MM format)
+export async function generateDateTime(): Promise<string> {
+  // Generate random date and time locally
+  const year = Math.floor(Math.random() * 30) + 1990; // Random year between 1990-2020
+  const month = (Math.floor(Math.random() * 12) + 1).toString().padStart(2, '0');
+  const day = (Math.floor(Math.random() * 28) + 1).toString().padStart(2, '0'); // Use 28 to avoid invalid dates
+  const hour = Math.floor(Math.random() * 24).toString().padStart(2, '0');
+  const minute = Math.floor(Math.random() * 60).toString().padStart(2, '0');
+  return `${year}-${month}-${day}T${hour}:${minute}`;
 }
 
 // Generate week string (YYYY-W## format)
@@ -105,6 +117,10 @@ export async function handleDateTimeInput(element: HTMLInputElement, gofakeitFun
         finalValue = await generateMonth();
       } else if (functionToCall === 'generateWeek') {
         finalValue = await generateWeek();
+      } else if (functionToCall === 'generateDate') {
+        finalValue = await generateDate();
+      } else if (functionToCall === 'generateDateTime') {
+        finalValue = await generateDateTime();
       } else {
         // Handle single function cases
         const response = await callFunc(functionToCall);
@@ -114,10 +130,38 @@ export async function handleDateTimeInput(element: HTMLInputElement, gofakeitFun
           if (response.status === 400) {
             handleError(element, `Failed to get random ${inputType}`);
           }
-          return { success: false, usedFunc: functionToCall };
+          
+          // Fallback to default function for this input type
+          const fallbackFunc = getDefaultFunctionForInputType(inputType);
+          if (fallbackFunc !== functionToCall) {
+            console.warn(`[Gofakeit Autofill] Falling back to default function: ${fallbackFunc}`);
+            
+            // Handle generate functions directly
+            if (fallbackFunc === 'generateWeek') {
+              finalValue = await generateWeek();
+            } else if (fallbackFunc === 'generateTime') {
+              finalValue = await generateTime();
+            } else if (fallbackFunc === 'generateMonth') {
+              finalValue = await generateMonth();
+            } else if (fallbackFunc === 'generateDate') {
+              finalValue = await generateDate();
+            } else if (fallbackFunc === 'generateDateTime') {
+              finalValue = await generateDateTime();
+            } else {
+              // For other functions, try calling the API
+              const fallbackResponse = await callFunc(fallbackFunc);
+              if (fallbackResponse.success) {
+                finalValue = fallbackResponse.data!;
+              } else {
+                return { success: false, usedFunc: functionToCall };
+              }
+            }
+          } else {
+            return { success: false, usedFunc: functionToCall };
+          }
+        } else {
+          finalValue = response.data!;
         }
-        
-        finalValue = response.data!;
       }
     }
     
@@ -133,7 +177,7 @@ export async function handleDateTimeInput(element: HTMLInputElement, gofakeitFun
       }
     } else if (inputType === 'datetime-local') {
       // Extract YYYY-MM-DDTHH:MM part from ISO datetime string
-      const datetimeMatch = finalValue.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}):\d{2}/);
+      const datetimeMatch = finalValue.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})(:\d{2})?/);
       if (datetimeMatch) {
         finalValue = datetimeMatch[1];
       } else {

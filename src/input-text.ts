@@ -1,5 +1,5 @@
 import { callFunc } from './api';
-import { handleError } from './autofill';
+import { handleError, getDefaultFunctionForInputType } from './autofill';
 
 // Get function name for text input (for batch processing)
 export function getTextInput(element: HTMLInputElement, gofakeitFunc: string): string {
@@ -47,6 +47,19 @@ export async function handleTextInput(element: HTMLInputElement, gofakeitFunc: s
     if (response.status === 400) {
       handleError(element, '', functionToCall);
     }
+    
+    // Fallback to default function for this input type
+    const inputType = element.type.toLowerCase();
+    const fallbackFunc = getDefaultFunctionForInputType(inputType);
+    if (fallbackFunc !== functionToCall) {
+      console.warn(`[Gofakeit Autofill] Falling back to default function: ${fallbackFunc}`);
+      const fallbackResponse = await callFunc(fallbackFunc);
+      if (fallbackResponse.success) {
+        setTextInput(element, fallbackResponse.data!);
+        return { success: true, usedFunc: fallbackFunc };
+      }
+    }
+    
     return { success: false, usedFunc: functionToCall };
   }
   
@@ -79,6 +92,18 @@ export async function handleTextarea(element: HTMLTextAreaElement, gofakeitFunc:
     if (response.status === 400) {
       handleError(element, '', functionToCall);
     }
+    
+    // Fallback to default function (sentence)
+    const fallbackFunc = 'sentence';
+    if (fallbackFunc !== functionToCall) {
+      console.warn(`[Gofakeit Autofill] Falling back to default function: ${fallbackFunc}`);
+      const fallbackResponse = await callFunc(fallbackFunc);
+      if (fallbackResponse.success) {
+        setTextarea(element, fallbackResponse.data!);
+        return { success: true, usedFunc: fallbackFunc };
+      }
+    }
+    
     return { success: false, usedFunc: functionToCall };
   }
   

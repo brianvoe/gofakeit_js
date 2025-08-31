@@ -336,7 +336,7 @@ async function processElements(elements: Element[], settings: AutofillSettings):
         // Check if this is an excluded type that should be processed individually
         if (element instanceof HTMLInputElement) {
           const inputType = element.type.toLowerCase();
-          if (['checkbox', 'radio', 'range', 'file', 'button', 'submit', 'reset', 'image', 'color'].includes(inputType)) {
+          if (['checkbox', 'radio', 'range', 'file', 'button', 'submit', 'reset', 'image', 'color', 'date', 'time', 'datetime-local', 'month', 'week'].includes(inputType)) {
             // Process excluded types individually
             excludedElements.push(element);
             continue;
@@ -823,12 +823,12 @@ function getAssociatedLabelText(input: HTMLInputElement): string {
 // Determine if an input type needs search API for function detection
 function needsSearchApi(inputType: string): boolean {
   // These input types have their own specific handling and don't need search API
-  const skipSearchTypes = ['checkbox', 'radio', 'select', 'range', 'file', 'button', 'submit', 'reset', 'image', 'color'];
+  const skipSearchTypes = ['checkbox', 'radio', 'select', 'range', 'file', 'button', 'submit', 'reset', 'image', 'color', 'week', 'date', 'time', 'datetime-local', 'month'];
   return !skipSearchTypes.includes(inputType);
 }
 
 // Get a default function for input types that don't need search API
-function getDefaultFunctionForInputType(inputType: string): string {
+export function getDefaultFunctionForInputType(inputType: string): string {
   switch (inputType) {
     case 'checkbox':
     case 'radio':
@@ -845,6 +845,16 @@ function getDefaultFunctionForInputType(inputType: string): string {
       return 'word';
     case 'color':
       return 'hexcolor';
+    case 'week':
+      return 'generateWeek';
+    case 'date':
+      return 'generateDate';
+    case 'time':
+      return 'generateTime';
+    case 'datetime-local':
+      return 'generateDateTime';
+    case 'month':
+      return 'generateMonth';
     default:
       return 'word';
   }

@@ -1,4 +1,4 @@
-import { callFunc, fetchRandomString } from './api';
+import { callFunc } from './api';
 import { handleError } from './autofill';
 
 // Handle checkbox input elements
@@ -271,8 +271,10 @@ export async function handleSelectWithFunction(element: HTMLSelectElement, gofak
   
   let response;
   if (gofakeitFunc === 'true') {
-    // Use random selection for 'true'
-    response = await fetchRandomString(options);
+    // Use random selection for 'true' - randomly select from options
+    const randomIndex = Math.floor(Math.random() * options.length);
+    const selectedOption = options[randomIndex];
+    response = { success: true, data: selectedOption };
   } else {
     // Use custom function
     response = await callFunc(gofakeitFunc);

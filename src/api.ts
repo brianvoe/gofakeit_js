@@ -85,10 +85,7 @@ export async function callFunc(func: string): Promise<ApiResponse> {
   }
 }
 
-// Fetch random string from an array of strings using gofakeit API
-export async function fetchRandomString(strings: string[]): Promise<ApiResponse> {
-  return makeRequest('POST', `${GOFAKEIT_API_BASE}/randomstring`, { strs: strings });
-}
+
 
 // Call multiple functions in a single request
 export async function callMultiFunc(requests: MultiFuncRequest[]): Promise<MultiFuncApiResponse> {

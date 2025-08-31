@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { callFunc, fetchRandomString } from '../api'
+import { callFunc } from '../api'
 
 describe('API Functions', () => {
   describe('callFunc', () => {
@@ -19,13 +19,5 @@ describe('API Functions', () => {
     })
   })
 
-  describe('fetchRandomString', () => {
-    it('should fetch random string data', async () => {
-      const result = await fetchRandomString(['test1', 'test2', 'test3'])
 
-      expect(result.success).toBe(true)
-      expect(result.data).toBeTruthy()
-      expect(typeof result.data).toBe('string')
-    })
-  })
 })
