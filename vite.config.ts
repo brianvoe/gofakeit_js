@@ -17,6 +17,9 @@ export default defineConfig({
       external: [],
       output: {
         globals: {}
+      },
+      input: {
+        main: resolve(__dirname, 'index.html')
       }
     },
     sourcemap: true,
