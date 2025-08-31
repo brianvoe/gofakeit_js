@@ -1,6 +1,6 @@
 # Gofakeit Autofill Plugin
 
-A powerful autofill plugin for form field automation using the Gofakeit API.
+A powerful autofill plugin for form field automation using the Gofakeit API with intelligent function detection.
 
 ![Tests](https://img.shields.io/badge/tests-102%20passed-brightgreen) ![Coverage](https://img.shields.io/badge/coverage-75.1%25-green)
 
@@ -8,17 +8,27 @@ A powerful autofill plugin for form field automation using the Gofakeit API.
 
 ## Features
 
-- 🎯 **Smart Form Detection**: Intelligent form field detection with smart-fill mode
-- 🌐 **API Integration**: Seamless integration with Gofakeit API
+- 🎯 **Smart Form Detection**: Automatically detects and fills form fields based on context, labels, and attributes
+- 🌐 **API Integration**: Seamless integration with Gofakeit API for data generation
+- ⚡ **Batch Processing**: Efficient batch processing with individual handling for special input types
+- 🎨 **Visual Feedback**: Function badges show which gofakeit function was used for each field
+- ⏱️ **Staggered Timing**: Configurable delays for visual effect during autofill
 - 🔧 **TypeScript**: Full TypeScript support with type definitions
 - 📦 **Modern Build**: ES modules and CommonJS support with minification
 - 🧪 **Comprehensive Testing**: Full test suite with Vitest and jsdom
 - 🛠️ **Extensible**: Easy to add new input types and functions
 
+### Excluded Input Types
+
+Certain input types are excluded from the search API and use direct function assignment:
+- `checkbox`, `radio`, `select` - Use predefined selection logic
+- `date`, `time`, `datetime-local`, `month`, `week` - Use local date/time generation
+- `color`, `range`, `file`, `button`, `image` - Use specific handlers
+
 ## Installation
 
 ```bash
-npm install
+npm install gofakeit
 ```
 
 ## Usage
@@ -52,19 +62,24 @@ The `autofill()` function accepts an optional settings object:
 
 ```typescript
 interface AutofillSettings {
-  smart?: boolean; // Default: true - Enable smart form field detection
+  smart?: boolean;        // Default: true - Enable smart form field detection
+  staggered?: boolean;    // Default: true - Add delays between field fills for visual effect
+  staggerDelay?: number;  // Default: 50 - Delay in milliseconds between field fills
 }
 ```
 
-- **`smart: true`** (default): Fills ALL form fields on the page, intelligently detecting appropriate data types based on field attributes (type, name, placeholder, etc.)
+- **`smart: true`** (default): Fills ALL form fields on the page, intelligently detecting appropriate data types using the search API
 - **`smart: false`**: Only fills fields that have explicit `data-gofakeit` attributes (manual mode)
+- **`staggered: true`** (default): Adds visual delays between field fills for better user experience
+- **`staggered: false`**: Fills all fields instantly (fast mode)
+- **`staggerDelay: number`**: Customize the delay between field fills (default: 50ms)
 
 ### API Functions
 
 ```typescript
 import { callFunc } from 'gofakeit'
 
-// Fetch specific data
+// Call a specific gofakeit function
 const data = await callFunc('person')
 ```
 
@@ -94,6 +109,21 @@ const allFunctions = getFuncs()
   }
   // etc...
 ]
+```
+
+### Data Attributes
+
+You can control autofill behavior using HTML data attributes:
+
+```html
+<!-- Exclude field from autofill -->
+<input type="text" data-gofakeit="false" />
+
+<!-- Specify a specific function -->
+<input type="text" data-gofakeit="email" />
+
+<!-- Enable autofill (default) -->
+<input type="text" data-gofakeit="true" />
 ```
 
 ## Development
