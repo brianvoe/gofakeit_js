@@ -129,7 +129,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
       const funcToUse = (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : 'true';
       const { success, usedFunc } = await handleSelectWithFunction(element, funcToUse);
       if (success) {
-        showFunctionBadgeWithDelay(element, usedFunc, settings);
+        showFuncBadge(element, usedFunc, settings);
       }
       return success;
     }
@@ -139,7 +139,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
       const funcToUse = (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : 'sentence';
       const { success, usedFunc } = await handleTextarea(element, funcToUse);
       if (success) {
-        showFunctionBadgeWithDelay(element, usedFunc, settings);
+        showFuncBadge(element, usedFunc, settings);
       }
       return success;
     }
@@ -153,7 +153,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
         const passToHandler = (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : 'true';
         const { success, usedFunc } = await handleCheckbox(element, passToHandler);
         if (success) {
-          showFunctionBadgeWithDelay(element, usedFunc, settings);
+          showFuncBadge(element, usedFunc, settings);
         }
         return success;
       }
@@ -165,7 +165,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
         if (success) {
           // Show function badge over the selected radio button, not the original one
           const elementToShowBadge = selectedElement || element;
-          showFunctionBadgeWithDelay(elementToShowBadge, usedFunc, settings);
+          showFuncBadge(elementToShowBadge, usedFunc, settings);
         }
         return success;
       }
@@ -174,7 +174,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
       if (inputType === 'range') {
         const { success, usedFunc } = await handleRangeInput(element);
         if (success) {
-          showFunctionBadgeWithDelay(element, usedFunc, settings);
+          showFuncBadge(element, usedFunc, settings);
         }
         return success;
       }
@@ -186,7 +186,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
       if (inputType === 'number') {
         const { success, usedFunc } = await handleNumberInput(element, inferred);
         if (success) {
-          showFunctionBadgeWithDelay(element, usedFunc, settings);
+          showFuncBadge(element, usedFunc, settings);
         }
         return success;
       }
@@ -195,7 +195,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
           inputType === 'month' || inputType === 'week') {
         const { success, usedFunc } = await handleDateTimeInput(element, inferred);
         if (success) {
-          showFunctionBadgeWithDelay(element, usedFunc, settings);
+          showFuncBadge(element, usedFunc, settings);
         }
         return success;
       }
@@ -203,7 +203,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
       // Handle text inputs (text, email, tel, password, search, url, color, etc.)
       const { success, usedFunc } = await handleTextInput(element, inferred);
       if (success) {
-        showFunctionBadgeWithDelay(element, usedFunc, settings);
+        showFuncBadge(element, usedFunc, settings);
       }
       return success;
     }
@@ -522,19 +522,10 @@ async function getElementFunction(element: Element, settings: AutofillSettings):
 }
 
 // Show function badge with a slight delay for visual effect
-function showFunctionBadgeWithDelay(element: Element, func: string, settings?: AutofillSettings): void {
+function showFuncBadge(element: Element, func: string, settings?: AutofillSettings): void {
   const testMode = (globalThis as any).__GOFAKEIT_TEST_MODE__;
   const staggered = testMode ? false : (settings?.staggered ?? true);
   const staggerDelay = settings?.staggerDelay ?? 50;
-  
-  // Add a subtle highlight effect when the field is filled
-  if (element instanceof HTMLElement) {
-    element.style.transition = 'background-color 0.3s ease';
-    element.style.backgroundColor = '#e8f5e8';
-    setTimeout(() => {
-      element.style.backgroundColor = '';
-    }, 500);
-  }
   
   // Only delay the badge if staggered is enabled, using the staggerDelay from settings
   const actualDelay = staggered ? staggerDelay : 0;
@@ -550,7 +541,7 @@ async function autofillElementWithValue(element: Element, func: string, value: s
     if (element instanceof HTMLSelectElement) {
       const { success, usedFunc } = await handleSelectWithFunction(element, func, value);
       if (success) {
-        showFunctionBadgeWithDelay(element, usedFunc, settings);
+        showFuncBadge(element, usedFunc, settings);
       }
       return success;
     }
@@ -558,7 +549,7 @@ async function autofillElementWithValue(element: Element, func: string, value: s
     // Handle textarea elements
     if (element instanceof HTMLTextAreaElement) {
       setTextarea(element, value);
-      showFunctionBadgeWithDelay(element, func, settings);
+      showFuncBadge(element, func, settings);
       return true;
     }
     
@@ -570,7 +561,7 @@ async function autofillElementWithValue(element: Element, func: string, value: s
       if (inputType === 'checkbox') {
         const { success, usedFunc } = await handleCheckbox(element, func, value);
         if (success) {
-          showFunctionBadgeWithDelay(element, usedFunc, settings);
+          showFuncBadge(element, usedFunc, settings);
         }
         return success;
       }
@@ -579,7 +570,7 @@ async function autofillElementWithValue(element: Element, func: string, value: s
       if (inputType === 'radio') {
         const { success, usedFunc } = await handleRadio(element, func, value);
         if (success) {
-          showFunctionBadgeWithDelay(element, usedFunc, settings);
+          showFuncBadge(element, usedFunc, settings);
         }
         return success;
       }
@@ -587,14 +578,14 @@ async function autofillElementWithValue(element: Element, func: string, value: s
       // Handle number inputs
       if (inputType === 'number') {
         setNumberInput(element, value);
-        showFunctionBadgeWithDelay(element, func, settings);
+        showFuncBadge(element, func, settings);
         return true;
       }
       
       // Handle range inputs
       if (inputType === 'range') {
         setRangeInput(element, value);
-        showFunctionBadgeWithDelay(element, func, settings);
+        showFuncBadge(element, func, settings);
         return true;
       }
       
@@ -603,14 +594,14 @@ async function autofillElementWithValue(element: Element, func: string, value: s
           inputType === 'month' || inputType === 'week') {
         const { success, usedFunc } = await handleDateTimeInput(element, func, value);
         if (success) {
-          showFunctionBadgeWithDelay(element, usedFunc, settings);
+          showFuncBadge(element, usedFunc, settings);
         }
         return success;
       }
       
       // Handle text inputs (text, email, tel, password, search, url, color, etc.)
       setTextInput(element, value);
-      showFunctionBadgeWithDelay(element, func, settings);
+      showFuncBadge(element, func, settings);
       return true;
     }
     
