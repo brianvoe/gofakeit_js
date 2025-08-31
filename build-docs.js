@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { existsSync, mkdirSync, copyFileSync } from 'fs';
+import { existsSync, mkdirSync, copyFileSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 console.log('📚 Building docs for GitHub Pages...');
@@ -30,6 +30,15 @@ filesToCopy.forEach(file => {
     console.warn(`⚠️  Warning: ${file} not found in dist/`);
   }
 });
+
+// Fix the import path in index.html for GitHub Pages
+const htmlPath = join(docsDir, 'index.html');
+if (existsSync(htmlPath)) {
+  let htmlContent = readFileSync(htmlPath, 'utf8');
+  htmlContent = htmlContent.replace('src="/index.cjs"', 'src="./index.cjs"');
+  writeFileSync(htmlPath, htmlContent);
+  console.log('✅ Fixed import path in index.html');
+}
 
 console.log('🎉 Docs build complete!');
 console.log('📁 Files in docs/:', filesToCopy.join(', '));
