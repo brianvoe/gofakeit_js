@@ -9,10 +9,3 @@ export {
 export {
   callFunc,
 } from './api';
-
-// Function list and utilities
-export {
-  hasFunc,
-  getFuncs,
-  type Func
-} from './funcs';
