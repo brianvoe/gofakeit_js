@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gofakeit Autofill Example - Comprehensive Testing</title>
+    <style>
+      :root {
+        /* Colors */
+        --primary-color: #007bff;
+        --primary-hover: #0056b3;
+        --secondary-color: #6c757d;
+        --secondary-hover: #545b62;
+        --success-color: #28a745;
+        --success-hover: #1e7e34;
+        --info-color: #17a2b8;
+        --info-hover: #138496;
+        --warning-color: #ffc107;
+        --warning-hover: #e0a800;
+        --danger-color: #dc3545;
+        --light-gray: #f5f5f5;
+        --border-color: #ddd;
+        --text-muted: #666;
+        --text-dark: #333;
+        --text-medium: #555;
+        --bg-light: #f8f9fa;
+        --bg-info-light: #e7f3ff;
+
+        /* Spacing */
+        --spacing-sm: 8px;
+        --spacing-md: 14px;
+        --spacing-lg: 20px;
+
+        /* Border radius */
+        --radius-sm: 4px;
+        --radius-md: 6px;
+        --radius-lg: 8px;
+
+        /* Font sizes */
+        --font-sm: 12px;
+        --font-base: 16px;
+
+        /* Shadows */
+        --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+        --shadow-medium: -2px 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      body {
+        font-family: Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--light-gray);
+        display: flex;
+      }
+
+      /* Utility Classes */
+      .text-muted {
+        color: var(--text-muted);
+      }
+
+      .text-dark {
+        color: var(--text-dark);
+      }
+
+      .text-primary {
+        color: var(--primary-color);
+      }
+
+      .bg-light {
+        background: var(--bg-light);
+      }
+
+      .bg-info-light {
+        background: var(--bg-info-light);
+      }
+
+      .border-top {
+        border-top: 1px solid var(--border-color);
+      }
+
+      .p-sm {
+        padding: var(--spacing-sm);
+      }
+      .p-md {
+        padding: var(--spacing-md);
+      }
+      .p-lg {
+        padding: var(--spacing-lg);
+      }
+
+      .pt-sm {
+        padding-top: var(--spacing-sm);
+      }
+      .pt-md {
+        padding-top: var(--spacing-md);
+      }
+      .pt-lg {
+        padding-top: var(--spacing-lg);
+      }
+
+      .pb-sm {
+        padding-bottom: var(--spacing-sm);
+      }
+      .pb-md {
+        padding-bottom: var(--spacing-md);
+      }
+      .pb-lg {
+        padding-bottom: var(--spacing-lg);
+      }
+
+      .pl-sm {
+        padding-left: var(--spacing-sm);
+      }
+      .pl-md {
+        padding-left: var(--spacing-md);
+      }
+      .pl-lg {
+        padding-left: var(--spacing-lg);
+      }
+
+      .m-sm {
+        margin: var(--spacing-sm);
+      }
+      .m-md {
+        margin: var(--spacing-md);
+      }
+      .m-lg {
+        margin: var(--spacing-lg);
+      }
+
+      .mt-sm {
+        margin-top: var(--spacing-sm);
+      }
+      .mt-md {
+        margin-top: var(--spacing-md);
+      }
+      .mt-lg {
+        margin-top: var(--spacing-lg);
+      }
+
+      .mb-sm {
+        margin-bottom: var(--spacing-sm);
+      }
+      .mb-md {
+        margin-bottom: var(--spacing-md);
+      }
+      .mb-lg {
+        margin-bottom: var(--spacing-lg);
+      }
+
+      .ml-sm {
+        margin-left: var(--spacing-sm);
+      }
+      .ml-md {
+        margin-left: var(--spacing-md);
+      }
+      .ml-lg {
+        margin-left: var(--spacing-lg);
+      }
+
+      .font-sm {
+        font-size: var(--font-sm);
+      }
+      .font-base {
+        font-size: var(--font-base);
+      }
+
+      .radius-sm {
+        border-radius: var(--radius-sm);
+      }
+      .radius-md {
+        border-radius: var(--radius-md);
+      }
+      .radius-lg {
+        border-radius: var(--radius-lg);
+      }
+
+      .w-full {
+        width: 100%;
+      }
+
+      /* Layout Classes */
+      .main-content {
+        flex: 1;
+        padding: var(--spacing-lg);
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .container {
+        background: white;
+        padding: 22px;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-light);
+        margin-bottom: var(--spacing-lg);
+      }
+
+      h1 {
+        color: var(--text-dark);
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      h2 {
+        color: var(--text-medium);
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 10px;
+        margin-top: 25px;
+      }
+
+      .form-group {
+        margin-bottom: var(--spacing-md);
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        font-size: var(--font-base);
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+      }
+
+      /* Special styling for color input */
+      input[type="color"] {
+        height: 50px;
+        padding: 5px;
+        cursor: pointer;
+        border-radius: var(--radius-md);
+        border: 2px solid var(--border-color);
+      }
+
+      input[type="color"]:hover {
+        border-color: var(--primary-color);
+      }
+
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
+        width: 100%;
+      }
+
+      .row .form-group {
+        margin-bottom: 0;
+      }
+
+      .btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: var(--spacing-md) 16px;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-size: var(--font-base);
+        margin: 5px 0;
+        transition: background-color 0.3s;
+        width: 100%;
+        display: block;
+      }
+
+      .btn:hover {
+        background: var(--primary-hover);
+      }
+
+      .btn-secondary {
+        background: var(--secondary-color);
+      }
+
+      .btn-secondary:hover {
+        background: var(--secondary-hover);
+      }
+
+      .btn-success {
+        background: var(--success-color);
+      }
+
+      .btn-success:hover {
+        background: var(--success-hover);
+      }
+
+      .btn-info {
+        background: var(--info-color);
+      }
+
+      .btn-info:hover {
+        background: var(--info-hover);
+      }
+
+      .btn-warning {
+        background: var(--warning-color);
+        color: #212529;
+      }
+
+      .btn-warning:hover {
+        background: var(--warning-hover);
+      }
+
+      .btn-primary {
+        background: var(--primary-color);
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-hover);
+      }
+
+      /* Settings Styles */
+      .setting-item {
+        background: var(--bg-light);
+        padding: var(--spacing-md);
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-color);
+      }
+
+      .setting-label {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        cursor: pointer;
+        font-weight: 500;
+      }
+
+      .setting-label input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        margin: 0;
+        cursor: pointer;
+      }
+
+      .setting-text {
+        flex: 1;
+        font-size: var(--font-base);
+      }
+
+      .setting-description {
+        margin-top: var(--spacing-sm);
+        margin-left: 26px;
+        line-height: 1.4;
+      }
+
+      .setting-range {
+        width: 100px;
+        margin: 0 var(--spacing-sm);
+      }
+
+      .setting-value {
+        min-width: 30px;
+        text-align: right;
+        font-weight: 500;
+        color: var(--primary-color);
+      }
+
+      .sidebar {
+        width: 300px;
+        background: white;
+        border-left: 1px solid var(--border-color);
+        padding: var(--spacing-lg);
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-medium);
+      }
+
+      .controls {
+        text-align: center;
+        margin-bottom: var(--spacing-lg);
+        padding: var(--spacing-lg);
+        background: var(--bg-light);
+        border-radius: var(--radius-lg);
+      }
+
+      .field-note {
+        font-size: var(--font-sm);
+        color: var(--text-muted);
+        margin-top: 5px;
+      }
+
+      .checkbox-group,
+      .radio-group {
+        display: flex;
+        gap: var(--spacing-md);
+        flex-wrap: wrap;
+      }
+
+      .checkbox-item,
+      .radio-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+      }
+
+      .checkbox-item input,
+      .radio-item input {
+        width: auto;
+      }
+
+      .checkbox-item label,
+      .radio-item label {
+        margin: 0;
+        font-weight: normal;
+      }
+
+      .section {
+        border: 1px solid var(--border-color);
+        padding: var(--spacing-md);
+        border-radius: var(--radius-lg);
+        margin-bottom: var(--spacing-lg);
+      }
+
+      .section h3 {
+        margin-top: 0;
+        color: var(--primary-color);
+      }
+
+      .status {
+        position: fixed;
+        top: var(--spacing-lg);
+        right: var(--spacing-lg);
+        padding: 10px var(--spacing-lg);
+        border-radius: var(--radius-sm);
+        color: white;
+        font-weight: bold;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .status.success {
+        background: var(--success-color);
+      }
+
+      .status.error {
+        background: var(--danger-color);
+      }
+
+      .status.show {
+        opacity: 1;
+      }
+
+      .context-indicator {
+        font-size: var(--font-sm);
+        padding: 2px 6px;
+        border-radius: 3px;
+        margin-left: var(--spacing-sm);
+        font-weight: normal;
+      }
+
+      .context-rich {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .context-sparse {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .context-medium {
+        background: #cce5ff;
+        color: #004085;
+      }
+
+      .category-selector {
+        background: var(--bg-light);
+        border: 2px solid var(--primary-color);
+        border-radius: var(--radius-lg);
+        padding: var(--spacing-lg);
+        margin-top: var(--spacing-lg);
+      }
+
+      .category-selector h4 {
+        color: var(--primary-color);
+        margin: 0 0 10px 0;
+        font-size: var(--font-base);
+      }
+
+      .category-selector select {
+        border-color: var(--primary-color);
+        background: white;
+      }
+
+      .category-selector select:focus {
+        border-color: var(--primary-hover);
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+      }
+    </style>
+    <script type="module" crossorigin src="/index.cjs"></script>
+  </head>
+  <body>
+    <div id="status" class="status"></div>
+
+    <div class="main-content">
+      <h1>🎯 Gofakeit Autofill</h1>
+
+      <div class="container">
+        <!-- RICH CONTEXT EXAMPLES - Lots of descriptive text -->
+        <div class="section" id="rich-context">
+          <h3>
+            📝 Rich Context Examples
+            <span class="context-indicator context-rich">Rich Context</span>
+          </h3>
+          <p class="text-muted font-base mb-lg">
+            These fields have lots of descriptive text to help the search API
+            find the right functions.
+          </p>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="firstName"
+                >First Name
+                <span class="context-indicator context-rich">Rich</span></label
+              >
+              <input
+                type="text"
+                id="firstName"
+                data-gofakeit="true"
+                placeholder="Enter your first name here"
+                aria-label="First name field for user registration"
+              />
+            </div>
+            <div class="form-group">
+              <label for="lastName"
+                >Last Name
+                <span class="context-indicator context-rich">Rich</span></label
+              >
+              <input
+                type="text"
+                id="lastName"
+                data-gofakeit="true"
+                placeholder="Enter your last name here"
+                aria-label="Last name field for user registration"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="email"
+                >Email Address
+                <span class="context-indicator context-rich">Rich</span></label
+              >
+              <input
+                type="email"
+                id="email"
+                data-gofakeit="true"
+                placeholder="Enter your email address for account verification"
+                aria-label="Email address field for user registration"
+              />
+            </div>
+            <div class="form-group">
+              <label for="phone"
+                >Phone Number
+                <span class="context-indicator context-rich">Rich</span></label
+              >
+              <input
+                type="tel"
+                id="phone"
+                data-gofakeit="true"
+                placeholder="Enter your phone number for contact purposes"
+                aria-label="Phone number field for user contact"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="ssn"
+                >Social Security Number
+                <span class="context-indicator context-rich">Rich</span></label
+              >
+              <input
+                type="text"
+                id="ssn"
+                data-gofakeit="true"
+                placeholder="XXX-XX-XXXX format for tax purposes"
+                aria-label="Social security number field for tax identification"
+              />
+            </div>
+            <div class="form-group">
+              <label for="dateOfBirth"
+                >Date of Birth
+                <span class="context-indicator context-rich">Rich</span></label
+              >
+              <input
+                type="date"
+                id="dateOfBirth"
+                data-gofakeit="true"
+                aria-label="Date of birth field for age verification"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- MEDIUM CONTEXT EXAMPLES - Some descriptive text -->
+        <div class="section" id="medium-context">
+          <h3>
+            📋 Medium Context Examples
+            <span class="context-indicator context-medium">Medium Context</span>
+          </h3>
+          <p class="text-muted font-base mb-lg">
+            These fields have some descriptive text to test moderate context
+            detection.
+          </p>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="company"
+                >Company
+                <span class="context-indicator context-medium"
+                  >Medium</span
+                ></label
+              >
+              <input
+                type="text"
+                id="company"
+                data-gofakeit="true"
+                placeholder="Enter company name"
+              />
+            </div>
+            <div class="form-group">
+              <label for="jobTitle"
+                >Job Title
+                <span class="context-indicator context-medium"
+                  >Medium</span
+                ></label
+              >
+              <input
+                type="text"
+                id="jobTitle"
+                data-gofakeit="true"
+                placeholder="Enter job title"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="website"
+                >Website
+                <span class="context-indicator context-medium"
+                  >Medium</span
+                ></label
+              >
+              <input
+                type="url"
+                id="website"
+                data-gofakeit="true"
+                placeholder="https://example.com"
+              />
+            </div>
+            <div class="form-group">
+              <label for="street"
+                >Street Address
+                <span class="context-indicator context-medium"
+                  >Medium</span
+                ></label
+              >
+              <input
+                type="text"
+                id="street"
+                data-gofakeit="true"
+                placeholder="Enter street address"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="city"
+                >City
+                <span class="context-indicator context-medium"
+                  >Medium</span
+                ></label
+              >
+              <input
+                type="text"
+                id="city"
+                data-gofakeit="true"
+                placeholder="Enter city"
+              />
+            </div>
+            <div class="form-group">
+              <label for="state"
+                >State
+                <span class="context-indicator context-medium"
+                  >Medium</span
+                ></label
+              >
+              <input
+                type="text"
+                id="state"
+                data-gofakeit="true"
+                placeholder="Enter state"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- SPARSE CONTEXT EXAMPLES - Minimal text -->
+        <div class="section" id="sparse-context">
+          <h3>
+            🔍 Sparse Context Examples
+            <span class="context-indicator context-sparse">Sparse Context</span>
+          </h3>
+          <p class="text-muted font-base mb-lg">
+            These fields have minimal context to test the search API's ability
+            to work with limited information.
+          </p>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="zipCode"
+                >Zip
+                <span class="context-indicator context-sparse"
+                  >Sparse</span
+                ></label
+              >
+              <input type="text" id="zipCode" data-gofakeit="true" />
+            </div>
+            <div class="form-group">
+              <label for="country"
+                >Country
+                <span class="context-indicator context-sparse"
+                  >Sparse</span
+                ></label
+              >
+              <input type="text" id="country" data-gofakeit="true" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="age"
+                >Age
+                <span class="context-indicator context-sparse"
+                  >Sparse</span
+                ></label
+              >
+              <input type="number" id="age" data-gofakeit="true" />
+            </div>
+            <div class="form-group">
+              <label for="salary"
+                >Salary
+                <span class="context-indicator context-sparse"
+                  >Sparse</span
+                ></label
+              >
+              <input
+                type="range"
+                id="salary"
+                data-gofakeit="true"
+                min="20000"
+                max="200000"
+                step="5000"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="color"
+                >Color
+                <span class="context-indicator context-sparse"
+                  >Sparse</span
+                ></label
+              >
+              <input type="color" id="color" data-gofakeit="true" />
+            </div>
+            <div class="form-group">
+              <label for="bio"
+                >Bio
+                <span class="context-indicator context-sparse"
+                  >Sparse</span
+                ></label
+              >
+              <textarea id="bio" data-gofakeit="true" rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- DIFFERENT CATEGORIES -->
+        <div class="section" id="categories">
+          <h3>🏷️ Different Categories</h3>
+          <p class="text-muted font-base mb-lg">
+            Testing various gofakeit categories with different input types.
+          </p>
+
+          <!-- PERSON CATEGORY -->
+          <div id="person-category">
+            <h4 class="text-primary mt-lg">👤 Person Category</h4>
+            <div class="row">
+              <div class="form-group">
+                <label for="personName">Person Name</label>
+                <input
+                  type="text"
+                  id="personName"
+                  data-gofakeit="true"
+                  placeholder="Full person name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="gender">Gender</label>
+                <input
+                  type="text"
+                  id="gender"
+                  data-gofakeit="true"
+                  placeholder="Gender selection"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <label for="petName">Pet Name</label>
+                <input
+                  type="text"
+                  id="petName"
+                  data-gofakeit="true"
+                  placeholder="Pet name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input
+                  type="text"
+                  id="username"
+                  data-gofakeit="true"
+                  placeholder="Username for login"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- ADDRESS CATEGORY -->
+          <div id="address-category">
+            <h4 class="text-primary mt-lg">🏠 Address Category</h4>
+            <div class="row">
+              <div class="form-group">
+                <label for="latitude">Latitude</label>
+                <input
+                  type="number"
+                  id="latitude"
+                  data-gofakeit="true"
+                  placeholder="Geographic latitude"
+                />
+              </div>
+              <div class="form-group">
+                <label for="longitude">Longitude</label>
+                <input
+                  type="number"
+                  id="longitude"
+                  data-gofakeit="true"
+                  placeholder="Geographic longitude"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- COMPANY CATEGORY -->
+          <div id="company-category">
+            <h4 class="text-primary mt-lg">🏢 Company Category</h4>
+            <div class="row">
+              <div class="form-group">
+                <label for="companySuffix">Company Suffix</label>
+                <input
+                  type="text"
+                  id="companySuffix"
+                  data-gofakeit="true"
+                  placeholder="Inc, LLC, Corp, etc."
+                />
+              </div>
+              <div class="form-group">
+                <label for="jobLevel">Job Level</label>
+                <input
+                  type="text"
+                  id="jobLevel"
+                  data-gofakeit="true"
+                  placeholder="Entry, Mid, Senior, etc."
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- PAYMENT CATEGORY -->
+          <div id="payment-category">
+            <h4 class="text-primary mt-lg">💳 Payment Category</h4>
+            <div class="row">
+              <div class="form-group">
+                <label for="creditCard">Credit Card</label>
+                <input
+                  type="text"
+                  id="creditCard"
+                  data-gofakeit="true"
+                  placeholder="Credit card number"
+                />
+              </div>
+              <div class="form-group">
+                <label for="creditCardType">Credit Card Type</label>
+                <input
+                  type="text"
+                  id="creditCardType"
+                  data-gofakeit="true"
+                  placeholder="Visa, MasterCard, etc."
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <label for="creditCardCVV">Credit Card CVV</label>
+                <input
+                  type="text"
+                  id="creditCardCVV"
+                  data-gofakeit="true"
+                  placeholder="3-4 digit security code"
+                />
+              </div>
+              <div class="form-group">
+                <label for="creditCardExp">Credit Card Expiry</label>
+                <input
+                  type="text"
+                  id="creditCardExp"
+                  data-gofakeit="true"
+                  placeholder="MM/YY format"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <label for="bankName">Bank Name</label>
+                <input
+                  type="text"
+                  id="bankName"
+                  data-gofakeit="true"
+                  placeholder="Bank institution name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="creditCardNumber">Credit Card Number</label>
+                <input
+                  type="text"
+                  id="creditCardNumber"
+                  data-gofakeit="true"
+                  placeholder="Full credit card number"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- INTERNET CATEGORY -->
+          <div id="internet-category">
+            <h4 class="text-primary mt-lg">🌐 Internet Category</h4>
+            <div class="row">
+              <div class="form-group">
+                <label for="domainName">Domain Name</label>
+                <input
+                  type="text"
+                  id="domainName"
+                  data-gofakeit="true"
+                  placeholder="example.com"
+                />
+              </div>
+              <div class="form-group">
+                <label for="ipv6Address">IPv6 Address</label>
+                <input
+                  type="text"
+                  id="ipv6Address"
+                  data-gofakeit="true"
+                  placeholder="IPv6 address"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <label for="userAgent">User Agent</label>
+                <input
+                  type="text"
+                  id="userAgent"
+                  data-gofakeit="true"
+                  placeholder="Browser user agent string"
+                />
+              </div>
+              <div class="form-group">
+                <label for="httpMethod">HTTP Method</label>
+                <input
+                  type="text"
+                  id="httpMethod"
+                  data-gofakeit="true"
+                  placeholder="GET, POST, PUT, etc."
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- TIME CATEGORY -->
+          <div id="time-category">
+            <h4 class="text-primary mt-lg">⏰ Time Category</h4>
+            <div class="row">
+              <div class="form-group">
+                <label for="timezone">Timezone</label>
+                <input
+                  type="text"
+                  id="timezone"
+                  data-gofakeit="true"
+                  placeholder="UTC, EST, PST, etc."
+                />
+              </div>
+              <div class="form-group">
+                <label for="weekday">Weekday</label>
+                <input
+                  type="text"
+                  id="weekday"
+                  data-gofakeit="true"
+                  placeholder="Monday, Tuesday, etc."
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <label for="month">Month</label>
+                <input
+                  type="text"
+                  id="month"
+                  data-gofakeit="true"
+                  placeholder="January, February, etc."
+                />
+              </div>
+              <div class="form-group">
+                <label for="year">Year</label>
+                <input
+                  type="number"
+                  id="year"
+                  data-gofakeit="true"
+                  placeholder="Year value"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- LANGUAGE CATEGORY -->
+          <div id="language-category">
+            <h4 class="text-primary mt-lg">🗣️ Language Category</h4>
+            <div class="row">
+              <div class="form-group">
+                <label for="programmingLanguage">Programming Language</label>
+                <input
+                  type="text"
+                  id="programmingLanguage"
+                  data-gofakeit="true"
+                  placeholder="JavaScript, Python, Go, etc."
+                />
+              </div>
+              <div class="form-group">
+                <label for="languageAbbreviation">Language Abbreviation</label>
+                <input
+                  type="text"
+                  id="languageAbbreviation"
+                  data-gofakeit="true"
+                  placeholder="en, es, fr, etc."
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- WORD CATEGORY -->
+          <div id="word-category">
+            <h4 class="text-primary mt-lg">📝 Word Category</h4>
+            <div class="row">
+              <div class="form-group">
+                <label for="noun">Noun</label>
+                <input
+                  type="text"
+                  id="noun"
+                  data-gofakeit="true"
+                  placeholder="Random noun"
+                />
+              </div>
+              <div class="form-group">
+                <label for="verb">Verb</label>
+                <input
+                  type="text"
+                  id="verb"
+                  data-gofakeit="true"
+                  placeholder="Random verb"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <label for="adjective">Adjective</label>
+                <input
+                  type="text"
+                  id="adjective"
+                  data-gofakeit="true"
+                  placeholder="Random adjective"
+                />
+              </div>
+              <div class="form-group">
+                <label for="sentence">Sentence</label>
+                <input
+                  type="text"
+                  id="sentence"
+                  data-gofakeit="true"
+                  placeholder="Random sentence"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- COLOR CATEGORY -->
+          <div id="color-category">
+            <h4 class="text-primary mt-lg">🎨 Color Category</h4>
+            <div class="row">
+              <div class="form-group">
+                <label for="hexColor">Hex Color</label>
+                <input
+                  type="text"
+                  id="hexColor"
+                  data-gofakeit="true"
+                  placeholder="#FF0000"
+                />
+              </div>
+              <div class="form-group">
+                <label for="rgbColor">RGB Color</label>
+                <input
+                  type="text"
+                  id="rgbColor"
+                  data-gofakeit="true"
+                  placeholder="rgb(255, 0, 0)"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- ANIMAL CATEGORY -->
+          <div id="animal-category">
+            <h4 class="text-primary mt-lg">🐾 Animal Category</h4>
+            <div class="row">
+              <div class="form-group">
+                <label for="animal">Animal</label>
+                <input
+                  type="text"
+                  id="animal"
+                  data-gofakeit="true"
+                  placeholder="Random animal"
+                />
+              </div>
+              <div class="form-group">
+                <label for="bird">Bird</label>
+                <input
+                  type="text"
+                  id="bird"
+                  data-gofakeit="true"
+                  placeholder="Random bird"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <label for="cat">Cat</label>
+                <input
+                  type="text"
+                  id="cat"
+                  data-gofakeit="true"
+                  placeholder="Random cat breed"
+                />
+              </div>
+              <div class="form-group">
+                <label for="dog">Dog</label>
+                <input
+                  type="text"
+                  id="dog"
+                  data-gofakeit="true"
+                  placeholder="Random dog breed"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- FOOD CATEGORY -->
+          <div id="food-category">
+            <h4 class="text-primary mt-lg">🍕 Food Category</h4>
+            <div class="row">
+              <div class="form-group">
+                <label for="fruit">Fruit</label>
+                <input
+                  type="text"
+                  id="fruit"
+                  data-gofakeit="true"
+                  placeholder="Random fruit"
+                />
+              </div>
+              <div class="form-group">
+                <label for="vegetable">Vegetable</label>
+                <input
+                  type="text"
+                  id="vegetable"
+                  data-gofakeit="true"
+                  placeholder="Random vegetable"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <label for="breakfast">Breakfast</label>
+                <input
+                  type="text"
+                  id="breakfast"
+                  data-gofakeit="true"
+                  placeholder="Breakfast food"
+                />
+              </div>
+              <div class="form-group">
+                <label for="lunch">Lunch</label>
+                <input
+                  type="text"
+                  id="lunch"
+                  data-gofakeit="true"
+                  placeholder="Lunch food"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- CAR CATEGORY -->
+          <div id="car-category">
+            <h4 class="text-primary mt-lg">🚗 Car Category</h4>
+            <div class="row">
+              <div class="form-group">
+                <label for="carMaker">Car Maker</label>
+                <input
+                  type="text"
+                  id="carMaker"
+                  data-gofakeit="true"
+                  placeholder="Car manufacturer"
+                />
+              </div>
+              <div class="form-group">
+                <label for="carModel">Car Model</label>
+                <input
+                  type="text"
+                  id="carModel"
+                  data-gofakeit="true"
+                  placeholder="Car model name"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- GAME CATEGORY -->
+          <div id="game-category">
+            <h4 class="text-primary mt-lg">🎮 Game Category</h4>
+            <div class="row">
+              <div class="form-group">
+                <label for="gamertag">Gamertag</label>
+                <input
+                  type="text"
+                  id="gamertag"
+                  data-gofakeit="true"
+                  placeholder="Gaming username"
+                />
+              </div>
+              <div class="form-group">
+                <label for="dice">Dice</label>
+                <input
+                  type="text"
+                  id="dice"
+                  data-gofakeit="true"
+                  placeholder="Dice roll result"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- MISC CATEGORY -->
+          <div id="misc-category">
+            <h4 class="text-primary mt-lg">🎲 Misc Category</h4>
+            <div class="row">
+              <div class="form-group">
+                <label for="uuid">UUID</label>
+                <input
+                  type="text"
+                  id="uuid"
+                  data-gofakeit="true"
+                  placeholder="Unique identifier"
+                />
+              </div>
+              <div class="form-group">
+                <label for="bool">Boolean</label>
+                <input
+                  type="text"
+                  id="bool"
+                  data-gofakeit="true"
+                  placeholder="True or false"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EXCLUDED INPUT TYPES -->
+        <div class="section" id="excluded-types">
+          <h3>🚫 Excluded Input Types (No Search API)</h3>
+          <p class="text-muted font-base mb-lg">
+            These input types are excluded from search API and use direct
+            function assignment. Color inputs are also excluded since they can
+            only accept color values.
+          </p>
+
+          <div class="form-group">
+            <label>Programming Languages (Checkboxes)</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="lang1" data-gofakeit="true" />
+                <label for="lang1">JavaScript</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="lang2" data-gofakeit="true" />
+                <label for="lang2">Python</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="lang3" data-gofakeit="true" />
+                <label for="lang3">Go</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="lang4" data-gofakeit="true" />
+                <label for="lang4">Rust</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Experience Level (Radio Buttons)</label>
+            <div class="radio-group">
+              <div class="radio-item">
+                <input
+                  type="radio"
+                  name="experience"
+                  id="exp1"
+                  data-gofakeit="true"
+                />
+                <label for="exp1">Beginner</label>
+              </div>
+              <div class="radio-item">
+                <input
+                  type="radio"
+                  name="experience"
+                  id="exp2"
+                  data-gofakeit="true"
+                />
+                <label for="exp2">Intermediate</label>
+              </div>
+              <div class="radio-item">
+                <input
+                  type="radio"
+                  name="experience"
+                  id="exp3"
+                  data-gofakeit="true"
+                />
+                <label for="exp3">Advanced</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="timezoneSelect">Timezone (Select)</label>
+            <select id="timezoneSelect" data-gofakeit="true">
+              <option value="">Select timezone</option>
+              <option value="UTC">UTC (Coordinated Universal Time)</option>
+              <option value="EST">EST (Eastern Standard Time)</option>
+              <option value="CST">CST (Central Standard Time)</option>
+              <option value="MST">MST (Mountain Standard Time)</option>
+              <option value="PST">PST (Pacific Standard Time)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- CUSTOM FUNCTION EXAMPLES -->
+        <div class="section" id="custom-functions">
+          <h3>🎯 Custom Function Examples</h3>
+          <p class="text-muted font-base mb-lg">
+            Examples with specific function assignments.
+          </p>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="customUuid">UUID (Custom)</label>
+              <input
+                type="text"
+                id="customUuid"
+                data-gofakeit="uuid"
+                placeholder="Will generate UUID"
+              />
+            </div>
+            <div class="form-group">
+              <label for="customCreditCard">Credit Card Number (Custom)</label>
+              <input
+                type="text"
+                id="customCreditCard"
+                data-gofakeit="creditcard"
+                placeholder="Will generate credit card"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="customBitcoin">Bitcoin Address (Custom)</label>
+              <input
+                type="text"
+                id="customBitcoin"
+                data-gofakeit="bitcoinaddress"
+                placeholder="Will generate Bitcoin address"
+              />
+            </div>
+            <div class="form-group">
+              <label for="customIp">IP Address (Custom)</label>
+              <input
+                type="text"
+                id="customIp"
+                data-gofakeit="ipv4address"
+                placeholder="Will generate IP address"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="customLorem">Lorem Ipsum Paragraph (Custom)</label>
+            <textarea
+              id="customLorem"
+              data-gofakeit="loremipsumparagraph"
+              rows="3"
+              placeholder="Will generate Lorem Ipsum text"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- EXCLUDED FIELDS -->
+        <div class="section" id="excluded-fields">
+          <h3>🚫 Excluded Fields (data-gofakeit="false")</h3>
+          <p class="text-muted font-base mb-lg">
+            These fields will NOT be filled by the autofill function.
+          </p>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="excludedField1">Excluded Field 1</label>
+              <input
+                type="text"
+                id="excludedField1"
+                data-gofakeit="false"
+                placeholder="This field will NOT be filled"
+              />
+            </div>
+            <div class="form-group">
+              <label for="excludedField2">Excluded Field 2</label>
+              <input
+                type="text"
+                id="excludedField2"
+                data-gofakeit="false"
+                placeholder="This field will NOT be filled"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="controls">
+        <h3 style="margin-top: 0; color: #333">🎮 Controls</h3>
+        <button class="btn" onclick="autofill()">🚀 Autofill All Fields</button>
+        <button class="btn btn-secondary" onclick="autofill('rich-context')">
+          📝 Rich Context
+        </button>
+        <button class="btn btn-secondary" onclick="autofill('medium-context')">
+          📋 Medium Context
+        </button>
+        <button class="btn btn-secondary" onclick="autofill('sparse-context')">
+          🔍 Sparse Context
+        </button>
+        <button class="btn btn-secondary" onclick="autofill('excluded-types')">
+          🚫 Excluded Types
+        </button>
+        <button
+          class="btn btn-secondary"
+          onclick="autofill('custom-functions')"
+        >
+          🎯 Custom Functions
+        </button>
+
+        <div class="category-selector">
+          <h4>🎯 Category Selector</h4>
+          <button
+            class="btn btn-secondary w-full mb-sm"
+            onclick="autofill('categories')"
+          >
+            🏷️ Autofill All Categories
+          </button>
+          <select
+            id="categorySelector"
+            data-gofakeit="false"
+            class="w-full p-sm radius-sm mb-sm font-base"
+          >
+            <option value="">Select a specific category...</option>
+            <option value="person-category">👤 Person Category</option>
+            <option value="address-category">🏠 Address Category</option>
+            <option value="company-category">🏢 Company Category</option>
+            <option value="payment-category">💳 Payment Category</option>
+            <option value="internet-category">🌐 Internet Category</option>
+            <option value="time-category">⏰ Time Category</option>
+            <option value="language-category">🗣️ Language Category</option>
+            <option value="word-category">📝 Word Category</option>
+            <option value="color-category">🎨 Color Category</option>
+            <option value="animal-category">🐾 Animal Category</option>
+            <option value="food-category">🍕 Food Category</option>
+            <option value="car-category">🚗 Car Category</option>
+            <option value="game-category">🎮 Game Category</option>
+            <option value="misc-category">🎲 Misc Category</option>
+          </select>
+          <button
+            class="btn btn-info"
+            onclick="autofillCategory()"
+            style="width: 100%"
+          >
+            🎯 Autofill Selected Category
+          </button>
+        </div>
+
+        <div class="mt-lg pt-lg border-top">
+          <h4 class="mb-sm text-dark font-base">🔧 Global Settings</h4>
+
+          <div class="setting-item mb-sm">
+            <label class="setting-label">
+              <input
+                type="checkbox"
+                data-gofakeit="false"
+                id="smartMode"
+                checked
+              />
+              <span class="setting-text">🧠 Smart Mode</span>
+            </label>
+            <div class="setting-description text-muted font-sm">
+              Automatically detect and fill all form fields
+            </div>
+          </div>
+
+          <div class="setting-item mb-sm">
+            <label class="setting-label">
+              <input
+                type="checkbox"
+                data-gofakeit="false"
+                id="staggeredMode"
+                checked
+              />
+              <span class="setting-text">⏱️ Staggered Timing</span>
+            </label>
+            <div class="setting-description text-muted font-sm">
+              Add delays between field fills for visual effect
+            </div>
+          </div>
+
+          <div class="setting-item mb-sm">
+            <label class="setting-label">
+              <span class="setting-text">⚡ Stagger Delay (ms)</span>
+              <input
+                type="range"
+                data-gofakeit="false"
+                id="staggerDelay"
+                min="0"
+                max="500"
+                value="50"
+                class="setting-range"
+              />
+              <span id="staggerDelayValue" class="setting-value">50</span>
+            </label>
+          </div>
+
+          <button
+            class="btn btn-primary w-full mb-sm"
+            onclick="autofillWithCurrentSettings()"
+          >
+            🚀 Autofill All with Settings
+          </button>
+        </div>
+
+        <button
+          class="btn btn-success"
+          onclick="clearAll()"
+          style="margin-top: 15px"
+        >
+          🧹 Clear All
+        </button>
+      </div>
+
+      <div class="bg-light p-lg radius-lg mt-lg">
+        <h4 class="text-dark">💡 Testing Guide</h4>
+        <ul class="pl-lg font-base text-muted">
+          <li>
+            <strong>Rich Context</strong>: Lots of descriptive text, should get
+            accurate results
+          </li>
+          <li>
+            <strong>Medium Context</strong>: Some descriptive text, moderate
+            accuracy expected
+          </li>
+          <li>
+            <strong>Sparse Context</strong>: Minimal text, tests API's ability
+            with limited info
+          </li>
+          <li>
+            <strong>All Categories</strong>: Tests all gofakeit function
+            categories at once
+          </li>
+          <li>
+            <strong>Category Selector</strong>: Test specific categories
+            individually
+          </li>
+          <li>
+            <strong>Excluded Types</strong>: Checkboxes, radios, selects (no
+            search API)
+          </li>
+          <li>
+            <strong>Custom Functions</strong>: Pre-assigned specific functions
+          </li>
+        </ul>
+      </div>
+
+      <div class="bg-info-light p-lg radius-lg mt-lg">
+        <h4 class="text-dark">🔍 Search API Testing</h4>
+        <ul class="pl-lg font-base text-muted">
+          <li>Watch browser network tab for search API calls</li>
+          <li>Check console for search queries being sent</li>
+          <li>Compare results between rich/sparse context fields</li>
+          <li>Verify excluded types don't make search calls</li>
+          <li>Test with different input types and categories</li>
+        </ul>
+      </div>
+    </div>
+
+  </body>
+</html>

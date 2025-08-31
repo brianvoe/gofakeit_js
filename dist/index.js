@@ -1,34 +1,57 @@
-const v = {
+(function() {
+  const t = document.createElement("link").relList;
+  if (t && t.supports && t.supports("modulepreload")) return;
+  for (const s of document.querySelectorAll('link[rel="modulepreload"]')) r(s);
+  new MutationObserver((s) => {
+    for (const n of s)
+      if (n.type === "childList")
+        for (const a of n.addedNodes) a.tagName === "LINK" && a.rel === "modulepreload" && r(a);
+  }).observe(document, {
+    childList: !0,
+    subtree: !0
+  });
+  function o(s) {
+    const n = {};
+    return s.integrity && (n.integrity = s.integrity), s.referrerPolicy && (n.referrerPolicy = s.referrerPolicy), s.crossOrigin === "use-credentials" ? n.credentials = "include" : s.crossOrigin === "anonymous" ? n.credentials = "omit" : n.credentials = "same-origin", n;
+  }
+  function r(s) {
+    if (s.ep) return;
+    s.ep = !0;
+    const n = o(s);
+    fetch(s.href, n);
+  }
+})();
+const x = {
   primary: "#ffa000",
   error: "#ff3860",
   background: "#ffffff"
-}, $ = {
+}, D = {
   // px
   half: 12,
   // px
   quarter: 8
   // px
-}, te = {
+}, ue = {
   radius: 6
-}, C = {
+}, H = {
   size: 14,
   // px
   family: "Helvetica, Arial, sans-serif"
 };
-function se(e, s) {
-  const t = document.querySelector(".gofakeit-error-tooltip");
-  t && t.remove();
-  const n = document.createElement("div");
-  n.className = "gofakeit-error-tooltip", n.style.cssText = `
+function le(e, t) {
+  const o = document.querySelector(".gofakeit-error-tooltip");
+  o && o.remove();
+  const r = document.createElement("div");
+  r.className = "gofakeit-error-tooltip", r.style.cssText = `
     position: absolute;
     z-index: 10001;
-    color: ${v.error};
-    font-size: ${C.size}px;
-    font-family: ${C.family};
-    background-color: ${v.background};
-    padding: ${$.quarter}px ${$.half}px;
-    border-radius: ${te.radius}px;
-    border: 1px solid ${v.error};
+    color: ${x.error};
+    font-size: ${H.size}px;
+    font-family: ${H.family};
+    background-color: ${x.background};
+    padding: ${D.quarter}px ${D.half}px;
+    border-radius: ${ue.radius}px;
+    border: 1px solid ${x.error};
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     max-width: 300px;
     word-wrap: break-word;
@@ -36,235 +59,261 @@ function se(e, s) {
     transform: translateY(-10px);
     transition: opacity 0.3s ease, transform 0.3s ease;
     pointer-events: none;
-  `, n.textContent = s, document.body.appendChild(n);
-  function r() {
-    const u = e.getBoundingClientRect(), f = window.pageYOffset || document.documentElement.scrollTop, p = window.pageXOffset || document.documentElement.scrollLeft, g = u.left + p, b = u.top + f - n.offsetHeight - 8;
-    n.style.left = `${g}px`, n.style.top = `${b}px`;
+  `, r.textContent = t, document.body.appendChild(r);
+  function s() {
+    const u = e.getBoundingClientRect(), f = window.pageYOffset || document.documentElement.scrollTop, p = window.pageXOffset || document.documentElement.scrollLeft, h = u.left + p, E = u.top + f - r.offsetHeight - 8;
+    r.style.left = `${h}px`, r.style.top = `${E}px`;
   }
-  r();
-  const o = () => r(), a = () => r();
-  window.addEventListener("scroll", o, { passive: !0 }), window.addEventListener("resize", a, { passive: !0 });
+  s();
+  const n = () => s(), a = () => s();
+  window.addEventListener("scroll", n, { passive: !0 }), window.addEventListener("resize", a, { passive: !0 });
   const c = document.querySelectorAll("*"), i = [];
   c.forEach((u) => {
     const f = window.getComputedStyle(u);
     if (f.overflow === "scroll" || f.overflowY === "scroll" || f.overflow === "auto" || f.overflowY === "auto") {
-      const p = () => r();
+      const p = () => s();
       u.addEventListener("scroll", p, { passive: !0 }), i.push({ element: u, handler: p });
     }
   }), requestAnimationFrame(() => {
-    n.style.opacity = "1", n.style.transform = "translateY(0)";
+    r.style.opacity = "1", r.style.transform = "translateY(0)";
   }), setTimeout(() => {
-    n.style.opacity = "0", n.style.transform = "translateY(-10px)", window.removeEventListener("scroll", o), window.removeEventListener("resize", a), i.forEach(({ element: u, handler: f }) => {
+    r.style.opacity = "0", r.style.transform = "translateY(-10px)", window.removeEventListener("scroll", n), window.removeEventListener("resize", a), i.forEach(({ element: u, handler: f }) => {
       u.removeEventListener("scroll", f);
     }), setTimeout(() => {
-      n.parentElement && n.parentElement.removeChild(n);
+      r.parentElement && r.parentElement.removeChild(r);
     }, 300);
   }, 5e3);
 }
-const x = "https://api.gofakeit.com/funcs";
-async function m(e) {
-  const s = e.indexOf("?");
-  if (s !== -1) {
-    const t = e.substring(0, s), n = e.substring(s + 1), r = {}, o = new URLSearchParams(n);
-    for (const [a, c] of o.entries()) {
+const C = "https://api.gofakeit.com/funcs";
+async function y(e) {
+  const t = e.indexOf("?");
+  if (t !== -1) {
+    const o = e.substring(0, t), r = e.substring(t + 1), s = {}, n = new URLSearchParams(r);
+    for (const [a, c] of n.entries()) {
       const i = parseFloat(c);
-      r[a] = isNaN(i) ? c : i;
+      s[a] = isNaN(i) ? c : i;
     }
-    return S("POST", `${x}/${t}`, r);
+    return O("POST", `${C}/${o}`, s);
   } else
-    return S("GET", `${x}/${e}`);
+    return O("GET", `${C}/${e}`);
 }
-async function ne(e) {
-  return S("POST", `${x}/randomstring`, { strs: e });
-}
-async function re(e) {
+async function fe(e) {
   if (e.length === 0)
     return {
       success: !1,
       error: "No functions provided"
     };
-  const s = e.map((t, n) => {
-    const { func: r, id: o } = t, a = r.indexOf("?");
+  const t = e.map((o, r) => {
+    const { func: s, id: n } = o, a = s.indexOf("?");
     if (a !== -1) {
-      const c = r.substring(0, a), i = r.substring(a + 1), u = {}, f = new URLSearchParams(i);
-      for (const [p, g] of f.entries()) {
-        const b = parseFloat(g);
-        u[p] = isNaN(b) ? g : b;
+      const c = s.substring(0, a), i = s.substring(a + 1), u = {}, f = new URLSearchParams(i);
+      for (const [p, h] of f.entries()) {
+        const E = parseFloat(h);
+        u[p] = isNaN(E) ? h : E;
       }
       return {
-        id: o || `req_${n}`,
+        id: n || `req_${r}`,
         func: c,
         params: u
       };
     } else
       return {
-        id: o || `req_${n}`,
-        func: r,
-        params: t.params
+        id: n || `req_${r}`,
+        func: s,
+        params: o.params
       };
   });
-  return oe("POST", `${x}/multi`, s);
+  return de("POST", `${C}/multi`, t);
 }
-async function q(e) {
+async function W(e) {
   return e.length === 0 ? {
     success: !1,
     error: "No search queries provided"
-  } : ae("POST", `${x}/search`, e);
+  } : pe("POST", `${C}/search`, e);
 }
-async function S(e, s, t) {
+async function O(e, t, o) {
   try {
-    const n = {
+    const r = {
       method: e,
       headers: {
         "Content-Type": "application/json"
       }
     };
-    e === "POST" && t && (n.body = JSON.stringify(t));
-    const r = await fetch(s, n);
-    return r.ok ? {
+    e === "POST" && o && (r.body = JSON.stringify(o));
+    const s = await fetch(t, r);
+    return s.ok ? {
       success: !0,
-      data: await r.text()
+      data: await s.text()
     } : {
       success: !1,
-      error: `HTTP error! status: ${r.status}`,
-      status: r.status
+      error: `HTTP error! status: ${s.status}`,
+      status: s.status
     };
-  } catch (n) {
-    return console.error(`[Gofakeit Autofill] Error in ${e} request to ${s}:`, n), {
+  } catch (r) {
+    return console.error(`[Gofakeit Autofill] Error in ${e} request to ${t}:`, r), {
       success: !1,
-      error: n instanceof Error ? n.message : "Unknown error"
+      error: r instanceof Error ? r.message : "Unknown error"
     };
   }
 }
-async function oe(e, s, t) {
+async function de(e, t, o) {
   try {
-    const n = {
+    const r = {
       method: e,
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(t)
-    }, r = await fetch(s, n);
-    return r.ok ? {
+      body: JSON.stringify(o)
+    }, s = await fetch(t, r);
+    return s.ok ? {
       success: !0,
-      data: await r.json()
+      data: await s.json()
     } : {
       success: !1,
-      error: `HTTP error! status: ${r.status}`,
-      status: r.status
+      error: `HTTP error! status: ${s.status}`,
+      status: s.status
     };
-  } catch (n) {
-    return console.error(`[Gofakeit Autofill] Error in ${e} request to ${s}:`, n), {
+  } catch (r) {
+    return console.error(`[Gofakeit Autofill] Error in ${e} request to ${t}:`, r), {
       success: !1,
-      error: n instanceof Error ? n.message : "Unknown error"
+      error: r instanceof Error ? r.message : "Unknown error"
     };
   }
 }
-async function ae(e, s, t) {
+async function pe(e, t, o) {
   try {
-    const n = {
+    const r = {
       method: e,
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(t)
-    }, r = await fetch(s, n);
-    return r.ok ? {
+      body: JSON.stringify(o)
+    }, s = await fetch(t, r);
+    return s.ok ? {
       success: !0,
-      data: await r.json()
+      data: await s.json()
     } : {
       success: !1,
-      error: `HTTP error! status: ${r.status}`,
-      status: r.status
+      error: `HTTP error! status: ${s.status}`,
+      status: s.status
     };
-  } catch (n) {
-    return console.error(`[Gofakeit Autofill] Error in ${e} request to ${s}:`, n), {
+  } catch (r) {
+    return console.error(`[Gofakeit Autofill] Error in ${e} request to ${t}:`, r), {
       success: !1,
-      error: n instanceof Error ? n.message : "Unknown error"
+      error: r instanceof Error ? r.message : "Unknown error"
     };
   }
 }
-function ce(e, s) {
-  const t = e.type.toLowerCase();
-  return t === "date" || t === "datetime-local" ? s === "true" ? "date" : s : t === "time" ? "generateTime" : t === "month" ? "generateMonth" : t === "week" && s === "true" ? "generateWeek" : s;
+function he(e, t) {
+  const o = e.type.toLowerCase();
+  return o === "date" ? t === "true" ? "generateDate" : t : o === "datetime-local" ? t === "true" ? "generateDateTime" : t : o === "time" ? t === "true" ? "generateTime" : t : o === "month" ? t === "true" ? "generateMonth" : t : o === "week" && t === "true" ? "generateWeek" : t;
 }
-function ie(e, s) {
-  e.value = s, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 }));
+function ge(e, t) {
+  e.value = t, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 }));
 }
-async function ue() {
-  const e = await m("hour"), s = await m("minute");
-  if (!e.success || !s.success)
-    throw new Error(`Failed to generate time: ${e.error || s.error}`);
-  const t = e.data.padStart(2, "0"), n = s.data.padStart(2, "0");
-  return `${t}:${n}`;
+async function q() {
+  const e = Math.floor(Math.random() * 24).toString().padStart(2, "0"), t = Math.floor(Math.random() * 60).toString().padStart(2, "0");
+  return `${e}:${t}`;
 }
-async function le() {
-  const e = await m("year"), s = await m("month");
-  if (!e.success || !s.success)
-    throw new Error(`Failed to generate month: ${e.error || s.error}`);
-  const t = s.data.padStart(2, "0");
-  return `${e.data}-${t}`;
+async function N() {
+  const e = Math.floor(Math.random() * 30) + 1990, t = (Math.floor(Math.random() * 12) + 1).toString().padStart(2, "0");
+  return `${e}-${t}`;
 }
-async function fe() {
-  const e = await m("year"), s = await m("number?min=1&max=53");
-  if (!e.success || !s.success)
-    throw new Error(`Failed to generate week: ${e.error || s.error}`);
-  const t = s.data.padStart(2, "0");
-  return `${e.data}-W${t}`;
+async function P() {
+  const e = Math.floor(Math.random() * 30) + 1990, t = (Math.floor(Math.random() * 12) + 1).toString().padStart(2, "0"), o = (Math.floor(Math.random() * 28) + 1).toString().padStart(2, "0");
+  return `${e}-${t}-${o}`;
 }
-function de(e) {
-  const s = new Date(e.getTime());
-  s.setUTCHours(0, 0, 0, 0), s.setUTCDate(s.getUTCDate() + 4 - (s.getUTCDay() || 7));
-  const t = new Date(s.getUTCFullYear(), 0, 4);
-  return Math.ceil(((s.getTime() - t.getTime()) / 864e5 - 3 + (t.getUTCDay() || 7)) / 7);
+async function R() {
+  const e = Math.floor(Math.random() * 30) + 1990, t = (Math.floor(Math.random() * 12) + 1).toString().padStart(2, "0"), o = (Math.floor(Math.random() * 28) + 1).toString().padStart(2, "0"), r = Math.floor(Math.random() * 24).toString().padStart(2, "0"), s = Math.floor(Math.random() * 60).toString().padStart(2, "0");
+  return `${e}-${t}-${o}T${r}:${s}`;
 }
-async function O(e, s, t) {
-  const n = e.type.toLowerCase(), r = ce(e, s);
+async function B() {
+  const e = await y("year"), t = await y("number?min=1&max=53");
+  if (!e.success || !t.success)
+    throw new Error(`Failed to generate week: ${e.error || t.error}`);
+  const o = t.data.padStart(2, "0");
+  return `${e.data}-W${o}`;
+}
+function me(e) {
+  const t = new Date(e.getTime());
+  t.setUTCHours(0, 0, 0, 0), t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7));
+  const o = new Date(t.getUTCFullYear(), 0, 4);
+  return Math.ceil(((t.getTime() - o.getTime()) / 864e5 - 3 + (o.getUTCDay() || 7)) / 7);
+}
+async function z(e, t, o) {
+  const r = e.type.toLowerCase(), s = he(e, t);
   try {
-    let o;
-    if (t !== void 0)
-      o = t;
-    else if (r === "generateTime")
-      o = await ue();
-    else if (r === "generateMonth")
-      o = await le();
-    else if (r === "generateWeek")
-      o = await fe();
+    let n;
+    if (o !== void 0)
+      n = o;
+    else if (s === "generateTime")
+      n = await q();
+    else if (s === "generateMonth")
+      n = await N();
+    else if (s === "generateWeek")
+      n = await B();
+    else if (s === "generateDate")
+      n = await P();
+    else if (s === "generateDateTime")
+      n = await R();
     else {
-      const a = await m(r);
-      if (!a.success)
-        return console.warn(`[Gofakeit Autofill] Error for ${n} input:`, a.error), a.status === 400 && T(e, `Failed to get random ${n}`), { success: !1, usedFunc: r };
-      o = a.data;
+      const a = await y(s);
+      if (a.success)
+        n = a.data;
+      else {
+        console.warn(`[Gofakeit Autofill] Error for ${r} input:`, a.error), a.status === 400 && k(e, `Failed to get random ${r}`);
+        const c = M(r);
+        if (c !== s)
+          if (console.warn(`[Gofakeit Autofill] Falling back to default function: ${c}`), c === "generateWeek")
+            n = await B();
+          else if (c === "generateTime")
+            n = await q();
+          else if (c === "generateMonth")
+            n = await N();
+          else if (c === "generateDate")
+            n = await P();
+          else if (c === "generateDateTime")
+            n = await R();
+          else {
+            const i = await y(c);
+            if (i.success)
+              n = i.data;
+            else
+              return { success: !1, usedFunc: s };
+          }
+        else
+          return { success: !1, usedFunc: s };
+      }
     }
-    if (n === "date") {
-      const a = o.match(/^(\d{4}-\d{2}-\d{2})/);
+    if (r === "date") {
+      const a = n.match(/^(\d{4}-\d{2}-\d{2})/);
       if (a)
-        o = a[1];
+        n = a[1];
       else
-        return console.warn("[Gofakeit Autofill] Could not parse date from response:", o), { success: !1, usedFunc: r };
-    } else if (n === "datetime-local") {
-      const a = o.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}):\d{2}/);
+        return console.warn("[Gofakeit Autofill] Could not parse date from response:", n), { success: !1, usedFunc: s };
+    } else if (r === "datetime-local") {
+      const a = n.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})(:\d{2})?/);
       if (a)
-        o = a[1];
+        n = a[1];
       else
-        return console.warn("[Gofakeit Autofill] Could not parse datetime from response:", o), { success: !1, usedFunc: r };
-    } else if (n === "week" && r !== "generateWeek" && (r === "date" || r.startsWith("daterange"))) {
-      const a = o.match(/^(\d{4}-\d{2}-\d{2})/);
+        return console.warn("[Gofakeit Autofill] Could not parse datetime from response:", n), { success: !1, usedFunc: s };
+    } else if (r === "week" && s !== "generateWeek" && (s === "date" || s.startsWith("daterange"))) {
+      const a = n.match(/^(\d{4}-\d{2}-\d{2})/);
       if (a) {
-        const c = new Date(a[1]), i = c.getFullYear(), u = de(c);
-        o = `${i}-W${u.toString().padStart(2, "0")}`;
+        const c = new Date(a[1]), i = c.getFullYear(), u = me(c);
+        n = `${i}-W${u.toString().padStart(2, "0")}`;
       } else
-        return console.warn("[Gofakeit Autofill] Could not parse date for week from response:", o), { success: !1, usedFunc: r };
+        return console.warn("[Gofakeit Autofill] Could not parse date for week from response:", n), { success: !1, usedFunc: s };
     }
-    return ie(e, o), { success: !0, usedFunc: r };
-  } catch (o) {
-    return console.warn(`[Gofakeit Autofill] Unexpected error handling ${n} input:`, o), { success: !1, usedFunc: r };
+    return ge(e, n), { success: !0, usedFunc: s };
+  } catch (n) {
+    return console.warn(`[Gofakeit Autofill] Unexpected error handling ${r} input:`, n), { success: !1, usedFunc: s };
   }
 }
-function pe(e, s) {
-  const t = e.type.toLowerCase();
-  if (s === "true")
-    switch (t) {
+function ye(e, t) {
+  const o = e.type.toLowerCase();
+  if (t === "true")
+    switch (o) {
       case "email":
         return "email";
       case "tel":
@@ -280,149 +329,176 @@ function pe(e, s) {
       default:
         return "word";
     }
-  return s;
+  return t;
 }
-function R(e, s) {
-  e.value = s, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 }));
+function L(e, t) {
+  e.value = t, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 }));
 }
-async function he(e, s) {
-  const t = pe(e, s), n = await m(t);
-  return n.success ? (R(e, n.data), { success: !0, usedFunc: t }) : (console.warn(`[Gofakeit Autofill] Error for function ${t}:`, n.error), n.status === 400 && T(e, "", t), { success: !1, usedFunc: t });
+async function we(e, t) {
+  const o = ye(e, t), r = await y(o);
+  if (!r.success) {
+    console.warn(`[Gofakeit Autofill] Error for function ${o}:`, r.error), r.status === 400 && k(e, "", o);
+    const s = e.type.toLowerCase(), n = M(s);
+    if (n !== o) {
+      console.warn(`[Gofakeit Autofill] Falling back to default function: ${n}`);
+      const a = await y(n);
+      if (a.success)
+        return L(e, a.data), { success: !0, usedFunc: n };
+    }
+    return { success: !1, usedFunc: o };
+  }
+  return L(e, r.data), { success: !0, usedFunc: o };
 }
-function N(e) {
+function Y(e) {
   return e === "true" ? "sentence" : e;
 }
-function _(e, s) {
-  e.value = s, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 }));
+function F(e, t) {
+  e.value = t, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 }));
 }
-async function me(e, s) {
-  const t = N(s), n = await m(t);
-  return n.success ? (_(e, n.data), { success: !0, usedFunc: t }) : (console.warn(`[Gofakeit Autofill] Error for function ${t}:`, n.error), n.status === 400 && T(e, "", t), { success: !1, usedFunc: t });
+async function be(e, t) {
+  const o = Y(t), r = await y(o);
+  if (!r.success) {
+    console.warn(`[Gofakeit Autofill] Error for function ${o}:`, r.error), r.status === 400 && k(e, "", o);
+    const s = "sentence";
+    if (s !== o) {
+      console.warn(`[Gofakeit Autofill] Falling back to default function: ${s}`);
+      const n = await y(s);
+      if (n.success)
+        return F(e, n.data), { success: !0, usedFunc: s };
+    }
+    return { success: !1, usedFunc: o };
+  }
+  return F(e, r.data), { success: !0, usedFunc: o };
 }
-async function D(e, s, t) {
-  const n = we(e);
-  if (n.length === 0)
+async function K(e, t, o) {
+  const r = Ee(e);
+  if (r.length === 0)
     return console.warn("[Gofakeit Autofill] No checkbox group found for element:", e), { success: !1, usedFunc: "bool" };
-  const r = s === "true" ? "bool" : s;
-  if (t !== void 0)
-    return n.forEach((a) => {
+  const s = t === "true" ? "bool" : t;
+  if (o !== void 0)
+    return r.forEach((a) => {
       a.checked = !1, a.dispatchEvent(new Event("change", { bubbles: !0 }));
-    }), (String(t).toLowerCase() === "true" || t === "1" || String(t).toLowerCase() === "yes") && n.length > 0 && (n[0].checked = !0, n[0].dispatchEvent(new Event("change", { bubbles: !0 }))), { success: !0, usedFunc: r };
-  if (s === "true") {
-    const o = Math.max(1, Math.ceil(n.length / 2));
-    n.forEach((c) => {
+    }), (String(o).toLowerCase() === "true" || o === "1" || String(o).toLowerCase() === "yes") && r.length > 0 && (r[0].checked = !0, r[0].dispatchEvent(new Event("change", { bubbles: !0 }))), { success: !0, usedFunc: s };
+  if (t === "true") {
+    const n = Math.max(1, Math.ceil(r.length / 2));
+    r.forEach((c) => {
       c.checked = !1, c.dispatchEvent(new Event("change", { bubbles: !0 }));
     });
     const a = /* @__PURE__ */ new Set();
-    for (let c = 0; c < o; c++) {
-      const i = await m("bool");
+    for (let c = 0; c < n; c++) {
+      const i = await y("bool");
       if (i.success && (i.data.toLowerCase() === "true" || i.data.toLowerCase() === "1")) {
-        const f = Array.from({ length: n.length }, (p, g) => g).filter((p) => !a.has(p));
+        const f = Array.from({ length: r.length }, (p, h) => h).filter((p) => !a.has(p));
         if (f.length > 0) {
           const p = f[Math.floor(Math.random() * f.length)];
-          a.add(p), n[p].checked = !0, n[p].dispatchEvent(new Event("change", { bubbles: !0 }));
+          a.add(p), r[p].checked = !0, r[p].dispatchEvent(new Event("change", { bubbles: !0 }));
         }
       }
     }
   } else {
-    const o = await m(r);
-    if (!o.success)
-      return console.warn(`[Gofakeit Autofill] Error for function ${r}:`, o.error), o.status === 400 && T(e, "", r), { success: !1, usedFunc: r };
-    n.forEach((c) => {
+    const n = await y(s);
+    if (!n.success)
+      return console.warn(`[Gofakeit Autofill] Error for function ${s}:`, n.error), n.status === 400 && k(e, "", s), { success: !1, usedFunc: s };
+    r.forEach((c) => {
       c.checked = !1, c.dispatchEvent(new Event("change", { bubbles: !0 }));
     });
-    const a = o.data.split(",").map((c) => c.trim());
-    n.forEach((c, i) => {
+    const a = n.data.split(",").map((c) => c.trim());
+    r.forEach((c, i) => {
       const u = a.includes(c.value) || a.includes(i.toString());
       c.checked = u, c.dispatchEvent(new Event("change", { bubbles: !0 }));
     });
   }
-  return { success: !0, usedFunc: r };
+  return { success: !0, usedFunc: s };
 }
-async function P(e, s, t) {
-  const n = ye(e), r = s === "true" ? "bool" : s;
-  if (t !== void 0) {
-    n.forEach((a) => {
+async function j(e, t, o) {
+  const r = Te(e), s = t === "true" ? "bool" : t;
+  if (o !== void 0) {
+    r.forEach((a) => {
       a.checked = !1, a.dispatchEvent(new Event("change", { bubbles: !0 }));
     });
-    let o = n.find((a) => a.value === t);
-    if (!o && !isNaN(Number(t))) {
-      const a = parseInt(t);
-      a >= 0 && a < n.length && (o = n[a]);
+    let n = r.find((a) => a.value === o);
+    if (!n && !isNaN(Number(o))) {
+      const a = parseInt(o);
+      a >= 0 && a < r.length && (n = r[a]);
     }
-    return o && (o.checked = !0, o.dispatchEvent(new Event("change", { bubbles: !0 }))), { success: !0, usedFunc: r, selectedElement: o };
+    return n && (n.checked = !0, n.dispatchEvent(new Event("change", { bubbles: !0 }))), { success: !0, usedFunc: s, selectedElement: n };
   }
-  if (s === "true") {
-    n.forEach((a) => {
+  if (t === "true") {
+    r.forEach((a) => {
       a.checked = !1, a.dispatchEvent(new Event("change", { bubbles: !0 }));
     });
-    const o = Math.floor(Math.random() * n.length);
-    return n[o].checked = !0, n[o].dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: r, selectedElement: n[o] };
+    const n = Math.floor(Math.random() * r.length);
+    return r[n].checked = !0, r[n].dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: s, selectedElement: r[n] };
   } else {
-    const o = await m(r);
-    if (!o.success)
-      return console.warn(`[Gofakeit Autofill] Error for function ${r}:`, o.error), o.status === 400 && T(e, "", r), { success: !1, usedFunc: r };
-    n.forEach((i) => {
+    const n = await y(s);
+    if (!n.success)
+      return console.warn(`[Gofakeit Autofill] Error for function ${s}:`, n.error), n.status === 400 && k(e, "", s), { success: !1, usedFunc: s };
+    r.forEach((i) => {
       i.checked = !1, i.dispatchEvent(new Event("change", { bubbles: !0 }));
     });
-    const a = o.data.trim();
-    let c = n.find((i) => i.value === a);
+    const a = n.data.trim();
+    let c = r.find((i) => i.value === a);
     if (!c && !isNaN(Number(a))) {
       const i = parseInt(a);
-      i >= 0 && i < n.length && (c = n[i]);
+      i >= 0 && i < r.length && (c = r[i]);
     }
     if (c)
-      return c.checked = !0, c.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: r, selectedElement: c };
+      return c.checked = !0, c.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: s, selectedElement: c };
     {
-      const i = Math.floor(Math.random() * n.length);
-      return n[i].checked = !0, n[i].dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: r, selectedElement: n[i] };
+      const i = Math.floor(Math.random() * r.length);
+      return r[i].checked = !0, r[i].dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: s, selectedElement: r[i] };
     }
   }
 }
-function we(e) {
+function Ee(e) {
   if (e.type !== "checkbox") return [e];
-  const s = e.name, t = e.closest("form, div, fieldset") || document;
-  return s ? Array.from(t.querySelectorAll(`input[type="checkbox"][name="${s}"]`)) : Array.from(t.querySelectorAll('input[type="checkbox"]'));
+  const t = e.name, o = e.closest("form, div, fieldset") || document;
+  return t ? Array.from(o.querySelectorAll(`input[type="checkbox"][name="${t}"]`)) : Array.from(o.querySelectorAll('input[type="checkbox"]'));
 }
-function ye(e) {
+function Te(e) {
   if (e.type !== "radio") return [e];
-  const s = e.name;
-  if (s)
-    return Array.from(document.querySelectorAll(`input[type="radio"][name="${s}"]`));
+  const t = e.name;
+  if (t)
+    return Array.from(document.querySelectorAll(`input[type="radio"][name="${t}"]`));
   {
-    const t = e.closest("form, div, fieldset") || document;
-    return Array.from(t.querySelectorAll('input[type="radio"]'));
+    const o = e.closest("form, div, fieldset") || document;
+    return Array.from(o.querySelectorAll('input[type="radio"]'));
   }
 }
-async function B(e, s, t) {
-  const n = Array.from(e.options).map((o) => o.value).filter((o) => o !== "");
-  if (n.length === 0)
-    return console.warn("[Gofakeit Autofill] Select element has no valid options:", e), { success: !1, usedFunc: s };
-  if (t !== void 0) {
+async function Q(e, t, o) {
+  const r = Array.from(e.options).map((n) => n.value).filter((n) => n !== "");
+  if (r.length === 0)
+    return console.warn("[Gofakeit Autofill] Select element has no valid options:", e), { success: !1, usedFunc: t };
+  if (o !== void 0) {
     if (e.multiple)
-      Array.from(e.options).forEach((a) => a.selected = !1), t.split(",").map((a) => a.trim()).filter((a) => a !== "").forEach((a) => {
+      Array.from(e.options).forEach((a) => a.selected = !1), o.split(",").map((a) => a.trim()).filter((a) => a !== "").forEach((a) => {
         const c = e.options.namedItem(a) || Array.from(e.options).find((i) => i.value === a);
         c && (c.selected = !0);
       });
-    else if (e.options.namedItem(t) || Array.from(e.options).find((a) => a.value === t))
-      e.value = t;
+    else if (e.options.namedItem(o) || Array.from(e.options).find((a) => a.value === o))
+      e.value = o;
     else {
-      const a = n.filter((c) => c !== "");
+      const a = r.filter((c) => c !== "");
       if (a.length > 0) {
         const c = a[Math.floor(Math.random() * a.length)];
         e.value = c;
       } else
-        return { success: !1, usedFunc: s };
+        return { success: !1, usedFunc: t };
     }
-    return e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: s === "true" ? "random" : s };
+    return e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: t === "true" ? "random" : t };
   }
-  let r;
-  if (s === "true" ? r = await ne(n) : r = await m(s), !r.success)
-    return console.warn("[Gofakeit Autofill] Error for select:", r.error), r.status === 400 && T(e, "Failed to get selection"), { success: !1, usedFunc: s };
+  let s;
+  if (t === "true") {
+    const n = Math.floor(Math.random() * r.length);
+    s = { success: !0, data: r[n] };
+  } else
+    s = await y(t);
+  if (!s.success)
+    return console.warn("[Gofakeit Autofill] Error for select:", s.error), s.status === 400 && k(e, "Failed to get selection"), { success: !1, usedFunc: t };
   if (e.multiple)
-    if (Array.from(e.options).forEach((o) => o.selected = !1), s === "true") {
-      const o = Math.min(Math.ceil(n.length / 2), n.length), a = [r.data], c = n.filter((i) => i !== r.data);
-      for (let i = 1; i < o && c.length > 0; i++) {
+    if (Array.from(e.options).forEach((n) => n.selected = !1), t === "true") {
+      const n = Math.min(Math.ceil(r.length / 2), r.length), a = [s.data], c = r.filter((i) => i !== s.data);
+      for (let i = 1; i < n && c.length > 0; i++) {
         const u = Math.floor(Math.random() * c.length);
         a.push(c.splice(u, 1)[0]);
       }
@@ -431,190 +507,190 @@ async function B(e, s, t) {
         u && (u.selected = !0);
       });
     } else
-      r.data.split(",").map((a) => a.trim()).filter((a) => a !== "").forEach((a) => {
+      s.data.split(",").map((a) => a.trim()).filter((a) => a !== "").forEach((a) => {
         const c = e.options.namedItem(a) || Array.from(e.options).find((i) => i.value === a);
         c && (c.selected = !0);
       });
   else
-    e.value = r.data;
-  return e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: s === "true" ? "random" : s };
+    e.value = s.data;
+  return e.dispatchEvent(new Event("change", { bubbles: !0 })), { success: !0, usedFunc: t === "true" ? "random" : t };
 }
-function ge(e) {
+function ke(e) {
   return e === "true" ? "number" : e;
 }
-function U(e, s) {
-  e.value = s, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 }));
+function J(e, t) {
+  e.value = t, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 }));
 }
-async function be(e, s) {
-  const t = ge(s), n = await m(t);
-  return n.success ? (U(e, n.data), { success: !0, usedFunc: t }) : (console.warn(`[Gofakeit Autofill] Error for function ${t}:`, n.error), n.status === 400 && T(e, "", t), { success: !1, usedFunc: t });
+async function ve(e, t) {
+  const o = ke(t), r = await y(o);
+  return r.success ? (J(e, r.data), { success: !0, usedFunc: o }) : (console.warn(`[Gofakeit Autofill] Error for function ${o}:`, r.error), r.status === 400 && k(e, "", o), { success: !1, usedFunc: o });
 }
-function V(e) {
-  const s = parseFloat(e.min) || 0, t = parseFloat(e.max) || 100;
-  return `number?min=${s}&max=${t}`;
+function X(e) {
+  const t = parseFloat(e.min) || 0, o = parseFloat(e.max) || 100;
+  return `number?min=${t}&max=${o}`;
 }
-function z(e, s) {
-  const t = parseFloat(s);
-  if (!isNaN(t)) {
-    const n = parseFloat(e.min) || 0, r = parseFloat(e.max) || 100, o = Math.max(n, Math.min(r, t));
-    e.value = o.toString(), e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 }));
+function Z(e, t) {
+  const o = parseFloat(t);
+  if (!isNaN(o)) {
+    const r = parseFloat(e.min) || 0, s = parseFloat(e.max) || 100, n = Math.max(r, Math.min(s, o));
+    e.value = n.toString(), e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 }));
   }
 }
-async function Ee(e) {
-  const s = V(e), t = await m(s);
-  return t.success ? (z(e, t.data), { success: !0, usedFunc: s }) : (console.warn("[Gofakeit Autofill] Error for range input:", t.error), t.status === 400 && T(e, "Failed to get random number for range"), { success: !1, usedFunc: s });
+async function Me(e) {
+  const t = X(e), o = await y(t);
+  return o.success ? (Z(e, o.data), { success: !0, usedFunc: t }) : (console.warn("[Gofakeit Autofill] Error for range input:", o.error), o.status === 400 && k(e, "Failed to get random number for range"), { success: !1, usedFunc: t });
 }
-async function $e(e, s) {
-  const n = { ...{ smart: !0 }, ...s };
+async function S(e, t) {
+  const r = { ...{ smart: !0 }, ...t };
   if (!e)
-    return Te(n);
-  if (e instanceof HTMLElement && M(e))
-    return I(e, n);
+    return xe(r);
+  if (e instanceof HTMLElement && I(e))
+    return _(e, r);
   if (e instanceof HTMLInputElement || e instanceof HTMLTextAreaElement || e instanceof HTMLSelectElement) {
-    const r = await L(e, n);
-    return r || E("Failed to autofill the specified element", "error"), r;
+    const s = await $(e, r);
+    return s || T("Failed to autofill the specified element", "error"), s;
   }
   if (e instanceof HTMLElement) {
-    const r = Le(e);
-    if (r)
-      return I(r, n);
+    const s = Ie(e);
+    if (s)
+      return _(s, r);
   }
   return !1;
 }
-async function Te(e) {
-  const s = Y(), t = e.smart ?? !0, r = (t ? s : s.filter((a) => a.hasAttribute("data-gofakeit"))).filter((a) => !W(a));
-  if (r.length === 0) {
-    E(t ? "No form fields found to autofill" : "No data-gofakeit fields exist. Turn on Smart mode to fill all form fields.", "info");
+async function xe(e) {
+  const t = ee(), o = e.smart ?? !0, s = (o ? t : t.filter((a) => a.hasAttribute("data-gofakeit"))).filter((a) => !te(a));
+  if (s.length === 0) {
+    T(o ? "No form fields found to autofill" : "No data-gofakeit fields exist. Turn on Smart mode to fill all form fields.", "info");
     return;
   }
-  console.log(`[Gofakeit] Found ${r.length} elements to generate data for`), E(`Starting data generation for ${r.length} fields...`, "info");
-  const o = await K(r, e);
-  j(o.success, o.failed, "Autofill");
+  console.log(`[Gofakeit] Found ${s.length} elements to generate data for`), T(`Starting data generation for ${s.length} fields...`, "info");
+  const n = await oe(s, e);
+  se(n.success, n.failed, "Autofill");
 }
-async function I(e, s) {
-  const t = Y(e), n = s.smart ?? !0, o = (n ? t : t.filter((c) => c.hasAttribute("data-gofakeit"))).filter((c) => !W(c));
-  if (o.length === 0) {
-    E(n ? "No form fields found in this container" : "No data-gofakeit fields exist in this section. Turn on Smart mode to fill all form fields.", "info");
+async function _(e, t) {
+  const o = ee(e), r = t.smart ?? !0, n = (r ? o : o.filter((c) => c.hasAttribute("data-gofakeit"))).filter((c) => !te(c));
+  if (n.length === 0) {
+    T(r ? "No form fields found in this container" : "No data-gofakeit fields exist in this section. Turn on Smart mode to fill all form fields.", "info");
     return;
   }
-  console.log(`[Gofakeit] Found ${o.length} elements to generate data for in container`), E(`Starting data generation for ${o.length} fields...`, "info");
-  const a = await K(o, s);
-  j(a.success, a.failed, "Container autofill");
+  console.log(`[Gofakeit] Found ${n.length} elements to generate data for in container`), T(`Starting data generation for ${n.length} fields...`, "info");
+  const a = await oe(n, t);
+  se(a.success, a.failed, "Container autofill");
 }
-async function L(e, s) {
-  const t = e.getAttribute("data-gofakeit");
-  if (typeof t == "string" && t.trim().toLowerCase() === "false")
+async function $(e, t) {
+  const o = e.getAttribute("data-gofakeit");
+  if (typeof o == "string" && o.trim().toLowerCase() === "false")
     return !1;
-  const n = s.smart ?? !0;
-  if (!t && !n)
+  const r = t.smart ?? !0;
+  if (!o && !r)
     return !1;
   try {
     if (e instanceof HTMLSelectElement) {
-      const r = t && t !== "true" ? t : "true", { success: o, usedFunc: a } = await B(e, r);
-      return o && h(e, a, s), o;
+      const s = o && o !== "true" ? o : "true", { success: n, usedFunc: a } = await Q(e, s);
+      return n && g(e, a, t), n;
     }
     if (e instanceof HTMLTextAreaElement) {
-      const r = t && t !== "true" ? t : "sentence", { success: o, usedFunc: a } = await me(e, r);
-      return o && h(e, a, s), o;
+      const s = o && o !== "true" ? o : "sentence", { success: n, usedFunc: a } = await be(e, s);
+      return n && g(e, a, t), n;
     }
     if (e instanceof HTMLInputElement) {
-      const r = e.type.toLowerCase();
-      if (r === "checkbox") {
-        const i = t && t !== "true" ? t : "true", { success: u, usedFunc: f } = await D(e, i);
-        return u && h(e, f, s), u;
+      const s = e.type.toLowerCase();
+      if (s === "checkbox") {
+        const i = o && o !== "true" ? o : "true", { success: u, usedFunc: f } = await K(e, i);
+        return u && g(e, f, t), u;
       }
-      if (r === "radio") {
-        const i = t && t !== "true" ? t : "true", { success: u, usedFunc: f, selectedElement: p } = await P(e, i);
-        return u && h(p || e, f, s), u;
+      if (s === "radio") {
+        const i = o && o !== "true" ? o : "true", { success: u, usedFunc: f, selectedElement: p } = await j(e, i);
+        return u && g(p || e, f, t), u;
       }
-      if (r === "range") {
-        const { success: i, usedFunc: u } = await Ee(e);
-        return i && h(e, u, s), i;
+      if (s === "range") {
+        const { success: i, usedFunc: u } = await Me(e);
+        return i && g(e, u, t), i;
       }
-      const o = t && t !== "true" ? t : await X(e);
-      if (r === "number") {
-        const { success: i, usedFunc: u } = await be(e, o);
-        return i && h(e, u, s), i;
+      const n = o && o !== "true" ? o : await ae(e);
+      if (s === "number") {
+        const { success: i, usedFunc: u } = await ve(e, n);
+        return i && g(e, u, t), i;
       }
-      if (r === "date" || r === "time" || r === "datetime-local" || r === "month" || r === "week") {
-        const { success: i, usedFunc: u } = await O(e, o);
-        return i && h(e, u, s), i;
+      if (s === "date" || s === "time" || s === "datetime-local" || s === "month" || s === "week") {
+        const { success: i, usedFunc: u } = await z(e, n);
+        return i && g(e, u, t), i;
       }
-      const { success: a, usedFunc: c } = await he(e, o);
-      return a && h(e, c, s), a;
+      const { success: a, usedFunc: c } = await we(e, n);
+      return a && g(e, c, t), a;
     }
     return console.warn("[Gofakeit] Unsupported element type:", e), !1;
-  } catch (r) {
-    return console.error("[Gofakeit] Unexpected error generating data for element:", e, r), !1;
+  } catch (s) {
+    return console.error("[Gofakeit] Unexpected error generating data for element:", e, s), !1;
   }
 }
-function Y(e) {
-  const s = "input, textarea, select", t = e ? e.querySelectorAll(s) : document.querySelectorAll(s), n = [];
-  return t.forEach((r) => {
-    if (r instanceof HTMLInputElement) {
-      if (r.type === "hidden" || r.disabled || r.readOnly) return;
-      n.push(r);
-    } else if (r instanceof HTMLTextAreaElement) {
-      if (r.disabled || r.readOnly) return;
-      n.push(r);
-    } else if (r instanceof HTMLSelectElement) {
-      if (r.disabled) return;
-      n.push(r);
+function ee(e) {
+  const t = "input, textarea, select", o = e ? e.querySelectorAll(t) : document.querySelectorAll(t), r = [];
+  return o.forEach((s) => {
+    if (s instanceof HTMLInputElement) {
+      if (s.type === "hidden" || s.disabled || s.readOnly) return;
+      r.push(s);
+    } else if (s instanceof HTMLTextAreaElement) {
+      if (s.disabled || s.readOnly) return;
+      r.push(s);
+    } else if (s instanceof HTMLSelectElement) {
+      if (s.disabled) return;
+      r.push(s);
     }
-  }), n;
+  }), r;
 }
-function W(e) {
-  const s = e.getAttribute && e.getAttribute("data-gofakeit");
-  return typeof s == "string" && s.trim().toLowerCase() === "false";
+function te(e) {
+  const t = e.getAttribute && e.getAttribute("data-gofakeit");
+  return typeof t == "string" && t.trim().toLowerCase() === "false";
 }
-function ke(e) {
-  const s = [], t = /* @__PURE__ */ new Set();
-  for (const n of e) {
-    if (n instanceof HTMLInputElement) {
-      const r = n.type.toLowerCase();
-      if (r === "checkbox" || r === "radio") {
-        const o = n.name;
-        if (o && t.has(o))
+function Se(e) {
+  const t = [], o = /* @__PURE__ */ new Set();
+  for (const r of e) {
+    if (r instanceof HTMLInputElement) {
+      const s = r.type.toLowerCase();
+      if (s === "checkbox" || s === "radio") {
+        const n = r.name;
+        if (n && o.has(n))
           continue;
-        o && t.add(o);
+        n && o.add(n);
       }
     }
-    s.push(n);
+    t.push(r);
   }
-  return s;
+  return t;
 }
-async function K(e, s) {
-  let t = 0, n = 0;
-  const r = ke(e), o = [], a = [];
-  for (const l of r)
+async function oe(e, t) {
+  let o = 0, r = 0;
+  const s = Se(e), n = [], a = [];
+  for (const l of s)
     if (l instanceof HTMLInputElement) {
       const d = l.type.toLowerCase();
-      Q(d) ? o.push(l) : a.push(l);
+      re(d) ? n.push(l) : a.push(l);
     } else
       a.push(l);
   let c = /* @__PURE__ */ new Map();
-  if (o.length > 0)
+  if (n.length > 0)
     try {
-      c = await Se(o);
+      c = await $e(n);
     } catch (l) {
       console.warn("[Gofakeit Autofill] Search API failed, falling back to individual function detection:", l);
-      for (const d of o) {
-        const w = await G(d, s);
+      for (const d of n) {
+        const w = await U(d, t);
         w && c.set(d, w);
       }
     }
   const i = [], u = [];
-  o.forEach((l) => {
+  n.forEach((l) => {
     const d = c.get(l);
     d && u.push({ element: l, func: d });
   });
   for (const l of a)
     try {
-      const d = await G(l, s);
+      const d = await U(l, t);
       if (d) {
         if (l instanceof HTMLInputElement) {
           const w = l.type.toLowerCase();
-          if (["checkbox", "radio", "range", "file", "button", "submit", "reset", "image", "color"].includes(w)) {
+          if (["checkbox", "radio", "range", "file", "button", "submit", "reset", "image", "color", "date", "time", "datetime-local", "month", "week"].includes(w)) {
             i.push(l);
             continue;
           }
@@ -622,202 +698,200 @@ async function K(e, s) {
         u.push({ element: l, func: d });
       }
     } catch (d) {
-      n++, console.warn("[Gofakeit Autofill] Failed to get function for element:", l, d);
+      r++, console.warn("[Gofakeit Autofill] Failed to get function for element:", l, d);
     }
-  if (globalThis.__GOFAKEIT_TEST_MODE__ ? !1 : s.staggered ?? !0)
+  if (globalThis.__GOFAKEIT_TEST_MODE__ ? !1 : t.staggered ?? !0)
     for (let l = 0; l < i.length; l++) {
-      const d = i[l], w = s.staggerDelay ?? 50;
-      l > 0 && await new Promise((y) => setTimeout(y, w));
+      const d = i[l], w = t.staggerDelay ?? 50;
+      l > 0 && await new Promise((b) => setTimeout(b, w));
       try {
-        await L(d, s) ? t++ : n++;
-      } catch (y) {
-        n++, console.warn("[Gofakeit Autofill] Failed to process excluded element:", d, y);
+        await $(d, t) ? o++ : r++;
+      } catch (b) {
+        r++, console.warn("[Gofakeit Autofill] Failed to process excluded element:", d, b);
       }
     }
   else {
     const l = i.map(async (w) => {
       try {
-        return await L(w, s);
-      } catch (y) {
-        return console.warn("[Gofakeit Autofill] Failed to process excluded element:", w, y), !1;
+        return await $(w, t);
+      } catch (b) {
+        return console.warn("[Gofakeit Autofill] Failed to process excluded element:", w, b), !1;
       }
     });
     (await Promise.all(l)).forEach((w) => {
-      w ? t++ : n++;
+      w ? o++ : r++;
     });
   }
   if (u.length === 0)
-    return { success: t, failed: n };
-  const g = u.map((l, d) => ({
+    return { success: o, failed: r };
+  const h = u.map((l, d) => ({
     id: `req_${d}`,
     func: l.func
-  })), b = await re(g);
-  if (!b.success || !b.data)
-    return console.error("[Gofakeit Autofill] Batch API call failed:", b.error), { success: t, failed: n + u.length };
+  })), E = await fe(h);
+  if (!E.success || !E.data)
+    return console.error("[Gofakeit Autofill] Batch API call failed:", E.error), { success: o, failed: r + u.length };
   for (let l = 0; l < u.length; l++) {
-    const { element: d, func: w } = u[l], y = b.data[l], Z = globalThis.__GOFAKEIT_TEST_MODE__ ? !1 : s.staggered ?? !0, ee = s.staggerDelay ?? 50;
-    if (Z && l > 0 && await new Promise((A) => setTimeout(A, ee)), y && y.value !== null && !y.error)
+    const { element: d, func: w } = u[l], b = E.data[l], ce = globalThis.__GOFAKEIT_TEST_MODE__ ? !1 : t.staggered ?? !0, ie = t.staggerDelay ?? 50;
+    if (ce && l > 0 && await new Promise((A) => setTimeout(A, ie)), b && b.value !== null && !b.error)
       try {
-        await ve(d, w, y.value, s) ? (t++, setTimeout(() => {
+        await Ae(d, w, b.value, t) ? (o++, setTimeout(() => {
           d instanceof HTMLInputElement || d instanceof HTMLTextAreaElement ? d.value === "" && console.warn("[Gofakeit Autofill] Value was cleared for element:", d) : d instanceof HTMLSelectElement && d.value === "" && console.warn("[Gofakeit Autofill] Value was cleared for select:", d);
-        }, 1e3)) : n++;
+        }, 1e3)) : r++;
       } catch (A) {
-        n++, console.warn("[Gofakeit Autofill] Failed to apply value to element:", d, A);
+        r++, console.warn("[Gofakeit Autofill] Failed to apply value to element:", d, A);
       }
     else
-      n++, console.warn("[Gofakeit Autofill] API error for element:", d, y?.error);
+      r++, console.warn("[Gofakeit Autofill] API error for element:", d, b?.error);
   }
-  return { success: t, failed: n };
+  return { success: o, failed: r };
 }
-async function G(e, s) {
-  const t = e.getAttribute("data-gofakeit");
-  if (typeof t == "string" && t.trim().toLowerCase() === "false")
+async function U(e, t) {
+  const o = e.getAttribute("data-gofakeit");
+  if (typeof o == "string" && o.trim().toLowerCase() === "false")
     return null;
-  const n = s.smart ?? !0;
-  if (!t && !n)
+  const r = t.smart ?? !0;
+  if (!o && !r)
     return null;
   try {
     if (e instanceof HTMLSelectElement)
-      return t && t !== "true" ? t : "word";
+      return o && o !== "true" ? o : "word";
     if (e instanceof HTMLTextAreaElement)
-      return N(t || "true");
+      return Y(o || "true");
     if (e instanceof HTMLInputElement) {
-      const r = e.type.toLowerCase();
-      return r === "checkbox" ? t && t !== "true" ? t : "bool" : r === "radio" ? t && t !== "true" ? t : "true" : r === "range" ? V(e) : await X(e);
+      const s = e.type.toLowerCase();
+      return s === "checkbox" ? o && o !== "true" ? o : "bool" : s === "radio" ? o && o !== "true" ? o : "true" : s === "range" ? X(e) : await ae(e);
     }
     return console.warn("[Gofakeit] Unsupported element type for batching:", e), null;
-  } catch (r) {
-    return console.error("[Gofakeit] Unexpected error getting function for element:", e, r), null;
+  } catch (s) {
+    return console.error("[Gofakeit] Unexpected error getting function for element:", e, s), null;
   }
 }
-function h(e, s, t) {
-  const r = globalThis.__GOFAKEIT_TEST_MODE__ ? !1 : t?.staggered ?? !0, o = t?.staggerDelay ?? 50;
-  e instanceof HTMLElement && (e.style.transition = "background-color 0.3s ease", e.style.backgroundColor = "#e8f5e8", setTimeout(() => {
-    e.style.backgroundColor = "";
-  }, 500)), setTimeout(() => {
-    Ae(e, s);
-  }, r ? o : 0);
+function g(e, t, o) {
+  const s = globalThis.__GOFAKEIT_TEST_MODE__ ? !1 : o?.staggered ?? !0, n = o?.staggerDelay ?? 50;
+  setTimeout(() => {
+    Le(e, t);
+  }, s ? n : 0);
 }
-async function ve(e, s, t, n) {
+async function Ae(e, t, o, r) {
   try {
     if (e instanceof HTMLSelectElement) {
-      const { success: r, usedFunc: o } = await B(e, s, t);
-      return r && h(e, o, n), r;
+      const { success: s, usedFunc: n } = await Q(e, t, o);
+      return s && g(e, n, r), s;
     }
     if (e instanceof HTMLTextAreaElement)
-      return _(e, t), h(e, s, n), !0;
+      return F(e, o), g(e, t, r), !0;
     if (e instanceof HTMLInputElement) {
-      const r = e.type.toLowerCase();
-      if (r === "checkbox") {
-        const { success: o, usedFunc: a } = await D(e, s, t);
-        return o && h(e, a, n), o;
+      const s = e.type.toLowerCase();
+      if (s === "checkbox") {
+        const { success: n, usedFunc: a } = await K(e, t, o);
+        return n && g(e, a, r), n;
       }
-      if (r === "radio") {
-        const { success: o, usedFunc: a } = await P(e, s, t);
-        return o && h(e, a, n), o;
+      if (s === "radio") {
+        const { success: n, usedFunc: a } = await j(e, t, o);
+        return n && g(e, a, r), n;
       }
-      if (r === "number")
-        return U(e, t), h(e, s, n), !0;
-      if (r === "range")
-        return z(e, t), h(e, s, n), !0;
-      if (r === "date" || r === "time" || r === "datetime-local" || r === "month" || r === "week") {
-        const { success: o, usedFunc: a } = await O(e, s, t);
-        return o && h(e, a, n), o;
+      if (s === "number")
+        return J(e, o), g(e, t, r), !0;
+      if (s === "range")
+        return Z(e, o), g(e, t, r), !0;
+      if (s === "date" || s === "time" || s === "datetime-local" || s === "month" || s === "week") {
+        const { success: n, usedFunc: a } = await z(e, t, o);
+        return n && g(e, a, r), n;
       }
-      return R(e, t), h(e, s, n), !0;
+      return L(e, o), g(e, t, r), !0;
     }
     return console.warn("[Gofakeit] Unsupported element type:", e), !1;
-  } catch (r) {
-    return console.error("[Gofakeit] Unexpected error generating data for element:", e, r), !1;
+  } catch (s) {
+    return console.error("[Gofakeit] Unexpected error generating data for element:", e, s), !1;
   }
 }
-function j(e, s, t) {
-  e > 0 && (console.log(`[Gofakeit] ${t} completed successfully for ${e} fields`), E(`Successfully generated data for ${e} fields!`, "success")), s > 0 && (console.error(`[Gofakeit] ${t} failed for ${s} fields`), E(`Failed to generate data for ${s} fields.`, "error")), e === 0 && s === 0 && (console.log(`[Gofakeit] ${t} - no fields were processed`), E("No fields were processed.", "info"));
+function se(e, t, o) {
+  e > 0 && (console.log(`[Gofakeit] ${o} completed successfully for ${e} fields`), T(`Successfully generated data for ${e} fields!`, "success")), t > 0 && (console.error(`[Gofakeit] ${o} failed for ${t} fields`), T(`Failed to generate data for ${t} fields.`, "error")), e === 0 && t === 0 && (console.log(`[Gofakeit] ${o} - no fields were processed`), T("No fields were processed.", "info"));
 }
-function T(e, s, t) {
-  e instanceof HTMLElement && (e.style.border = `2px solid ${v.error}`, setTimeout(() => {
+function k(e, t, o) {
+  e instanceof HTMLElement && (e.style.border = `2px solid ${x.error}`, setTimeout(() => {
     e.style.border = "";
   }, 5e3));
-  const n = t ? `Invalid function: ${t}` : s;
-  se(e, n);
+  const r = o ? `Invalid function: ${o}` : t;
+  le(e, r);
 }
-function M(e) {
+function I(e) {
   return e.querySelectorAll("input[data-gofakeit], textarea[data-gofakeit], select[data-gofakeit]").length > 0;
 }
-const k = /* @__PURE__ */ new Map();
-function xe(e) {
+const v = /* @__PURE__ */ new Map();
+function Ce(e) {
   if (e instanceof HTMLInputElement && e.type === "radio" && e.name)
-    document.querySelectorAll(`input[type="radio"][name="${e.name}"]`).forEach((t) => {
-      const n = k.get(t);
-      n && (clearTimeout(n.timeout), n.cleanup(), k.delete(t));
+    document.querySelectorAll(`input[type="radio"][name="${e.name}"]`).forEach((o) => {
+      const r = v.get(o);
+      r && (clearTimeout(r.timeout), r.cleanup(), v.delete(o));
     });
   else {
-    const s = k.get(e);
-    s && (clearTimeout(s.timeout), s.cleanup(), k.delete(e));
+    const t = v.get(e);
+    t && (clearTimeout(t.timeout), t.cleanup(), v.delete(e));
   }
 }
-function Ae(e, s) {
+function Le(e, t) {
   if (!(e instanceof HTMLElement)) return;
-  xe(e);
-  const t = document.createElement("div");
-  t.textContent = s, t.style.position = "fixed", t.style.background = v.primary, t.style.color = "#000", t.style.fontFamily = "Arial, sans-serif", t.style.fontSize = "11px", t.style.padding = "3px 8px", t.style.borderRadius = "6px", t.style.boxShadow = "0 2px 6px rgba(0,0,0,0.25)", t.style.zIndex = "2147483647", t.style.opacity = "0", t.style.transform = "translateY(-6px)", t.style.transition = "opacity 200ms ease, transform 200ms ease", t.style.pointerEvents = "none";
-  const n = () => {
-    const f = e.getBoundingClientRect(), p = window.innerHeight || document.documentElement.clientHeight, g = window.innerWidth || document.documentElement.clientWidth;
-    if (f.bottom <= 0 || f.top >= p || f.right <= 0 || f.left >= g) {
-      t.style.display = "none";
+  Ce(e);
+  const o = document.createElement("div");
+  o.textContent = t, o.style.position = "fixed", o.style.background = x.primary, o.style.color = "#000", o.style.fontFamily = "Arial, sans-serif", o.style.fontSize = "11px", o.style.padding = "3px 8px", o.style.borderRadius = "6px", o.style.boxShadow = "0 2px 6px rgba(0,0,0,0.25)", o.style.zIndex = "2147483647", o.style.opacity = "0", o.style.transform = "translateY(-6px)", o.style.transition = "opacity 200ms ease, transform 200ms ease", o.style.pointerEvents = "none";
+  const r = () => {
+    const f = e.getBoundingClientRect(), p = window.innerHeight || document.documentElement.clientHeight, h = window.innerWidth || document.documentElement.clientWidth;
+    if (f.bottom <= 0 || f.top >= p || f.right <= 0 || f.left >= h) {
+      o.style.display = "none";
       return;
     }
-    t.style.display === "none" && (t.style.display = "block");
+    o.style.display === "none" && (o.style.display = "block");
     const l = f.top - 8, d = f.left;
-    t.style.top = `${l}px`, t.style.left = `${d}px`;
+    o.style.top = `${l}px`, o.style.left = `${d}px`;
   };
-  document.body.appendChild(t), n(), requestAnimationFrame(() => {
-    t.style.opacity = "1", t.style.transform = "translateY(-12px)";
+  document.body.appendChild(o), r(), requestAnimationFrame(() => {
+    o.style.opacity = "1", o.style.transform = "translateY(-12px)";
   });
-  const r = () => n(), o = () => n();
-  window.addEventListener("scroll", r, !0), window.addEventListener("resize", o, !0);
+  const s = () => r(), n = () => r();
+  window.addEventListener("scroll", s, !0), window.addEventListener("resize", n, !0);
   let a = null;
   if (typeof ResizeObserver < "u") {
-    a = new ResizeObserver(() => n());
+    a = new ResizeObserver(() => r());
     try {
       a.observe(e);
     } catch {
     }
   }
   const c = () => {
-    if (window.removeEventListener("scroll", r, !0), window.removeEventListener("resize", o, !0), a) {
+    if (window.removeEventListener("scroll", s, !0), window.removeEventListener("resize", n, !0), a) {
       try {
         a.disconnect();
       } catch {
       }
       a = null;
     }
-    t.parentNode && t.parentNode.removeChild(t), k.delete(e);
+    o.parentNode && o.parentNode.removeChild(o), v.delete(e);
   }, u = setTimeout(() => {
-    t.style.opacity = "0", t.style.transform = "translateY(-6px)", setTimeout(c, 220);
+    o.style.opacity = "0", o.style.transform = "translateY(-6px)", setTimeout(c, 220);
   }, 6e3);
-  k.set(e, { badge: t, timeout: u, cleanup: c });
+  v.set(e, { badge: o, timeout: u, cleanup: c });
 }
 function Fe(e) {
-  const s = [], t = e.id, n = e.getAttribute("aria-labelledby");
-  if (n && n.split(/\s+/).forEach((a) => {
+  const t = [], o = e.id, r = e.getAttribute("aria-labelledby");
+  if (r && r.split(/\s+/).forEach((a) => {
     const c = document.getElementById(a);
-    c && c.textContent && s.push(c.textContent);
-  }), t)
+    c && c.textContent && t.push(c.textContent);
+  }), o)
     try {
-      const a = document.querySelector('label[for="' + t.replace(/"/g, '\\"') + '"]');
-      a && a.textContent && s.push(a.textContent);
+      const a = document.querySelector('label[for="' + o.replace(/"/g, '\\"') + '"]');
+      a && a.textContent && t.push(a.textContent);
     } catch {
     }
-  const r = e.closest("label");
-  r && r.textContent && s.push(r.textContent);
-  const o = e.previousElementSibling;
-  return o && o.tagName === "LABEL" && o.textContent && s.push(o.textContent), s.join(" ").toLowerCase();
+  const s = e.closest("label");
+  s && s.textContent && t.push(s.textContent);
+  const n = e.previousElementSibling;
+  return n && n.tagName === "LABEL" && n.textContent && t.push(n.textContent), t.join(" ").toLowerCase();
 }
-function Q(e) {
-  return !["checkbox", "radio", "select", "range", "file", "button", "submit", "reset", "image", "color"].includes(e);
+function re(e) {
+  return !["checkbox", "radio", "select", "range", "file", "button", "submit", "reset", "image", "color", "week", "date", "time", "datetime-local", "month"].includes(e);
 }
-function F(e) {
+function M(e) {
   switch (e) {
     case "checkbox":
     case "radio":
@@ -834,11 +908,21 @@ function F(e) {
       return "word";
     case "color":
       return "hexcolor";
+    case "week":
+      return "generateWeek";
+    case "date":
+      return "generateDate";
+    case "time":
+      return "generateTime";
+    case "datetime-local":
+      return "generateDateTime";
+    case "month":
+      return "generateMonth";
     default:
       return "word";
   }
 }
-function H(e) {
+function V(e) {
   switch (e) {
     case "email":
       return "email";
@@ -869,85 +953,272 @@ function H(e) {
       return "word";
   }
 }
-function J(e) {
-  const s = e.type.toLowerCase(), t = (e.name || "").toLowerCase(), n = (e.id || "").toLowerCase(), r = (e.placeholder || "").toLowerCase(), o = (e.autocomplete || "").toLowerCase(), a = (e.getAttribute("aria-label") || "").toLowerCase(), c = Fe(e);
+function ne(e) {
+  const t = e.type.toLowerCase(), o = (e.name || "").toLowerCase(), r = (e.id || "").toLowerCase(), s = (e.placeholder || "").toLowerCase(), n = (e.autocomplete || "").toLowerCase(), a = (e.getAttribute("aria-label") || "").toLowerCase(), c = Fe(e);
   return [
-    s,
     t,
-    n,
-    r,
     o,
+    r,
+    s,
+    n,
     a,
     c
   ].filter((f) => f && f.trim()).join(" ").toLowerCase().replace(/[^\w\s]/g, " ").replace(/\s+/g, " ").trim() || "text input";
 }
-async function X(e) {
-  const s = e.type.toLowerCase();
-  if (!Q(s))
-    return F(s);
-  const t = J(e);
+async function ae(e) {
+  const t = e.type.toLowerCase();
+  if (!re(t))
+    return M(t);
+  const o = ne(e);
   try {
-    const n = {
+    const r = {
       id: e.id || e.name || `input_${Date.now()}`,
-      query: t
-    }, r = await q([n]);
-    if (r.success && r.data && r.data.length > 0) {
-      const o = r.data[0];
-      if (o.results && o.results.length > 0)
-        return o.results[0].name;
+      query: o
+    }, s = await W([r]);
+    if (s.success && s.data && s.data.length > 0) {
+      const n = s.data[0];
+      if (n.results && n.results.length > 0)
+        return n.results[0].name;
     }
-  } catch (n) {
-    console.warn("[Gofakeit] Function search failed, falling back to default function:", n);
+  } catch (r) {
+    console.warn("[Gofakeit] Function search failed, falling back to default function:", r);
   }
-  return F(s);
+  return M(t);
 }
-async function Se(e) {
-  const s = /* @__PURE__ */ new Map();
+async function $e(e) {
+  const t = /* @__PURE__ */ new Map();
   if (e.length === 0)
-    return s;
+    return t;
   try {
-    const t = e.map((r, o) => {
-      const a = J(r);
+    const o = e.map((s, n) => {
+      const a = ne(s);
       return {
-        id: r.id || r.name || `input_${o}`,
+        id: s.id || s.name || `input_${n}`,
         query: a
       };
-    }), n = await q(t);
-    if (n.success && n.data)
-      for (let r = 0; r < n.data.length; r++) {
-        const o = n.data[r], a = e[r], c = a.type.toLowerCase();
-        if (o.results && o.results.length > 0) {
-          const i = o.results[0];
-          i.score >= 100 ? s.set(a, i.name) : s.set(a, H(c));
+    }), r = await W(o);
+    if (r.success && r.data)
+      for (let s = 0; s < r.data.length; s++) {
+        const n = r.data[s], a = e[s], c = a.type.toLowerCase();
+        if (n.results && n.results.length > 0) {
+          const i = n.results[0];
+          i.score >= 100 ? t.set(a, i.name) : t.set(a, V(c));
         } else
-          s.set(a, H(c));
+          t.set(a, V(c));
       }
     else
-      for (const r of e)
-        s.set(r, F(r.type.toLowerCase()));
-  } catch (t) {
-    console.warn("[Gofakeit] Multi-function search failed, falling back to default functions:", t);
-    for (const n of e)
-      s.set(n, F(n.type.toLowerCase()));
+      for (const s of e)
+        t.set(s, M(s.type.toLowerCase()));
+  } catch (o) {
+    console.warn("[Gofakeit] Multi-function search failed, falling back to default functions:", o);
+    for (const r of e)
+      t.set(r, M(r.type.toLowerCase()));
   }
-  return s;
+  return t;
 }
-function Le(e) {
-  if (M(e))
+function Ie(e) {
+  if (I(e))
     return e;
-  let s = e.parentElement;
-  for (; s; ) {
-    if (M(s))
-      return s;
-    s = s.parentElement;
+  let t = e.parentElement;
+  for (; t; ) {
+    if (I(t))
+      return t;
+    t = t.parentElement;
   }
   return null;
 }
-function E(e, s = "info") {
-  console.log(`[Gofakeit ${s.toUpperCase()}] ${e}`);
+function T(e, t = "info") {
+  console.log(`[Gofakeit ${t.toUpperCase()}] ${e}`);
 }
-export {
-  $e as autofill,
-  m as callFunc
+window.autofill = async (e) => {
+  try {
+    const t = G();
+    if (e)
+      if (typeof e == "string") {
+        const o = document.getElementById(e);
+        if (!o) {
+          m("❌ Element not found: " + e, "error");
+          return;
+        }
+        o.scrollIntoView({ behavior: "smooth", block: "start" }), setTimeout(async () => {
+          await S(o, t), m(
+            `✅ ${e} section filled successfully!`,
+            "success"
+          );
+        }, 500);
+      } else
+        await S(e, t), m("✅ Element filled successfully!", "success");
+    else
+      await S(void 0, t), m("✅ All fields filled successfully!", "success");
+  } catch (t) {
+    m("❌ Error filling fields: " + t.message, "error");
+  }
 };
+window.autofillCategory = async () => {
+  const e = document.getElementById("categorySelector"), t = e.value;
+  if (!t) {
+    m("❌ Please select a category first!", "error");
+    return;
+  }
+  try {
+    const r = {
+      "person-category": {
+        section: "categories"
+      },
+      "address-category": {
+        section: "categories"
+      },
+      "company-category": {
+        section: "categories"
+      },
+      "payment-category": {
+        section: "categories"
+      },
+      "internet-category": {
+        section: "categories"
+      },
+      "time-category": {
+        section: "categories"
+      },
+      "language-category": {
+        section: "categories"
+      },
+      "word-category": {
+        section: "categories"
+      },
+      "color-category": {
+        section: "categories"
+      },
+      "animal-category": {
+        section: "categories"
+      },
+      "food-category": {
+        section: "categories"
+      },
+      "car-category": {
+        section: "categories"
+      },
+      "game-category": {
+        section: "categories"
+      },
+      "misc-category": {
+        section: "categories"
+      }
+    }[t];
+    if (!r) {
+      m("❌ Invalid category selected!", "error");
+      return;
+    }
+    const n = {
+      "person-category": "👤 Person Category",
+      "address-category": "🏠 Address Category",
+      "company-category": "🏢 Company Category",
+      "payment-category": "💳 Payment Category",
+      "internet-category": "🌐 Internet Category",
+      "time-category": "⏰ Time Category",
+      "language-category": "🗣️ Language Category",
+      "word-category": "📝 Word Category",
+      "color-category": "🎨 Color Category",
+      "animal-category": "🐾 Animal Category",
+      "food-category": "🍕 Food Category",
+      "car-category": "🚗 Car Category",
+      "game-category": "🎮 Game Category",
+      "misc-category": "🎲 Misc Category"
+    }[t];
+    let a = null;
+    if (n) {
+      const c = document.querySelectorAll("h4");
+      for (const i of c)
+        if (i.textContent?.includes(n)) {
+          a = i;
+          break;
+        }
+    }
+    if (a)
+      a.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    else {
+      const c = document.getElementById(r.section);
+      c && c.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    setTimeout(async () => {
+      const c = document.getElementById(t);
+      if (!c) {
+        m("❌ Category container not found!", "error");
+        return;
+      }
+      try {
+        const i = G();
+        await S(c, i);
+        let u = 0;
+        c.querySelectorAll(
+          "input, textarea, select"
+        ).forEach((h) => {
+          h instanceof HTMLInputElement ? h.type === "checkbox" || h.type === "radio" ? h.checked && u++ : h.value && u++ : (h instanceof HTMLTextAreaElement || h instanceof HTMLSelectElement) && h.value && u++;
+        });
+        const p = e.options[e.selectedIndex].text;
+        m(
+          `✅ ${p} filled successfully! (${u} fields)`,
+          "success"
+        );
+      } catch (i) {
+        console.warn("Failed to fill category:", i), m(
+          "❌ Error filling category: " + i.message,
+          "error"
+        );
+      }
+    }, 500);
+  } catch (o) {
+    m("❌ Error filling category: " + o.message, "error");
+  }
+};
+function G() {
+  const e = document.getElementById("smartMode").checked, t = document.getElementById("staggeredMode").checked, o = parseInt(
+    document.getElementById("staggerDelay").value
+  );
+  return {
+    smart: e,
+    staggered: t,
+    staggerDelay: o
+  };
+}
+window.autofillWithCurrentSettings = async () => {
+  try {
+    const e = G();
+    await S(void 0, e);
+    const t = e.smart ? "Smart Mode" : "Manual Mode", o = e.staggered ? ` (${e.staggerDelay}ms delay)` : " (no stagger)";
+    m(
+      `✅ All fields filled with ${t}${o}!`,
+      "success"
+    );
+  } catch (e) {
+    m("❌ Error filling fields: " + e.message, "error");
+  }
+};
+document.addEventListener("DOMContentLoaded", function() {
+  const e = document.getElementById("staggerDelay"), t = document.getElementById("staggerDelayValue");
+  e && t && e.addEventListener("input", function() {
+    t.textContent = this.value;
+  });
+});
+window.clearAll = () => {
+  document.querySelectorAll("input, textarea, select").forEach((t) => {
+    t.type === "checkbox" || t.type === "radio" ? t.checked = !1 : t.value = "";
+  }), m("🧹 All fields cleared!", "success");
+};
+function m(e, t) {
+  const o = document.getElementById("status");
+  o.textContent = e, o.className = `status ${t} show`, setTimeout(() => {
+    o.classList.remove("show");
+  }, 3e3);
+}
+console.log("🎯 Gofakeit Autofill Comprehensive Testing loaded!");
+console.log(
+  "This page tests the search API with various input contexts and categories."
+);
+console.log(
+  "Check the browser network tab to see search API calls in action!"
+);
 //# sourceMappingURL=index.js.map
