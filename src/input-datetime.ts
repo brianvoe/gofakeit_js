@@ -1,6 +1,78 @@
 import { callFunc } from './api';
 import { handleError } from './autofill';
 
+// Get function name for date/time input (for batch processing)
+export function getDateTimeInput(element: HTMLInputElement, gofakeitFunc: string): string {
+  const inputType = element.type.toLowerCase();
+  
+  // For inputs that use a single function
+  if (inputType === 'date' || inputType === 'datetime-local') {
+    return gofakeitFunc === 'true' ? 'date' : gofakeitFunc;
+  }
+  
+  // For inputs that use multiple functions, we'll use generate functions
+  if (inputType === 'time') {
+    return 'generateTime';
+  }
+  
+  if (inputType === 'month') {
+    return 'generateMonth';
+  }
+  
+  if (inputType === 'week') {
+    return gofakeitFunc === 'true' ? 'generateWeek' : gofakeitFunc;
+  }
+  
+  return gofakeitFunc;
+}
+
+// Set date/time input value (for batch processing)
+export function setDateTimeInput(element: HTMLInputElement, value: string): void {
+  element.value = value;
+  element.dispatchEvent(new Event('input', { bubbles: true }));
+  element.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+// Generate time string (HH:MM format)
+export async function generateTime(): Promise<string> {
+  const hourResponse = await callFunc('hour');
+  const minuteResponse = await callFunc('minute');
+  
+  if (!hourResponse.success || !minuteResponse.success) {
+    throw new Error(`Failed to generate time: ${hourResponse.error || minuteResponse.error}`);
+  }
+  
+  const hour = hourResponse.data!.padStart(2, '0');
+  const minute = minuteResponse.data!.padStart(2, '0');
+  return `${hour}:${minute}`;
+}
+
+// Generate month string (YYYY-MM format)
+export async function generateMonth(): Promise<string> {
+  const yearResponse = await callFunc('year');
+  const monthResponse = await callFunc('month');
+  
+  if (!yearResponse.success || !monthResponse.success) {
+    throw new Error(`Failed to generate month: ${yearResponse.error || monthResponse.error}`);
+  }
+  
+  const month = monthResponse.data!.padStart(2, '0');
+  return `${yearResponse.data!}-${month}`;
+}
+
+// Generate week string (YYYY-W## format)
+export async function generateWeek(): Promise<string> {
+  const weekYearResponse = await callFunc('year');
+  const weekResponse = await callFunc('number?min=1&max=53');
+  
+  if (!weekYearResponse.success || !weekResponse.success) {
+    throw new Error(`Failed to generate week: ${weekYearResponse.error || weekResponse.error}`);
+  }
+  
+  const week = weekResponse.data!.padStart(2, '0');
+  return `${weekYearResponse.data!}-W${week}`;
+}
+
 // Get ISO week number for a date
 function getISOWeek(date: Date): number {
   const d = new Date(date.getTime());
@@ -15,176 +87,80 @@ function getISOWeek(date: Date): number {
 }
 
 // Handle date/time input elements
-export async function handleDateTimeInput(element: HTMLInputElement, gofakeitFunc: string): Promise<{ success: boolean, usedFunc: string }> {
+export async function handleDateTimeInput(element: HTMLInputElement, gofakeitFunc: string, value?: string): Promise<{ success: boolean, usedFunc: string }> {
   const inputType = element.type.toLowerCase();
+  const functionToCall = getDateTimeInput(element, gofakeitFunc);
   
   try {
-    switch (inputType) {
-      case 'date': {
-        // Use the provided function or default to 'date'
-        const dateFunc = gofakeitFunc === 'true' ? 'date' : gofakeitFunc;
-        const dateResponse = await callFunc(dateFunc);
+    let finalValue: string;
+    
+    // If value is provided (batch processing), use it directly
+    if (value !== undefined) {
+      finalValue = value;
+    } else {
+      // Handle generate functions (multi-function cases)
+      if (functionToCall === 'generateTime') {
+        finalValue = await generateTime();
+      } else if (functionToCall === 'generateMonth') {
+        finalValue = await generateMonth();
+      } else if (functionToCall === 'generateWeek') {
+        finalValue = await generateWeek();
+      } else {
+        // Handle single function cases
+        const response = await callFunc(functionToCall);
         
-        if (!dateResponse.success) {
-          console.warn(`[Gofakeit Autofill] Error for ${inputType} input:`, dateResponse.error);
-          if (dateResponse.status === 400) {
+        if (!response.success) {
+          console.warn(`[Gofakeit Autofill] Error for ${inputType} input:`, response.error);
+          if (response.status === 400) {
             handleError(element, `Failed to get random ${inputType}`);
           }
-          return { success: false, usedFunc: dateFunc };
+          return { success: false, usedFunc: functionToCall };
         }
         
-        // Parse the ISO date string (e.g., "1935-03-01T19:02:35Z") and extract just the date part
-        try {
-          const dateString = dateResponse.data!;
-          const dateMatch = dateString.match(/^(\d{4}-\d{2}-\d{2})/);
-          if (dateMatch) {
-            element.value = dateMatch[1]; // Extract YYYY-MM-DD part
-          } else {
-            console.warn('[Gofakeit Autofill] Could not parse date from response:', dateString);
-            return { success: false, usedFunc: dateFunc };
-          }
-        } catch (error) {
-          console.warn('[Gofakeit Autofill] Error parsing date response:', error);
-          return { success: false, usedFunc: dateFunc };
-        }
-        break;
+        finalValue = response.data!;
       }
-        
-      case 'time': {
-        // Use gofakeit hour and minute functions to create time format
-        const hourResponse = await callFunc('hour');
-        const minuteResponse = await callFunc('minute');
-        
-        if (!hourResponse.success || !minuteResponse.success) {
-          console.warn('[Gofakeit Autofill] Error getting hour or minute:', hourResponse.error || minuteResponse.error);
-          if (hourResponse.status === 400 || minuteResponse.status === 400) {
-            handleError(element, 'Failed to get random time');
-          }
-          return { success: false, usedFunc: 'hour/minute' };
-        }
-        
-        // Format time as HH:MM
-        const hour = hourResponse.data!.padStart(2, '0');
-        const minute = minuteResponse.data!.padStart(2, '0');
-        element.value = `${hour}:${minute}`;
-        break;
-      }
-        
-      case 'datetime-local': {
-        // Use the provided function or default to 'date' (which includes time)
-        const datetimeFunc = gofakeitFunc === 'true' ? 'date' : gofakeitFunc;
-        const datetimeResponse = await callFunc(datetimeFunc);
-        
-        if (!datetimeResponse.success) {
-          console.warn(`[Gofakeit Autofill] Error for ${inputType} input:`, datetimeResponse.error);
-          if (datetimeResponse.status === 400) {
-            handleError(element, `Failed to get random ${inputType}`);
-          }
-          return { success: false, usedFunc: datetimeFunc };
-        }
-        
-        // Parse the ISO datetime string (e.g., "1935-03-01T19:02:35Z") and extract datetime-local format
-        try {
-          const datetimeString = datetimeResponse.data!;
-          const datetimeMatch = datetimeString.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}):\d{2}/);
-          if (datetimeMatch) {
-            element.value = datetimeMatch[1]; // Extract YYYY-MM-DDTHH:MM part
-          } else {
-            console.warn('[Gofakeit Autofill] Could not parse datetime from response:', datetimeString);
-            return { success: false, usedFunc: datetimeFunc };
-          }
-        } catch (error) {
-          console.warn('[Gofakeit Autofill] Error parsing datetime response:', error);
-          return { success: false, usedFunc: datetimeFunc };
-        }
-        break;
-      }
-        
-      case 'month': {
-        // Use gofakeit year and month functions
-        const yearResponse = await callFunc('year');
-        const monthResponse = await callFunc('month');
-        
-        if (!yearResponse.success || !monthResponse.success) {
-          console.warn('[Gofakeit Autofill] Error getting year or month:', yearResponse.error || monthResponse.error);
-          if (yearResponse.status === 400 || monthResponse.status === 400) {
-            handleError(element, 'Failed to get random month');
-          }
-          return { success: false, usedFunc: 'year/month' };
-        }
-        
-        // Format month as YYYY-MM
-        const month = monthResponse.data!.padStart(2, '0');
-        element.value = `${yearResponse.data!}-${month}`;
-        break;
-      }
-        
-      case 'week': {
-        // Use the provided function or default to year + number range
-        const weekFunc = gofakeitFunc === 'true' ? 'date' : gofakeitFunc;
-        
-        if (weekFunc === 'date' || weekFunc.startsWith('daterange')) {
-          // Use date/daterange function and extract week from the result
-          const weekDateResponse = await callFunc(weekFunc);
-          
-          if (!weekDateResponse.success) {
-            console.warn('[Gofakeit Autofill] Error getting date for week:', weekDateResponse.error);
-            if (weekDateResponse.status === 400) {
-              handleError(element, 'Failed to get random week');
-            }
-            return { success: false, usedFunc: weekFunc };
-          }
-          
-          // Parse the ISO date string and extract week
-          try {
-            const dateString = weekDateResponse.data!;
-            const dateMatch = dateString.match(/^(\d{4}-\d{2}-\d{2})/);
-            if (dateMatch) {
-              const date = new Date(dateMatch[1]);
-              const year = date.getFullYear();
-              const week = getISOWeek(date);
-              element.value = `${year}-W${week.toString().padStart(2, '0')}`;
-            } else {
-              console.warn('[Gofakeit Autofill] Could not parse date for week from response:', dateString);
-              return { success: false, usedFunc: weekFunc };
-            }
-          } catch (error) {
-            console.warn('[Gofakeit Autofill] Error parsing date for week:', error);
-            return { success: false, usedFunc: weekFunc };
-          }
-        } else {
-          // Use gofakeit year and number range for week (1-53)
-          const weekYearResponse = await callFunc('year');
-          const weekResponse = await callFunc('number?min=1&max=53');
-          
-          if (!weekYearResponse.success || !weekResponse.success) {
-            console.warn('[Gofakeit Autofill] Error getting year or week:', weekYearResponse.error || weekResponse.error);
-            if (weekYearResponse.status === 400 || weekResponse.status === 400) {
-              handleError(element, 'Failed to get random week');
-            }
-            return { success: false, usedFunc: 'year/number?min=1&max=53' };
-          }
-          
-          // Format week as YYYY-W## (ISO week format)
-          const week = weekResponse.data!.padStart(2, '0');
-          element.value = `${weekYearResponse.data!}-W${week}`;
-        }
-        break;
-      }
-        
-      default:
-        console.warn('[Gofakeit Autofill] Unknown date/time input type:', inputType);
-        return { success: false, usedFunc: gofakeitFunc };
     }
     
-    // Trigger events to ensure any listeners are notified
-    element.dispatchEvent(new Event('input', { bubbles: true }));
-    element.dispatchEvent(new Event('change', { bubbles: true }));
+    // Parse and format the value based on input type
+    if (inputType === 'date') {
+      // Extract YYYY-MM-DD part from ISO date string
+      const dateMatch = finalValue.match(/^(\d{4}-\d{2}-\d{2})/);
+      if (dateMatch) {
+        finalValue = dateMatch[1];
+      } else {
+        console.warn('[Gofakeit Autofill] Could not parse date from response:', finalValue);
+        return { success: false, usedFunc: functionToCall };
+      }
+    } else if (inputType === 'datetime-local') {
+      // Extract YYYY-MM-DDTHH:MM part from ISO datetime string
+      const datetimeMatch = finalValue.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}):\d{2}/);
+      if (datetimeMatch) {
+        finalValue = datetimeMatch[1];
+      } else {
+        console.warn('[Gofakeit Autofill] Could not parse datetime from response:', finalValue);
+        return { success: false, usedFunc: functionToCall };
+      }
+    } else if (inputType === 'week' && functionToCall !== 'generateWeek') {
+      // Handle custom week functions (like date/daterange)
+      if (functionToCall === 'date' || functionToCall.startsWith('daterange')) {
+        const dateMatch = finalValue.match(/^(\d{4}-\d{2}-\d{2})/);
+        if (dateMatch) {
+          const date = new Date(dateMatch[1]);
+          const year = date.getFullYear();
+          const week = getISOWeek(date);
+          finalValue = `${year}-W${week.toString().padStart(2, '0')}`;
+        } else {
+          console.warn('[Gofakeit Autofill] Could not parse date for week from response:', finalValue);
+          return { success: false, usedFunc: functionToCall };
+        }
+      }
+    }
     
-    return { success: true, usedFunc: gofakeitFunc === 'true' ? inputType : gofakeitFunc };
+    setDateTimeInput(element, finalValue);
+    return { success: true, usedFunc: functionToCall };
     
   } catch (error) {
     console.warn(`[Gofakeit Autofill] Unexpected error handling ${inputType} input:`, error);
-    return { success: false, usedFunc: gofakeitFunc };
+    return { success: false, usedFunc: functionToCall };
   }
 }

@@ -1,14 +1,16 @@
-import { hasFunc } from './funcs';
 import { GOFAKEIT_COLORS } from './styles';
 import { showFieldError } from './field-error';
 import { handleDateTimeInput } from './input-datetime';
-import { handleTextInput, handleTextarea } from './input-text';
+import { handleTextInput, handleTextarea, getTextarea, setTextInput, setTextarea } from './input-text';
 import { handleCheckbox, handleRadio, handleSelectWithFunction } from './input-misc';
-import { handleNumberInput, handleRangeInput } from './input-number';
+import { handleNumberInput, handleRangeInput, getRangeInput, setNumberInput, setRangeInput } from './input-number';
+import { callMultiFunc, MultiFuncRequest, searchMultiFunc, FuncSearchRequest } from './api';
 
 // Settings interface for autofill configuration
 export interface AutofillSettings {
   smart?: boolean;
+  staggered?: boolean;
+  staggerDelay?: number;
 }
 
 // ============================================================================
@@ -127,7 +129,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
       const funcToUse = (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : 'true';
       const { success, usedFunc } = await handleSelectWithFunction(element, funcToUse);
       if (success) {
-        showFunctionBadge(element, usedFunc);
+        showFunctionBadgeWithDelay(element, usedFunc, settings);
       }
       return success;
     }
@@ -137,7 +139,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
       const funcToUse = (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : 'sentence';
       const { success, usedFunc } = await handleTextarea(element, funcToUse);
       if (success) {
-        showFunctionBadge(element, usedFunc);
+        showFunctionBadgeWithDelay(element, usedFunc, settings);
       }
       return success;
     }
@@ -151,7 +153,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
         const passToHandler = (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : 'true';
         const { success, usedFunc } = await handleCheckbox(element, passToHandler);
         if (success) {
-          showFunctionBadge(element, usedFunc);
+          showFunctionBadgeWithDelay(element, usedFunc, settings);
         }
         return success;
       }
@@ -159,19 +161,11 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
       // Handle radio inputs
       if (inputType === 'radio') {
         const passToHandler = (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : 'true';
-        const { success, usedFunc } = await handleRadio(element, passToHandler);
+        const { success, usedFunc, selectedElement } = await handleRadio(element, passToHandler);
         if (success) {
-          showFunctionBadge(element, usedFunc);
-        }
-        return success;
-      }
-      
-      // Handle number inputs
-      if (inputType === 'number') {
-        const inferred = (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : (await inferFunctionForInput(element));
-        const { success, usedFunc } = await handleNumberInput(element, inferred);
-        if (success) {
-          showFunctionBadge(element, usedFunc);
+          // Show function badge over the selected radio button, not the original one
+          const elementToShowBadge = selectedElement || element;
+          showFunctionBadgeWithDelay(elementToShowBadge, usedFunc, settings);
         }
         return success;
       }
@@ -180,27 +174,36 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
       if (inputType === 'range') {
         const { success, usedFunc } = await handleRangeInput(element);
         if (success) {
-          showFunctionBadge(element, usedFunc);
+          showFunctionBadgeWithDelay(element, usedFunc, settings);
         }
         return success;
       }
       
-      // Handle date/time inputs
+      // Handle all other input types (text, email, tel, password, search, url, color, number, date, etc.)
+      const inferred = (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : await searchFunctionForInput(element);
+      
+      // Route to appropriate handler based on input type
+      if (inputType === 'number') {
+        const { success, usedFunc } = await handleNumberInput(element, inferred);
+        if (success) {
+          showFunctionBadgeWithDelay(element, usedFunc, settings);
+        }
+        return success;
+      }
+      
       if (inputType === 'date' || inputType === 'time' || inputType === 'datetime-local' || 
           inputType === 'month' || inputType === 'week') {
-        const inferred = (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : (await inferFunctionForInput(element));
         const { success, usedFunc } = await handleDateTimeInput(element, inferred);
         if (success) {
-          showFunctionBadge(element, usedFunc);
+          showFunctionBadgeWithDelay(element, usedFunc, settings);
         }
         return success;
       }
       
       // Handle text inputs (text, email, tel, password, search, url, color, etc.)
-      const inferred = (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : (await inferFunctionForInput(element));
       const { success, usedFunc } = await handleTextInput(element, inferred);
       if (success) {
-        showFunctionBadge(element, usedFunc);
+        showFunctionBadgeWithDelay(element, usedFunc, settings);
       }
       return success;
     }
@@ -270,7 +273,7 @@ function getUniqueElements(elements: Element[]): Element[] {
   return uniqueElements;
 }
 
-// Process multiple elements and track results
+// Process multiple elements and track results using batched API calls
 async function processElements(elements: Element[], settings: AutofillSettings): Promise<{ success: number, failed: number }> {
   let successfulCount = 0;
   let failedCount = 0;
@@ -278,35 +281,346 @@ async function processElements(elements: Element[], settings: AutofillSettings):
   // Get unique elements to avoid processing checkbox/radio groups multiple times
   const uniqueElements = getUniqueElements(elements);
 
+  // Separate input elements from other elements
+  const searchInputElements: HTMLInputElement[] = [];
+  const otherElements: Element[] = [];
+  
   for (const element of uniqueElements) {
-    try {
-      const success = await autofillElement(element, settings);
-      if (success) {
-        successfulCount++;
-        
-        // Monitor if the value gets cleared after a short delay
-        setTimeout(() => {
-          if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
-            if (element.value === '') {
-              console.warn('[Gofakeit Autofill] Value was cleared for element:', element);
-            }
-          } else if (element instanceof HTMLSelectElement) {
-            if (element.value === '') {
-              console.warn('[Gofakeit Autofill] Value was cleared for select:', element);
-            }
-          }
-        }, 1000);
-        
+    if (element instanceof HTMLInputElement) {
+      const inputType = element.type.toLowerCase();
+      if (needsSearchApi(inputType)) {
+        searchInputElements.push(element);
       } else {
-        failedCount++;
+        // For excluded input types, add them to otherElements to be processed by getElementFunction
+        otherElements.push(element);
+      }
+    } else {
+      otherElements.push(element);
+    }
+  }
+
+  // Use search API to get functions for all searchable input elements at once
+  let inputFunctionMap = new Map<HTMLInputElement, string>();
+  if (searchInputElements.length > 0) {
+    try {
+      inputFunctionMap = await searchFunctionsForInputs(searchInputElements);
+    } catch (error) {
+      console.warn('[Gofakeit Autofill] Search API failed, falling back to individual function detection:', error);
+      // Fallback to individual function detection
+      for (const element of searchInputElements) {
+        const func = await getElementFunction(element, settings);
+        if (func) {
+          inputFunctionMap.set(element, func);
+        }
+      }
+    }
+  }
+
+  // Process excluded elements individually (they don't use batch API)
+  const excludedElements: Element[] = [];
+  const batchElements: { element: Element, func: string }[] = [];
+  
+  // Add input elements with their search API functions to batch
+  searchInputElements.forEach(element => {
+    const func = inputFunctionMap.get(element);
+    if (func) {
+      batchElements.push({ element, func });
+    }
+  });
+  
+  // Process other elements (select, textarea, checkbox, radio, etc.)
+  for (const element of otherElements) {
+    try {
+      const func = await getElementFunction(element, settings);
+      if (func) {
+        // Check if this is an excluded type that should be processed individually
+        if (element instanceof HTMLInputElement) {
+          const inputType = element.type.toLowerCase();
+          if (['checkbox', 'radio', 'range', 'file', 'button', 'submit', 'reset', 'image', 'color'].includes(inputType)) {
+            // Process excluded types individually
+            excludedElements.push(element);
+            continue;
+          }
+        }
+        // Add to batch for other types (select, textarea, etc.)
+        batchElements.push({ element, func });
       }
     } catch (error) {
       failedCount++;
-      console.warn(`[Gofakeit Autofill] Failed to autofill element:`, element, error);
+      console.warn(`[Gofakeit Autofill] Failed to get function for element:`, element, error);
+    }
+  }
+
+  // Process excluded elements with appropriate timing
+  const testMode = (globalThis as any).__GOFAKEIT_TEST_MODE__;
+  const staggered = testMode ? false : (settings.staggered ?? true);
+  
+  if (staggered) {
+    // Process excluded elements individually with staggered timing
+    for (let i = 0; i < excludedElements.length; i++) {
+      const element = excludedElements[i];
+      const staggerDelay = settings.staggerDelay ?? 50;
+      
+      if (i > 0) {
+        await new Promise(resolve => setTimeout(resolve, staggerDelay));
+      }
+      
+      try {
+        const success = await autofillElement(element, settings);
+        if (success) {
+          successfulCount++;
+        } else {
+          failedCount++;
+        }
+      } catch (error) {
+        failedCount++;
+        console.warn(`[Gofakeit Autofill] Failed to process excluded element:`, element, error);
+      }
+    }
+  } else {
+    // Process excluded elements all at once for fast mode
+    const promises = excludedElements.map(async (element) => {
+      try {
+        const success = await autofillElement(element, settings);
+        return success;
+      } catch (error) {
+        console.warn(`[Gofakeit Autofill] Failed to process excluded element:`, element, error);
+        return false;
+      }
+    });
+    
+    const results = await Promise.all(promises);
+    results.forEach(success => {
+      if (success) {
+        successfulCount++;
+      } else {
+        failedCount++;
+      }
+    });
+  }
+
+  // Process batch elements if any exist
+  if (batchElements.length === 0) {
+    return { success: successfulCount, failed: failedCount };
+  }
+
+  // Create batch requests
+  const requests: MultiFuncRequest[] = batchElements.map((item, index) => ({
+    id: `req_${index}`,
+    func: item.func
+  }));
+
+  // Make single batch API call
+  const batchResponse = await callMultiFunc(requests);
+  
+  if (!batchResponse.success || !batchResponse.data) {
+    console.error('[Gofakeit Autofill] Batch API call failed:', batchResponse.error);
+    return { success: successfulCount, failed: failedCount + batchElements.length };
+  }
+
+  // Process responses using existing handlers with staggered timing
+  for (let i = 0; i < batchElements.length; i++) {
+    const { element, func } = batchElements[i];
+    const response = batchResponse.data[i];
+    
+    // Add staggered delay for visual effect if enabled
+    const testMode = (globalThis as any).__GOFAKEIT_TEST_MODE__;
+    const staggered = testMode ? false : (settings.staggered ?? true);
+    const staggerDelay = settings.staggerDelay ?? 50;
+    if (staggered && i > 0) {
+      await new Promise(resolve => setTimeout(resolve, staggerDelay));
+    }
+    
+    if (response && response.value !== null && !response.error) {
+      try {
+        // Use the existing autofillElement function with the batch response value
+        const success = await autofillElementWithValue(element, func, response.value, settings);
+        if (success) {
+          successfulCount++;
+          
+          // Monitor if the value gets cleared after a short delay
+          setTimeout(() => {
+            if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+              if (element.value === '') {
+                console.warn('[Gofakeit Autofill] Value was cleared for element:', element);
+              }
+            } else if (element instanceof HTMLSelectElement) {
+              if (element.value === '') {
+                console.warn('[Gofakeit Autofill] Value was cleared for select:', element);
+              }
+            }
+          }, 1000);
+        } else {
+          failedCount++;
+        }
+      } catch (error) {
+        failedCount++;
+        console.warn(`[Gofakeit Autofill] Failed to apply value to element:`, element, error);
+      }
+    } else {
+      failedCount++;
+      console.warn(`[Gofakeit Autofill] API error for element:`, element, response?.error);
     }
   }
 
   return { success: successfulCount, failed: failedCount };
+}
+
+// Get the function name for an element (same logic as autofillElement but returns function name)
+async function getElementFunction(element: Element, settings: AutofillSettings): Promise<string | null> {
+  const gofakeitFunc = element.getAttribute('data-gofakeit');
+  if (typeof gofakeitFunc === 'string' && gofakeitFunc.trim().toLowerCase() === 'false') {
+    return null;
+  }
+  
+  const smartMode = settings.smart ?? true;
+  if (!gofakeitFunc && !smartMode) {
+    return null;
+  }
+
+  try {
+    // Handle select dropdowns
+    if (element instanceof HTMLSelectElement) {
+      return (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : 'word';
+    }
+    
+    // Handle textarea elements
+    if (element instanceof HTMLTextAreaElement) {
+      return getTextarea(gofakeitFunc || 'true');
+    }
+    
+    // Handle input elements
+    if (element instanceof HTMLInputElement) {
+      const inputType = element.type.toLowerCase();
+      
+      // Handle checkbox inputs
+      if (inputType === 'checkbox') {
+        return (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : 'bool';
+      }
+      
+      // Handle radio inputs
+      if (inputType === 'radio') {
+        return (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : 'true';
+      }
+      
+      // Handle range inputs
+      if (inputType === 'range') {
+        return getRangeInput(element);
+      }
+      
+      // For all other input types, use search API (this is a fallback for individual elements)
+      return await searchFunctionForInput(element);
+    }
+    
+    console.warn('[Gofakeit] Unsupported element type for batching:', element);
+    return null;
+    
+  } catch (error) {
+    console.error('[Gofakeit] Unexpected error getting function for element:', element, error);
+    return null;
+  }
+}
+
+// Show function badge with a slight delay for visual effect
+function showFunctionBadgeWithDelay(element: Element, func: string, settings?: AutofillSettings): void {
+  const testMode = (globalThis as any).__GOFAKEIT_TEST_MODE__;
+  const staggered = testMode ? false : (settings?.staggered ?? true);
+  const staggerDelay = settings?.staggerDelay ?? 50;
+  
+  // Add a subtle highlight effect when the field is filled
+  if (element instanceof HTMLElement) {
+    element.style.transition = 'background-color 0.3s ease';
+    element.style.backgroundColor = '#e8f5e8';
+    setTimeout(() => {
+      element.style.backgroundColor = '';
+    }, 500);
+  }
+  
+  // Only delay the badge if staggered is enabled, using the staggerDelay from settings
+  const actualDelay = staggered ? staggerDelay : 0;
+  setTimeout(() => {
+    showFunctionBadge(element, func);
+  }, actualDelay);
+}
+
+// Autofill an element with a pre-fetched value (for batch processing)
+async function autofillElementWithValue(element: Element, func: string, value: string, settings?: AutofillSettings): Promise<boolean> {
+  try {
+    // Handle select dropdowns
+    if (element instanceof HTMLSelectElement) {
+      const { success, usedFunc } = await handleSelectWithFunction(element, func, value);
+      if (success) {
+        showFunctionBadgeWithDelay(element, usedFunc, settings);
+      }
+      return success;
+    }
+    
+    // Handle textarea elements
+    if (element instanceof HTMLTextAreaElement) {
+      setTextarea(element, value);
+      showFunctionBadgeWithDelay(element, func, settings);
+      return true;
+    }
+    
+    // Handle input elements
+    if (element instanceof HTMLInputElement) {
+      const inputType = element.type.toLowerCase();
+      
+      // Handle checkbox inputs
+      if (inputType === 'checkbox') {
+        const { success, usedFunc } = await handleCheckbox(element, func, value);
+        if (success) {
+          showFunctionBadgeWithDelay(element, usedFunc, settings);
+        }
+        return success;
+      }
+      
+      // Handle radio inputs
+      if (inputType === 'radio') {
+        const { success, usedFunc } = await handleRadio(element, func, value);
+        if (success) {
+          showFunctionBadgeWithDelay(element, usedFunc, settings);
+        }
+        return success;
+      }
+      
+      // Handle number inputs
+      if (inputType === 'number') {
+        setNumberInput(element, value);
+        showFunctionBadgeWithDelay(element, func, settings);
+        return true;
+      }
+      
+      // Handle range inputs
+      if (inputType === 'range') {
+        setRangeInput(element, value);
+        showFunctionBadgeWithDelay(element, func, settings);
+        return true;
+      }
+      
+      // Handle date/time inputs
+      if (inputType === 'date' || inputType === 'time' || inputType === 'datetime-local' || 
+          inputType === 'month' || inputType === 'week') {
+        const { success, usedFunc } = await handleDateTimeInput(element, func, value);
+        if (success) {
+          showFunctionBadgeWithDelay(element, usedFunc, settings);
+        }
+        return success;
+      }
+      
+      // Handle text inputs (text, email, tel, password, search, url, color, etc.)
+      setTextInput(element, value);
+      showFunctionBadgeWithDelay(element, func, settings);
+      return true;
+    }
+    
+    console.warn('[Gofakeit] Unsupported element type:', element);
+    return false;
+    
+  } catch (error) {
+    console.error('[Gofakeit] Unexpected error generating data for element:', element, error);
+    return false;
+  }
 }
 
 // Show results notification
@@ -362,9 +676,39 @@ export function isFormField(element: HTMLElement): boolean {
   );
 }
 
+// Global tracking of active function badges
+const activeBadges = new Map<Element, { badge: HTMLElement; timeout: ReturnType<typeof setTimeout>; cleanup: () => void }>();
+
+// Remove existing badges for a specific element
+function removeExistingBadges(element: Element): void {
+  // For radio buttons, remove badges for all radio buttons in the same group
+  if (element instanceof HTMLInputElement && element.type === 'radio' && element.name) {
+    const radioGroup = document.querySelectorAll(`input[type="radio"][name="${element.name}"]`);
+    radioGroup.forEach(radio => {
+      const existing = activeBadges.get(radio);
+      if (existing) {
+        clearTimeout(existing.timeout);
+        existing.cleanup();
+        activeBadges.delete(radio);
+      }
+    });
+  } else {
+    // For other elements, just remove the badge for this specific element
+    const existing = activeBadges.get(element);
+    if (existing) {
+      clearTimeout(existing.timeout);
+      existing.cleanup();
+      activeBadges.delete(element);
+    }
+  }
+}
+
 // Display a small badge showing the function used for this field
-function showFunctionBadge(element: Element, funcName: string): void {
+export function showFunctionBadge(element: Element, funcName: string): void {
   if (!(element instanceof HTMLElement)) return;
+
+  // Remove any existing badges for this element
+  removeExistingBadges(element);
 
   const badge = document.createElement('div');
   badge.textContent = funcName;
@@ -424,24 +768,29 @@ function showFunctionBadge(element: Element, funcName: string): void {
     try { ro.observe(element); } catch { /* ignore */ }
   }
 
+  // Create cleanup function
+  const cleanup = () => {
+    window.removeEventListener('scroll', onScroll, true);
+    window.removeEventListener('resize', onResize, true);
+    if (ro) {
+      try { ro.disconnect(); } catch { /* ignore */ }
+      ro = null;
+    }
+    if (badge.parentNode) badge.parentNode.removeChild(badge);
+    activeBadges.delete(element);
+  };
+
   // Animate out and remove after extended delay
   const DISPLAY_MS = 6000;
-  setTimeout(() => {
+  const timeout = setTimeout(() => {
     badge.style.opacity = '0';
     badge.style.transform = 'translateY(-6px)';
-    setTimeout(() => {
-      window.removeEventListener('scroll', onScroll, true);
-      window.removeEventListener('resize', onResize, true);
-      if (ro) {
-        try { ro.disconnect(); } catch { /* ignore */ }
-        ro = null;
-      }
-      if (badge.parentNode) badge.parentNode.removeChild(badge);
-    }, 220);
+    setTimeout(cleanup, 220);
   }, DISPLAY_MS);
+
+  // Track this badge
+  activeBadges.set(element, { badge, timeout, cleanup });
 }
-
-
 
 // Extract nearby/associated label text for context
 function getAssociatedLabelText(input: HTMLInputElement): string {
@@ -471,8 +820,71 @@ function getAssociatedLabelText(input: HTMLInputElement): string {
   return texts.join(' ').toLowerCase();
 }
 
-// Infer best-fit function name for an input based on type/name/placeholder
-async function inferFunctionForInput(input: HTMLInputElement): Promise<string> {
+// Determine if an input type needs search API for function detection
+function needsSearchApi(inputType: string): boolean {
+  // These input types have their own specific handling and don't need search API
+  const skipSearchTypes = ['checkbox', 'radio', 'select', 'range', 'file', 'button', 'submit', 'reset', 'image', 'color'];
+  return !skipSearchTypes.includes(inputType);
+}
+
+// Get a default function for input types that don't need search API
+function getDefaultFunctionForInputType(inputType: string): string {
+  switch (inputType) {
+    case 'checkbox':
+    case 'radio':
+    case 'select':
+      return 'true';
+    case 'range':
+      return 'number?min=0&max=100';
+    case 'file':
+      return 'word';
+    case 'button':
+    case 'submit':
+    case 'reset':
+    case 'image':
+      return 'word';
+    case 'color':
+      return 'hexcolor';
+    default:
+      return 'word';
+  }
+}
+
+// Get type-specific fallback functions for when search API doesn't find good matches
+function getTypeSpecificFallback(inputType: string): string {
+  switch (inputType) {
+    case 'email':
+      return 'email';
+    case 'tel':
+      return 'phone';
+    case 'number':
+      return 'number';
+    case 'date':
+      return 'date';
+    case 'time':
+      return 'time';
+    case 'datetime-local':
+      return 'datetime';
+    case 'month':
+      return 'month';
+    case 'week':
+      return 'week';
+    case 'url':
+      return 'url';
+    case 'password':
+      return 'password';
+    case 'search':
+      return 'word';
+    case 'color':
+      return 'color';
+    case 'text':
+    default:
+      return 'word';
+  }
+}
+
+// Create a comprehensive search query from input field characteristics
+function createSearchQuery(input: HTMLInputElement): string {
   const type = input.type.toLowerCase();
   const name = (input.name || '').toLowerCase();
   const id = (input.id || '').toLowerCase();
@@ -481,96 +893,118 @@ async function inferFunctionForInput(input: HTMLInputElement): Promise<string> {
   const ariaLabel = (input.getAttribute('aria-label') || '').toLowerCase();
   const labelText = getAssociatedLabelText(input);
 
-  const text = `${name} ${id} ${placeholder} ${autocomplete} ${ariaLabel} ${labelText}`;
+  // Build a comprehensive search query with all available information
+  const queryParts = [
+    type,
+    name,
+    id,
+    placeholder,
+    autocomplete,
+    ariaLabel,
+    labelText
+  ].filter(part => part && part.trim());
 
-  // Helper to ensure function exists
-  const pick = (fn: string, fallback: string = 'word'): string => (hasFunc(fn) ? fn : fallback);
+  // Join all parts with spaces to create a comprehensive search query
+  const searchQuery = queryParts.join(' ').toLowerCase()
+    .replace(/[^\w\s]/g, ' ') // Remove special characters
+    .replace(/\s+/g, ' ') // Normalize whitespace
+    .trim();
 
-  // Direct type mappings
-  if (type === 'email' || /email/.test(text)) return pick('email');
-  if (type === 'password' || /password|pass/.test(text)) return pick('password');
-  if (type === 'tel' || /phone|tel|mobile/.test(text)) return pick('phone');
-  if (type === 'url' || /url|website/.test(text)) return pick('url');
-  if (type === 'color' || /color/.test(text)) return pick('hexcolor');
-  // Numeric-like hints (avoid matching 'account' via word boundaries)
-  if (type === 'number' || /\b(?:age|qty|quantity|count|amount)\b/.test(text)) {
-    return hasFunc('number') ? 'number?min=1&max=9999' : 'word';
+  return searchQuery || 'text input';
+}
+
+// Search for functions using the API endpoint based on input field characteristics
+async function searchFunctionForInput(input: HTMLInputElement): Promise<string> {
+  const type = input.type.toLowerCase();
+  
+  // Skip search API for input types that don't need it
+  if (!needsSearchApi(type)) {
+    return getDefaultFunctionForInputType(type);
   }
 
-  // Placeholder-only numeric hint: if no numeric type but placeholder looks numeric
-  // Example: placeholder="0.000" → float-like; placeholder="123" → int-like
-  if ((type === '' || type === 'text')) {
-    const placeholderRaw = (input.placeholder || '').trim();
-    if (/^[+-]?\d+$/.test(placeholderRaw)) {
-      const digits = Math.min(placeholderRaw.replace(/[^0-9]/g, '').length || 1, 9);
-      const max = Math.pow(10, digits) - 1;
-      return `number?min=0&max=${max}`;
+  const searchQuery = createSearchQuery(input);
+
+  try {
+    const searchRequest: FuncSearchRequest = {
+      id: input.id || input.name || `input_${Date.now()}`,
+      query: searchQuery
+    };
+
+    const response = await searchMultiFunc([searchRequest]);
+    
+    if (response.success && response.data && response.data.length > 0) {
+      const searchResult = response.data[0];
+      if (searchResult.results && searchResult.results.length > 0) {
+        // Return the highest scoring function
+        const bestMatch = searchResult.results[0];
+        return bestMatch.name;
+      }
     }
-    if (/^[+-]?\d+\.\d+$/.test(placeholderRaw)) {
-      const parts = placeholderRaw.replace(/[^0-9.]/g, '').split('.');
-      const fracDigits = Math.min((parts[1] || '2').length, 6);
-      return `generate?str={number:0,100}.{generate:${'#'.repeat(fracDigits)}}`;
+  } catch (error) {
+    console.warn('[Gofakeit] Function search failed, falling back to default function:', error);
+  }
+
+  // Fallback to default function if search fails
+  return getDefaultFunctionForInputType(type);
+}
+
+// Search for functions for multiple inputs using the API endpoint
+export async function searchFunctionsForInputs(inputs: HTMLInputElement[]): Promise<Map<HTMLInputElement, string>> {
+  const functionMap = new Map<HTMLInputElement, string>();
+  
+  if (inputs.length === 0) {
+    return functionMap;
+  }
+
+  try {
+    // Create search requests for all inputs using the shared createSearchQuery function
+    const searchRequests: FuncSearchRequest[] = inputs.map((input, index) => {
+      const searchQuery = createSearchQuery(input);
+      
+      return {
+        id: input.id || input.name || `input_${index}`,
+        query: searchQuery
+      };
+    });
+
+    const response = await searchMultiFunc(searchRequests);
+    
+    if (response.success && response.data) {
+      // Map results back to inputs with improved fallback logic
+      for (let i = 0; i < response.data.length; i++) {
+        const searchResult = response.data[i];
+        const input = inputs[i];
+        const inputType = input.type.toLowerCase();
+        
+        if (searchResult.results && searchResult.results.length > 0) {
+          const bestMatch = searchResult.results[0];
+          // Only use the search result if it has a reasonable score
+          if (bestMatch.score >= 100) {
+            functionMap.set(input, bestMatch.name);
+          } else {
+            // Use type-specific fallback for low-scoring results
+            functionMap.set(input, getTypeSpecificFallback(inputType));
+          }
+        } else {
+          // Fallback to type-specific function if no search results
+          functionMap.set(input, getTypeSpecificFallback(inputType));
+        }
+      }
+    } else {
+      // Fallback to default functions for all inputs if search fails
+      for (const input of inputs) {
+        functionMap.set(input, getDefaultFunctionForInputType(input.type.toLowerCase()));
+      }
+    }
+  } catch (error) {
+    console.warn('[Gofakeit] Multi-function search failed, falling back to default functions:', error);
+    // Fallback to default functions for all inputs
+    for (const input of inputs) {
+      functionMap.set(input, getDefaultFunctionForInputType(input.type.toLowerCase()));
     }
   }
 
-  // Credit card number detection
-  const looksLikeCcField =
-    /credit\s*card|card\b|cc\b/.test(text) && /(number|no|num)/.test(text) ||
-    /card[-_ ]?number|credit[-_ ]?card[-_ ]?number/.test(text) ||
-    ariaLabel.includes('credit card number') ||
-    placeholder.includes('••••') ||
-    (input.maxLength >= 16 && input.maxLength <= 19 && (/card|credit/.test(text)));
-  if (looksLikeCcField) {
-    return 'creditcardnumber';
-  }
-
-  // Credit card CVV/CVC/Security Code
-  if (/\bcvv\b|\bcvc\b|security\s*code|card\s*code|\bcid\b|\bcv2\b/.test(text)) {
-    if (hasFunc('creditcardcvv')) return 'creditcardcvv';
-  }
-
-  // Credit card Expiry / Expiration date
-  if (/\bexp(iry|iration)?\b|valid\s*(thru|through)|mm\s*\/\s*yy|yy\s*\/\s*mm|mm\s*yy|yy\s*mm|expiry\s*date|exp\.?\s*date/.test(text)
-      || /\b\d{2}\s*\/\s*\d{2}\b/.test((input.value || '').toLowerCase())) {
-    if (hasFunc('creditcardexp')) return 'creditcardexp';
-  }
-
-  // After card-specific checks, fall back to general date/time
-  if (type === 'date' || /\bdate\b|\bdob\b|birthday/.test(text)) return pick('date');
-  if (type === 'time' || /\btime\b/.test(text)) return pick('date');
-  if (type === 'datetime-local' || /\bdatetime\b|appointment/.test(text)) return pick('date');
-
-  // Bank account and routing numbers
-  if (/\baccount\b\s*(?:number|no)\b|\bacct\b/.test(text) || /\baccount\s*number\b/.test(placeholder)) {
-    if (hasFunc('achaccount')) return 'achaccount';
-  }
-  if (/routing\s*(number|no)|\baba\b/.test(text)) {
-    if (hasFunc('achrouting')) return 'achrouting';
-  }
-
-  // Common field heuristics
-  // Address line 2 / unit identifiers (must come before generic address/street)
-  if (/(^|\b)(apartment|apt|suite|unit|floor|bldg|building|room|ste|address[-_ ]?line[-_ ]?2|address2|addr2|line[-_ ]?2)(\b|$)/.test(text)) {
-    return pick('unit');
-  }
-  if (/first\s*name|firstname|first_name|given/.test(text)) return pick('firstname');
-  if (/last\s*name|lastname|last_name|surname|family/.test(text)) return pick('lastname');
-  if (/full\s*name|fullname/.test(text)) return pick('name');
-  if (/city/.test(text)) return pick('city');
-  if (/state|province|region/.test(text)) return pick('state');
-  if (/\bpostal\b|\bpostal[-_ ]?code\b|\bpostcode\b|\bzip\b|\bzip[-_ ]?code\b/.test(text)) {
-    return hasFunc('postcode') ? 'postcode' : 'zip';
-  }
-  if (/address|street/.test(text)) return pick('street');
-  if (/company|organization|org/.test(text)) return pick('company');
-  if (/job|title|role/.test(text)) return pick('jobtitle', pick('job'));
-  if (/website|domain/.test(text)) return pick('url');
-  if (/username|user\b/.test(text)) return pick('username');
-
-  // Fallbacks
-  if (type === 'search') return 'word';
-  if (hasFunc('word')) return 'word';
-  return 'word';
+  return functionMap;
 }
 
 // Find the closest container that has form fields with data-gofakeit attributes

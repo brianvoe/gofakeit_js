@@ -2,7 +2,7 @@ import { callFunc, fetchRandomString } from './api';
 import { handleError } from './autofill';
 
 // Handle checkbox input elements
-export async function handleCheckbox(element: HTMLInputElement, gofakeitFunc: string): Promise<{ success: boolean, usedFunc: string }> {
+export async function handleCheckbox(element: HTMLInputElement, gofakeitFunc: string, value?: string): Promise<{ success: boolean, usedFunc: string }> {
   // Find the checkbox group by name
   const checkboxGroup = findCheckboxGroup(element);
   
@@ -13,6 +13,25 @@ export async function handleCheckbox(element: HTMLInputElement, gofakeitFunc: st
   
   // Use boolean function if 'true' is passed, otherwise use the provided function
   const functionToCall = gofakeitFunc === 'true' ? 'bool' : gofakeitFunc;
+  
+  // If value is provided (from batch), use it directly
+  if (value !== undefined) {
+    // Clear all checkboxes first
+    checkboxGroup.forEach(cb => {
+      cb.checked = false;
+      cb.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    
+    // For boolean values, check if it's true
+    const boolValue = String(value).toLowerCase() === 'true' || value === '1' || String(value).toLowerCase() === 'yes';
+    if (boolValue && checkboxGroup.length > 0) {
+      // Select the first checkbox if value is true
+      checkboxGroup[0].checked = true;
+      checkboxGroup[0].dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    
+    return { success: true, usedFunc: functionToCall };
+  }
   
   // For checkbox groups, we want to select multiple checkboxes
   if (gofakeitFunc === 'true') {
@@ -77,18 +96,37 @@ export async function handleCheckbox(element: HTMLInputElement, gofakeitFunc: st
   return { success: true, usedFunc: functionToCall };
 }
 
-// Handle radio input elements
-export async function handleRadio(element: HTMLInputElement, gofakeitFunc: string): Promise<{ success: boolean, usedFunc: string }> {
-  // Find the radio group by name
+// Handle radio inputs
+export async function handleRadio(element: HTMLInputElement, gofakeitFunc: string, value?: string): Promise<{ success: boolean, usedFunc: string, selectedElement?: HTMLInputElement }> {
   const radioGroup = findRadioGroup(element);
-  
-  if (radioGroup.length === 0) {
-    console.warn('[Gofakeit Autofill] No radio group found for element:', element);
-    return { success: false, usedFunc: 'bool' };
-  }
-  
-  // Use boolean function if 'true' is passed, otherwise use the provided function
+  // For radio buttons, when 'true' is passed, we actually use 'bool' function
   const functionToCall = gofakeitFunc === 'true' ? 'bool' : gofakeitFunc;
+  
+  // If a specific value is provided, try to select that radio button
+  if (value !== undefined) {
+    // Clear all radio buttons first
+    radioGroup.forEach((rb: HTMLInputElement) => {
+      rb.checked = false;
+      rb.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    
+    // Try to find by value first, then by index
+    let selectedRadio = radioGroup.find((rb: HTMLInputElement) => rb.value === value);
+    if (!selectedRadio && !isNaN(Number(value))) {
+      const index = parseInt(value);
+      if (index >= 0 && index < radioGroup.length) {
+        selectedRadio = radioGroup[index];
+      }
+    }
+    
+    // If no match found, select the first one
+    if (selectedRadio) {
+      selectedRadio.checked = true;
+      selectedRadio.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    
+    return { success: true, usedFunc: functionToCall, selectedElement: selectedRadio };
+  }
   
   // For radio groups, we want to select exactly one radio button
   if (gofakeitFunc === 'true') {
@@ -98,16 +136,12 @@ export async function handleRadio(element: HTMLInputElement, gofakeitFunc: strin
       rb.dispatchEvent(new Event('change', { bubbles: true }));
     });
     
-    // Select a random radio button using API
-    const boolResponse = await callFunc('bool');
-    if (boolResponse.success) {
-      const shouldSelect = boolResponse.data!.toLowerCase() === 'true' || boolResponse.data!.toLowerCase() === '1';
-      if (shouldSelect) {
-        const randomIndex = Math.floor(Math.random() * radioGroup.length);
-        radioGroup[randomIndex].checked = true;
-        radioGroup[randomIndex].dispatchEvent(new Event('change', { bubbles: true }));
-      }
-    }
+    // Always select exactly one random radio button
+    const randomIndex = Math.floor(Math.random() * radioGroup.length);
+    radioGroup[randomIndex].checked = true;
+    radioGroup[randomIndex].dispatchEvent(new Event('change', { bubbles: true }));
+    
+    return { success: true, usedFunc: functionToCall, selectedElement: radioGroup[randomIndex] };
   } else {
     // For custom functions, use the response to determine which radio button to select
     const response = await callFunc(functionToCall);
@@ -139,14 +173,21 @@ export async function handleRadio(element: HTMLInputElement, gofakeitFunc: strin
       }
     }
     
-    // If no match found, select the first one
+    // If no match found, select a random one to ensure exactly one is selected
     if (selectedRadio) {
       selectedRadio.checked = true;
       selectedRadio.dispatchEvent(new Event('change', { bubbles: true }));
+      
+      return { success: true, usedFunc: functionToCall, selectedElement: selectedRadio };
+    } else {
+      // Fallback: select a random radio button
+      const randomIndex = Math.floor(Math.random() * radioGroup.length);
+      radioGroup[randomIndex].checked = true;
+      radioGroup[randomIndex].dispatchEvent(new Event('change', { bubbles: true }));
+      
+      return { success: true, usedFunc: functionToCall, selectedElement: radioGroup[randomIndex] };
     }
   }
-  
-  return { success: true, usedFunc: functionToCall };
 }
 
 // Helper function to find checkbox group
@@ -172,24 +213,60 @@ function findRadioGroup(element: HTMLInputElement): HTMLInputElement[] {
   
   // Look for radio buttons with the same name
   const name = element.name;
-  const container = element.closest('form, div, fieldset') || document;
   
   if (name) {
-    // Find radio buttons with the same name
-    return Array.from(container.querySelectorAll(`input[type="radio"][name="${name}"]`));
+    // Search the entire document for radio buttons with the same name
+    const radioButtons = Array.from(document.querySelectorAll(`input[type="radio"][name="${name}"]`)) as HTMLInputElement[];
+    return radioButtons;
   } else {
     // Find radio buttons in the same container
-    return Array.from(container.querySelectorAll('input[type="radio"]'));
+    const container = element.closest('form, div, fieldset') || document;
+    const radioButtons = Array.from(container.querySelectorAll('input[type="radio"]')) as HTMLInputElement[];
+    return radioButtons;
   }
 }
 
 // Handle select dropdown
-export async function handleSelectWithFunction(element: HTMLSelectElement, gofakeitFunc: string): Promise<{ success: boolean, usedFunc: string }> {
+export async function handleSelectWithFunction(element: HTMLSelectElement, gofakeitFunc: string, value?: string): Promise<{ success: boolean, usedFunc: string }> {
   const options = Array.from(element.options).map(option => option.value).filter(value => value !== '');
   
   if (options.length === 0) {
     console.warn('[Gofakeit Autofill] Select element has no valid options:', element);
     return { success: false, usedFunc: gofakeitFunc };
+  }
+  
+  // If value is provided (from batch), use it directly
+  if (value !== undefined) {
+    if (element.multiple) {
+      // Handle multiselect
+      Array.from(element.options).forEach(option => option.selected = false);
+      
+      // Parse comma-separated values
+      const selectedValues = value.split(',').map(val => val.trim()).filter(val => val !== '');
+      selectedValues.forEach(value => {
+        const option = element.options.namedItem(value) || Array.from(element.options).find(opt => opt.value === value);
+        if (option) option.selected = true;
+      });
+    } else {
+      // Try to set the value directly
+      const option = element.options.namedItem(value) || Array.from(element.options).find(opt => opt.value === value);
+      if (option) {
+        element.value = value;
+      } else {
+        // If the value doesn't match any option, select a random option
+        const validOptions = options.filter(opt => opt !== '');
+        if (validOptions.length > 0) {
+          const randomOption = validOptions[Math.floor(Math.random() * validOptions.length)];
+          element.value = randomOption;
+        } else {
+          // If no valid options, don't set any value
+          return { success: false, usedFunc: gofakeitFunc };
+        }
+      }
+    }
+    
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+    return { success: true, usedFunc: gofakeitFunc === 'true' ? 'random' : gofakeitFunc };
   }
   
   let response;
