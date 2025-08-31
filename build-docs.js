@@ -15,7 +15,7 @@ if (!existsSync(docsDir)) {
 // Copy necessary files from dist to docs
 const filesToCopy = [
   'index.html',
-  'index.cjs'
+  'index.js'
 ];
 
 console.log('📋 Copying files to docs...');
@@ -35,7 +35,7 @@ filesToCopy.forEach(file => {
 const htmlPath = join(docsDir, 'index.html');
 if (existsSync(htmlPath)) {
   let htmlContent = readFileSync(htmlPath, 'utf8');
-  htmlContent = htmlContent.replace('src="/index.cjs"', 'src="./index.cjs"');
+  htmlContent = htmlContent.replace('src="/index.cjs"', 'src="./index.js"');
   writeFileSync(htmlPath, htmlContent);
   console.log('✅ Fixed import path in index.html');
 }
