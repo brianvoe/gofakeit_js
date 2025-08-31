@@ -9,18 +9,10 @@ export declare function autofill(target?: HTMLElement | Element, settings?: Auto
 
 declare interface AutofillSettings {
     smart?: boolean;
+    staggered?: boolean;
+    staggerDelay?: number;
 }
 
 export declare function callFunc(func: string): Promise<ApiResponse>;
-
-export declare interface Func {
-    value: string;
-    display: string;
-    category: string;
-}
-
-export declare function getFuncs(): Func[];
-
-export declare function hasFunc(name: string): boolean;
 
 export { }
