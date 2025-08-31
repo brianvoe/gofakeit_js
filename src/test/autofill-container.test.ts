@@ -6,7 +6,7 @@ describe('Autofill Container', () => {
 
   beforeEach(() => {
     // Store original body content
-    originalBody = document.body.innerHTML
+    originalBody = document.body.innerHTML || ''
     
     // Create multiple containers with forms
     document.body.innerHTML = `
@@ -46,7 +46,7 @@ describe('Autofill Container', () => {
 
   afterEach(() => {
     // Restore original body content
-    document.body.innerHTML = originalBody
+    document.body.innerHTML = originalBody || ''
   })
 
   it('should fill only fields in the selected container', async () => {

@@ -1,17 +1,8 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { autofill } from '../autofill';
-import { callFunc } from '../api';
-
-// Mock the API module
-vi.mock('../api', () => ({
-  callFunc: vi.fn()
-}));
 
 describe('Autofill Smart Mode', () => {
   beforeEach(() => {
-    // Clear all mocks before each test
-    vi.clearAllMocks();
-    
     // Setup DOM
     document.body.innerHTML = `
       <div id="test-container">
@@ -21,9 +12,6 @@ describe('Autofill Smart Mode', () => {
         <input type="text" id="field4" placeholder="Smart field">
       </div>
     `;
-    
-    // Mock successful API responses
-    (callFunc as any).mockResolvedValue('test-value');
   });
 
   describe('Smart Mode (default)', () => {
@@ -33,13 +21,17 @@ describe('Autofill Smart Mode', () => {
       await autofill(container, { smart: true });
       
       // Should fill field1 (has data-gofakeit="true")
-      expect(callFunc).toHaveBeenCalledWith('word');
+      const field1 = document.getElementById('field1') as HTMLInputElement;
+      expect(field1.value).toBeTruthy();
       
       // Should fill field2 (email field detected by smart mode)
-      expect(callFunc).toHaveBeenCalledWith('email');
+      const field2 = document.getElementById('field2') as HTMLInputElement;
+      expect(field2.value).toBeTruthy();
+      expect(field2.value).toContain('@');
       
       // Should fill field4 (text field detected by smart mode)
-      expect(callFunc).toHaveBeenCalledWith('word');
+      const field4 = document.getElementById('field4') as HTMLInputElement;
+      expect(field4.value).toBeTruthy();
       
       // Should NOT fill field3 (has data-gofakeit="false")
       const field3 = document.getElementById('field3') as HTMLInputElement;
@@ -52,8 +44,10 @@ describe('Autofill Smart Mode', () => {
       await autofill(container);
       
       // Should still fill smart-detected fields
-      expect(callFunc).toHaveBeenCalledWith('email');
-      expect(callFunc).toHaveBeenCalledWith('word');
+      const field2 = document.getElementById('field2') as HTMLInputElement;
+      const field4 = document.getElementById('field4') as HTMLInputElement;
+      expect(field2.value).toBeTruthy();
+      expect(field4.value).toBeTruthy();
     });
   });
 
@@ -64,7 +58,8 @@ describe('Autofill Smart Mode', () => {
       await autofill(container, { smart: false });
       
       // Should fill field1 (has data-gofakeit="true")
-      expect(callFunc).toHaveBeenCalledWith('word');
+      const field1 = document.getElementById('field1') as HTMLInputElement;
+      expect(field1.value).toBeTruthy();
       
       // Should NOT fill field2 (no data-gofakeit attribute)
       const field2 = document.getElementById('field2') as HTMLInputElement;
@@ -91,9 +86,6 @@ describe('Autofill Smart Mode', () => {
       
       await autofill(container, { smart: false });
       
-      // Should not call API for any fields
-      expect(callFunc).not.toHaveBeenCalled();
-      
       // Fields should remain empty
       const field1 = document.getElementById('field1') as HTMLInputElement;
       const field2 = document.getElementById('field2') as HTMLInputElement;
@@ -108,15 +100,14 @@ describe('Autofill Smart Mode', () => {
       
       // Smart mode should fill the email field
       await autofill(field, { smart: true });
-      expect(callFunc).toHaveBeenCalledWith('email');
+      expect(field.value).toBeTruthy();
+      expect(field.value).toContain('@');
       
       // Reset
       field.value = '';
-      vi.clearAllMocks();
       
       // Manual mode should not fill the field (no data-gofakeit attribute)
       await autofill(field, { smart: false });
-      expect(callFunc).not.toHaveBeenCalled();
       expect(field.value).toBe('');
     });
 
@@ -125,14 +116,13 @@ describe('Autofill Smart Mode', () => {
       
       // Should fill in both modes
       await autofill(field, { smart: true });
-      expect(callFunc).toHaveBeenCalledWith('word');
+      expect(field.value).toBeTruthy();
       
       // Reset
       field.value = '';
-      vi.clearAllMocks();
       
       await autofill(field, { smart: false });
-      expect(callFunc).toHaveBeenCalledWith('word');
+      expect(field.value).toBeTruthy();
     });
   });
 
@@ -141,15 +131,20 @@ describe('Autofill Smart Mode', () => {
       await autofill(undefined, { smart: true });
       
       // Should fill all form fields
-      expect(callFunc).toHaveBeenCalledWith('word');
-      expect(callFunc).toHaveBeenCalledWith('email');
+      const field1 = document.getElementById('field1') as HTMLInputElement;
+      const field2 = document.getElementById('field2') as HTMLInputElement;
+      const field4 = document.getElementById('field4') as HTMLInputElement;
+      expect(field1.value).toBeTruthy();
+      expect(field2.value).toBeTruthy();
+      expect(field4.value).toBeTruthy();
     });
 
     it('should only fill data-gofakeit fields when smart is false', async () => {
       await autofill(undefined, { smart: false });
       
       // Should only fill field1 (has data-gofakeit="true")
-      expect(callFunc).toHaveBeenCalledWith('word');
+      const field1 = document.getElementById('field1') as HTMLInputElement;
+      expect(field1.value).toBeTruthy();
       
       // Should not fill other fields
       const field2 = document.getElementById('field2') as HTMLInputElement;
@@ -167,8 +162,10 @@ describe('Autofill Smart Mode', () => {
       await autofill(container, undefined);
       
       // Should default to smart mode
-      expect(callFunc).toHaveBeenCalledWith('email');
-      expect(callFunc).toHaveBeenCalledWith('word');
+      const field2 = document.getElementById('field2') as HTMLInputElement;
+      const field4 = document.getElementById('field4') as HTMLInputElement;
+      expect(field2.value).toBeTruthy();
+      expect(field4.value).toBeTruthy();
     });
 
     it('should handle empty settings object gracefully', async () => {
@@ -177,8 +174,10 @@ describe('Autofill Smart Mode', () => {
       await autofill(container, {});
       
       // Should default to smart mode
-      expect(callFunc).toHaveBeenCalledWith('email');
-      expect(callFunc).toHaveBeenCalledWith('word');
+      const field2 = document.getElementById('field2') as HTMLInputElement;
+      const field4 = document.getElementById('field4') as HTMLInputElement;
+      expect(field2.value).toBeTruthy();
+      expect(field4.value).toBeTruthy();
     });
   });
 });

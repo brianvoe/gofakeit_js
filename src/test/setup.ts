@@ -10,5 +10,9 @@ beforeAll(() => {
         })
       }
     }
-  }
+  } as any;
+  
+  // Disable staggered timing for tests to keep them fast
+  // This can be overridden in individual tests if needed
+  (globalThis as any).__GOFAKEIT_TEST_MODE__ = true;
 })

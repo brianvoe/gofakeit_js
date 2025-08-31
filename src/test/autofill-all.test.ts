@@ -6,7 +6,7 @@ describe('Autofill All Fields', () => {
 
   beforeEach(() => {
     // Store original body content
-    originalBody = document.body.innerHTML
+    originalBody = document.body.innerHTML || ''
     
     // Create a comprehensive test form
     document.body.innerHTML = `
@@ -59,7 +59,7 @@ describe('Autofill All Fields', () => {
 
   afterEach(() => {
     // Restore original body content
-    document.body.innerHTML = originalBody
+    document.body.innerHTML = originalBody || ''
   })
 
   it('should fill all form fields with data-gofakeit="true"', async () => {

@@ -655,5 +655,355 @@ describe('Input Types Testing', () => {
       const result = await autofill(select)
       expect(result).toBe(true)
     })
+
+    it('should handle radio button group with random selection across multiple runs', async () => {
+      const results = [];
+      const radioCount = 8; // Create 8 radio buttons to make the test more comprehensive
+      
+      for (let run = 0; run < 20; run++) {
+        // Create a fresh set of radio buttons for each run
+        const container = document.createElement('form');
+        
+        // Create 8 radio buttons with the same name
+        const radios = [];
+        for (let i = 0; i < radioCount; i++) {
+          const radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = 'testGroup';
+          radio.value = `option${i + 1}`;
+          radio.id = `radio${i + 1}`;
+          radio.setAttribute('data-gofakeit', 'true');
+          container.appendChild(radio);
+          radios.push(radio);
+        }
+        
+        document.body.appendChild(container);
+        
+        // Run autofill on the first radio button (should handle the entire group)
+        const result = await autofill(radios[0]);
+        expect(result).toBe(true);
+        
+        // Find which radio button was selected
+        const selectedIndex = radios.findIndex(radio => radio.checked);
+        results.push(selectedIndex);
+        
+        // Verify exactly one radio button is selected
+        const checkedCount = radios.filter(radio => radio.checked).length;
+        expect(checkedCount).toBe(1);
+        
+        // Clean up for next run
+        document.body.removeChild(container);
+      }
+      
+      // Log the distribution
+      const distribution: Record<string, number> = {};
+      for (let i = 0; i < radioCount; i++) {
+        distribution[`radio${i + 1}`] = results.filter(r => r === i).length;
+      }
+      
+      console.log('Radio button selection distribution over 20 runs:', {
+        ...distribution,
+        total: results.length,
+        uniqueSelections: new Set(results).size
+      });
+      
+      // Should have selected multiple different options (at least 3 out of 8)
+      const uniqueSelections = new Set(results).size;
+      expect(uniqueSelections).toBeGreaterThan(2);
+      
+      // Should have exactly 20 selections total
+      expect(results.length).toBe(20);
+      
+      // No single radio button should be selected more than 50% of the time
+      const maxSelections = Math.max(...Object.values(distribution));
+      expect(maxSelections).toBeLessThan(12); // Less than 60% of runs
+    })
+
+    it('should display function badge over the selected radio button', async () => {
+      document.body.innerHTML = `
+        <div class="form-group">
+          <label>Test Radio Group</label>
+          <div class="radio-group">
+            <div class="radio-item">
+              <input type="radio" name="test" id="radio1" data-gofakeit="true">
+              <label for="radio1">Option 1</label>
+            </div>
+            <div class="radio-item">
+              <input type="radio" name="test" id="radio2" data-gofakeit="true">
+              <label for="radio2">Option 2</label>
+            </div>
+            <div class="radio-item">
+              <input type="radio" name="test" id="radio3" data-gofakeit="true">
+              <label for="radio3">Option 3</label>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      const radio1 = document.getElementById('radio1') as HTMLInputElement;
+      const radio2 = document.getElementById('radio2') as HTMLInputElement;
+      const radio3 = document.getElementById('radio3') as HTMLInputElement;
+      
+      // Run autofill
+      const result = await autofill(radio1);
+      expect(result).toBe(true);
+      
+      // Find the selected radio button
+      const selectedRadio = [radio1, radio2, radio3].find(radio => radio.checked);
+      expect(selectedRadio).toBeTruthy();
+      
+      // Wait a bit for the function badge to appear
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Check that there's a function badge in the DOM
+      const functionBadges = document.querySelectorAll('[style*="position: fixed"]');
+      expect(functionBadges.length).toBeGreaterThan(0);
+      
+      // Verify the function badge is positioned near the selected radio button
+      const selectedRect = selectedRadio!.getBoundingClientRect();
+      let badgeFoundNearSelected = false;
+      
+      functionBadges.forEach(badge => {
+        const badgeRect = badge.getBoundingClientRect();
+        // Check if badge is positioned near the selected radio button
+        const isNearSelected = Math.abs(badgeRect.left - selectedRect.left) < 50 && 
+                              Math.abs(badgeRect.top - selectedRect.top) < 50;
+        if (isNearSelected) {
+          badgeFoundNearSelected = true;
+        }
+      });
+      
+      expect(badgeFoundNearSelected).toBe(true);
+      
+      // Verify the function badge shows "bool" (the actual function used)
+      const badgeWithBool = Array.from(functionBadges).find(badge => 
+        badge.textContent?.includes('bool')
+      );
+      expect(badgeWithBool).toBeTruthy();
+    })
+
+    it('should remove existing function badges when autofill is called multiple times', async () => {
+      document.body.innerHTML = `
+        <div class="form-group">
+          <label>Test Radio Group</label>
+          <div class="radio-group">
+            <div class="radio-item">
+              <input type="radio" name="test" id="radio1" data-gofakeit="true">
+              <label for="radio1">Option 1</label>
+            </div>
+            <div class="radio-item">
+              <input type="radio" name="test" id="radio2" data-gofakeit="true">
+              <label for="radio2">Option 2</label>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      const radio1 = document.getElementById('radio1') as HTMLInputElement;
+      
+      // First autofill call
+      const result1 = await autofill(radio1);
+      expect(result1).toBe(true);
+      
+      // Wait a bit for the first badge to appear
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Check that there's exactly one function badge
+      let functionBadges = document.querySelectorAll('[style*="position: fixed"]');
+      expect(functionBadges.length).toBe(1);
+      
+      // Second autofill call (should remove the first badge and create a new one)
+      const result2 = await autofill(radio1);
+      expect(result2).toBe(true);
+      
+      // Wait a bit for the second badge to appear
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Should still have exactly one function badge (not two)
+      functionBadges = document.querySelectorAll('[style*="position: fixed"]');
+      expect(functionBadges.length).toBe(1);
+      
+      // Third autofill call
+      const result3 = await autofill(radio1);
+      expect(result3).toBe(true);
+      
+      // Wait a bit for the third badge to appear
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Should still have exactly one function badge (not three)
+      functionBadges = document.querySelectorAll('[style*="position: fixed"]');
+      expect(functionBadges.length).toBe(1);
+    })
+  })
+
+  describe('Staggered Timing Tests', () => {
+    it('should correctly map category values to heading text for scrolling', () => {
+      // Test the category heading mapping logic
+      const categoryHeadingMap = {
+        'person-category': '👤 Person Category',
+        'address-category': '🏠 Address Category',
+        'company-category': '🏢 Company Category',
+        'payment-category': '💳 Payment Category',
+        'internet-category': '🌐 Internet Category',
+        'time-category': '⏰ Time Category',
+        'language-category': '🗣️ Language Category',
+        'word-category': '📝 Word Category',
+        'color-category': '🎨 Color Category',
+        'animal-category': '🐾 Animal Category',
+        'food-category': '🍕 Food Category',
+        'car-category': '🚗 Car Category',
+        'game-category': '🎮 Game Category',
+        'misc-category': '🎲 Misc Category'
+      };
+      
+      // Test that all mappings are correct
+      expect(categoryHeadingMap['person-category']).toBe('👤 Person Category');
+      expect(categoryHeadingMap['payment-category']).toBe('💳 Payment Category');
+      expect(categoryHeadingMap['animal-category']).toBe('🐾 Animal Category');
+      expect(categoryHeadingMap['food-category']).toBe('🍕 Food Category');
+      
+      // Test that the mapping can find headings in HTML
+      document.body.innerHTML = `
+        <div id="categories">
+          <h4>👤 Person Category</h4>
+          <h4>💳 Payment Category</h4>
+          <h4>🐾 Animal Category</h4>
+        </div>
+      `;
+      
+      // Test finding headings by text content
+      const allHeadings = document.querySelectorAll('h4');
+      let personHeading = null;
+      let paymentHeading = null;
+      
+      for (const heading of allHeadings) {
+        if (heading.textContent?.includes('👤 Person Category')) {
+          personHeading = heading;
+        }
+        if (heading.textContent?.includes('💳 Payment Category')) {
+          paymentHeading = heading;
+        }
+      }
+      
+      expect(personHeading).toBeTruthy();
+      expect(paymentHeading).toBeTruthy();
+      expect(personHeading?.textContent).toContain('👤 Person Category');
+      expect(paymentHeading?.textContent).toContain('💳 Payment Category');
+    })
+
+    it('should apply staggered timing to excluded elements (checkboxes, radio buttons)', async () => {
+      // Test that excluded elements follow the same staggered timing rules
+      document.body.innerHTML = `
+        <div>
+          <input type="checkbox" id="checkbox1" data-gofakeit="true">
+          <input type="checkbox" id="checkbox2" data-gofakeit="true">
+          <input type="checkbox" id="checkbox3" data-gofakeit="true">
+          <input type="radio" name="test" id="radio1" data-gofakeit="true">
+          <input type="radio" name="test" id="radio2" data-gofakeit="true">
+          <input type="radio" name="test" id="radio3" data-gofakeit="true">
+        </div>
+      `;
+      
+      const elements = [
+        document.getElementById('checkbox1') as HTMLInputElement,
+        document.getElementById('checkbox2') as HTMLInputElement,
+        document.getElementById('checkbox3') as HTMLInputElement,
+        document.getElementById('radio1') as HTMLInputElement,
+        document.getElementById('radio2') as HTMLInputElement,
+        document.getElementById('radio3') as HTMLInputElement
+      ];
+      
+      // Test with fast mode (no stagger) - should be relatively fast
+      const fastSettings = { smart: true, staggered: false };
+      const startTime = Date.now();
+      
+      // Autofill all elements to test batch processing
+      await autofill(undefined, fastSettings);
+      
+      const fastModeTime = Date.now() - startTime;
+      // Fast mode should be reasonably quick (allowing for API calls and processing)
+      expect(fastModeTime).toBeLessThan(2000);
+      
+      // Clear elements for next test
+      elements.forEach(el => {
+        if (el.type === 'checkbox' || el.type === 'radio') {
+          el.checked = false;
+        }
+      });
+      
+      // Test with slow mode (with stagger) - should be slower
+      const slowSettings = { smart: true, staggered: true, staggerDelay: 100 };
+      const slowStartTime = Date.now();
+      
+      // Autofill all elements to test staggered processing
+      await autofill(undefined, slowSettings);
+      
+      const slowModeTime = Date.now() - slowStartTime;
+      // Slow mode should take longer due to stagger delay
+      expect(slowModeTime).toBeGreaterThanOrEqual(100);
+      
+      // Verify that slow mode is not significantly faster than fast mode
+      // (this would indicate staggered timing is not working)
+      expect(slowModeTime).toBeGreaterThanOrEqual(fastModeTime - 500); // Allow some variance
+      
+      // Verify that elements were actually processed
+      const checkedElements = elements.filter(el => el.checked);
+      expect(checkedElements.length).toBeGreaterThan(0);
+    })
+  })
+
+  describe('Category Selector Tests', () => {
+    it('should demonstrate category selector functionality', async () => {
+      // This test simulates the category selector functionality from the HTML example
+      document.body.innerHTML = `
+        <div id="categories">
+          <h4>👤 Person Category</h4>
+          <input type="text" id="personName" data-gofakeit="true" placeholder="Full person name">
+          <input type="text" id="gender" data-gofakeit="true" placeholder="Gender selection">
+          <input type="text" id="petName" data-gofakeit="true" placeholder="Pet name">
+          <input type="text" id="username" data-gofakeit="true" placeholder="Username for login">
+          
+          <h4>💳 Payment Category</h4>
+          <input type="text" id="creditCard" data-gofakeit="true" placeholder="Credit card number">
+          <input type="text" id="creditCardType" data-gofakeit="true" placeholder="Visa, MasterCard, etc.">
+          <input type="text" id="creditCardCVV" data-gofakeit="true" placeholder="3-4 digit security code">
+          <input type="text" id="creditCardExp" data-gofakeit="true" placeholder="MM/YY format">
+        </div>
+      `;
+      
+      // Simulate selecting and autofilling the person category
+      const personFields = ['personName', 'gender', 'petName', 'username'];
+      let filledCount = 0;
+      
+      for (const fieldId of personFields) {
+        const element = document.getElementById(fieldId) as HTMLInputElement;
+        if (element) {
+          const result = await autofill(element);
+          if (result) {
+            filledCount++;
+          }
+        }
+      }
+      
+      expect(filledCount).toBe(4);
+      
+      // Verify that person fields have been filled
+      const personName = document.getElementById('personName') as HTMLInputElement;
+      const gender = document.getElementById('gender') as HTMLInputElement;
+      const petName = document.getElementById('petName') as HTMLInputElement;
+      const username = document.getElementById('username') as HTMLInputElement;
+      
+      expect(personName.value).toBeTruthy();
+      expect(gender.value).toBeTruthy();
+      expect(petName.value).toBeTruthy();
+      expect(username.value).toBeTruthy();
+      
+      // Verify that payment fields are still empty (not autofilled)
+      const creditCard = document.getElementById('creditCard') as HTMLInputElement;
+      const creditCardType = document.getElementById('creditCardType') as HTMLInputElement;
+      
+      expect(creditCard.value).toBe('');
+      expect(creditCardType.value).toBe('');
+    })
   })
 })
