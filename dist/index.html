@@ -4,10 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gofakeit Autofill Example - Comprehensive Testing</title>
-    <link rel="icon" type="image/x-icon" href="https://gofakeit.com/favicon.ico" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://gofakeit.com/favicon.ico"
+    />
     <style>
       :root {
-        /* Colors */
+        /* Colors - Light Theme */
         --primary-color: #007bff;
         --primary-hover: #0056b3;
         --secondary-color: #6c757d;
@@ -26,7 +30,41 @@
         --text-medium: #555;
         --bg-light: #f8f9fa;
         --bg-info-light: #e7f3ff;
+        --bg-main: #f5f5f5;
+        --bg-container: #ffffff;
+        --text-primary: #333;
+        --text-secondary: #666;
+        --border-main: #ddd;
+      }
 
+      /* Dark Theme Variables */
+      [data-theme="dark"] {
+        --primary-color: #4dabf7;
+        --primary-hover: #74c0fc;
+        --secondary-color: #adb5bd;
+        --secondary-hover: #ced4da;
+        --success-color: #51cf66;
+        --success-hover: #69db7c;
+        --info-color: #66d9e8;
+        --info-hover: #99e9f2;
+        --warning-color: #ffd43b;
+        --warning-hover: #fcc419;
+        --danger-color: #ff6b6b;
+        --light-gray: #343a40;
+        --border-color: #495057;
+        --text-muted: #adb5bd;
+        --text-dark: #f8f9fa;
+        --text-medium: #dee2e6;
+        --bg-light: #495057;
+        --bg-info-light: #1e3a5f;
+        --bg-main: #212529;
+        --bg-container: #343a40;
+        --text-primary: #f8f9fa;
+        --text-secondary: #adb5bd;
+        --border-main: #495057;
+      }
+
+      :root {
         /* Spacing */
         --spacing-sm: 8px;
         --spacing-md: 14px;
@@ -50,21 +88,25 @@
         font-family: Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
-        background-color: var(--light-gray);
+        background-color: var(--bg-main);
         display: flex;
+        transition: background-color 0.3s ease;
       }
 
       /* Utility Classes */
       .text-muted {
         color: var(--text-muted);
+        transition: color 0.3s ease;
       }
 
       .text-dark {
         color: var(--text-dark);
+        transition: color 0.3s ease;
       }
 
       .text-primary {
-        color: var(--primary-color);
+        color: var(--text-primary);
+        transition: color 0.3s ease;
       }
 
       .bg-light {
@@ -189,24 +231,27 @@
       }
 
       .container {
-        background: white;
+        background: var(--bg-container);
         padding: 22px;
         border-radius: var(--radius-lg);
         box-shadow: var(--shadow-light);
         margin-bottom: var(--spacing-lg);
+        transition: background-color 0.3s ease;
       }
 
       h1 {
-        color: var(--text-dark);
+        color: var(--text-primary);
         text-align: center;
         margin-bottom: 30px;
+        transition: color 0.3s ease;
       }
 
       h2 {
-        color: var(--text-medium);
+        color: var(--text-primary);
         border-bottom: 2px solid var(--primary-color);
         padding-bottom: 10px;
         margin-top: 25px;
+        transition: color 0.3s ease;
       }
 
       .form-group {
@@ -217,7 +262,8 @@
         display: block;
         margin-bottom: 5px;
         font-weight: 600;
-        color: var(--text-dark);
+        color: var(--text-primary);
+        transition: color 0.3s ease;
       }
 
       input,
@@ -228,7 +274,9 @@
         border: 2px solid var(--border-color);
         border-radius: var(--radius-sm);
         font-size: var(--font-base);
-        transition: border-color 0.3s;
+        background-color: var(--bg-container);
+        color: var(--text-primary);
+        transition: border-color 0.3s, background-color 0.3s, color 0.3s;
         box-sizing: border-box;
       }
 
@@ -239,9 +287,25 @@
         cursor: pointer;
         border-radius: var(--radius-md);
         border: 2px solid var(--border-color);
+        background-color: var(--bg-container);
+        transition: border-color 0.3s, background-color 0.3s;
       }
 
       input[type="color"]:hover {
+        border-color: var(--primary-color);
+      }
+
+      /* Dark mode styling for checkboxes and radio buttons */
+      input[type="checkbox"],
+      input[type="radio"] {
+        accent-color: var(--primary-color);
+        background-color: var(--bg-container);
+        border: 2px solid var(--border-color);
+        transition: border-color 0.3s, background-color 0.3s;
+      }
+
+      input[type="checkbox"]:hover,
+      input[type="radio"]:hover {
         border-color: var(--primary-color);
       }
 
@@ -250,6 +314,29 @@
       select:focus {
         outline: none;
         border-color: var(--primary-color);
+      }
+
+      /* Dark mode styling for select options */
+      select option {
+        background-color: var(--bg-container);
+        color: var(--text-primary);
+      }
+
+      /* Enhanced select styling for dark mode */
+      select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+      }
+
+      /* Dark mode select arrow */
+      [data-theme="dark"] select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
       }
 
       .row {
@@ -262,6 +349,50 @@
 
       .row .form-group {
         margin-bottom: 0;
+      }
+
+      /* Theme Toggle Button */
+      .theme-toggle {
+        display: flex;
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin-top: calc(var(--spacing-lg) + var(--spacing-sm));
+        margin-right: calc(var(--spacing-lg) + var(--spacing-sm));
+        justify-content: flex-end;
+      }
+
+      .theme-toggle-btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-light);
+      }
+
+      .theme-toggle-btn:hover {
+        background: var(--primary-hover);
+        transform: scale(1.1);
+      }
+
+      .theme-toggle-btn:active {
+        transform: scale(0.95);
+      }
+
+      .theme-icon {
+        transition: transform 0.3s ease;
+      }
+
+      .theme-toggle-btn:hover .theme-icon {
+        transform: rotate(180deg);
       }
 
       .btn {
@@ -371,7 +502,7 @@
 
       .sidebar {
         width: 300px;
-        background: white;
+        background: var(--bg-container);
         border-left: 1px solid var(--border-color);
         padding: var(--spacing-lg);
         position: sticky;
@@ -379,6 +510,7 @@
         height: 100vh;
         overflow-y: auto;
         box-shadow: var(--shadow-medium);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
       }
 
       .controls {
@@ -387,6 +519,7 @@
         padding: var(--spacing-lg);
         background: var(--bg-light);
         border-radius: var(--radius-lg);
+        transition: background-color 0.3s ease;
       }
 
       .field-note {
@@ -425,11 +558,14 @@
         padding: var(--spacing-md);
         border-radius: var(--radius-lg);
         margin-bottom: var(--spacing-lg);
+        background-color: var(--bg-container);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
       }
 
       .section h3 {
         margin-top: 0;
         color: var(--primary-color);
+        transition: color 0.3s ease;
       }
 
       .status {
@@ -486,22 +622,18 @@
         border-radius: var(--radius-lg);
         padding: var(--spacing-lg);
         margin-top: var(--spacing-lg);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
       }
 
       .category-selector h4 {
         color: var(--primary-color);
         margin: 0 0 10px 0;
         font-size: var(--font-base);
+        transition: color 0.3s ease;
       }
 
       .category-selector select {
         border-color: var(--primary-color);
-        background: white;
-      }
-
-      .category-selector select:focus {
-        border-color: var(--primary-hover);
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
       }
     </style>
     <script type="module" crossorigin src="/index.cjs"></script>
@@ -1476,7 +1608,18 @@
 
     <div class="sidebar">
       <div class="controls">
-        <h3 style="margin-top: 0; color: #333">🎮 Controls</h3>
+        <!-- Night Mode Toggle at the top -->
+        <div class="theme-toggle">
+          <button
+            id="themeToggle"
+            class="theme-toggle-btn"
+            title="Toggle dark mode"
+          >
+            <span class="theme-icon">🌙</span>
+          </button>
+        </div>
+
+        <h3 style="margin-top: 0; color: var(--text-primary)">🎮 Controls</h3>
         <button class="btn" onclick="autofill()">🚀 Autofill All Fields</button>
         <button class="btn btn-secondary" onclick="autofill('rich-context')">
           📝 Rich Context
@@ -1498,7 +1641,7 @@
         </button>
 
         <div class="category-selector">
-          <h4>🎯 Category Selector</h4>
+          <h4 class="text-primary">🎯 Category Selector</h4>
           <button
             class="btn btn-secondary w-full mb-sm"
             onclick="autofill('categories')"
@@ -1510,7 +1653,7 @@
             data-gofakeit="false"
             class="w-full p-sm radius-sm mb-sm font-base"
           >
-            <option value="">Select a specific category...</option>
+            <option value="">Select category...</option>
             <option value="person-category">👤 Person Category</option>
             <option value="address-category">🏠 Address Category</option>
             <option value="company-category">🏢 Company Category</option>
@@ -1536,7 +1679,7 @@
         </div>
 
         <div class="mt-lg pt-lg border-top">
-          <h4 class="mb-sm text-dark font-base">🔧 Global Settings</h4>
+          <h4 class="mb-sm text-primary font-base">🔧 Global Settings</h4>
 
           <div class="setting-item mb-sm">
             <label class="setting-label">
