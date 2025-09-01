@@ -4,7 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gofakeit Autofill Example - Comprehensive Testing</title>
-    <link rel="icon" type="image/x-icon" href="https://gofakeit.com/favicon.ico" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://gofakeit.com/favicon.ico"
+    />
     <style>
       :root {
         /* Colors - Light Theme */
@@ -350,9 +354,12 @@
       /* Theme Toggle Button */
       .theme-toggle {
         display: flex;
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin-top: calc(var(--spacing-lg) + var(--spacing-sm));
+        margin-right: calc(var(--spacing-lg) + var(--spacing-sm));
         justify-content: flex-end;
-        text-align: center;
-        margin-bottom: var(--spacing-lg);
       }
 
       .theme-toggle-btn {
@@ -360,8 +367,8 @@
         color: white;
         border: none;
         border-radius: 50%;
-        width: 50px;
-        height: 50px;
+        width: 30px;
+        height: 30px;
         font-size: 20px;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -628,7 +635,6 @@
       .category-selector select {
         border-color: var(--primary-color);
       }
-
     </style>
   </head>
   <body>
@@ -1602,8 +1608,12 @@
     <div class="sidebar">
       <div class="controls">
         <!-- Night Mode Toggle at the top -->
-        <div class="theme-toggle mb-lg">
-          <button id="themeToggle" class="theme-toggle-btn" title="Toggle dark mode">
+        <div class="theme-toggle">
+          <button
+            id="themeToggle"
+            class="theme-toggle-btn"
+            title="Toggle dark mode"
+          >
             <span class="theme-icon">🌙</span>
           </button>
         </div>
@@ -1715,8 +1725,6 @@
               <span id="staggerDelayValue" class="setting-value">50</span>
             </label>
           </div>
-
-
 
           <button
             class="btn btn-primary w-full mb-sm"
@@ -2035,48 +2043,53 @@
         // Handle theme toggle
         if (themeToggle) {
           // Get user's saved preference or system preference
-          const savedTheme = localStorage.getItem('theme');
-          const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          
+          const savedTheme = localStorage.getItem("theme");
+          const systemPrefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)"
+          ).matches;
+
           // Use saved preference if available, otherwise use system preference
-          const shouldUseDark = savedTheme === 'dark' || (savedTheme === null && systemPrefersDark);
-          
+          const shouldUseDark =
+            savedTheme === "dark" || (savedTheme === null && systemPrefersDark);
+
           if (shouldUseDark) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            themeIcon.textContent = '☀️';
+            document.documentElement.setAttribute("data-theme", "dark");
+            themeIcon.textContent = "☀️";
           } else {
-            themeIcon.textContent = '🌙';
+            themeIcon.textContent = "🌙";
           }
 
           themeToggle.addEventListener("click", function () {
-            const isDark = document.documentElement.hasAttribute('data-theme');
-            
+            const isDark = document.documentElement.hasAttribute("data-theme");
+
             if (isDark) {
               // Switch to light mode
-              document.documentElement.removeAttribute('data-theme');
-              localStorage.setItem('theme', 'light');
-              themeIcon.textContent = '🌙';
+              document.documentElement.removeAttribute("data-theme");
+              localStorage.setItem("theme", "light");
+              themeIcon.textContent = "🌙";
             } else {
               // Switch to dark mode
-              document.documentElement.setAttribute('data-theme', 'dark');
-              localStorage.setItem('theme', 'dark');
-              themeIcon.textContent = '☀️';
+              document.documentElement.setAttribute("data-theme", "dark");
+              localStorage.setItem("theme", "dark");
+              themeIcon.textContent = "☀️";
             }
           });
 
           // Listen for system preference changes
-          window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-            // Only update if user hasn't set a preference
-            if (localStorage.getItem('theme') === null) {
-              if (e.matches) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                themeIcon.textContent = '☀️';
-              } else {
-                document.documentElement.removeAttribute('data-theme');
-                themeIcon.textContent = '🌙';
+          window
+            .matchMedia("(prefers-color-scheme: dark)")
+            .addEventListener("change", function (e) {
+              // Only update if user hasn't set a preference
+              if (localStorage.getItem("theme") === null) {
+                if (e.matches) {
+                  document.documentElement.setAttribute("data-theme", "dark");
+                  themeIcon.textContent = "☀️";
+                } else {
+                  document.documentElement.removeAttribute("data-theme");
+                  themeIcon.textContent = "🌙";
+                }
               }
-            }
-          });
+            });
         }
       });
 
