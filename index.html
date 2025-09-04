@@ -148,7 +148,7 @@
         padding-bottom: var(--spacing-md);
       }
       .pb-lg {
-        padding-bottom: var(--spacing-lg);
+        padding-bottom: var(--spacing-md);
       }
 
       .pl-sm {
@@ -289,10 +289,10 @@
         border: 2px solid var(--border-color);
         background-color: var(--bg-container);
         transition: border-color 0.3s, background-color 0.3s;
-      }
 
-      input[type="color"]:hover {
-        border-color: var(--primary-color);
+        &:hover {
+          border-color: var(--primary-color);
+        }
       }
 
       /* Dark mode styling for checkboxes and radio buttons */
@@ -302,11 +302,10 @@
         background-color: var(--bg-container);
         border: 2px solid var(--border-color);
         transition: border-color 0.3s, background-color 0.3s;
-      }
 
-      input[type="checkbox"]:hover,
-      input[type="radio"]:hover {
-        border-color: var(--primary-color);
+        &:hover {
+          border-color: var(--primary-color);
+        }
       }
 
       input:focus,
@@ -332,11 +331,11 @@
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
-      }
 
-      /* Dark mode select arrow */
-      [data-theme="dark"] select {
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        /* Dark mode select arrow */
+        [data-theme="dark"] & {
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        }
       }
 
       .row {
@@ -345,10 +344,10 @@
         gap: var(--spacing-md);
         margin-bottom: var(--spacing-lg);
         width: 100%;
-      }
 
-      .row .form-group {
-        margin-bottom: 0;
+        .form-group {
+          margin-bottom: 0;
+        }
       }
 
       /* Theme Toggle Button */
@@ -376,23 +375,23 @@
         align-items: center;
         justify-content: center;
         box-shadow: var(--shadow-light);
-      }
 
-      .theme-toggle-btn:hover {
-        background: var(--primary-hover);
-        transform: scale(1.1);
-      }
+        &:hover {
+          background: var(--primary-hover);
+          transform: scale(1.1);
+        }
 
-      .theme-toggle-btn:active {
-        transform: scale(0.95);
-      }
+        &:active {
+          transform: scale(0.95);
+        }
 
-      .theme-icon {
-        transition: transform 0.3s ease;
-      }
+        .theme-icon {
+          transition: transform 0.3s ease;
+        }
 
-      .theme-toggle-btn:hover .theme-icon {
-        transform: rotate(180deg);
+        &:hover .theme-icon {
+          transform: rotate(180deg);
+        }
       }
 
       .btn {
@@ -407,51 +406,51 @@
         transition: background-color 0.3s;
         width: 100%;
         display: block;
-      }
 
-      .btn:hover {
-        background: var(--primary-hover);
-      }
+        &:hover {
+          background: var(--primary-hover);
+        }
 
-      .btn-secondary {
-        background: var(--secondary-color);
-      }
+        &.btn-secondary {
+          background: var(--secondary-color);
 
-      .btn-secondary:hover {
-        background: var(--secondary-hover);
-      }
+          &:hover {
+            background: var(--secondary-hover);
+          }
+        }
 
-      .btn-success {
-        background: var(--success-color);
-      }
+        &.btn-success {
+          background: var(--success-color);
 
-      .btn-success:hover {
-        background: var(--success-hover);
-      }
+          &:hover {
+            background: var(--success-hover);
+          }
+        }
 
-      .btn-info {
-        background: var(--info-color);
-      }
+        &.btn-info {
+          background: var(--info-color);
 
-      .btn-info:hover {
-        background: var(--info-hover);
-      }
+          &:hover {
+            background: var(--info-hover);
+          }
+        }
 
-      .btn-warning {
-        background: var(--warning-color);
-        color: #212529;
-      }
+        &.btn-warning {
+          background: var(--warning-color);
+          color: #212529;
 
-      .btn-warning:hover {
-        background: var(--warning-hover);
-      }
+          &:hover {
+            background: var(--warning-hover);
+          }
+        }
 
-      .btn-primary {
-        background: var(--primary-color);
-      }
+        &.btn-primary {
+          background: var(--primary-color);
 
-      .btn-primary:hover {
-        background: var(--primary-hover);
+          &:hover {
+            background: var(--primary-hover);
+          }
+        }
       }
 
       /* Settings Styles */
@@ -468,13 +467,13 @@
         gap: var(--spacing-sm);
         cursor: pointer;
         font-weight: 500;
-      }
 
-      .setting-label input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-        margin: 0;
-        cursor: pointer;
+        input[type="checkbox"] {
+          width: 18px;
+          height: 18px;
+          margin: 0;
+          cursor: pointer;
+        }
       }
 
       .setting-text {
@@ -540,17 +539,15 @@
         display: flex;
         align-items: center;
         gap: var(--spacing-sm);
-      }
 
-      .checkbox-item input,
-      .radio-item input {
-        width: auto;
-      }
+        input {
+          width: auto;
+        }
 
-      .checkbox-item label,
-      .radio-item label {
-        margin: 0;
-        font-weight: normal;
+        label {
+          margin: 0;
+          font-weight: normal;
+        }
       }
 
       .section {
@@ -560,12 +557,12 @@
         margin-bottom: var(--spacing-lg);
         background-color: var(--bg-container);
         transition: background-color 0.3s ease, border-color 0.3s ease;
-      }
 
-      .section h3 {
-        margin-top: 0;
-        color: var(--primary-color);
-        transition: color 0.3s ease;
+        h3 {
+          margin-top: 0;
+          color: var(--primary-color);
+          transition: color 0.3s ease;
+        }
       }
 
       .status {
@@ -578,19 +575,21 @@
         font-weight: bold;
         z-index: 1000;
         opacity: 0;
-        transition: opacity 0.3s;
-      }
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
 
-      .status.success {
-        background: var(--success-color);
-      }
+        &.success {
+          background: var(--success-color);
+        }
 
-      .status.error {
-        background: var(--danger-color);
-      }
+        &.error {
+          background: var(--danger-color);
+        }
 
-      .status.show {
-        opacity: 1;
+        &.show {
+          opacity: 1;
+          visibility: visible;
+        }
       }
 
       .context-indicator {
@@ -599,21 +598,21 @@
         border-radius: 3px;
         margin-left: var(--spacing-sm);
         font-weight: normal;
-      }
 
-      .context-rich {
-        background: #d4edda;
-        color: #155724;
-      }
+        &.context-rich {
+          background: #d4edda;
+          color: #155724;
+        }
 
-      .context-sparse {
-        background: #fff3cd;
-        color: #856404;
-      }
+        &.context-sparse {
+          background: #fff3cd;
+          color: #856404;
+        }
 
-      .context-medium {
-        background: #cce5ff;
-        color: #004085;
+        &.context-medium {
+          background: #cce5ff;
+          color: #004085;
+        }
       }
 
       .category-selector {
@@ -623,17 +622,17 @@
         padding: var(--spacing-lg);
         margin-top: var(--spacing-lg);
         transition: background-color 0.3s ease, border-color 0.3s ease;
-      }
 
-      .category-selector h4 {
-        color: var(--primary-color);
-        margin: 0 0 10px 0;
-        font-size: var(--font-base);
-        transition: color 0.3s ease;
-      }
+        h4 {
+          color: var(--primary-color);
+          margin: 0 0 10px 0;
+          font-size: var(--font-base);
+          transition: color 0.3s ease;
+        }
 
-      .category-selector select {
-        border-color: var(--primary-color);
+        select {
+          border-color: var(--primary-color);
+        }
       }
     </style>
   </head>
@@ -2108,10 +2107,15 @@
       function showStatus(message, type) {
         const status = document.getElementById("status");
         status.textContent = message;
+        status.style.display = "block";
         status.className = `status ${type} show`;
 
         setTimeout(() => {
           status.classList.remove("show");
+          // Hide the status element completely after animation
+          setTimeout(() => {
+            status.style.display = "none";
+          }, 300);
         }, 3000);
       }
 
