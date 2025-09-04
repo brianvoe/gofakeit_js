@@ -85,8 +85,6 @@ export async function callFunc(func: string): Promise<ApiResponse> {
   }
 }
 
-
-
 // Call multiple functions in a single request
 export async function callMultiFunc(requests: MultiFuncRequest[]): Promise<MultiFuncApiResponse> {
   if (requests.length === 0) {
