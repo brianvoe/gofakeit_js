@@ -1,4 +1,4 @@
-# Gofakeit Autofill Plugin
+# Gofakeit Plugin
 
 A powerful autofill plugin for form field automation using the Gofakeit API with intelligent function detection.
 
