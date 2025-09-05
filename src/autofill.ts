@@ -1,5 +1,4 @@
 import { GOFAKEIT_COLORS } from './styles';
-import { showFieldError } from './field-error';
 import { handleDateTimeInput } from './input-datetime';
 import { handleTextInput, handleTextarea, getTextarea, setTextInput, setTextarea } from './input-text';
 import { handleCheckbox, handleRadio, handleSelectWithFunction } from './input-misc';
@@ -286,12 +285,20 @@ async function processElements(elements: Element[], settings: AutofillSettings):
   const otherElements: Element[] = [];
   
   for (const element of uniqueElements) {
+    const gofakeitFunc = element.getAttribute('data-gofakeit');
+    
+    // Check if element has a specific function value (not "true" or "false")
+    const hasSpecificFunction = gofakeitFunc && 
+      gofakeitFunc.trim().toLowerCase() !== 'true' && 
+      gofakeitFunc.trim().toLowerCase() !== 'false';
+    
     if (element instanceof HTMLInputElement) {
       const inputType = element.type.toLowerCase();
-      if (needsSearchApi(inputType)) {
+      if (needsSearchApi(inputType) && !hasSpecificFunction) {
+        // Only use search API for elements that need it and don't have specific functions
         searchInputElements.push(element);
       } else {
-        // For excluded input types, add them to otherElements to be processed by getElementFunction
+        // For excluded input types or elements with specific functions, add them to otherElements
         otherElements.push(element);
       }
     } else {
@@ -431,7 +438,12 @@ async function processElements(elements: Element[], settings: AutofillSettings):
       await new Promise(resolve => setTimeout(resolve, staggerDelay));
     }
     
-    if (response && response.value !== null && !response.error) {
+    if (response && response.error) {
+      // Handle API errors - display error message above the field
+      failedCount++;
+      console.warn(`[Gofakeit Autofill] API error for element:`, element, response.error);
+      showFunctionBadge(element, response.error, 'error');
+    } else if (response && response.value !== null) {
       try {
         // Use the existing autofillElement function with the batch response value
         const success = await autofillElementWithValue(element, func, response.value, settings);
@@ -459,7 +471,7 @@ async function processElements(elements: Element[], settings: AutofillSettings):
       }
     } else {
       failedCount++;
-      console.warn(`[Gofakeit Autofill] API error for element:`, element, response?.error);
+      console.warn(`[Gofakeit Autofill] No valid response for element:`, element);
     }
   }
 
@@ -506,6 +518,11 @@ async function getElementFunction(element: Element, settings: AutofillSettings):
       // Handle range inputs
       if (inputType === 'range') {
         return getRangeInput(element);
+      }
+      
+      // For text inputs with specific functions, return the function directly
+      if (gofakeitFunc && gofakeitFunc !== 'true') {
+        return gofakeitFunc;
       }
       
       // For all other input types, use search API (this is a fallback for individual elements)
@@ -650,7 +667,7 @@ export function handleError(element: Element, error: string, functionName?: stri
   }
   
   const message = functionName ? `Invalid function: ${functionName}` : error;
-  showFieldError(element, message);
+  showFunctionBadge(element, message, 'error');
 }
 
 // Check if an element contains form fields with data-gofakeit attributes
@@ -695,7 +712,7 @@ function removeExistingBadges(element: Element): void {
 }
 
 // Display a small badge showing the function used for this field
-export function showFunctionBadge(element: Element, funcName: string): void {
+export function showFunctionBadge(element: Element, funcName: string, status: 'success' | 'error' = 'success'): void {
   if (!(element instanceof HTMLElement)) return;
 
   // Remove any existing badges for this element
@@ -704,8 +721,6 @@ export function showFunctionBadge(element: Element, funcName: string): void {
   const badge = document.createElement('div');
   badge.textContent = funcName;
   badge.style.position = 'fixed';
-  badge.style.background = GOFAKEIT_COLORS.primary;
-  badge.style.color = '#000';
   badge.style.fontFamily = 'Arial, sans-serif';
   badge.style.fontSize = '11px';
   badge.style.padding = '3px 8px';
@@ -716,6 +731,16 @@ export function showFunctionBadge(element: Element, funcName: string): void {
   badge.style.transform = 'translateY(-6px)';
   badge.style.transition = 'opacity 200ms ease, transform 200ms ease';
   badge.style.pointerEvents = 'none';
+
+  // Apply styling based on status
+  if (status === 'error') {
+    badge.style.background = GOFAKEIT_COLORS.error;
+    badge.style.color = '#fff';
+    badge.style.border = `1px solid ${GOFAKEIT_COLORS.error}`;
+  } else {
+    badge.style.background = GOFAKEIT_COLORS.primary;
+    badge.style.color = '#000';
+  }
 
   const updatePosition = () => {
     const rect = element.getBoundingClientRect();
