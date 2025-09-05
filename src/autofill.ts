@@ -5,7 +5,6 @@ import { handleCheckbox, handleRadio, handleSelectWithFunction } from './input-m
 import { handleNumberInput, handleRangeInput, getRangeInput, setNumberInput, setRangeInput } from './input-number';
 import { callMultiFunc, MultiFuncRequest, searchMultiFunc, FuncSearchRequest } from './api';
 
-// Settings interface for autofill configuration
 export interface AutofillSettings {
   smart?: boolean;
   staggered?: boolean;
@@ -17,13 +16,26 @@ export interface AutofillSettings {
 // ============================================================================
 
 // Unified autofill function that handles all cases
-export async function autofill(target?: HTMLElement | Element, settings?: AutofillSettings): Promise<boolean | void> {
+export async function autofill(target?: HTMLElement | Element | string, settings?: AutofillSettings): Promise<boolean | void> {
   const defaultSettings: AutofillSettings = { smart: true }; // Default to true for backward compatibility
   const finalSettings = { ...defaultSettings, ...settings };
   
   // No parameters - autofill all form fields on the page
   if (!target) {
     return autofillAll(finalSettings);
+  }
+
+  // If target is a string, treat it as a CSS selector (ID, class, or other selector)
+  if (typeof target === 'string') {
+    const element = document.querySelector(target) as HTMLElement;
+    if (element) {
+      console.log(`[Gofakeit] Found element with selector "${target}":`, element);
+      target = element;
+    } else {
+      console.warn(`[Gofakeit] No element found with selector: "${target}"`);
+      showNotification(`No element found with selector: ${target}`, 'error');
+      return false;
+    }
   }
   
   // If target is a container (has form fields), autofill the container
@@ -128,7 +140,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
       const funcToUse = (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : 'true';
       const { success, usedFunc } = await handleSelectWithFunction(element, funcToUse);
       if (success) {
-        showFuncBadge(element, usedFunc, settings);
+        showBadgeWithTiming(element, usedFunc, settings);
       }
       return success;
     }
@@ -138,7 +150,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
       const funcToUse = (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : 'sentence';
       const { success, usedFunc } = await handleTextarea(element, funcToUse);
       if (success) {
-        showFuncBadge(element, usedFunc, settings);
+        showBadgeWithTiming(element, usedFunc, settings);
       }
       return success;
     }
@@ -152,7 +164,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
         const passToHandler = (gofakeitFunc && gofakeitFunc !== 'true') ? gofakeitFunc : 'true';
         const { success, usedFunc } = await handleCheckbox(element, passToHandler);
         if (success) {
-          showFuncBadge(element, usedFunc, settings);
+          showBadgeWithTiming(element, usedFunc, settings);
         }
         return success;
       }
@@ -164,7 +176,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
         if (success) {
           // Show function badge over the selected radio button, not the original one
           const elementToShowBadge = selectedElement || element;
-          showFuncBadge(elementToShowBadge, usedFunc, settings);
+          showBadgeWithTiming(elementToShowBadge, usedFunc, settings);
         }
         return success;
       }
@@ -173,7 +185,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
       if (inputType === 'range') {
         const { success, usedFunc } = await handleRangeInput(element);
         if (success) {
-          showFuncBadge(element, usedFunc, settings);
+          showBadgeWithTiming(element, usedFunc, settings);
         }
         return success;
       }
@@ -185,7 +197,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
       if (inputType === 'number') {
         const { success, usedFunc } = await handleNumberInput(element, inferred);
         if (success) {
-          showFuncBadge(element, usedFunc, settings);
+          showBadgeWithTiming(element, usedFunc, settings);
         }
         return success;
       }
@@ -194,7 +206,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
           inputType === 'month' || inputType === 'week') {
         const { success, usedFunc } = await handleDateTimeInput(element, inferred);
         if (success) {
-          showFuncBadge(element, usedFunc, settings);
+          showBadgeWithTiming(element, usedFunc, settings);
         }
         return success;
       }
@@ -202,7 +214,7 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
       // Handle text inputs (text, email, tel, password, search, url, color, etc.)
       const { success, usedFunc } = await handleTextInput(element, inferred);
       if (success) {
-        showFuncBadge(element, usedFunc, settings);
+        showBadgeWithTiming(element, usedFunc, settings);
       }
       return success;
     }
@@ -538,18 +550,6 @@ async function getElementFunction(element: Element, settings: AutofillSettings):
   }
 }
 
-// Show function badge with a slight delay for visual effect
-function showFuncBadge(element: Element, func: string, settings?: AutofillSettings): void {
-  const testMode = (globalThis as any).__GOFAKEIT_TEST_MODE__;
-  const staggered = testMode ? false : (settings?.staggered ?? true);
-  const staggerDelay = settings?.staggerDelay ?? 50;
-  
-  // Only delay the badge if staggered is enabled, using the staggerDelay from settings
-  const actualDelay = staggered ? staggerDelay : 0;
-  setTimeout(() => {
-    showFunctionBadge(element, func);
-  }, actualDelay);
-}
 
 // Autofill an element with a pre-fetched value (for batch processing)
 async function autofillElementWithValue(element: Element, func: string, value: string, settings?: AutofillSettings): Promise<boolean> {
@@ -558,7 +558,7 @@ async function autofillElementWithValue(element: Element, func: string, value: s
     if (element instanceof HTMLSelectElement) {
       const { success, usedFunc } = await handleSelectWithFunction(element, func, value);
       if (success) {
-        showFuncBadge(element, usedFunc, settings);
+        showBadgeWithTiming(element, usedFunc, settings);
       }
       return success;
     }
@@ -566,7 +566,7 @@ async function autofillElementWithValue(element: Element, func: string, value: s
     // Handle textarea elements
     if (element instanceof HTMLTextAreaElement) {
       setTextarea(element, value);
-      showFuncBadge(element, func, settings);
+      showBadgeWithTiming(element, func, settings);
       return true;
     }
     
@@ -578,7 +578,7 @@ async function autofillElementWithValue(element: Element, func: string, value: s
       if (inputType === 'checkbox') {
         const { success, usedFunc } = await handleCheckbox(element, func, value);
         if (success) {
-          showFuncBadge(element, usedFunc, settings);
+          showBadgeWithTiming(element, usedFunc, settings);
         }
         return success;
       }
@@ -587,7 +587,7 @@ async function autofillElementWithValue(element: Element, func: string, value: s
       if (inputType === 'radio') {
         const { success, usedFunc } = await handleRadio(element, func, value);
         if (success) {
-          showFuncBadge(element, usedFunc, settings);
+          showBadgeWithTiming(element, usedFunc, settings);
         }
         return success;
       }
@@ -595,14 +595,14 @@ async function autofillElementWithValue(element: Element, func: string, value: s
       // Handle number inputs
       if (inputType === 'number') {
         setNumberInput(element, value);
-        showFuncBadge(element, func, settings);
+        showBadgeWithTiming(element, func, settings);
         return true;
       }
       
       // Handle range inputs
       if (inputType === 'range') {
         setRangeInput(element, value);
-        showFuncBadge(element, func, settings);
+        showBadgeWithTiming(element, func, settings);
         return true;
       }
       
@@ -611,14 +611,14 @@ async function autofillElementWithValue(element: Element, func: string, value: s
           inputType === 'month' || inputType === 'week') {
         const { success, usedFunc } = await handleDateTimeInput(element, func, value);
         if (success) {
-          showFuncBadge(element, usedFunc, settings);
+          showBadgeWithTiming(element, usedFunc, settings);
         }
         return success;
       }
       
       // Handle text inputs (text, email, tel, password, search, url, color, etc.)
       setTextInput(element, value);
-      showFuncBadge(element, func, settings);
+      showBadgeWithTiming(element, func, settings);
       return true;
     }
     
@@ -656,10 +656,23 @@ function showResults(successfulCount: number, failedCount: number, context: stri
 // UTILITY FUNCTIONS (Called by various functions)
 // ============================================================================
 
+// Show function badge with staggered timing
+function showBadgeWithTiming(element: Element, func: string, settings?: AutofillSettings): void {
+  const testMode = (globalThis as any).__GOFAKEIT_TEST_MODE__;
+  const staggered = testMode ? false : (settings?.staggered ?? true);
+  const staggerDelay = settings?.staggerDelay ?? 50;
+  
+  // Only delay the badge if staggered is enabled, using the staggerDelay from settings
+  const actualDelay = staggered ? staggerDelay : 0;
+  setTimeout(() => {
+    showFunctionBadge(element, func);
+  }, actualDelay);
+}
+
 // Handle error display and field highlighting
 export function handleError(element: Element, error: string, functionName?: string): void {
   if (element instanceof HTMLElement) {
-    element.style.border = `2px solid ${GOFAKEIT_COLORS.error}`;
+    element.style.border = `2px solid #dc3545`;
     
     setTimeout(() => {
       element.style.border = '';
@@ -670,9 +683,9 @@ export function handleError(element: Element, error: string, functionName?: stri
   showFunctionBadge(element, message, 'error');
 }
 
-// Check if an element contains form fields with data-gofakeit attributes
+// Check if an element contains form fields
 export function hasFormFields(element: HTMLElement): boolean {
-  const formFields = element.querySelectorAll('input[data-gofakeit], textarea[data-gofakeit], select[data-gofakeit]');
+  const formFields = element.querySelectorAll('input, textarea, select');
   return formFields.length > 0;
 }
 
@@ -682,130 +695,6 @@ export function isFormField(element: HTMLElement): boolean {
     (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA' || element.tagName === 'SELECT') &&
     element.hasAttribute('data-gofakeit')
   );
-}
-
-// Global tracking of active function badges
-const activeBadges = new Map<Element, { badge: HTMLElement; timeout: ReturnType<typeof setTimeout>; cleanup: () => void }>();
-
-// Remove existing badges for a specific element
-function removeExistingBadges(element: Element): void {
-  // For radio buttons, remove badges for all radio buttons in the same group
-  if (element instanceof HTMLInputElement && element.type === 'radio' && element.name) {
-    const radioGroup = document.querySelectorAll(`input[type="radio"][name="${element.name}"]`);
-    radioGroup.forEach(radio => {
-      const existing = activeBadges.get(radio);
-      if (existing) {
-        clearTimeout(existing.timeout);
-        existing.cleanup();
-        activeBadges.delete(radio);
-      }
-    });
-  } else {
-    // For other elements, just remove the badge for this specific element
-    const existing = activeBadges.get(element);
-    if (existing) {
-      clearTimeout(existing.timeout);
-      existing.cleanup();
-      activeBadges.delete(element);
-    }
-  }
-}
-
-// Display a small badge showing the function used for this field
-export function showFunctionBadge(element: Element, funcName: string, status: 'success' | 'error' = 'success'): void {
-  if (!(element instanceof HTMLElement)) return;
-
-  // Remove any existing badges for this element
-  removeExistingBadges(element);
-
-  const badge = document.createElement('div');
-  badge.textContent = funcName;
-  badge.style.position = 'fixed';
-  badge.style.fontFamily = 'Arial, sans-serif';
-  badge.style.fontSize = '11px';
-  badge.style.padding = '3px 8px';
-  badge.style.borderRadius = '6px';
-  badge.style.boxShadow = '0 2px 6px rgba(0,0,0,0.25)';
-  badge.style.zIndex = '2147483647';
-  badge.style.opacity = '0';
-  badge.style.transform = 'translateY(-6px)';
-  badge.style.transition = 'opacity 200ms ease, transform 200ms ease';
-  badge.style.pointerEvents = 'none';
-
-  // Apply styling based on status
-  if (status === 'error') {
-    badge.style.background = GOFAKEIT_COLORS.error;
-    badge.style.color = '#fff';
-    badge.style.border = `1px solid ${GOFAKEIT_COLORS.error}`;
-  } else {
-    badge.style.background = GOFAKEIT_COLORS.primary;
-    badge.style.color = '#000';
-  }
-
-  const updatePosition = () => {
-    const rect = element.getBoundingClientRect();
-    const vh = window.innerHeight || document.documentElement.clientHeight;
-    const vw = window.innerWidth || document.documentElement.clientWidth;
-
-    // If the element is completely out of the viewport, hide the badge entirely
-    const outOfView = rect.bottom <= 0 || rect.top >= vh || rect.right <= 0 || rect.left >= vw;
-    if (outOfView) {
-      badge.style.display = 'none';
-      return;
-    }
-
-    // Otherwise, ensure it's visible and position above-left of the field
-    if (badge.style.display === 'none') badge.style.display = 'block';
-    const top = rect.top - 8;
-    const left = rect.left;
-    badge.style.top = `${top}px`;
-    badge.style.left = `${left}px`;
-  };
-
-  document.body.appendChild(badge);
-  updatePosition();
-
-  // Animate in
-  requestAnimationFrame(() => {
-    badge.style.opacity = '1';
-    badge.style.transform = 'translateY(-12px)';
-  });
-
-  // Track movement while visible
-  const onScroll = () => updatePosition();
-  const onResize = () => updatePosition();
-  window.addEventListener('scroll', onScroll, true);
-  window.addEventListener('resize', onResize, true);
-
-  // Observe element size/position changes
-  let ro: ResizeObserver | null = null;
-  if (typeof ResizeObserver !== 'undefined') {
-    ro = new ResizeObserver(() => updatePosition());
-    try { ro.observe(element); } catch { /* ignore */ }
-  }
-
-  // Create cleanup function
-  const cleanup = () => {
-    window.removeEventListener('scroll', onScroll, true);
-    window.removeEventListener('resize', onResize, true);
-    if (ro) {
-      try { ro.disconnect(); } catch { /* ignore */ }
-      ro = null;
-    }
-    if (badge.parentNode) badge.parentNode.removeChild(badge);
-    activeBadges.delete(element);
-  };
-
-  // Animate out and remove after extended delay
-  const DISPLAY_MS = 6000;
-  const timeout = setTimeout(() => {
-    badge.style.opacity = '0';
-    badge.style.transform = 'translateY(-6px)';
-    setTimeout(cleanup, 220);
-  }, DISPLAY_MS);
-
-  // Track this badge
-  activeBadges.set(element, { badge, timeout, cleanup });
 }
 
 // Extract nearby/associated label text for context
@@ -1055,4 +944,158 @@ export function findFormContainer(element: HTMLElement): HTMLElement | null {
 // Simple notification function (can be overridden by the consuming application)
 function showNotification(message: string, type: 'success' | 'error' | 'info' = 'info'): void {
   console.log(`[Gofakeit ${type.toUpperCase()}] ${message}`);
+}
+
+// ============================================================================
+// BADGE FUNCTIONALITY
+// ============================================================================
+
+// Global tracking of active function badges
+const activeBadges = new Map<
+  Element,
+  {
+    badge: HTMLElement;
+    timeout: ReturnType<typeof setTimeout>;
+    cleanup: () => void;
+  }
+>();
+
+// Display a small badge showing the function used for this field
+export function showFunctionBadge(
+  element: Element,
+  funcName: string,
+  status: "success" | "error" = "success"
+): void {
+  if (!(element instanceof HTMLElement)) return;
+
+  // Remove any existing badges for this element
+  removeExistingBadges(element);
+
+  const badge = document.createElement("div");
+  badge.textContent = funcName;
+  badge.style.position = "fixed";
+  badge.style.fontFamily = "Arial, sans-serif";
+  badge.style.fontSize = "11px";
+  badge.style.padding = "3px 8px";
+  badge.style.borderRadius = "6px";
+  badge.style.boxShadow = "0 2px 6px rgba(0,0,0,0.25)";
+  badge.style.zIndex = "2147483647";
+  badge.style.opacity = "0";
+  badge.style.transform = "translateY(-6px)";
+  badge.style.transition = "opacity 200ms ease, transform 200ms ease";
+  badge.style.pointerEvents = "none";
+
+  // Apply styling based on status
+  if (status === "error") {
+    badge.style.background = GOFAKEIT_COLORS.error;
+    badge.style.color = "#fff";
+    badge.style.border = `1px solid ${GOFAKEIT_COLORS.error}`;
+  } else {
+    badge.style.background = GOFAKEIT_COLORS.primary;
+    badge.style.color = "#000";
+  }
+
+  const updatePosition = () => {
+    const rect = element.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const vw = window.innerWidth || document.documentElement.clientWidth;
+
+    // If the element is completely out of the viewport, hide the badge entirely
+    const outOfView =
+      rect.bottom <= 0 || rect.top >= vh || rect.right <= 0 || rect.left >= vw;
+    if (outOfView) {
+      badge.style.display = "none";
+      return;
+    }
+
+    // Otherwise, ensure it's visible and position above-left of the field
+    if (badge.style.display === "none") badge.style.display = "block";
+    const top = rect.top - 8;
+    const left = rect.left;
+    badge.style.top = `${top}px`;
+    badge.style.left = `${left}px`;
+  };
+
+  document.body.appendChild(badge);
+  updatePosition();
+
+  // Animate in
+  requestAnimationFrame(() => {
+    badge.style.opacity = "1";
+    badge.style.transform = "translateY(-12px)";
+  });
+
+  // Track movement while visible
+  const onScroll = () => updatePosition();
+  const onResize = () => updatePosition();
+  window.addEventListener("scroll", onScroll, true);
+  window.addEventListener("resize", onResize, true);
+
+  // Observe element size/position changes
+  let ro: ResizeObserver | null = null;
+  if (typeof ResizeObserver !== "undefined") {
+    ro = new ResizeObserver(() => updatePosition());
+    try {
+      ro.observe(element);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  // Create cleanup function
+  const cleanup = () => {
+    window.removeEventListener("scroll", onScroll, true);
+    window.removeEventListener("resize", onResize, true);
+    if (ro) {
+      try {
+        ro.disconnect();
+      } catch {
+        /* ignore */
+      }
+      ro = null;
+    }
+    if (badge.parentNode) badge.parentNode.removeChild(badge);
+    activeBadges.delete(element);
+  };
+
+  // Animate out and remove after extended delay
+  const DISPLAY_MS = 6000;
+  const timeout = setTimeout(() => {
+    badge.style.opacity = "0";
+    badge.style.transform = "translateY(-6px)";
+    setTimeout(cleanup, 220);
+  }, DISPLAY_MS);
+
+  // Track this badge
+  activeBadges.set(element, { badge, timeout, cleanup });
+}
+
+// Remove existing badges for a specific element
+function removeExistingBadges(element: Element): void {
+  // For radio buttons, remove badges for all radio buttons in the same group
+  if (
+    element instanceof HTMLInputElement &&
+    element.type === "radio" &&
+    element.name
+  ) {
+    const radioGroup = document.querySelectorAll(
+      `input[type="radio"][name="${element.name}"]`
+    );
+    radioGroup.forEach((radio) => {
+      const existing = activeBadges.get(radio);
+      if (existing) {
+        clearTimeout(existing.timeout);
+        existing.cleanup();
+        activeBadges.delete(radio);
+      }
+    });
+  } else {
+    // For other elements, just remove the badge for this specific element
+    const existing = activeBadges.get(element);
+    if (existing) {
+      clearTimeout(existing.timeout);
+      existing.cleanup();
+      activeBadges.delete(element);
+    }
+  }
 }
