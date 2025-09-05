@@ -46,8 +46,8 @@ import { autofill, type AutofillSettings } from 'gofakeit'
 await autofill()
 
 // Autofill with custom settings
-await autofill(undefined, { smart: true }) // Enable smart-fill mode
-await autofill(undefined, { smart: false }) // Only fill fields with data-gofakeit attributes
+await autofill(undefined, { mode: 'auto' }) // Enable auto-fill mode (default)
+await autofill(undefined, { mode: 'manual' }) // Only fill fields with data-gofakeit attributes
 
 // Autofill using string selectors (NEW!)
 await autofill('#myForm') // Target by ID
@@ -56,11 +56,11 @@ await autofill('.form-section input[type="email"]') // Complex CSS selector
 
 // Autofill all fields within a specific container
 const form = document.getElementById('myForm')
-await autofill(form, { smart: true })
+await autofill(form, { mode: 'auto' })
 
 // Autofill a single form element
 const input = document.getElementById('email')
-await autofill(input, { smart: false })
+await autofill(input, { mode: 'manual' })
 ```
 
 ### Settings
@@ -69,14 +69,14 @@ The `autofill()` function accepts an optional settings object:
 
 ```typescript
 interface AutofillSettings {
-  smart?: boolean;        // Default: true - Enable smart form field detection
-  staggered?: boolean;    // Default: true - Add delays between field fills for visual effect
-  staggerDelay?: number;  // Default: 50 - Delay in milliseconds between field fills
+  mode?: 'auto' | 'manual'; // Default: 'auto' - Control which fields to fill
+  staggered?: boolean;      // Default: true - Add delays between field fills for visual effect
+  staggerDelay?: number;    // Default: 50 - Delay in milliseconds between field fills
 }
 ```
 
-- **`smart: true`** (default): Fills ALL form fields on the page, intelligently detecting appropriate data types using the search API
-- **`smart: false`**: Only fills fields that have explicit `data-gofakeit` attributes (manual mode)
+- **`mode: 'auto'`** (default): Fills ALL form fields on the page, intelligently detecting appropriate data types using the search API
+- **`mode: 'manual'`**: Only fills fields that have explicit `data-gofakeit` attributes
 - **`staggered: true`** (default): Adds visual delays between field fills for better user experience
 - **`staggered: false`**: Fills all fields instantly (fast mode)
 - **`staggerDelay: number`**: Customize the delay between field fills (default: 50ms)
@@ -129,10 +129,10 @@ You can control autofill behavior using HTML data attributes:
 <!-- Specify a specific function -->
 <input type="text" data-gofakeit="email" />
 
-<!-- Enable autofill (always filled, regardless of smart mode) -->
+<!-- Enable autofill (always filled, regardless of mode) -->
 <input type="text" data-gofakeit="true" />
 
-<!-- No attribute: Only filled in Smart Mode (default) -->
+<!-- No attribute: Only filled in Auto Mode (default) -->
 <input type="text" />
 ```
 
