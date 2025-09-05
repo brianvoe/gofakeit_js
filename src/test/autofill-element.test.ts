@@ -310,10 +310,10 @@ describe('Autofill Single Element', () => {
         expect(hasFormFields(container)).toBe(true)
       })
 
-      it('should return false when container has no form fields with data-gofakeit', () => {
+      it('should return true when container has form fields without data-gofakeit', () => {
         const container = document.createElement('div')
         container.innerHTML = '<input type="text" />'
-        expect(hasFormFields(container)).toBe(false)
+        expect(hasFormFields(container)).toBe(true)
       })
 
       it('should return false when container has no form fields', () => {
@@ -374,6 +374,245 @@ describe('Autofill Single Element', () => {
 
       const result = await autofill(weekInput)
       expect(result).toBe(true)
+    })
+  })
+
+  describe('String Selector Support', () => {
+    it('should autofill element by ID selector', async () => {
+      const input = document.createElement('input')
+      input.type = 'text'
+      input.id = 'test-input-id'
+      input.setAttribute('data-gofakeit', 'word')
+      document.body.appendChild(input)
+
+      const result = await autofill('#test-input-id')
+      expect(result).toBe(true)
+      expect(input.value).toBeTruthy()
+    })
+
+    it('should autofill element by class selector', async () => {
+      const input = document.createElement('input')
+      input.type = 'email'
+      input.className = 'test-input-class'
+      input.setAttribute('data-gofakeit', 'email')
+      document.body.appendChild(input)
+
+      const result = await autofill('.test-input-class')
+      expect(result).toBe(true)
+      expect(input.value).toBeTruthy()
+    })
+
+    it('should autofill container by ID selector', async () => {
+      const container = document.createElement('div')
+      container.id = 'test-container-id'
+      
+      const input1 = document.createElement('input')
+      input1.type = 'text'
+      input1.setAttribute('data-gofakeit', 'word')
+      
+      const input2 = document.createElement('input')
+      input2.type = 'email'
+      input2.setAttribute('data-gofakeit', 'email')
+      
+      container.appendChild(input1)
+      container.appendChild(input2)
+      document.body.appendChild(container)
+
+      const result = await autofill('#test-container-id')
+      // autofillContainer returns void, so result will be undefined
+      expect(result).toBeUndefined()
+      expect(input1.value).toBeTruthy()
+      expect(input2.value).toBeTruthy()
+    })
+
+    it('should return false for non-existent selector', async () => {
+      const result = await autofill('#non-existent-element')
+      expect(result).toBe(false)
+    })
+
+    it('should handle complex CSS selectors', async () => {
+      const container = document.createElement('div')
+      container.className = 'form-section'
+      
+      const input = document.createElement('input')
+      input.type = 'text'
+      input.className = 'form-input'
+      input.setAttribute('data-gofakeit', 'word')
+      
+      container.appendChild(input)
+      document.body.appendChild(container)
+
+      const result = await autofill('.form-section .form-input')
+      expect(result).toBe(true)
+      expect(input.value).toBeTruthy()
+    })
+  })
+
+  describe('Scope Isolation Tests', () => {
+    it('should only fill inputs within the targeted container', async () => {
+      // Create two separate containers with inputs
+      const container1 = document.createElement('div')
+      container1.id = 'container-1'
+      
+      const container2 = document.createElement('div')
+      container2.id = 'container-2'
+      
+      // Add inputs to both containers
+      const input1 = document.createElement('input')
+      input1.type = 'text'
+      input1.id = 'input-1'
+      input1.setAttribute('data-gofakeit', 'word')
+      
+      const input2 = document.createElement('input')
+      input2.type = 'text'
+      input2.id = 'input-2'
+      input2.setAttribute('data-gofakeit', 'word')
+      
+      const input3 = document.createElement('input')
+      input3.type = 'text'
+      input3.id = 'input-3'
+      input3.setAttribute('data-gofakeit', 'word')
+      
+      const input4 = document.createElement('input')
+      input4.type = 'text'
+      input4.id = 'input-4'
+      input4.setAttribute('data-gofakeit', 'word')
+      
+      container1.appendChild(input1)
+      container1.appendChild(input2)
+      container2.appendChild(input3)
+      container2.appendChild(input4)
+      
+      document.body.appendChild(container1)
+      document.body.appendChild(container2)
+      
+      // Clear all inputs first
+      input1.value = ''
+      input2.value = ''
+      input3.value = ''
+      input4.value = ''
+      
+      // Autofill only container1
+      await autofill('#container-1')
+      
+      // Only inputs in container1 should be filled
+      expect(input1.value).toBeTruthy()
+      expect(input2.value).toBeTruthy()
+      expect(input3.value).toBe('')
+      expect(input4.value).toBe('')
+    })
+
+    it('should only fill the specific targeted element', async () => {
+      // Create multiple inputs
+      const input1 = document.createElement('input')
+      input1.type = 'text'
+      input1.id = 'specific-input-1'
+      input1.setAttribute('data-gofakeit', 'word')
+      
+      const input2 = document.createElement('input')
+      input2.type = 'text'
+      input2.id = 'specific-input-2'
+      input2.setAttribute('data-gofakeit', 'word')
+      
+      const input3 = document.createElement('input')
+      input3.type = 'text'
+      input3.id = 'specific-input-3'
+      input3.setAttribute('data-gofakeit', 'word')
+      
+      document.body.appendChild(input1)
+      document.body.appendChild(input2)
+      document.body.appendChild(input3)
+      
+      // Clear all inputs first
+      input1.value = ''
+      input2.value = ''
+      input3.value = ''
+      
+      // Autofill only the specific input
+      const result = await autofill('#specific-input-2')
+      
+      // Only the targeted input should be filled
+      expect(result).toBe(true)
+      expect(input1.value).toBe('')
+      expect(input2.value).toBeTruthy()
+      expect(input3.value).toBe('')
+    })
+
+    it('should not fill inputs outside the targeted container when using class selector', async () => {
+      // Create containers with same class name but different contexts
+      const container1 = document.createElement('div')
+      container1.className = 'test-container'
+      
+      const container2 = document.createElement('div')
+      container2.className = 'test-container'
+      
+      // Add inputs to both containers
+      const input1 = document.createElement('input')
+      input1.type = 'text'
+      input1.setAttribute('data-gofakeit', 'word')
+      
+      const input2 = document.createElement('input')
+      input2.type = 'text'
+      input2.setAttribute('data-gofakeit', 'word')
+      
+      const input3 = document.createElement('input')
+      input3.type = 'text'
+      input3.className = 'test-container'
+      input3.setAttribute('data-gofakeit', 'word')
+      
+      container1.appendChild(input1)
+      container2.appendChild(input2)
+      document.body.appendChild(container1)
+      document.body.appendChild(container2)
+      document.body.appendChild(input3)
+      
+      // Clear all inputs first
+      input1.value = ''
+      input2.value = ''
+      input3.value = ''
+      
+      // Autofill only the first container
+      await autofill(container1)
+      
+      // Only input in the first container should be filled
+      expect(input1.value).toBeTruthy()
+      expect(input2.value).toBe('')
+      expect(input3.value).toBe('')
+    })
+
+    it('should not fill inputs with data-gofakeit="false" even when in targeted container', async () => {
+      const container = document.createElement('div')
+      container.id = 'mixed-container'
+      
+      const input1 = document.createElement('input')
+      input1.type = 'text'
+      input1.setAttribute('data-gofakeit', 'word')
+      
+      const input2 = document.createElement('input')
+      input2.type = 'text'
+      input2.setAttribute('data-gofakeit', 'false')
+      
+      const input3 = document.createElement('input')
+      input3.type = 'text'
+      input3.setAttribute('data-gofakeit', 'word')
+      
+      container.appendChild(input1)
+      container.appendChild(input2)
+      container.appendChild(input3)
+      document.body.appendChild(container)
+      
+      // Clear all inputs first
+      input1.value = ''
+      input2.value = ''
+      input3.value = ''
+      
+      // Autofill the container
+      await autofill('#mixed-container')
+      
+      // Only inputs without data-gofakeit="false" should be filled
+      expect(input1.value).toBeTruthy()
+      expect(input2.value).toBe('')
+      expect(input3.value).toBeTruthy()
     })
   })
 })
