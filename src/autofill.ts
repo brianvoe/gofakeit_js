@@ -1,12 +1,13 @@
 import { GOFAKEIT_COLORS } from './styles';
+import { callMultiFunc, MultiFuncRequest, searchMultiFunc, FuncSearchRequest } from './api';
+// Inputs
 import { handleDateTimeInput } from './input-datetime';
 import { handleTextInput, handleTextarea, getTextarea, setTextInput, setTextarea } from './input-text';
 import { handleCheckbox, handleRadio, handleSelectWithFunction } from './input-misc';
 import { handleNumberInput, handleRangeInput, getRangeInput, setNumberInput, setRangeInput } from './input-number';
-import { callMultiFunc, MultiFuncRequest, searchMultiFunc, FuncSearchRequest } from './api';
 
 export interface AutofillSettings {
-  smart?: boolean;
+  mode?: 'auto' | 'manual';
   staggered?: boolean;
   staggerDelay?: number;
 }
@@ -17,7 +18,7 @@ export interface AutofillSettings {
 
 // Unified autofill function that handles all cases
 export async function autofill(target?: HTMLElement | Element | string, settings?: AutofillSettings): Promise<boolean | void> {
-  const defaultSettings: AutofillSettings = { smart: true }; // Default to true for backward compatibility
+  const defaultSettings: AutofillSettings = { mode: 'auto' }; // Default to auto for backward compatibility
   const finalSettings = { ...defaultSettings, ...settings };
   
   // No parameters - autofill all form fields on the page
@@ -67,18 +68,18 @@ export async function autofill(target?: HTMLElement | Element | string, settings
 // Autofill all form fields on the page
 async function autofillAll(settings: AutofillSettings): Promise<void> {
   const elements = queryFormElements();
-  const smartMode = settings.smart ?? true;
+  const mode = settings.mode ?? 'auto';
 
-  // Smart mode: Fill ALL form fields (except those explicitly excluded)
+  // Auto mode: Fill ALL form fields (except those explicitly excluded)
   // Manual mode: Only fill fields with data-gofakeit attributes
-  const targetsBase = smartMode
+  const targetsBase = mode === 'auto'
     ? elements
     : elements.filter((el) => (el as Element).hasAttribute('data-gofakeit'));
   const targets = targetsBase.filter((el) => !isDataGofakeitFalse(el));
 
   if (targets.length === 0) {
-    if (!smartMode) {
-      showNotification('No data-gofakeit fields exist. Turn on Smart mode to fill all form fields.', 'info');
+    if (mode === 'manual') {
+      showNotification('No data-gofakeit fields exist. Set mode to "auto" to fill all form fields.', 'info');
     } else {
       showNotification('No form fields found to autofill', 'info');
     }
@@ -95,18 +96,18 @@ async function autofillAll(settings: AutofillSettings): Promise<void> {
 // Autofill all fields within a specific container
 async function autofillContainer(container: HTMLElement, settings: AutofillSettings): Promise<void> {
   const elements = queryFormElements(container);
-  const smartMode = settings.smart ?? true;
+  const mode = settings.mode ?? 'auto';
 
-  // Smart mode: Fill ALL form fields in container (except those explicitly excluded)
+  // Auto mode: Fill ALL form fields in container (except those explicitly excluded)
   // Manual mode: Only fill fields with data-gofakeit attributes
-  const targetsBase = smartMode
+  const targetsBase = mode === 'auto'
     ? elements
     : elements.filter((el) => (el as Element).hasAttribute('data-gofakeit'));
   const targets = targetsBase.filter((el) => !isDataGofakeitFalse(el));
 
   if (targets.length === 0) {
-    if (!smartMode) {
-      showNotification('No data-gofakeit fields exist in this section. Turn on Smart mode to fill all form fields.', 'info');
+    if (mode === 'manual') {
+      showNotification('No data-gofakeit fields exist in this section. Set mode to "auto" to fill all form fields.', 'info');
     } else {
       showNotification('No form fields found in this container', 'info');
     }
@@ -127,10 +128,10 @@ async function autofillElement(element: Element, settings: AutofillSettings): Pr
     return false;
   }
   
-  const smartMode = settings.smart ?? true;
-  // Smart mode: Fill any form field (even without data-gofakeit attribute)
+  const mode = settings.mode ?? 'auto';
+  // Auto mode: Fill any form field (even without data-gofakeit attribute)
   // Manual mode: Only fill fields that have data-gofakeit attributes
-  if (!gofakeitFunc && !smartMode) {
+  if (!gofakeitFunc && mode === 'manual') {
     return false;
   }
 
@@ -355,7 +356,7 @@ async function processElements(elements: Element[], settings: AutofillSettings):
         // Check if this is an excluded type that should be processed individually
         if (element instanceof HTMLInputElement) {
           const inputType = element.type.toLowerCase();
-          if (['checkbox', 'radio', 'range', 'file', 'button', 'submit', 'reset', 'image', 'color', 'date', 'time', 'datetime-local', 'month', 'week'].includes(inputType)) {
+          if (['checkbox', 'radio', 'range', 'file', 'button', 'submit', 'reset', 'image', 'date', 'time', 'datetime-local', 'month', 'week'].includes(inputType)) {
             // Process excluded types individually
             excludedElements.push(element);
             continue;
@@ -497,8 +498,8 @@ async function getElementFunction(element: Element, settings: AutofillSettings):
     return null;
   }
   
-  const smartMode = settings.smart ?? true;
-  if (!gofakeitFunc && !smartMode) {
+  const mode = settings.mode ?? 'auto';
+  if (!gofakeitFunc && mode === 'manual') {
     return null;
   }
 
@@ -728,7 +729,7 @@ function getAssociatedLabelText(input: HTMLInputElement): string {
 // Determine if an input type needs search API for function detection
 function needsSearchApi(inputType: string): boolean {
   // These input types have their own specific handling and don't need search API
-  const skipSearchTypes = ['checkbox', 'radio', 'select', 'range', 'file', 'button', 'submit', 'reset', 'image', 'color', 'week', 'date', 'time', 'datetime-local', 'month'];
+  const skipSearchTypes = ['checkbox', 'radio', 'select', 'range', 'file', 'button', 'submit', 'reset', 'image', 'week', 'date', 'time', 'datetime-local', 'month'];
   return !skipSearchTypes.includes(inputType);
 }
 
@@ -748,8 +749,6 @@ export function getDefaultFunctionForInputType(inputType: string): string {
     case 'reset':
     case 'image':
       return 'word';
-    case 'color':
-      return 'hexcolor';
     case 'week':
       return 'generateWeek';
     case 'date':
@@ -791,7 +790,7 @@ function getTypeSpecificFallback(inputType: string): string {
     case 'search':
       return 'word';
     case 'color':
-      return 'color';
+      return 'hexcolor';
     case 'text':
     default:
       return 'word';

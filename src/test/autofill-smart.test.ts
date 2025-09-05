@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { autofill } from '../autofill';
 
-describe('Autofill Smart Mode', () => {
+describe('Autofill Mode', () => {
   beforeEach(() => {
     // Setup DOM
     document.body.innerHTML = `
@@ -14,11 +14,11 @@ describe('Autofill Smart Mode', () => {
     `;
   });
 
-  describe('Smart Mode (default)', () => {
-    it('should fill all form fields when smart is true', async () => {
+  describe('Auto Mode (default)', () => {
+    it('should fill all form fields when mode is auto', async () => {
       const container = document.getElementById('test-container') as HTMLElement;
       
-      await autofill(container, { smart: true });
+      await autofill(container, { mode: 'auto' });
       
       // Should fill field1 (has data-gofakeit="true")
       const field1 = document.getElementById('field1') as HTMLInputElement;
@@ -38,7 +38,7 @@ describe('Autofill Smart Mode', () => {
       expect(field3.value).toBe('');
     });
 
-    it('should use smart mode by default when no settings provided', async () => {
+    it('should use auto mode by default when no settings provided', async () => {
       const container = document.getElementById('test-container') as HTMLElement;
       
       await autofill(container);
@@ -52,10 +52,10 @@ describe('Autofill Smart Mode', () => {
   });
 
   describe('Manual Mode', () => {
-    it('should only fill fields with data-gofakeit attributes when smart is false', async () => {
+    it('should only fill fields with data-gofakeit attributes when mode is manual', async () => {
       const container = document.getElementById('test-container') as HTMLElement;
       
-      await autofill(container, { smart: false });
+      await autofill(container, { mode: 'manual' });
       
       // Should fill field1 (has data-gofakeit="true")
       const field1 = document.getElementById('field1') as HTMLInputElement;
@@ -84,7 +84,7 @@ describe('Autofill Smart Mode', () => {
       
       const container = document.getElementById('empty-container') as HTMLElement;
       
-      await autofill(container, { smart: false });
+      await autofill(container, { mode: 'manual' });
       
       // Fields should remain empty
       const field1 = document.getElementById('field1') as HTMLInputElement;
@@ -95,11 +95,11 @@ describe('Autofill Smart Mode', () => {
   });
 
   describe('Single Element with Settings', () => {
-    it('should respect smart setting for single element', async () => {
+    it('should respect mode setting for single element', async () => {
       const field = document.getElementById('field2') as HTMLInputElement; // email field
       
-      // Smart mode should fill the email field
-      await autofill(field, { smart: true });
+      // Auto mode should fill the email field
+      await autofill(field, { mode: 'auto' });
       expect(field.value).toBeTruthy();
       expect(field.value).toContain('@');
       
@@ -107,28 +107,28 @@ describe('Autofill Smart Mode', () => {
       field.value = '';
       
       // Manual mode should not fill the field (no data-gofakeit attribute)
-      await autofill(field, { smart: false });
+      await autofill(field, { mode: 'manual' });
       expect(field.value).toBe('');
     });
 
-    it('should fill single element with data-gofakeit attribute regardless of smart setting', async () => {
+    it('should fill single element with data-gofakeit attribute regardless of mode setting', async () => {
       const field = document.getElementById('field1') as HTMLInputElement; // has data-gofakeit="true"
       
       // Should fill in both modes
-      await autofill(field, { smart: true });
+      await autofill(field, { mode: 'auto' });
       expect(field.value).toBeTruthy();
       
       // Reset
       field.value = '';
       
-      await autofill(field, { smart: false });
+      await autofill(field, { mode: 'manual' });
       expect(field.value).toBeTruthy();
     });
   });
 
   describe('Global Autofill with Settings', () => {
-    it('should apply smart setting to all fields on page', async () => {
-      await autofill(undefined, { smart: true });
+    it('should apply mode setting to all fields on page', async () => {
+      await autofill(undefined, { mode: 'auto' });
       
       // Should fill all form fields
       const field1 = document.getElementById('field1') as HTMLInputElement;
@@ -139,8 +139,8 @@ describe('Autofill Smart Mode', () => {
       expect(field4.value).toBeTruthy();
     });
 
-    it('should only fill data-gofakeit fields when smart is false', async () => {
-      await autofill(undefined, { smart: false });
+    it('should only fill data-gofakeit fields when mode is manual', async () => {
+      await autofill(undefined, { mode: 'manual' });
       
       // Should only fill field1 (has data-gofakeit="true")
       const field1 = document.getElementById('field1') as HTMLInputElement;

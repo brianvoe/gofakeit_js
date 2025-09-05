@@ -157,7 +157,7 @@ describe('Autofill All Fields', () => {
     const form = document.getElementById('testForm') as HTMLFormElement
 
     // Test smart mode (default)
-    await autofill(undefined, { smart: true })
+    await autofill(undefined, { mode: 'auto' })
     
     // Smart mode should fill all fields except excluded ones
     const smartField = form.querySelector('[name="smartField"]') as HTMLInputElement
@@ -176,7 +176,7 @@ describe('Autofill All Fields', () => {
     manualField.value = ''
     excludedField.value = ''
 
-    await autofill(undefined, { smart: false })
+    await autofill(undefined, { mode: 'manual' })
     
     // Manual mode should only fill fields with data-gofakeit attributes
     expect(smartField.value).toBe('') // Should remain empty

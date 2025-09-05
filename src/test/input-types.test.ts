@@ -914,7 +914,7 @@ describe('Input Types Testing', () => {
       ];
       
       // Test with fast mode (no stagger) - should be relatively fast
-      const fastSettings = { smart: true, staggered: false };
+      const fastSettings = { mode: 'auto' as const, staggered: false };
       const startTime = Date.now();
       
       // Autofill all elements to test batch processing
@@ -932,7 +932,7 @@ describe('Input Types Testing', () => {
       });
       
       // Test with slow mode (with stagger) - should be slower
-      const slowSettings = { smart: true, staggered: true, staggerDelay: 100 };
+      const slowSettings = { mode: 'auto' as const, staggered: true, staggerDelay: 100 };
       const slowStartTime = Date.now();
       
       // Autofill all elements to test staggered processing
