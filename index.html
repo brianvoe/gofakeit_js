@@ -10,35 +10,12 @@
       href="https://gofakeit.com/favicon.ico"
     />
     <style>
+      /* ============================================================================
+         CSS VARIABLES
+         ============================================================================ */
+      
       :root {
-        /* Colors - Light Theme */
-        --primary-color: #007bff;
-        --primary-hover: #0056b3;
-        --secondary-color: #6c757d;
-        --secondary-hover: #545b62;
-        --success-color: #28a745;
-        --success-hover: #1e7e34;
-        --info-color: #17a2b8;
-        --info-hover: #138496;
-        --warning-color: #ffc107;
-        --warning-hover: #e0a800;
-        --danger-color: #dc3545;
-        --light-gray: #f5f5f5;
-        --border-color: #ddd;
-        --text-muted: #666;
-        --text-dark: #333;
-        --text-medium: #555;
-        --bg-light: #f8f9fa;
-        --bg-info-light: #e7f3ff;
-        --bg-main: #f5f5f5;
-        --bg-container: #ffffff;
-        --text-primary: #333;
-        --text-secondary: #666;
-        --border-main: #ddd;
-      }
-
-      /* Dark Theme Variables */
-      [data-theme="dark"] {
+        /* Colors - Dark Theme (Default) */
         --primary-color: #4dabf7;
         --primary-hover: #74c0fc;
         --secondary-color: #adb5bd;
@@ -64,6 +41,33 @@
         --border-main: #495057;
       }
 
+      /* Light Theme Variables */
+      [data-theme="light"] {
+        --primary-color: #007bff;
+        --primary-hover: #0056b3;
+        --secondary-color: #6c757d;
+        --secondary-hover: #545b62;
+        --success-color: #28a745;
+        --success-hover: #1e7e34;
+        --info-color: #17a2b8;
+        --info-hover: #138496;
+        --warning-color: #ffc107;
+        --warning-hover: #e0a800;
+        --danger-color: #dc3545;
+        --light-gray: #f5f5f5;
+        --border-color: #ddd;
+        --text-muted: #666;
+        --text-dark: #333;
+        --text-medium: #555;
+        --bg-light: #f8f9fa;
+        --bg-info-light: #e7f3ff;
+        --bg-main: #f5f5f5;
+        --bg-container: #ffffff;
+        --text-primary: #333;
+        --text-secondary: #666;
+        --border-main: #ddd;
+      }
+
       :root {
         /* Spacing */
         --spacing-sm: 8px;
@@ -76,6 +80,7 @@
         --radius-lg: 8px;
 
         /* Font sizes */
+        --font-xs: 10px;
         --font-sm: 12px;
         --font-base: 16px;
 
@@ -83,6 +88,10 @@
         --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
         --shadow-medium: -2px 0 10px rgba(0, 0, 0, 0.1);
       }
+
+      /* ============================================================================
+         BASE ELEMENTS
+         ============================================================================ */
 
       body {
         font-family: Helvetica, Arial, sans-serif;
@@ -93,14 +102,13 @@
         transition: background-color 0.3s ease;
       }
 
-      /* Utility Classes */
+      /* ============================================================================
+         SEMANTIC STYLING
+         ============================================================================ */
+
+      /* Text styling */
       .text-muted {
         color: var(--text-muted);
-        transition: color 0.3s ease;
-      }
-
-      .text-dark {
-        color: var(--text-dark);
         transition: color 0.3s ease;
       }
 
@@ -109,125 +117,17 @@
         transition: color 0.3s ease;
       }
 
-      .bg-light {
-        background: var(--bg-light);
-      }
-
-      .bg-info-light {
-        background: var(--bg-info-light);
-      }
-
-      .border-top {
-        border-top: 1px solid var(--border-color);
-      }
-
-      .p-sm {
-        padding: var(--spacing-sm);
-      }
-      .p-md {
-        padding: var(--spacing-md);
-      }
-      .p-lg {
-        padding: var(--spacing-lg);
-      }
-
-      .pt-sm {
-        padding-top: var(--spacing-sm);
-      }
-      .pt-md {
-        padding-top: var(--spacing-md);
-      }
-      .pt-lg {
-        padding-top: var(--spacing-lg);
-      }
-
-      .pb-sm {
-        padding-bottom: var(--spacing-sm);
-      }
-      .pb-md {
-        padding-bottom: var(--spacing-md);
-      }
-      .pb-lg {
-        padding-bottom: var(--spacing-md);
-      }
-
-      .pl-sm {
-        padding-left: var(--spacing-sm);
-      }
-      .pl-md {
-        padding-left: var(--spacing-md);
-      }
-      .pl-lg {
-        padding-left: var(--spacing-lg);
-      }
-
-      .m-sm {
-        margin: var(--spacing-sm);
-      }
-      .m-md {
-        margin: var(--spacing-md);
-      }
-      .m-lg {
-        margin: var(--spacing-lg);
-      }
-
-      .mt-sm {
-        margin-top: var(--spacing-sm);
-      }
-      .mt-md {
-        margin-top: var(--spacing-md);
-      }
-      .mt-lg {
-        margin-top: var(--spacing-lg);
-      }
-
-      .mb-sm {
-        margin-bottom: var(--spacing-sm);
-      }
-      .mb-md {
-        margin-bottom: var(--spacing-md);
-      }
-      .mb-lg {
-        margin-bottom: var(--spacing-lg);
-      }
-
-      .ml-sm {
-        margin-left: var(--spacing-sm);
-      }
-      .ml-md {
-        margin-left: var(--spacing-md);
-      }
-      .ml-lg {
-        margin-left: var(--spacing-lg);
-      }
-
-      .font-sm {
-        font-size: var(--font-sm);
-      }
-      .font-base {
-        font-size: var(--font-base);
-      }
-
-      .radius-sm {
-        border-radius: var(--radius-sm);
-      }
-      .radius-md {
-        border-radius: var(--radius-md);
-      }
-      .radius-lg {
-        border-radius: var(--radius-lg);
-      }
-
-      .w-full {
-        width: 100%;
-      }
-
-      /* Layout Classes */
+      /* ============================================================================
+         LAYOUT CONTAINERS
+         ============================================================================ */
       .main-content {
         flex: 1;
         padding: var(--spacing-lg);
         max-width: 1200px;
         margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
       }
 
       .container {
@@ -235,35 +135,53 @@
         padding: 22px;
         border-radius: var(--radius-lg);
         box-shadow: var(--shadow-light);
-        margin-bottom: var(--spacing-lg);
         transition: background-color 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        color: var(--text-primary);
+        margin: 0;
+        padding: 0;
+        transition: color 0.3s ease;
       }
 
       h1 {
-        color: var(--text-primary);
         text-align: center;
-        margin-bottom: 30px;
-        transition: color 0.3s ease;
       }
 
-      h2 {
+      p {
         color: var(--text-primary);
-        border-bottom: 2px solid var(--primary-color);
-        padding-bottom: 10px;
-        margin-top: 25px;
         transition: color 0.3s ease;
+        margin: 0;
+        padding: 0;
+        font-size: var(--font-base);
+        line-height: 1.5;
       }
+
+      /* ============================================================================
+         FORM ELEMENTS
+         ============================================================================ */
 
       .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
         margin-bottom: var(--spacing-md);
+      }
+
+      .form-group:last-child {
+        margin-bottom: 0;
       }
 
       label {
         display: block;
-        margin-bottom: 5px;
         font-weight: 600;
         color: var(--text-primary);
         transition: color 0.3s ease;
+        font-size: var(--font-sm);
       }
 
       input,
@@ -332,8 +250,8 @@
         -moz-appearance: none;
         appearance: none;
 
-        /* Dark mode select arrow */
-        [data-theme="dark"] & {
+        /* Dark mode select arrow (default) */
+        &:not([data-theme="light"]) {
           background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
         }
       }
@@ -342,12 +260,27 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: var(--spacing-md);
-        margin-bottom: var(--spacing-lg);
         width: 100%;
 
         .form-group {
           margin-bottom: 0;
         }
+      }
+
+      .input-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
+      }
+
+      .input-grid .form-group {
+        margin-bottom: 0;
+      }
+
+      .form-group.full-width {
+        grid-column: 1 / -1;
+        margin-bottom: var(--spacing-md);
       }
 
       /* Theme Toggle Button */
@@ -393,6 +326,10 @@
           transform: rotate(180deg);
         }
       }
+
+      /* ============================================================================
+         BUTTONS
+         ============================================================================ */
 
       .btn {
         background: var(--primary-color);
@@ -454,7 +391,9 @@
         }
       }
 
-      /* Settings Styles */
+      /* ============================================================================
+         SETTINGS COMPONENTS
+         ============================================================================ */
       .setting-item {
         background: var(--bg-light);
         padding: var(--spacing-md);
@@ -486,6 +425,8 @@
         margin-top: var(--spacing-sm);
         margin-left: 26px;
         line-height: 1.4;
+        font-size: var(--font-sm);
+        color: var(--text-muted);
       }
 
       .setting-range {
@@ -500,6 +441,158 @@
         color: var(--primary-color);
       }
 
+      /* ============================================================================
+         TOGGLE COMPONENTS
+         ============================================================================ */
+      .mode-toggle {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+      }
+
+      .mode-label {
+        font-weight: 500;
+        color: var(--text-primary);
+        min-width: 40px;
+      }
+
+      .toggle-container {
+        display: flex;
+        background: var(--bg-light);
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .toggle-container input[type="radio"] {
+        display: none;
+      }
+
+      .toggle-option {
+        padding: 6px 12px;
+        font-size: var(--font-sm);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: transparent;
+        color: var(--text-muted);
+        border: none;
+        min-width: 50px;
+        text-align: center;
+      }
+
+      .toggle-container input[type="radio"]:checked + .toggle-option {
+        background: var(--primary-color);
+        color: white;
+      }
+
+      .toggle-container input[type="radio"]:checked + .toggle-option:hover {
+        background: var(--primary-color);
+      }
+
+      .toggle-option:hover {
+        background: var(--bg-hover);
+        color: var(--text-primary);
+      }
+
+      /* Compact setting styles */
+      .setting-label.compact {
+        margin-bottom: 0;
+      }
+
+      .setting-range.compact {
+        width: 80px;
+        margin: 0 var(--spacing-xs);
+      }
+
+      .setting-description {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        margin-top: var(--spacing-xs);
+        margin-left: 0;
+      }
+
+      /* ============================================================================
+         STAGGERED TIMING COMPONENTS
+         ============================================================================ */
+      .staggered-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .staggered-label {
+          font-size: var(--font-sm);
+          font-weight: 500;
+          color: var(--text-primary);
+        }
+      }
+
+      .delay-display {
+        background: var(--primary-color);
+        color: white;
+        padding: 2px 6px;
+        border-radius: var(--radius-sm);
+        font-size: var(--font-xs);
+        font-weight: 500;
+        min-width: 35px;
+        text-align: center;
+      }
+
+      .staggered-slider {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+
+        .setting-range {
+          width: 100%;
+          margin: 0;
+          height: 6px;
+          background: var(--bg-light);
+          border-radius: 3px;
+          outline: none;
+          -webkit-appearance: none;
+
+          &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          }
+
+          &::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          }
+        }
+      }
+
+      .slider-labels {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: var(--font-xs);
+        color: var(--text-muted);
+        margin-top: 2px;
+
+        .delay-display {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          margin-top: -2px;
+        }
+      }
+
       .sidebar {
         width: 300px;
         background: var(--bg-container);
@@ -511,21 +604,33 @@
         overflow-y: auto;
         box-shadow: var(--shadow-medium);
         transition: background-color 0.3s ease, border-color 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
       }
 
       .controls {
         text-align: center;
-        margin-bottom: var(--spacing-lg);
         padding: var(--spacing-lg);
         background: var(--bg-light);
         border-radius: var(--radius-lg);
         transition: background-color 0.3s ease;
       }
 
+      .settings-section {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+        padding-top: var(--spacing-lg);
+        border-top: 1px solid var(--border-color);
+      }
+
       .field-note {
-        font-size: var(--font-sm);
+        font-size: var(--font-xs);
         color: var(--text-muted);
-        margin-top: 5px;
+        font-style: italic;
+        margin-top: var(--spacing-xs);
+        line-height: 1.3;
       }
 
       .checkbox-group,
@@ -553,18 +658,18 @@
 
       .section {
         border: 1px solid var(--border-color);
-        padding: var(--spacing-md);
+        padding: var(--spacing-lg);
         border-radius: var(--radius-lg);
-        margin-bottom: var(--spacing-lg);
         background-color: var(--bg-container);
         transition: background-color 0.3s ease, border-color 0.3s ease;
-
-        h3 {
-          margin-top: 0;
-          color: var(--primary-color);
-          transition: color 0.3s ease;
-        }
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
       }
+
+      /* ============================================================================
+         STATUS AND NOTIFICATIONS
+         ============================================================================ */
 
       .status {
         position: fixed;
@@ -592,6 +697,10 @@
           visibility: visible;
         }
       }
+
+      /* ============================================================================
+         CONTEXT INDICATORS
+         ============================================================================ */
 
       .context-indicator {
         font-size: var(--font-sm);
@@ -664,7 +773,7 @@
             📝 Rich Context Examples
             <span class="context-indicator context-rich">Rich Context</span>
           </h3>
-          <p class="text-muted font-base mb-lg">
+          <p>
             These fields have lots of descriptive text to help the search API
             find the right functions.
           </p>
@@ -754,7 +863,7 @@
             📋 Medium Context Examples
             <span class="context-indicator context-medium">Medium Context</span>
           </h3>
-          <p class="text-muted font-base mb-lg">
+          <p>
             These fields have some descriptive text to test moderate context
             detection.
           </p>
@@ -851,7 +960,7 @@
             🔍 Sparse Context Examples
             <span class="context-indicator context-sparse">Sparse Context</span>
           </h3>
-          <p class="text-muted font-base mb-lg">
+          <p>
             These fields have minimal context to test the search API's ability
             to work with limited information.
           </p>
@@ -927,13 +1036,13 @@
         <!-- CATEGORIES -->
         <div class="section" id="categories">
           <h3>🏷️ Categories</h3>
-          <p class="text-muted font-base mb-lg">
+          <p>
             Testing various gofakeit categories with different input types.
           </p>
 
           <!-- PERSON CATEGORY -->
           <div id="person-category">
-            <h4 class="text-primary mt-lg">👤 Person Category</h4>
+            <h4>👤 Person Category</h4>
             <div class="row">
               <div class="form-group">
                 <label for="personName">Person Name</label>
@@ -974,7 +1083,7 @@
 
           <!-- ADDRESS CATEGORY -->
           <div id="address-category">
-            <h4 class="text-primary mt-lg">🏠 Address Category</h4>
+            <h4>🏠 Address Category</h4>
             <div class="row">
               <div class="form-group">
                 <label for="latitude">Latitude</label>
@@ -997,7 +1106,7 @@
 
           <!-- COMPANY CATEGORY -->
           <div id="company-category">
-            <h4 class="text-primary mt-lg">🏢 Company Category</h4>
+            <h4>🏢 Company Category</h4>
             <div class="row">
               <div class="form-group">
                 <label for="companySuffix">Company Suffix</label>
@@ -1020,7 +1129,7 @@
 
           <!-- PAYMENT CATEGORY -->
           <div id="payment-category">
-            <h4 class="text-primary mt-lg">💳 Payment Category</h4>
+            <h4>💳 Payment Category</h4>
             <div class="row">
               <div class="form-group">
                 <label for="creditCard">Credit Card</label>
@@ -1079,7 +1188,7 @@
 
           <!-- INTERNET CATEGORY -->
           <div id="internet-category">
-            <h4 class="text-primary mt-lg">🌐 Internet Category</h4>
+            <h4>🌐 Internet Category</h4>
             <div class="row">
               <div class="form-group">
                 <label for="domainName">Domain Name</label>
@@ -1120,7 +1229,7 @@
 
           <!-- TIME CATEGORY -->
           <div id="time-category">
-            <h4 class="text-primary mt-lg">⏰ Time Category</h4>
+            <h4>⏰ Time Category</h4>
             <div class="row">
               <div class="form-group">
                 <label for="timezone">Timezone</label>
@@ -1161,7 +1270,7 @@
 
           <!-- LANGUAGE CATEGORY -->
           <div id="language-category">
-            <h4 class="text-primary mt-lg">🗣️ Language Category</h4>
+            <h4>🗣️ Language Category</h4>
             <div class="row">
               <div class="form-group">
                 <label for="programmingLanguage">Programming Language</label>
@@ -1184,7 +1293,7 @@
 
           <!-- WORD CATEGORY -->
           <div id="word-category">
-            <h4 class="text-primary mt-lg">📝 Word Category</h4>
+            <h4>📝 Word Category</h4>
             <div class="row">
               <div class="form-group">
                 <label for="noun">Noun</label>
@@ -1225,7 +1334,7 @@
 
           <!-- COLOR CATEGORY -->
           <div id="color-category">
-            <h4 class="text-primary mt-lg">🎨 Color Category</h4>
+            <h4>🎨 Color Category</h4>
             <div class="row">
               <div class="form-group">
                 <label for="hexColor">Hex Color</label>
@@ -1248,7 +1357,7 @@
 
           <!-- ANIMAL CATEGORY -->
           <div id="animal-category">
-            <h4 class="text-primary mt-lg">🐾 Animal Category</h4>
+            <h4>🐾 Animal Category</h4>
             <div class="row">
               <div class="form-group">
                 <label for="animal">Animal</label>
@@ -1289,7 +1398,7 @@
 
           <!-- FOOD CATEGORY -->
           <div id="food-category">
-            <h4 class="text-primary mt-lg">🍕 Food Category</h4>
+            <h4>🍕 Food Category</h4>
             <div class="row">
               <div class="form-group">
                 <label for="fruit">Fruit</label>
@@ -1330,7 +1439,7 @@
 
           <!-- CAR CATEGORY -->
           <div id="car-category">
-            <h4 class="text-primary mt-lg">🚗 Car Category</h4>
+            <h4>🚗 Car Category</h4>
             <div class="row">
               <div class="form-group">
                 <label for="carMaker">Car Maker</label>
@@ -1353,7 +1462,7 @@
 
           <!-- GAME CATEGORY -->
           <div id="game-category">
-            <h4 class="text-primary mt-lg">🎮 Game Category</h4>
+            <h4>🎮 Game Category</h4>
             <div class="row">
               <div class="form-group">
                 <label for="gamertag">Gamertag</label>
@@ -1376,7 +1485,7 @@
 
           <!-- MISC CATEGORY -->
           <div id="misc-category">
-            <h4 class="text-primary mt-lg">🎲 Misc Category</h4>
+            <h4>🎲 Misc Category</h4>
             <div class="row">
               <div class="form-group">
                 <label for="uuid">UUID</label>
@@ -1401,7 +1510,7 @@
         <!-- CUSTOM FUNCTION EXAMPLES -->
         <div class="section" id="custom-functions">
           <h3>🎯 Custom Function Examples</h3>
-          <p class="text-muted font-base mb-lg">
+          <p>
             Examples with specific function assignments.
           </p>
 
@@ -1464,66 +1573,81 @@
         <!-- DATA-GOFAKEIT="TRUE" DEMONSTRATION -->
         <div class="section" id="data-gofakeit-true">
           <h3>✅ Data-gofakeit="true" Fields</h3>
-          <p class="text-muted font-base mb-lg">
-            These fields have <code>data-gofakeit="true"</code> and will be autofilled regardless of Smart Mode setting.
+          <p>
+            These fields have <code>data-gofakeit="true"</code> and will be autofilled regardless of Auto Mode setting.
           </p>
 
-          <div class="form-group">
-            <label for="trueFirstName">First Name</label>
-            <input
-              type="text"
-              id="trueFirstName"
-              data-gofakeit="true"
-              placeholder="Will be filled with smart detection"
-            />
-            <div class="field-note">data-gofakeit="true"</div>
+          <div class="input-grid">
+            <div class="form-group">
+              <label for="trueFirstName">First Name</label>
+              <input
+                type="text"
+                id="trueFirstName"
+                data-gofakeit="true"
+                placeholder="Will be filled with smart detection"
+              />
+              <div class="field-note">data-gofakeit="true"</div>
+            </div>
+
+            <div class="form-group">
+              <label for="trueEmail">Email</label>
+              <input
+                type="email"
+                id="trueEmail"
+                data-gofakeit="true"
+                placeholder="Will be filled with email function"
+              />
+              <div class="field-note">data-gofakeit="true"</div>
+            </div>
+
+            <div class="form-group">
+              <label for="truePhone">Phone</label>
+              <input
+                type="tel"
+                id="truePhone"
+                data-gofakeit="true"
+                placeholder="Will be filled with phone function"
+              />
+              <div class="field-note">data-gofakeit="true"</div>
+            </div>
+
+            <div class="form-group">
+              <label for="trueNumber">Age</label>
+              <input
+                type="number"
+                id="trueNumber"
+                data-gofakeit="true"
+                placeholder="Will be filled with number function"
+              />
+              <div class="field-note">data-gofakeit="true"</div>
+            </div>
+
+            <div class="form-group">
+              <label for="trueDate">Birth Date</label>
+              <input
+                type="date"
+                id="trueDate"
+                data-gofakeit="true"
+                placeholder="Will be filled with date function"
+              />
+              <div class="field-note">data-gofakeit="true"</div>
+            </div>
+
+            <div class="form-group">
+              <label for="trueSelect">Country</label>
+              <select id="trueSelect" data-gofakeit="true">
+                <option value="">Select country</option>
+                <option value="us">United States</option>
+                <option value="ca">Canada</option>
+                <option value="uk">United Kingdom</option>
+                <option value="de">Germany</option>
+                <option value="fr">France</option>
+              </select>
+              <div class="field-note">data-gofakeit="true"</div>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="trueEmail">Email</label>
-            <input
-              type="email"
-              id="trueEmail"
-              data-gofakeit="true"
-              placeholder="Will be filled with email function"
-            />
-            <div class="field-note">data-gofakeit="true"</div>
-          </div>
-
-          <div class="form-group">
-            <label for="truePhone">Phone</label>
-            <input
-              type="tel"
-              id="truePhone"
-              data-gofakeit="true"
-              placeholder="Will be filled with phone function"
-            />
-            <div class="field-note">data-gofakeit="true"</div>
-          </div>
-
-          <div class="form-group">
-            <label for="trueNumber">Age</label>
-            <input
-              type="number"
-              id="trueNumber"
-              data-gofakeit="true"
-              placeholder="Will be filled with number function"
-            />
-            <div class="field-note">data-gofakeit="true"</div>
-          </div>
-
-          <div class="form-group">
-            <label for="trueDate">Birth Date</label>
-            <input
-              type="date"
-              id="trueDate"
-              data-gofakeit="true"
-              placeholder="Will be filled with date function"
-            />
-            <div class="field-note">data-gofakeit="true"</div>
-          </div>
-
-          <div class="form-group">
+          <div class="form-group full-width">
             <label for="trueTextarea">Bio</label>
             <textarea
               id="trueTextarea"
@@ -1534,7 +1658,7 @@
             <div class="field-note">data-gofakeit="true"</div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group full-width">
             <label for="trueCheckbox">Agree to Terms</label>
             <div class="checkbox-item">
               <input type="checkbox" id="trueCheckbox" data-gofakeit="true" />
@@ -1543,7 +1667,7 @@
             <div class="field-note">data-gofakeit="true"</div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group full-width">
             <label>Gender</label>
             <div class="radio-group">
               <div class="radio-item">
@@ -1561,25 +1685,12 @@
             </div>
             <div class="field-note">data-gofakeit="true"</div>
           </div>
-
-          <div class="form-group">
-            <label for="trueSelect">Country</label>
-            <select id="trueSelect" data-gofakeit="true">
-              <option value="">Select country</option>
-              <option value="us">United States</option>
-              <option value="ca">Canada</option>
-              <option value="uk">United Kingdom</option>
-              <option value="de">Germany</option>
-              <option value="fr">France</option>
-            </select>
-            <div class="field-note">data-gofakeit="true"</div>
-          </div>
         </div>
 
         <!-- EXCLUDED INPUT TYPES -->
         <div class="section" id="no-search-inputs">
           <h3>🚫 No Search Inputs</h3>
-          <p class="text-muted font-base mb-lg">
+          <p>
             These input types are excluded from search API and use direct
             function assignment.
           </p>
@@ -1650,7 +1761,7 @@
         <!-- EXCLUDED FIELDS -->
         <div class="section" id="excluded-fields">
           <h3>🚫 Excluded Fields (data-gofakeit="false")</h3>
-          <p class="text-muted font-base mb-lg">
+          <p>
             These fields will NOT be filled by the autofill function.
           </p>
 
@@ -1679,7 +1790,7 @@
         <!-- ERROR DEMONSTRATION SECTION -->
         <div class="section" id="error-demonstration">
           <h3>⚠️ Error Demonstration</h3>
-          <p class="text-muted font-base mb-lg">
+          <p>
             These fields use invalid <code>data-gofakeit</code> values that should cause errors to be displayed.
             This helps test error handling and user feedback.
           </p>
@@ -1841,53 +1952,47 @@
           🧹 Clear All
         </button>
 
-        <div class="mt-lg pt-lg border-top">
-          <h4 class="mb-sm text-primary font-base">🔧 Global Settings</h4>
+        <div class="settings-section">
+          <h4>🔧 Settings</h4>
 
-          <div class="setting-item mb-sm">
-            <label class="setting-label">
-              <input
-                type="checkbox"
-                data-gofakeit="false"
-                id="smartMode"
-                checked
-              />
-              <span class="setting-text">🧠 Smart Mode</span>
-            </label>
-            <div class="setting-description text-muted font-sm">
-              Only fill fields with data-gofakeit attributes
+          <!-- Mode Toggle -->
+          <div class="setting-item">
+            <div class="mode-toggle">
+              <span class="mode-label">Mode:</span>
+              <div class="toggle-container">
+                <input type="radio" id="modeAuto" name="mode" value="auto" checked>
+                <label for="modeAuto" class="toggle-option">Auto</label>
+                <input type="radio" id="modeManual" name="mode" value="manual">
+                <label for="modeManual" class="toggle-option">Manual</label>
+              </div>
+            </div>
+            <div class="setting-description">
+              Auto: Fill all fields | Manual: Only marked fields
             </div>
           </div>
 
-          <div class="setting-item mb-sm">
-            <label class="setting-label">
-              <input
-                type="checkbox"
-                data-gofakeit="false"
-                id="staggeredMode"
-                checked
-              />
-              <span class="setting-text">⏱️ Staggered Timing</span>
-            </label>
-            <div class="setting-description text-muted font-sm">
+          <!-- Staggered Timing -->
+          <div class="setting-item">
+            <div class="staggered-toggle">
+              <span class="staggered-label">⏱️ Staggered:</span>
+              <div class="toggle-container">
+                <input type="radio" id="staggeredOn" name="staggered" value="on" checked>
+                <label for="staggeredOn" class="toggle-option">On</label>
+                <input type="radio" id="staggeredOff" name="staggered" value="off">
+                <label for="staggeredOff" class="toggle-option">Off</label>
+              </div>
+            </div>
+            <div class="staggered-slider">
+              <input type="range" data-gofakeit="false" id="staggerDelay" min="0" max="500" value="50" class="setting-range" />
+              <div class="slider-labels">
+                <span>0ms</span>
+                <span id="staggerDelayValue" class="delay-display">50ms</span>
+                <span>500ms</span>
+              </div>
+            </div>
+            <div class="setting-description">
               Add delays between field fills for visual effect
             </div>
-          </div>
-
-          <div class="setting-item mb-sm">
-            <label class="setting-label">
-              <span class="setting-text">⚡ Stagger Delay (ms)</span>
-              <input
-                type="range"
-                data-gofakeit="false"
-                id="staggerDelay"
-                min="0"
-                max="500"
-                value="50"
-                class="setting-range"
-              />
-              <span id="staggerDelayValue" class="setting-value">50</span>
-            </label>
           </div>
         </div>
       </div>
@@ -2050,14 +2155,14 @@
 
       // Function to get current settings from the UI controls
       function getCurrentSettings() {
-        const smartMode = document.getElementById("smartMode").checked;
-        const staggeredMode = document.getElementById("staggeredMode").checked;
+        const mode = document.querySelector('input[name="mode"]:checked').value;
+        const staggeredMode = document.querySelector('input[name="staggered"]:checked').value === 'on';
         const staggerDelay = parseInt(
           document.getElementById("staggerDelay").value
         );
 
         return {
-          smart: smartMode,
+          mode: mode,
           staggered: staggeredMode,
           staggerDelay: staggerDelay,
         };
@@ -2069,7 +2174,7 @@
           const settings = getCurrentSettings();
           await autofill(undefined, settings);
 
-          const modeText = settings.smart ? "Smart Mode" : "Manual Mode";
+          const modeText = settings.mode === 'auto' ? "Auto Mode" : "Manual Mode";
           const staggerText = settings.staggered
             ? ` (${settings.staggerDelay}ms delay)`
             : " (no stagger)";
@@ -2104,29 +2209,32 @@
           ).matches;
 
           // Use saved preference if available, otherwise use system preference
-          const shouldUseDark =
-            savedTheme === "dark" || (savedTheme === null && systemPrefersDark);
+          // Since dark is now default, we need to check if user wants light mode
+          const shouldUseLight =
+            savedTheme === "light" || (savedTheme === null && !systemPrefersDark);
 
-          if (shouldUseDark) {
-            document.documentElement.setAttribute("data-theme", "dark");
-            themeIcon.textContent = "☀️";
-          } else {
+          if (shouldUseLight) {
+            document.documentElement.setAttribute("data-theme", "light");
             themeIcon.textContent = "🌙";
+          } else {
+            // Dark is default, no data-theme attribute needed
+            themeIcon.textContent = "☀️";
           }
 
           themeToggle.addEventListener("click", function () {
-            const isDark = document.documentElement.hasAttribute("data-theme");
+            const isLight = document.documentElement.hasAttribute("data-theme") && 
+                           document.documentElement.getAttribute("data-theme") === "light";
 
-            if (isDark) {
-              // Switch to light mode
+            if (isLight) {
+              // Switch to dark mode (default)
               document.documentElement.removeAttribute("data-theme");
-              localStorage.setItem("theme", "light");
-              themeIcon.textContent = "🌙";
-            } else {
-              // Switch to dark mode
-              document.documentElement.setAttribute("data-theme", "dark");
               localStorage.setItem("theme", "dark");
               themeIcon.textContent = "☀️";
+            } else {
+              // Switch to light mode
+              document.documentElement.setAttribute("data-theme", "light");
+              localStorage.setItem("theme", "light");
+              themeIcon.textContent = "🌙";
             }
           });
 
@@ -2137,10 +2245,12 @@
               // Only update if user hasn't set a preference
               if (localStorage.getItem("theme") === null) {
                 if (e.matches) {
-                  document.documentElement.setAttribute("data-theme", "dark");
+                  // System prefers dark, use default (dark)
+                  document.documentElement.removeAttribute("data-theme");
                   themeIcon.textContent = "☀️";
                 } else {
-                  document.documentElement.removeAttribute("data-theme");
+                  // System prefers light, switch to light
+                  document.documentElement.setAttribute("data-theme", "light");
                   themeIcon.textContent = "🌙";
                 }
               }
