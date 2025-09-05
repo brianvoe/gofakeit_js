@@ -405,6 +405,7 @@
         margin: 5px 0;
         transition: background-color 0.3s;
         width: 100%;
+        height: 50px;
         display: block;
 
         &:hover {
@@ -615,24 +616,38 @@
         }
       }
 
-      .category-selector {
-        background: var(--bg-light);
-        border: 2px solid var(--primary-color);
-        border-radius: var(--radius-lg);
-        padding: var(--spacing-lg);
-        margin-top: var(--spacing-lg);
-        transition: background-color 0.3s ease, border-color 0.3s ease;
+      /* Style select elements that have btn class to look like buttons */
+      select.btn {
+        background: var(--secondary-color);
+        color: white;
+        border: none;
+        padding: var(--spacing-md) 16px;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-size: var(--font-base);
+        margin: 5px 0;
+        transition: background-color 0.3s;
+        width: 100%;
+        height: 50px;
+        display: block;
+        text-align: center;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+      }
 
-        h4 {
-          color: var(--primary-color);
-          margin: 0 0 10px 0;
-          font-size: var(--font-base);
-          transition: color 0.3s ease;
-        }
+      select.btn:hover {
+        background: var(--secondary-hover);
+      }
 
-        select {
-          border-color: var(--primary-color);
-        }
+      select.btn option {
+        background: var(--secondary-color);
+        color: white;
       }
     </style>
   </head>
@@ -922,9 +937,9 @@
           </div>
         </div>
 
-        <!-- DIFFERENT CATEGORIES -->
+        <!-- CATEGORIES -->
         <div class="section" id="categories">
-          <h3>🏷️ Different Categories</h3>
+          <h3>🏷️ Categories</h3>
           <p class="text-muted font-base mb-lg">
             Testing various gofakeit categories with different input types.
           </p>
@@ -1440,13 +1455,75 @@
           </div>
         </div>
 
+        <!-- CUSTOM FUNCTION EXAMPLES -->
+        <div class="section" id="custom-functions">
+          <h3>🎯 Custom Function Examples</h3>
+          <p class="text-muted font-base mb-lg">
+            Examples with specific function assignments.
+          </p>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="customUuid">UUID (Custom)</label>
+              <input
+                type="text"
+                id="customUuid"
+                data-gofakeit="uuid"
+                placeholder="Will generate UUID"
+              />
+              <div class="field-note">data-gofakeit="uuid"</div>
+            </div>
+            <div class="form-group">
+              <label for="customCreditCard">Credit Card Number (Custom)</label>
+              <input
+                type="text"
+                id="customCreditCard"
+                data-gofakeit="creditcardnumber"
+                placeholder="Will generate credit card"
+              />
+              <div class="field-note">data-gofakeit="creditcard"</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="customBitcoin">Bitcoin Address (Custom)</label>
+              <input
+                type="text"
+                id="customBitcoin"
+                data-gofakeit="bitcoinaddress"
+                placeholder="Will generate Bitcoin address"
+              />
+              <div class="field-note">data-gofakeit="bitcoinaddress"</div>
+            </div>
+            <div class="form-group">
+              <label for="customIp">IP Address (Custom)</label>
+              <input
+                type="text"
+                id="customIp"
+                data-gofakeit="ipv4address"
+                placeholder="Will generate IP address"
+              />
+              <div class="field-note">data-gofakeit="ipv4address"</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="customLorem">Lorem Ipsum Paragraph (Custom)</label>
+            <textarea
+              id="customLorem"
+              data-gofakeit="loremipsumparagraph"
+              rows="3"
+              placeholder="Will generate Lorem Ipsum text"
+            ></textarea>
+            <div class="field-note">data-gofakeit="loremipsumparagraph"</div>
+          </div>
+        </div>
+
         <!-- EXCLUDED INPUT TYPES -->
         <div class="section" id="excluded-types">
           <h3>🚫 Excluded Input Types (No Search API)</h3>
           <p class="text-muted font-base mb-lg">
             These input types are excluded from search API and use direct
-            function assignment. Color inputs are also excluded since they can
-            only accept color values.
+            function assignment.
           </p>
 
           <div class="form-group">
@@ -1515,64 +1592,6 @@
           </div>
         </div>
 
-        <!-- CUSTOM FUNCTION EXAMPLES -->
-        <div class="section" id="custom-functions">
-          <h3>🎯 Custom Function Examples</h3>
-          <p class="text-muted font-base mb-lg">
-            Examples with specific function assignments.
-          </p>
-
-          <div class="row">
-            <div class="form-group">
-              <label for="customUuid">UUID (Custom)</label>
-              <input
-                type="text"
-                id="customUuid"
-                data-gofakeit="uuid"
-                placeholder="Will generate UUID"
-              />
-            </div>
-            <div class="form-group">
-              <label for="customCreditCard">Credit Card Number (Custom)</label>
-              <input
-                type="text"
-                id="customCreditCard"
-                data-gofakeit="creditcard"
-                placeholder="Will generate credit card"
-              />
-            </div>
-          </div>
-          <div class="row">
-            <div class="form-group">
-              <label for="customBitcoin">Bitcoin Address (Custom)</label>
-              <input
-                type="text"
-                id="customBitcoin"
-                data-gofakeit="bitcoinaddress"
-                placeholder="Will generate Bitcoin address"
-              />
-            </div>
-            <div class="form-group">
-              <label for="customIp">IP Address (Custom)</label>
-              <input
-                type="text"
-                id="customIp"
-                data-gofakeit="ipv4address"
-                placeholder="Will generate IP address"
-              />
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="customLorem">Lorem Ipsum Paragraph (Custom)</label>
-            <textarea
-              id="customLorem"
-              data-gofakeit="loremipsumparagraph"
-              rows="3"
-              placeholder="Will generate Lorem Ipsum text"
-            ></textarea>
-          </div>
-        </div>
-
         <!-- EXCLUDED FIELDS -->
         <div class="section" id="excluded-fields">
           <h3>🚫 Excluded Fields (data-gofakeit="false")</h3>
@@ -1599,6 +1618,92 @@
                 placeholder="This field will NOT be filled"
               />
             </div>
+          </div>
+        </div>
+
+        <!-- ERROR DEMONSTRATION SECTION -->
+        <div class="section" id="error-demonstration">
+          <h3>⚠️ Error Demonstration</h3>
+          <p class="text-muted font-base mb-lg">
+            These fields use invalid <code>data-gofakeit</code> values that should cause errors to be displayed.
+            This helps test error handling and user feedback.
+          </p>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="invalidFunction1">Invalid Function 1</label>
+              <input
+                type="text"
+                id="invalidFunction1"
+                data-gofakeit="nonexistentfunction"
+                placeholder="Should show error for invalid function"
+              />
+              <div class="field-note">data-gofakeit="nonexistentfunction"</div>
+            </div>
+            <div class="form-group">
+              <label for="invalidFunction2">Invalid Function 2</label>
+              <input
+                type="text"
+                id="invalidFunction2"
+                data-gofakeit="fakefunction123"
+                placeholder="Should show error for invalid function"
+              />
+              <div class="field-note">data-gofakeit="fakefunction123"</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="invalidFunction3">Invalid Function 3</label>
+              <input
+                type="text"
+                id="invalidFunction3"
+                data-gofakeit="notreal"
+                placeholder="Should show error for invalid function"
+              />
+              <div class="field-note">data-gofakeit="notreal"</div>
+            </div>
+            <div class="form-group">
+              <label for="invalidFunction4">Invalid Function 4</label>
+              <input
+                type="text"
+                id="invalidFunction4"
+                data-gofakeit="bogusdata"
+                placeholder="Should show error for invalid function"
+              />
+              <div class="field-note">data-gofakeit="bogusdata"</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="invalidFunction5">Invalid Function 5</label>
+              <input
+                type="email"
+                id="invalidFunction5"
+                data-gofakeit="madeupfunction"
+                placeholder="Should show error for invalid function"
+              />
+              <div class="field-note">data-gofakeit="madeupfunction"</div>
+            </div>
+            <div class="form-group">
+              <label for="invalidFunction6">Invalid Function 6</label>
+              <input
+                type="tel"
+                id="invalidFunction6"
+                data-gofakeit="wrongfunction"
+                placeholder="Should show error for invalid function"
+              />
+              <div class="field-note">data-gofakeit="wrongfunction"</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="invalidFunction7">Invalid Function 7 (Textarea)</label>
+            <textarea
+              id="invalidFunction7"
+              data-gofakeit="invalidtextarea"
+              rows="3"
+              placeholder="Should show error for invalid function"
+            ></textarea>
+            <div class="field-note">data-gofakeit="invalidtextarea"</div>
           </div>
         </div>
       </div>
@@ -1628,53 +1733,52 @@
         <button class="btn btn-secondary" onclick="autofill('sparse-context')">
           🔍 Sparse Context
         </button>
-        <button class="btn btn-secondary" onclick="autofill('excluded-types')">
-          🚫 Excluded Types
+        <button
+          class="btn btn-secondary"
+          onclick="autofill('categories')"
+        >
+          🏷️ All Categories
         </button>
+        <select
+          id="categorySelector"
+          data-gofakeit="false"
+          class="btn btn-secondary"
+          onchange="handleCategorySelection()"
+        >
+          <option value="">🎯 Select Category...</option>
+          <option value="person-category">👤 Person Category</option>
+          <option value="address-category">🏠 Address Category</option>
+          <option value="company-category">🏢 Company Category</option>
+          <option value="payment-category">💳 Payment Category</option>
+          <option value="internet-category">🌐 Internet Category</option>
+          <option value="time-category">⏰ Time Category</option>
+          <option value="language-category">🗣️ Language Category</option>
+          <option value="word-category">📝 Word Category</option>
+          <option value="color-category">🎨 Color Category</option>
+          <option value="animal-category">🐾 Animal Category</option>
+          <option value="food-category">🍕 Food Category</option>
+          <option value="car-category">🚗 Car Category</option>
+          <option value="game-category">🎮 Game Category</option>
+          <option value="misc-category">🎲 Misc Category</option>
+        </select>
         <button
           class="btn btn-secondary"
           onclick="autofill('custom-functions')"
         >
           🎯 Custom Functions
         </button>
-
-        <div class="category-selector">
-          <h4 class="text-primary">🎯 Category Selector</h4>
-          <button
-            class="btn btn-secondary w-full mb-sm"
-            onclick="autofill('categories')"
-          >
-            🏷️ Autofill All Categories
-          </button>
-          <select
-            id="categorySelector"
-            data-gofakeit="false"
-            class="w-full p-sm radius-sm mb-sm font-base"
-          >
-            <option value="">Select category...</option>
-            <option value="person-category">👤 Person Category</option>
-            <option value="address-category">🏠 Address Category</option>
-            <option value="company-category">🏢 Company Category</option>
-            <option value="payment-category">💳 Payment Category</option>
-            <option value="internet-category">🌐 Internet Category</option>
-            <option value="time-category">⏰ Time Category</option>
-            <option value="language-category">🗣️ Language Category</option>
-            <option value="word-category">📝 Word Category</option>
-            <option value="color-category">🎨 Color Category</option>
-            <option value="animal-category">🐾 Animal Category</option>
-            <option value="food-category">🍕 Food Category</option>
-            <option value="car-category">🚗 Car Category</option>
-            <option value="game-category">🎮 Game Category</option>
-            <option value="misc-category">🎲 Misc Category</option>
-          </select>
-          <button
-            class="btn btn-info"
-            onclick="autofillCategory()"
-            style="width: 100%"
-          >
-            🎯 Autofill Selected Category
-          </button>
-        </div>
+        <button class="btn btn-secondary" onclick="autofill('excluded-types')">
+          🚫 Excluded Types
+        </button>
+        <button
+          class="btn btn-secondary"
+          onclick="autofill('error-demonstration')"
+        >
+          ⚠️ Error Demonstration
+        </button>
+        <button class="btn btn-success" onclick="clearAll()">
+          🧹 Clear All
+        </button>
 
         <div class="mt-lg pt-lg border-top">
           <h4 class="mb-sm text-primary font-base">🔧 Global Settings</h4>
@@ -1724,66 +1828,7 @@
               <span id="staggerDelayValue" class="setting-value">50</span>
             </label>
           </div>
-
-          <button
-            class="btn btn-primary w-full mb-sm"
-            onclick="autofillWithCurrentSettings()"
-          >
-            🚀 Autofill All with Settings
-          </button>
         </div>
-
-        <button
-          class="btn btn-success"
-          onclick="clearAll()"
-          style="margin-top: 15px"
-        >
-          🧹 Clear All
-        </button>
-      </div>
-
-      <div class="bg-light p-lg radius-lg mt-lg">
-        <h4 class="text-dark">💡 Testing Guide</h4>
-        <ul class="pl-lg font-base text-muted">
-          <li>
-            <strong>Rich Context</strong>: Lots of descriptive text, should get
-            accurate results
-          </li>
-          <li>
-            <strong>Medium Context</strong>: Some descriptive text, moderate
-            accuracy expected
-          </li>
-          <li>
-            <strong>Sparse Context</strong>: Minimal text, tests API's ability
-            with limited info
-          </li>
-          <li>
-            <strong>All Categories</strong>: Tests all gofakeit function
-            categories at once
-          </li>
-          <li>
-            <strong>Category Selector</strong>: Test specific categories
-            individually
-          </li>
-          <li>
-            <strong>Excluded Types</strong>: Checkboxes, radios, selects (no
-            search API)
-          </li>
-          <li>
-            <strong>Custom Functions</strong>: Pre-assigned specific functions
-          </li>
-        </ul>
-      </div>
-
-      <div class="bg-info-light p-lg radius-lg mt-lg">
-        <h4 class="text-dark">🔍 Search API Testing</h4>
-        <ul class="pl-lg font-base text-muted">
-          <li>Watch browser network tab for search API calls</li>
-          <li>Check console for search queries being sent</li>
-          <li>Compare results between rich/sparse context fields</li>
-          <li>Verify excluded types don't make search calls</li>
-          <li>Test with different input types and categories</li>
-        </ul>
       </div>
     </div>
 
@@ -1830,69 +1875,16 @@
         }
       };
 
-      // Function to autofill a specific category
-      window.autofillCategory = async () => {
+      // Function to handle category selection from dropdown
+      window.handleCategorySelection = async () => {
         const selector = document.getElementById("categorySelector");
         const selectedCategory = selector.value;
 
         if (!selectedCategory) {
-          showStatus("❌ Please select a category first!", "error");
           return;
         }
 
         try {
-          // Map category values to the actual section IDs and field selectors
-          const categoryMap = {
-            "person-category": {
-              section: "categories",
-            },
-            "address-category": {
-              section: "categories",
-            },
-            "company-category": {
-              section: "categories",
-            },
-            "payment-category": {
-              section: "categories",
-            },
-            "internet-category": {
-              section: "categories",
-            },
-            "time-category": {
-              section: "categories",
-            },
-            "language-category": {
-              section: "categories",
-            },
-            "word-category": {
-              section: "categories",
-            },
-            "color-category": {
-              section: "categories",
-            },
-            "animal-category": {
-              section: "categories",
-            },
-            "food-category": {
-              section: "categories",
-            },
-            "car-category": {
-              section: "categories",
-            },
-            "game-category": {
-              section: "categories",
-            },
-            "misc-category": {
-              section: "categories",
-            },
-          };
-
-          const category = categoryMap[selectedCategory];
-          if (!category) {
-            showStatus("❌ Invalid category selected!", "error");
-            return;
-          }
-
           // Map category values to their heading text
           const categoryHeadingMap = {
             "person-category": "👤 Person Category",
@@ -1931,7 +1923,7 @@
             });
           } else {
             // Fallback: scroll to the categories section
-            const section = document.getElementById(category.section);
+            const section = document.getElementById("categories");
             if (section) {
               section.scrollIntoView({ behavior: "smooth", block: "start" });
             }
@@ -1973,8 +1965,7 @@
                 }
               });
 
-              const categoryName =
-                selector.options[selector.selectedIndex].text;
+              const categoryName = selector.options[selector.selectedIndex].text;
               showStatus(
                 `✅ ${categoryName} filled successfully! (${filledCount} fields)`,
                 "success"
@@ -1986,9 +1977,14 @@
                 "error"
               );
             }
+
+            // Reset the dropdown
+            selector.value = "";
           }, 500);
         } catch (error) {
           showStatus("❌ Error filling category: " + error.message, "error");
+          // Reset the dropdown even on error
+          selector.value = "";
         }
       };
 
