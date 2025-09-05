@@ -5,7 +5,7 @@ declare interface ApiResponse {
     status?: number;
 }
 
-export declare function autofill(target?: HTMLElement | Element, settings?: AutofillSettings): Promise<boolean | void>;
+export declare function autofill(target?: HTMLElement | Element | string, settings?: AutofillSettings): Promise<boolean | void>;
 
 declare interface AutofillSettings {
     smart?: boolean;

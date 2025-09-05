@@ -148,7 +148,7 @@
         padding-bottom: var(--spacing-md);
       }
       .pb-lg {
-        padding-bottom: var(--spacing-lg);
+        padding-bottom: var(--spacing-md);
       }
 
       .pl-sm {
@@ -289,10 +289,10 @@
         border: 2px solid var(--border-color);
         background-color: var(--bg-container);
         transition: border-color 0.3s, background-color 0.3s;
-      }
 
-      input[type="color"]:hover {
-        border-color: var(--primary-color);
+        &:hover {
+          border-color: var(--primary-color);
+        }
       }
 
       /* Dark mode styling for checkboxes and radio buttons */
@@ -302,11 +302,10 @@
         background-color: var(--bg-container);
         border: 2px solid var(--border-color);
         transition: border-color 0.3s, background-color 0.3s;
-      }
 
-      input[type="checkbox"]:hover,
-      input[type="radio"]:hover {
-        border-color: var(--primary-color);
+        &:hover {
+          border-color: var(--primary-color);
+        }
       }
 
       input:focus,
@@ -332,11 +331,11 @@
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
-      }
 
-      /* Dark mode select arrow */
-      [data-theme="dark"] select {
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        /* Dark mode select arrow */
+        [data-theme="dark"] & {
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        }
       }
 
       .row {
@@ -345,10 +344,10 @@
         gap: var(--spacing-md);
         margin-bottom: var(--spacing-lg);
         width: 100%;
-      }
 
-      .row .form-group {
-        margin-bottom: 0;
+        .form-group {
+          margin-bottom: 0;
+        }
       }
 
       /* Theme Toggle Button */
@@ -376,23 +375,23 @@
         align-items: center;
         justify-content: center;
         box-shadow: var(--shadow-light);
-      }
 
-      .theme-toggle-btn:hover {
-        background: var(--primary-hover);
-        transform: scale(1.1);
-      }
+        &:hover {
+          background: var(--primary-hover);
+          transform: scale(1.1);
+        }
 
-      .theme-toggle-btn:active {
-        transform: scale(0.95);
-      }
+        &:active {
+          transform: scale(0.95);
+        }
 
-      .theme-icon {
-        transition: transform 0.3s ease;
-      }
+        .theme-icon {
+          transition: transform 0.3s ease;
+        }
 
-      .theme-toggle-btn:hover .theme-icon {
-        transform: rotate(180deg);
+        &:hover .theme-icon {
+          transform: rotate(180deg);
+        }
       }
 
       .btn {
@@ -406,52 +405,53 @@
         margin: 5px 0;
         transition: background-color 0.3s;
         width: 100%;
+        height: 50px;
         display: block;
-      }
 
-      .btn:hover {
-        background: var(--primary-hover);
-      }
+        &:hover {
+          background: var(--primary-hover);
+        }
 
-      .btn-secondary {
-        background: var(--secondary-color);
-      }
+        &.btn-secondary {
+          background: var(--secondary-color);
 
-      .btn-secondary:hover {
-        background: var(--secondary-hover);
-      }
+          &:hover {
+            background: var(--secondary-hover);
+          }
+        }
 
-      .btn-success {
-        background: var(--success-color);
-      }
+        &.btn-success {
+          background: var(--success-color);
 
-      .btn-success:hover {
-        background: var(--success-hover);
-      }
+          &:hover {
+            background: var(--success-hover);
+          }
+        }
 
-      .btn-info {
-        background: var(--info-color);
-      }
+        &.btn-info {
+          background: var(--info-color);
 
-      .btn-info:hover {
-        background: var(--info-hover);
-      }
+          &:hover {
+            background: var(--info-hover);
+          }
+        }
 
-      .btn-warning {
-        background: var(--warning-color);
-        color: #212529;
-      }
+        &.btn-warning {
+          background: var(--warning-color);
+          color: #212529;
 
-      .btn-warning:hover {
-        background: var(--warning-hover);
-      }
+          &:hover {
+            background: var(--warning-hover);
+          }
+        }
 
-      .btn-primary {
-        background: var(--primary-color);
-      }
+        &.btn-primary {
+          background: var(--primary-color);
 
-      .btn-primary:hover {
-        background: var(--primary-hover);
+          &:hover {
+            background: var(--primary-hover);
+          }
+        }
       }
 
       /* Settings Styles */
@@ -468,13 +468,13 @@
         gap: var(--spacing-sm);
         cursor: pointer;
         font-weight: 500;
-      }
 
-      .setting-label input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-        margin: 0;
-        cursor: pointer;
+        input[type="checkbox"] {
+          width: 18px;
+          height: 18px;
+          margin: 0;
+          cursor: pointer;
+        }
       }
 
       .setting-text {
@@ -540,17 +540,15 @@
         display: flex;
         align-items: center;
         gap: var(--spacing-sm);
-      }
 
-      .checkbox-item input,
-      .radio-item input {
-        width: auto;
-      }
+        input {
+          width: auto;
+        }
 
-      .checkbox-item label,
-      .radio-item label {
-        margin: 0;
-        font-weight: normal;
+        label {
+          margin: 0;
+          font-weight: normal;
+        }
       }
 
       .section {
@@ -560,12 +558,12 @@
         margin-bottom: var(--spacing-lg);
         background-color: var(--bg-container);
         transition: background-color 0.3s ease, border-color 0.3s ease;
-      }
 
-      .section h3 {
-        margin-top: 0;
-        color: var(--primary-color);
-        transition: color 0.3s ease;
+        h3 {
+          margin-top: 0;
+          color: var(--primary-color);
+          transition: color 0.3s ease;
+        }
       }
 
       .status {
@@ -578,19 +576,21 @@
         font-weight: bold;
         z-index: 1000;
         opacity: 0;
-        transition: opacity 0.3s;
-      }
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
 
-      .status.success {
-        background: var(--success-color);
-      }
+        &.success {
+          background: var(--success-color);
+        }
 
-      .status.error {
-        background: var(--danger-color);
-      }
+        &.error {
+          background: var(--danger-color);
+        }
 
-      .status.show {
-        opacity: 1;
+        &.show {
+          opacity: 1;
+          visibility: visible;
+        }
       }
 
       .context-indicator {
@@ -599,41 +599,55 @@
         border-radius: 3px;
         margin-left: var(--spacing-sm);
         font-weight: normal;
+
+        &.context-rich {
+          background: #d4edda;
+          color: #155724;
+        }
+
+        &.context-sparse {
+          background: #fff3cd;
+          color: #856404;
+        }
+
+        &.context-medium {
+          background: #cce5ff;
+          color: #004085;
+        }
       }
 
-      .context-rich {
-        background: #d4edda;
-        color: #155724;
-      }
-
-      .context-sparse {
-        background: #fff3cd;
-        color: #856404;
-      }
-
-      .context-medium {
-        background: #cce5ff;
-        color: #004085;
-      }
-
-      .category-selector {
-        background: var(--bg-light);
-        border: 2px solid var(--primary-color);
-        border-radius: var(--radius-lg);
-        padding: var(--spacing-lg);
-        margin-top: var(--spacing-lg);
-        transition: background-color 0.3s ease, border-color 0.3s ease;
-      }
-
-      .category-selector h4 {
-        color: var(--primary-color);
-        margin: 0 0 10px 0;
+      /* Style select elements that have btn class to look like buttons */
+      select.btn {
+        background: var(--secondary-color);
+        color: white;
+        border: none;
+        padding: var(--spacing-md) 16px;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
         font-size: var(--font-base);
-        transition: color 0.3s ease;
+        margin: 5px 0;
+        transition: background-color 0.3s;
+        width: 100%;
+        height: 50px;
+        display: block;
+        text-align: center;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
       }
 
-      .category-selector select {
-        border-color: var(--primary-color);
+      select.btn:hover {
+        background: var(--secondary-hover);
+      }
+
+      select.btn option {
+        background: var(--secondary-color);
+        color: white;
       }
     </style>
     <script type="module" crossorigin src="/index.cjs"></script>
@@ -665,7 +679,6 @@
               <input
                 type="text"
                 id="firstName"
-                data-gofakeit="true"
                 placeholder="Enter your first name here"
                 aria-label="First name field for user registration"
               />
@@ -678,7 +691,6 @@
               <input
                 type="text"
                 id="lastName"
-                data-gofakeit="true"
                 placeholder="Enter your last name here"
                 aria-label="Last name field for user registration"
               />
@@ -693,7 +705,6 @@
               <input
                 type="email"
                 id="email"
-                data-gofakeit="true"
                 placeholder="Enter your email address for account verification"
                 aria-label="Email address field for user registration"
               />
@@ -706,7 +717,6 @@
               <input
                 type="tel"
                 id="phone"
-                data-gofakeit="true"
                 placeholder="Enter your phone number for contact purposes"
                 aria-label="Phone number field for user contact"
               />
@@ -721,7 +731,6 @@
               <input
                 type="text"
                 id="ssn"
-                data-gofakeit="true"
                 placeholder="XXX-XX-XXXX format for tax purposes"
                 aria-label="Social security number field for tax identification"
               />
@@ -734,7 +743,6 @@
               <input
                 type="date"
                 id="dateOfBirth"
-                data-gofakeit="true"
                 aria-label="Date of birth field for age verification"
               />
             </div>
@@ -763,7 +771,6 @@
               <input
                 type="text"
                 id="company"
-                data-gofakeit="true"
                 placeholder="Enter company name"
               />
             </div>
@@ -777,7 +784,6 @@
               <input
                 type="text"
                 id="jobTitle"
-                data-gofakeit="true"
                 placeholder="Enter job title"
               />
             </div>
@@ -793,7 +799,6 @@
               <input
                 type="url"
                 id="website"
-                data-gofakeit="true"
                 placeholder="https://example.com"
               />
             </div>
@@ -807,7 +812,6 @@
               <input
                 type="text"
                 id="street"
-                data-gofakeit="true"
                 placeholder="Enter street address"
               />
             </div>
@@ -823,7 +827,6 @@
               <input
                 type="text"
                 id="city"
-                data-gofakeit="true"
                 placeholder="Enter city"
               />
             </div>
@@ -837,7 +840,6 @@
               <input
                 type="text"
                 id="state"
-                data-gofakeit="true"
                 placeholder="Enter state"
               />
             </div>
@@ -863,7 +865,7 @@
                   >Sparse</span
                 ></label
               >
-              <input type="text" id="zipCode" data-gofakeit="true" />
+              <input type="text" id="zipCode"  />
             </div>
             <div class="form-group">
               <label for="country"
@@ -872,7 +874,7 @@
                   >Sparse</span
                 ></label
               >
-              <input type="text" id="country" data-gofakeit="true" />
+              <input type="text" id="country"  />
             </div>
           </div>
           <div class="row">
@@ -883,7 +885,7 @@
                   >Sparse</span
                 ></label
               >
-              <input type="number" id="age" data-gofakeit="true" />
+              <input type="number" id="age"  />
             </div>
             <div class="form-group">
               <label for="salary"
@@ -895,7 +897,6 @@
               <input
                 type="range"
                 id="salary"
-                data-gofakeit="true"
                 min="20000"
                 max="200000"
                 step="5000"
@@ -910,7 +911,7 @@
                   >Sparse</span
                 ></label
               >
-              <input type="color" id="color" data-gofakeit="true" />
+              <input type="color" id="color"  />
             </div>
             <div class="form-group">
               <label for="bio"
@@ -919,14 +920,14 @@
                   >Sparse</span
                 ></label
               >
-              <textarea id="bio" data-gofakeit="true" rows="3"></textarea>
+              <textarea id="bio" rows="3"></textarea>
             </div>
           </div>
         </div>
 
-        <!-- DIFFERENT CATEGORIES -->
+        <!-- CATEGORIES -->
         <div class="section" id="categories">
-          <h3>🏷️ Different Categories</h3>
+          <h3>🏷️ Categories</h3>
           <p class="text-muted font-base mb-lg">
             Testing various gofakeit categories with different input types.
           </p>
@@ -940,7 +941,6 @@
                 <input
                   type="text"
                   id="personName"
-                  data-gofakeit="true"
                   placeholder="Full person name"
                 />
               </div>
@@ -949,7 +949,6 @@
                 <input
                   type="text"
                   id="gender"
-                  data-gofakeit="true"
                   placeholder="Gender selection"
                 />
               </div>
@@ -960,7 +959,6 @@
                 <input
                   type="text"
                   id="petName"
-                  data-gofakeit="true"
                   placeholder="Pet name"
                 />
               </div>
@@ -969,7 +967,6 @@
                 <input
                   type="text"
                   id="username"
-                  data-gofakeit="true"
                   placeholder="Username for login"
                 />
               </div>
@@ -985,7 +982,6 @@
                 <input
                   type="number"
                   id="latitude"
-                  data-gofakeit="true"
                   placeholder="Geographic latitude"
                 />
               </div>
@@ -994,7 +990,6 @@
                 <input
                   type="number"
                   id="longitude"
-                  data-gofakeit="true"
                   placeholder="Geographic longitude"
                 />
               </div>
@@ -1010,7 +1005,6 @@
                 <input
                   type="text"
                   id="companySuffix"
-                  data-gofakeit="true"
                   placeholder="Inc, LLC, Corp, etc."
                 />
               </div>
@@ -1019,7 +1013,6 @@
                 <input
                   type="text"
                   id="jobLevel"
-                  data-gofakeit="true"
                   placeholder="Entry, Mid, Senior, etc."
                 />
               </div>
@@ -1035,7 +1028,6 @@
                 <input
                   type="text"
                   id="creditCard"
-                  data-gofakeit="true"
                   placeholder="Credit card number"
                 />
               </div>
@@ -1044,7 +1036,6 @@
                 <input
                   type="text"
                   id="creditCardType"
-                  data-gofakeit="true"
                   placeholder="Visa, MasterCard, etc."
                 />
               </div>
@@ -1055,7 +1046,6 @@
                 <input
                   type="text"
                   id="creditCardCVV"
-                  data-gofakeit="true"
                   placeholder="3-4 digit security code"
                 />
               </div>
@@ -1064,7 +1054,6 @@
                 <input
                   type="text"
                   id="creditCardExp"
-                  data-gofakeit="true"
                   placeholder="MM/YY format"
                 />
               </div>
@@ -1075,7 +1064,6 @@
                 <input
                   type="text"
                   id="bankName"
-                  data-gofakeit="true"
                   placeholder="Bank institution name"
                 />
               </div>
@@ -1084,7 +1072,6 @@
                 <input
                   type="text"
                   id="creditCardNumber"
-                  data-gofakeit="true"
                   placeholder="Full credit card number"
                 />
               </div>
@@ -1100,7 +1087,6 @@
                 <input
                   type="text"
                   id="domainName"
-                  data-gofakeit="true"
                   placeholder="example.com"
                 />
               </div>
@@ -1109,7 +1095,6 @@
                 <input
                   type="text"
                   id="ipv6Address"
-                  data-gofakeit="true"
                   placeholder="IPv6 address"
                 />
               </div>
@@ -1120,7 +1105,6 @@
                 <input
                   type="text"
                   id="userAgent"
-                  data-gofakeit="true"
                   placeholder="Browser user agent string"
                 />
               </div>
@@ -1129,7 +1113,6 @@
                 <input
                   type="text"
                   id="httpMethod"
-                  data-gofakeit="true"
                   placeholder="GET, POST, PUT, etc."
                 />
               </div>
@@ -1145,7 +1128,6 @@
                 <input
                   type="text"
                   id="timezone"
-                  data-gofakeit="true"
                   placeholder="UTC, EST, PST, etc."
                 />
               </div>
@@ -1154,7 +1136,6 @@
                 <input
                   type="text"
                   id="weekday"
-                  data-gofakeit="true"
                   placeholder="Monday, Tuesday, etc."
                 />
               </div>
@@ -1165,7 +1146,6 @@
                 <input
                   type="text"
                   id="month"
-                  data-gofakeit="true"
                   placeholder="January, February, etc."
                 />
               </div>
@@ -1174,7 +1154,6 @@
                 <input
                   type="number"
                   id="year"
-                  data-gofakeit="true"
                   placeholder="Year value"
                 />
               </div>
@@ -1190,7 +1169,6 @@
                 <input
                   type="text"
                   id="programmingLanguage"
-                  data-gofakeit="true"
                   placeholder="JavaScript, Python, Go, etc."
                 />
               </div>
@@ -1199,7 +1177,6 @@
                 <input
                   type="text"
                   id="languageAbbreviation"
-                  data-gofakeit="true"
                   placeholder="en, es, fr, etc."
                 />
               </div>
@@ -1215,7 +1192,6 @@
                 <input
                   type="text"
                   id="noun"
-                  data-gofakeit="true"
                   placeholder="Random noun"
                 />
               </div>
@@ -1224,7 +1200,6 @@
                 <input
                   type="text"
                   id="verb"
-                  data-gofakeit="true"
                   placeholder="Random verb"
                 />
               </div>
@@ -1235,7 +1210,6 @@
                 <input
                   type="text"
                   id="adjective"
-                  data-gofakeit="true"
                   placeholder="Random adjective"
                 />
               </div>
@@ -1244,7 +1218,6 @@
                 <input
                   type="text"
                   id="sentence"
-                  data-gofakeit="true"
                   placeholder="Random sentence"
                 />
               </div>
@@ -1260,7 +1233,6 @@
                 <input
                   type="text"
                   id="hexColor"
-                  data-gofakeit="true"
                   placeholder="#FF0000"
                 />
               </div>
@@ -1269,7 +1241,6 @@
                 <input
                   type="text"
                   id="rgbColor"
-                  data-gofakeit="true"
                   placeholder="rgb(255, 0, 0)"
                 />
               </div>
@@ -1285,7 +1256,6 @@
                 <input
                   type="text"
                   id="animal"
-                  data-gofakeit="true"
                   placeholder="Random animal"
                 />
               </div>
@@ -1294,7 +1264,6 @@
                 <input
                   type="text"
                   id="bird"
-                  data-gofakeit="true"
                   placeholder="Random bird"
                 />
               </div>
@@ -1305,7 +1274,6 @@
                 <input
                   type="text"
                   id="cat"
-                  data-gofakeit="true"
                   placeholder="Random cat breed"
                 />
               </div>
@@ -1314,7 +1282,6 @@
                 <input
                   type="text"
                   id="dog"
-                  data-gofakeit="true"
                   placeholder="Random dog breed"
                 />
               </div>
@@ -1330,7 +1297,6 @@
                 <input
                   type="text"
                   id="fruit"
-                  data-gofakeit="true"
                   placeholder="Random fruit"
                 />
               </div>
@@ -1339,7 +1305,6 @@
                 <input
                   type="text"
                   id="vegetable"
-                  data-gofakeit="true"
                   placeholder="Random vegetable"
                 />
               </div>
@@ -1350,7 +1315,6 @@
                 <input
                   type="text"
                   id="breakfast"
-                  data-gofakeit="true"
                   placeholder="Breakfast food"
                 />
               </div>
@@ -1359,7 +1323,6 @@
                 <input
                   type="text"
                   id="lunch"
-                  data-gofakeit="true"
                   placeholder="Lunch food"
                 />
               </div>
@@ -1375,7 +1338,6 @@
                 <input
                   type="text"
                   id="carMaker"
-                  data-gofakeit="true"
                   placeholder="Car manufacturer"
                 />
               </div>
@@ -1384,7 +1346,6 @@
                 <input
                   type="text"
                   id="carModel"
-                  data-gofakeit="true"
                   placeholder="Car model name"
                 />
               </div>
@@ -1400,7 +1361,6 @@
                 <input
                   type="text"
                   id="gamertag"
-                  data-gofakeit="true"
                   placeholder="Gaming username"
                 />
               </div>
@@ -1409,7 +1369,6 @@
                 <input
                   type="text"
                   id="dice"
-                  data-gofakeit="true"
                   placeholder="Dice roll result"
                 />
               </div>
@@ -1425,7 +1384,6 @@
                 <input
                   type="text"
                   id="uuid"
-                  data-gofakeit="true"
                   placeholder="Unique identifier"
                 />
               </div>
@@ -1434,86 +1392,10 @@
                 <input
                   type="text"
                   id="bool"
-                  data-gofakeit="true"
                   placeholder="True or false"
                 />
               </div>
             </div>
-          </div>
-        </div>
-
-        <!-- EXCLUDED INPUT TYPES -->
-        <div class="section" id="excluded-types">
-          <h3>🚫 Excluded Input Types (No Search API)</h3>
-          <p class="text-muted font-base mb-lg">
-            These input types are excluded from search API and use direct
-            function assignment. Color inputs are also excluded since they can
-            only accept color values.
-          </p>
-
-          <div class="form-group">
-            <label>Programming Languages (Checkboxes)</label>
-            <div class="checkbox-group">
-              <div class="checkbox-item">
-                <input type="checkbox" id="lang1" data-gofakeit="true" />
-                <label for="lang1">JavaScript</label>
-              </div>
-              <div class="checkbox-item">
-                <input type="checkbox" id="lang2" data-gofakeit="true" />
-                <label for="lang2">Python</label>
-              </div>
-              <div class="checkbox-item">
-                <input type="checkbox" id="lang3" data-gofakeit="true" />
-                <label for="lang3">Go</label>
-              </div>
-              <div class="checkbox-item">
-                <input type="checkbox" id="lang4" data-gofakeit="true" />
-                <label for="lang4">Rust</label>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Experience Level (Radio Buttons)</label>
-            <div class="radio-group">
-              <div class="radio-item">
-                <input
-                  type="radio"
-                  name="experience"
-                  id="exp1"
-                  data-gofakeit="true"
-                />
-                <label for="exp1">Beginner</label>
-              </div>
-              <div class="radio-item">
-                <input
-                  type="radio"
-                  name="experience"
-                  id="exp2"
-                  data-gofakeit="true"
-                />
-                <label for="exp2">Intermediate</label>
-              </div>
-              <div class="radio-item">
-                <input
-                  type="radio"
-                  name="experience"
-                  id="exp3"
-                  data-gofakeit="true"
-                />
-                <label for="exp3">Advanced</label>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="timezoneSelect">Timezone (Select)</label>
-            <select id="timezoneSelect" data-gofakeit="true">
-              <option value="">Select timezone</option>
-              <option value="UTC">UTC (Coordinated Universal Time)</option>
-              <option value="EST">EST (Eastern Standard Time)</option>
-              <option value="CST">CST (Central Standard Time)</option>
-              <option value="MST">MST (Mountain Standard Time)</option>
-              <option value="PST">PST (Pacific Standard Time)</option>
-            </select>
           </div>
         </div>
 
@@ -1533,15 +1415,17 @@
                 data-gofakeit="uuid"
                 placeholder="Will generate UUID"
               />
+              <div class="field-note">data-gofakeit="uuid"</div>
             </div>
             <div class="form-group">
               <label for="customCreditCard">Credit Card Number (Custom)</label>
               <input
                 type="text"
                 id="customCreditCard"
-                data-gofakeit="creditcard"
+                data-gofakeit="creditcardnumber"
                 placeholder="Will generate credit card"
               />
+              <div class="field-note">data-gofakeit="creditcard"</div>
             </div>
           </div>
           <div class="row">
@@ -1553,6 +1437,7 @@
                 data-gofakeit="bitcoinaddress"
                 placeholder="Will generate Bitcoin address"
               />
+              <div class="field-note">data-gofakeit="bitcoinaddress"</div>
             </div>
             <div class="form-group">
               <label for="customIp">IP Address (Custom)</label>
@@ -1562,6 +1447,7 @@
                 data-gofakeit="ipv4address"
                 placeholder="Will generate IP address"
               />
+              <div class="field-note">data-gofakeit="ipv4address"</div>
             </div>
           </div>
           <div class="form-group">
@@ -1572,6 +1458,193 @@
               rows="3"
               placeholder="Will generate Lorem Ipsum text"
             ></textarea>
+            <div class="field-note">data-gofakeit="loremipsumparagraph"</div>
+          </div>
+        </div>
+
+        <!-- DATA-GOFAKEIT="TRUE" DEMONSTRATION -->
+        <div class="section" id="data-gofakeit-true">
+          <h3>✅ Data-gofakeit="true" Fields</h3>
+          <p class="text-muted font-base mb-lg">
+            These fields have <code>data-gofakeit="true"</code> and will be autofilled regardless of Smart Mode setting.
+          </p>
+
+          <div class="form-group">
+            <label for="trueFirstName">First Name</label>
+            <input
+              type="text"
+              id="trueFirstName"
+              data-gofakeit="true"
+              placeholder="Will be filled with smart detection"
+            />
+            <div class="field-note">data-gofakeit="true"</div>
+          </div>
+
+          <div class="form-group">
+            <label for="trueEmail">Email</label>
+            <input
+              type="email"
+              id="trueEmail"
+              data-gofakeit="true"
+              placeholder="Will be filled with email function"
+            />
+            <div class="field-note">data-gofakeit="true"</div>
+          </div>
+
+          <div class="form-group">
+            <label for="truePhone">Phone</label>
+            <input
+              type="tel"
+              id="truePhone"
+              data-gofakeit="true"
+              placeholder="Will be filled with phone function"
+            />
+            <div class="field-note">data-gofakeit="true"</div>
+          </div>
+
+          <div class="form-group">
+            <label for="trueNumber">Age</label>
+            <input
+              type="number"
+              id="trueNumber"
+              data-gofakeit="true"
+              placeholder="Will be filled with number function"
+            />
+            <div class="field-note">data-gofakeit="true"</div>
+          </div>
+
+          <div class="form-group">
+            <label for="trueDate">Birth Date</label>
+            <input
+              type="date"
+              id="trueDate"
+              data-gofakeit="true"
+              placeholder="Will be filled with date function"
+            />
+            <div class="field-note">data-gofakeit="true"</div>
+          </div>
+
+          <div class="form-group">
+            <label for="trueTextarea">Bio</label>
+            <textarea
+              id="trueTextarea"
+              data-gofakeit="true"
+              rows="3"
+              placeholder="Will be filled with sentence function"
+            ></textarea>
+            <div class="field-note">data-gofakeit="true"</div>
+          </div>
+
+          <div class="form-group">
+            <label for="trueCheckbox">Agree to Terms</label>
+            <div class="checkbox-item">
+              <input type="checkbox" id="trueCheckbox" data-gofakeit="true" />
+              <label for="trueCheckbox">I agree to the terms and conditions</label>
+            </div>
+            <div class="field-note">data-gofakeit="true"</div>
+          </div>
+
+          <div class="form-group">
+            <label>Gender</label>
+            <div class="radio-group">
+              <div class="radio-item">
+                <input type="radio" id="trueMale" name="trueGender" data-gofakeit="true" />
+                <label for="trueMale">Male</label>
+              </div>
+              <div class="radio-item">
+                <input type="radio" id="trueFemale" name="trueGender" data-gofakeit="true" />
+                <label for="trueFemale">Female</label>
+              </div>
+              <div class="radio-item">
+                <input type="radio" id="trueOther" name="trueGender" data-gofakeit="true" />
+                <label for="trueOther">Other</label>
+              </div>
+            </div>
+            <div class="field-note">data-gofakeit="true"</div>
+          </div>
+
+          <div class="form-group">
+            <label for="trueSelect">Country</label>
+            <select id="trueSelect" data-gofakeit="true">
+              <option value="">Select country</option>
+              <option value="us">United States</option>
+              <option value="ca">Canada</option>
+              <option value="uk">United Kingdom</option>
+              <option value="de">Germany</option>
+              <option value="fr">France</option>
+            </select>
+            <div class="field-note">data-gofakeit="true"</div>
+          </div>
+        </div>
+
+        <!-- EXCLUDED INPUT TYPES -->
+        <div class="section" id="no-search-inputs">
+          <h3>🚫 No Search Inputs</h3>
+          <p class="text-muted font-base mb-lg">
+            These input types are excluded from search API and use direct
+            function assignment.
+          </p>
+
+          <div class="form-group">
+            <label>Programming Languages (Checkboxes)</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="lang1"  />
+                <label for="lang1">JavaScript</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="lang2"  />
+                <label for="lang2">Python</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="lang3"  />
+                <label for="lang3">Go</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="lang4"  />
+                <label for="lang4">Rust</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Experience Level (Radio Buttons)</label>
+            <div class="radio-group">
+              <div class="radio-item">
+                <input
+                  type="radio"
+                  name="experience"
+                  id="exp1"
+                />
+                <label for="exp1">Beginner</label>
+              </div>
+              <div class="radio-item">
+                <input
+                  type="radio"
+                  name="experience"
+                  id="exp2"
+                />
+                <label for="exp2">Intermediate</label>
+              </div>
+              <div class="radio-item">
+                <input
+                  type="radio"
+                  name="experience"
+                  id="exp3"
+                />
+                <label for="exp3">Advanced</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="timezoneSelect">Timezone (Select)</label>
+            <select id="timezoneSelect" >
+              <option value="">Select timezone</option>
+              <option value="UTC">UTC (Coordinated Universal Time)</option>
+              <option value="EST">EST (Eastern Standard Time)</option>
+              <option value="CST">CST (Central Standard Time)</option>
+              <option value="MST">MST (Mountain Standard Time)</option>
+              <option value="PST">PST (Pacific Standard Time)</option>
+            </select>
           </div>
         </div>
 
@@ -1603,6 +1676,92 @@
             </div>
           </div>
         </div>
+
+        <!-- ERROR DEMONSTRATION SECTION -->
+        <div class="section" id="error-demonstration">
+          <h3>⚠️ Error Demonstration</h3>
+          <p class="text-muted font-base mb-lg">
+            These fields use invalid <code>data-gofakeit</code> values that should cause errors to be displayed.
+            This helps test error handling and user feedback.
+          </p>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="invalidFunction1">Invalid Function 1</label>
+              <input
+                type="text"
+                id="invalidFunction1"
+                data-gofakeit="nonexistentfunction"
+                placeholder="Should show error for invalid function"
+              />
+              <div class="field-note">data-gofakeit="nonexistentfunction"</div>
+            </div>
+            <div class="form-group">
+              <label for="invalidFunction2">Invalid Function 2</label>
+              <input
+                type="text"
+                id="invalidFunction2"
+                data-gofakeit="fakefunction123"
+                placeholder="Should show error for invalid function"
+              />
+              <div class="field-note">data-gofakeit="fakefunction123"</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="invalidFunction3">Invalid Function 3</label>
+              <input
+                type="text"
+                id="invalidFunction3"
+                data-gofakeit="notreal"
+                placeholder="Should show error for invalid function"
+              />
+              <div class="field-note">data-gofakeit="notreal"</div>
+            </div>
+            <div class="form-group">
+              <label for="invalidFunction4">Invalid Function 4</label>
+              <input
+                type="text"
+                id="invalidFunction4"
+                data-gofakeit="bogusdata"
+                placeholder="Should show error for invalid function"
+              />
+              <div class="field-note">data-gofakeit="bogusdata"</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="invalidFunction5">Invalid Function 5</label>
+              <input
+                type="email"
+                id="invalidFunction5"
+                data-gofakeit="madeupfunction"
+                placeholder="Should show error for invalid function"
+              />
+              <div class="field-note">data-gofakeit="madeupfunction"</div>
+            </div>
+            <div class="form-group">
+              <label for="invalidFunction6">Invalid Function 6</label>
+              <input
+                type="tel"
+                id="invalidFunction6"
+                data-gofakeit="wrongfunction"
+                placeholder="Should show error for invalid function"
+              />
+              <div class="field-note">data-gofakeit="wrongfunction"</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="invalidFunction7">Invalid Function 7 (Textarea)</label>
+            <textarea
+              id="invalidFunction7"
+              data-gofakeit="invalidtextarea"
+              rows="3"
+              placeholder="Should show error for invalid function"
+            ></textarea>
+            <div class="field-note">data-gofakeit="invalidtextarea"</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1621,62 +1780,67 @@
 
         <h3 style="margin-top: 0; color: var(--text-primary)">🎮 Controls</h3>
         <button class="btn" onclick="autofill()">🚀 Autofill All Fields</button>
-        <button class="btn btn-secondary" onclick="autofill('rich-context')">
+        <button class="btn btn-secondary" onclick="autofill('#rich-context')">
           📝 Rich Context
         </button>
-        <button class="btn btn-secondary" onclick="autofill('medium-context')">
+        <button class="btn btn-secondary" onclick="autofill('#medium-context')">
           📋 Medium Context
         </button>
-        <button class="btn btn-secondary" onclick="autofill('sparse-context')">
+        <button class="btn btn-secondary" onclick="autofill('#sparse-context')">
           🔍 Sparse Context
-        </button>
-        <button class="btn btn-secondary" onclick="autofill('excluded-types')">
-          🚫 Excluded Types
         </button>
         <button
           class="btn btn-secondary"
-          onclick="autofill('custom-functions')"
+          onclick="autofill('#categories')"
+        >
+          🏷️ All Categories
+        </button>
+        <select
+          id="categorySelector"
+          data-gofakeit="false"
+          class="btn btn-secondary"
+          onchange="handleCategorySelection()"
+        >
+          <option value="">🎯 Select Category...</option>
+          <option value="person-category">👤 Person Category</option>
+          <option value="address-category">🏠 Address Category</option>
+          <option value="company-category">🏢 Company Category</option>
+          <option value="payment-category">💳 Payment Category</option>
+          <option value="internet-category">🌐 Internet Category</option>
+          <option value="time-category">⏰ Time Category</option>
+          <option value="language-category">🗣️ Language Category</option>
+          <option value="word-category">📝 Word Category</option>
+          <option value="color-category">🎨 Color Category</option>
+          <option value="animal-category">🐾 Animal Category</option>
+          <option value="food-category">🍕 Food Category</option>
+          <option value="car-category">🚗 Car Category</option>
+          <option value="game-category">🎮 Game Category</option>
+          <option value="misc-category">🎲 Misc Category</option>
+        </select>
+        <button
+          class="btn btn-secondary"
+          onclick="autofill('#custom-functions')"
         >
           🎯 Custom Functions
         </button>
-
-        <div class="category-selector">
-          <h4 class="text-primary">🎯 Category Selector</h4>
-          <button
-            class="btn btn-secondary w-full mb-sm"
-            onclick="autofill('categories')"
-          >
-            🏷️ Autofill All Categories
-          </button>
-          <select
-            id="categorySelector"
-            data-gofakeit="false"
-            class="w-full p-sm radius-sm mb-sm font-base"
-          >
-            <option value="">Select category...</option>
-            <option value="person-category">👤 Person Category</option>
-            <option value="address-category">🏠 Address Category</option>
-            <option value="company-category">🏢 Company Category</option>
-            <option value="payment-category">💳 Payment Category</option>
-            <option value="internet-category">🌐 Internet Category</option>
-            <option value="time-category">⏰ Time Category</option>
-            <option value="language-category">🗣️ Language Category</option>
-            <option value="word-category">📝 Word Category</option>
-            <option value="color-category">🎨 Color Category</option>
-            <option value="animal-category">🐾 Animal Category</option>
-            <option value="food-category">🍕 Food Category</option>
-            <option value="car-category">🚗 Car Category</option>
-            <option value="game-category">🎮 Game Category</option>
-            <option value="misc-category">🎲 Misc Category</option>
-          </select>
-          <button
-            class="btn btn-info"
-            onclick="autofillCategory()"
-            style="width: 100%"
-          >
-            🎯 Autofill Selected Category
-          </button>
-        </div>
+        <button
+          class="btn btn-secondary"
+          onclick="autofill('#data-gofakeit-true')"
+        >
+          ✅ Data-gofakeit="true"
+        </button>
+        <button class="btn btn-secondary" onclick="autofill('#no-search-inputs')">
+          🚫 No Search Inputs
+        </button>
+        <button
+          class="btn btn-secondary"
+          onclick="autofill('#error-demonstration')"
+        >
+          ⚠️ Error Demonstration
+        </button>
+        <button class="btn btn-success" onclick="clearAll()">
+          🧹 Clear All
+        </button>
 
         <div class="mt-lg pt-lg border-top">
           <h4 class="mb-sm text-primary font-base">🔧 Global Settings</h4>
@@ -1692,7 +1856,7 @@
               <span class="setting-text">🧠 Smart Mode</span>
             </label>
             <div class="setting-description text-muted font-sm">
-              Automatically detect and fill all form fields
+              Only fill fields with data-gofakeit attributes
             </div>
           </div>
 
@@ -1726,66 +1890,7 @@
               <span id="staggerDelayValue" class="setting-value">50</span>
             </label>
           </div>
-
-          <button
-            class="btn btn-primary w-full mb-sm"
-            onclick="autofillWithCurrentSettings()"
-          >
-            🚀 Autofill All with Settings
-          </button>
         </div>
-
-        <button
-          class="btn btn-success"
-          onclick="clearAll()"
-          style="margin-top: 15px"
-        >
-          🧹 Clear All
-        </button>
-      </div>
-
-      <div class="bg-light p-lg radius-lg mt-lg">
-        <h4 class="text-dark">💡 Testing Guide</h4>
-        <ul class="pl-lg font-base text-muted">
-          <li>
-            <strong>Rich Context</strong>: Lots of descriptive text, should get
-            accurate results
-          </li>
-          <li>
-            <strong>Medium Context</strong>: Some descriptive text, moderate
-            accuracy expected
-          </li>
-          <li>
-            <strong>Sparse Context</strong>: Minimal text, tests API's ability
-            with limited info
-          </li>
-          <li>
-            <strong>All Categories</strong>: Tests all gofakeit function
-            categories at once
-          </li>
-          <li>
-            <strong>Category Selector</strong>: Test specific categories
-            individually
-          </li>
-          <li>
-            <strong>Excluded Types</strong>: Checkboxes, radios, selects (no
-            search API)
-          </li>
-          <li>
-            <strong>Custom Functions</strong>: Pre-assigned specific functions
-          </li>
-        </ul>
-      </div>
-
-      <div class="bg-info-light p-lg radius-lg mt-lg">
-        <h4 class="text-dark">🔍 Search API Testing</h4>
-        <ul class="pl-lg font-base text-muted">
-          <li>Watch browser network tab for search API calls</li>
-          <li>Check console for search queries being sent</li>
-          <li>Compare results between rich/sparse context fields</li>
-          <li>Verify excluded types don't make search calls</li>
-          <li>Test with different input types and categories</li>
-        </ul>
       </div>
     </div>
 
