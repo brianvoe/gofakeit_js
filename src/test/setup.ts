@@ -1,18 +1,5 @@
-import { beforeAll, vi } from 'vitest'
+// Test setup file for Vitest
+// This file is required by the vitest configuration
 
-// Mock Chrome API for autofill tests
-beforeAll(() => {
-  (globalThis as any).chrome = {
-    storage: {
-      sync: {
-        get: vi.fn((_keys: any, callback: any) => {
-          callback({ gofakeitSmartFill: true })
-        })
-      }
-    }
-  } as any;
-  
-  // Disable staggered timing for tests to keep them fast
-  // This can be overridden in individual tests if needed
-  (globalThis as any).__GOFAKEIT_TEST_MODE__ = true;
-})
+// Global test setup can be added here if needed
+// For now, this is just a placeholder to satisfy the vitest config
