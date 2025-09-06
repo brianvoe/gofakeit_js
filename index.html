@@ -698,6 +698,52 @@
         }
       }
 
+      .status-badge {
+        position: fixed;
+        top: var(--spacing-lg);
+        left: var(--spacing-lg);
+        padding: 8px var(--spacing-md);
+        border-radius: var(--radius-sm);
+        color: white;
+        font-weight: 500;
+        font-size: 14px;
+        z-index: 1000;
+        transition: all 0.3s ease;
+
+        &.idle {
+          background: var(--secondary-color);
+        }
+
+        &.starting {
+          background: var(--info-color);
+        }
+
+        &.initializing {
+          background: var(--info-color);
+        }
+
+        &.determining_functions {
+          background: var(--warning-color);
+          color: var(--bg-main);
+        }
+
+        &.getting_values {
+          background: var(--primary-color);
+        }
+
+        &.applying_values {
+          background: var(--primary-color);
+        }
+
+        &.completed {
+          background: var(--success-color);
+        }
+
+        &.error {
+          background: var(--danger-color);
+        }
+      }
+
       /* ============================================================================
          CONTEXT INDICATORS
          ============================================================================ */
@@ -762,6 +808,7 @@
   </head>
   <body>
     <div id="status" class="status"></div>
+    <div id="statusDisplay" class="status-badge idle">Ready</div>
 
     <div class="main-content">
       <h1>🎯 Gofakeit Autofill</h1>
@@ -1999,7 +2046,7 @@
     </div>
 
     <script type="module">
-      import { autofill } from "./src/index.ts";
+      import { Autofill } from "./src/index.ts";
 
       // Make functions available globally
       window.autofill = async (target) => {
@@ -2017,7 +2064,8 @@
                 
                 // Wait a moment for the scroll to complete, then autofill
                 setTimeout(async () => {
-                  await autofill(target, settings);
+                  const manager = new Autofill(settings);
+                  await manager.autofill(target);
                   showStatus(
                     `✅ ${target} section filled successfully!`,
                     "success"
@@ -2027,12 +2075,14 @@
                 showStatus("❌ Element not found: " + target, "error");
               }
             } else {
-              await autofill(target, settings);
+              const manager = new AutofillManager(settings);
+              await manager.autofill(target);
               showStatus("✅ Element filled successfully!", "success");
             }
           } else {
             // No target - autofill all
-            await autofill(undefined, settings);
+            const manager = new AutofillManager(settings);
+            await manager.autofill(undefined);
             showStatus("✅ All fields filled successfully!", "success");
           }
         } catch (error) {
@@ -2108,7 +2158,8 @@
               const settings = getCurrentSettings();
 
               // Use the main autofill function with the category container
-              await autofill(categoryContainer, settings);
+              const manager = new Autofill(settings);
+              await manager.autofill(categoryContainer);
 
               // Count filled elements
               let filledCount = 0;
@@ -2165,6 +2216,36 @@
           mode: mode,
           staggered: staggeredMode,
           staggerDelay: staggerDelay,
+          onStatusChange: (status, state) => {
+            console.log(`[Status Update] ${status}:`, state);
+            
+            // Update status display in UI
+            const statusElement = document.getElementById('statusDisplay');
+            if (statusElement) {
+              const statusText = {
+                'idle': 'Ready',
+                'starting': 'Starting...',
+                'initializing': 'Initializing inputs...',
+                'determining_functions': 'Determining functions...',
+                'getting_values': 'Getting values...',
+                'applying_values': 'Applying values...',
+                'completed': 'Completed!',
+                'error': 'Error occurred'
+              }[status] || status;
+              
+              statusElement.textContent = statusText;
+              statusElement.className = `status-badge ${status}`;
+            }
+            
+            // Show progress for certain statuses
+            if (status === 'getting_values' || status === 'applying_values') {
+              const processedCount = state.inputs.filter(input => input.value || input.error).length;
+              const totalCount = state.inputs.length;
+              if (totalCount > 0) {
+                showStatus(`Processing ${processedCount}/${totalCount} fields...`, 'info');
+              }
+            }
+          }
         };
       }
 
@@ -2172,7 +2253,8 @@
       window.autofillWithCurrentSettings = async () => {
         try {
           const settings = getCurrentSettings();
-          await autofill(undefined, settings);
+          const manager = new Autofill(settings);
+          await manager.autofill(undefined);
 
           const modeText = settings.mode === 'auto' ? "Auto Mode" : "Manual Mode";
           const staggerText = settings.staggered
