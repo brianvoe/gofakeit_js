@@ -6,23 +6,23 @@ export const GOFAKEIT_COLORS = {
   success: '#48c774',
   error: '#ff3860',
   info: '#209cee',
-  text: '#ffffff',
+  text: '#333333',
   border: '#686868',
-  background: '#ffffff',
+  background: '#22272e',
 };
 
 export const GOFAKEIT_SPACING = {
-  base: 24, // px
-  half: 12, // px
-  quarter: 8, // px
+  base: 16, // px
+  half: 8, // px
+  quarter: 4, // px
 };
 
 export const GOFAKEIT_BORDER = {
-  radius: 6, // px
+  radius: 4, // px
   width: 2, // px
 };
 
 export const GOFAKEIT_FONT = {
-  size: 14, // px
+  size: 12, // px
   family: 'Helvetica, Arial, sans-serif',
 };
