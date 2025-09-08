@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -13,7 +13,7 @@
       /* ============================================================================
          CSS VARIABLES
          ============================================================================ */
-      
+
       :root {
         /* Colors - Dark Theme (Default) */
         --primary-color: #4dabf7;
@@ -42,7 +42,7 @@
       }
 
       /* Light Theme Variables */
-      [data-theme="light"] {
+      [data-theme='light'] {
         --primary-color: #007bff;
         --primary-hover: #0056b3;
         --secondary-color: #6c757d;
@@ -90,7 +90,7 @@
       }
 
       /* ============================================================================
-         BASE ELEMENTS
+         BASE ELEMENTS & LAYOUT
          ============================================================================ */
 
       body {
@@ -100,26 +100,12 @@
         background-color: var(--bg-main);
         display: flex;
         transition: background-color 0.3s ease;
+        box-sizing: border-box;
+        height: 100vh;
+        overflow: hidden;
       }
 
-      /* ============================================================================
-         SEMANTIC STYLING
-         ============================================================================ */
-
-      /* Text styling */
-      .text-muted {
-        color: var(--text-muted);
-        transition: color 0.3s ease;
-      }
-
-      .text-primary {
-        color: var(--text-primary);
-        transition: color 0.3s ease;
-      }
-
-      /* ============================================================================
-         LAYOUT CONTAINERS
-         ============================================================================ */
+      /* Main Layout Containers */
       .main-content {
         flex: 1;
         padding: var(--spacing-lg);
@@ -128,6 +114,109 @@
         display: flex;
         flex-direction: column;
         gap: var(--spacing-lg);
+        overflow-y: auto;
+        box-sizing: border-box;
+      }
+
+      /* Mobile Header */
+      .mobile-header {
+        display: none;
+        height: 60px;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+        padding: var(--spacing-md);
+        border-bottom: 1px solid var(--border-color);
+        position: relative;
+        background: var(--bg-main);
+        z-index: 1000;
+        box-sizing: border-box;
+      }
+
+      .mobile-header h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        flex: 1;
+        text-align: center;
+      }
+
+      .mobile-header-spacer {
+        width: 30px; /* Same width as hamburger button to balance layout */
+      }
+
+      /* Main Title */
+      .main-title {
+        margin: 0 0 var(--spacing-lg) 0;
+        font-size: 2rem;
+        color: var(--text-primary);
+        display: block;
+      }
+
+      /* Desktop: Hide mobile header, show main title */
+      @media (min-width: 769px) {
+        .mobile-header {
+          display: none !important;
+        }
+
+        .main-title {
+          display: block;
+        }
+      }
+
+      /* Mobile: Hide main title, show mobile header */
+      @media (max-width: 768px) {
+        .main-title {
+          display: none;
+        }
+      }
+
+      /* Sidebar Toggle Button */
+      .sidebar-toggle {
+        display: none;
+        width: 30px;
+        height: 30px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 1001;
+        position: relative;
+      }
+
+      .hamburger {
+        width: 100%;
+        height: 3px;
+        background-color: var(--text-primary);
+        position: absolute;
+        left: 0;
+        transition:
+          transform 0.3s ease-in-out,
+          opacity 0.3s ease-in-out;
+      }
+
+      .hamburger:nth-child(1) {
+        top: 0;
+      }
+
+      .hamburger:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .hamburger:nth-child(3) {
+        bottom: 0;
+      }
+
+      .sidebar-toggle.active .hamburger:nth-child(1) {
+        transform: translateY(13px) rotate(45deg);
+      }
+
+      .sidebar-toggle.active .hamburger:nth-child(2) {
+        opacity: 0;
+      }
+
+      .sidebar-toggle.active .hamburger:nth-child(3) {
+        transform: translateY(-13px) rotate(-45deg);
       }
 
       .container {
@@ -141,7 +230,12 @@
         gap: var(--spacing-lg);
       }
 
-      h1, h2, h3, h4, h5, h6 {
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
         color: var(--text-primary);
         margin: 0;
         padding: 0;
@@ -159,6 +253,37 @@
         padding: 0;
         font-size: var(--font-base);
         line-height: 1.5;
+      }
+
+      /* ============================================================================
+         CONTENT SECTIONS
+         ============================================================================ */
+
+      .section {
+        border: 1px solid var(--border-color);
+        padding: var(--spacing-lg);
+        border-radius: var(--radius-lg);
+        background-color: var(--bg-container);
+        transition:
+          background-color 0.3s ease,
+          border-color 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
+
+      /* ============================================================================
+         SEMANTIC STYLING
+         ============================================================================ */
+
+      .text-muted {
+        color: var(--text-muted);
+        transition: color 0.3s ease;
+      }
+
+      .text-primary {
+        color: var(--text-primary);
+        transition: color 0.3s ease;
       }
 
       /* ============================================================================
@@ -194,19 +319,24 @@
         font-size: var(--font-base);
         background-color: var(--bg-container);
         color: var(--text-primary);
-        transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+        transition:
+          border-color 0.3s,
+          background-color 0.3s,
+          color 0.3s;
         box-sizing: border-box;
       }
 
       /* Special styling for color input */
-      input[type="color"] {
+      input[type='color'] {
         height: 50px;
         padding: 5px;
         cursor: pointer;
         border-radius: var(--radius-md);
         border: 2px solid var(--border-color);
         background-color: var(--bg-container);
-        transition: border-color 0.3s, background-color 0.3s;
+        transition:
+          border-color 0.3s,
+          background-color 0.3s;
 
         &:hover {
           border-color: var(--primary-color);
@@ -214,12 +344,14 @@
       }
 
       /* Dark mode styling for checkboxes and radio buttons */
-      input[type="checkbox"],
-      input[type="radio"] {
+      input[type='checkbox'],
+      input[type='radio'] {
         accent-color: var(--primary-color);
         background-color: var(--bg-container);
         border: 2px solid var(--border-color);
-        transition: border-color 0.3s, background-color 0.3s;
+        transition:
+          border-color 0.3s,
+          background-color 0.3s;
 
         &:hover {
           border-color: var(--primary-color);
@@ -251,7 +383,7 @@
         appearance: none;
 
         /* Dark mode select arrow (default) */
-        &:not([data-theme="light"]) {
+        &:not([data-theme='light']) {
           background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
         }
       }
@@ -394,124 +526,175 @@
       /* ============================================================================
          SETTINGS COMPONENTS
          ============================================================================ */
-      .setting-item {
-        background: var(--bg-light);
-        padding: var(--spacing-md);
-        border-radius: var(--radius-sm);
-        border: 1px solid var(--border-color);
-      }
 
-      .setting-label {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-sm);
-        cursor: pointer;
-        font-weight: 500;
+      .settings-section {
+        margin-top: var(--spacing-lg);
 
-        input[type="checkbox"] {
-          width: 18px;
-          height: 18px;
-          margin: 0;
-          cursor: pointer;
+        h4 {
+          margin: 0 0 var(--spacing-md) 0;
+          color: var(--text-primary);
+          font-size: var(--font-base);
+          font-weight: 600;
         }
-      }
 
-      .setting-text {
-        flex: 1;
-        font-size: var(--font-base);
-      }
+        .setting-item {
+          background: var(--bg-light);
+          padding: var(--spacing-sm);
+          border-radius: var(--radius-sm);
+          border: 1px solid var(--border-color);
+          margin-bottom: var(--spacing-sm);
 
-      .setting-description {
-        margin-top: var(--spacing-sm);
-        margin-left: 26px;
-        line-height: 1.4;
-        font-size: var(--font-sm);
-        color: var(--text-muted);
-      }
+          &:last-child {
+            margin-bottom: 0;
+          }
 
-      .setting-range {
-        width: 100px;
-        margin: 0 var(--spacing-sm);
-      }
+          .setting-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--spacing-sm);
+            cursor: pointer;
+            font-weight: 500;
 
-      .setting-value {
-        min-width: 30px;
-        text-align: right;
-        font-weight: 500;
-        color: var(--primary-color);
+            input[type='checkbox'] {
+              width: 18px;
+              height: 18px;
+              margin: 0;
+              cursor: pointer;
+            }
+
+            .setting-text {
+              flex: 1;
+              font-size: var(--font-base);
+              font-weight: 500;
+              color: var(--text-primary);
+            }
+          }
+
+          .setting-slider-container {
+            margin-top: var(--spacing-xs);
+            padding: 2px 0;
+
+            .setting-range {
+              margin: 0;
+              padding: 0;
+              height: 20px;
+              width: 150px;
+            }
+          }
+
+          .setting-description {
+            margin-top: var(--spacing-sm);
+            margin-left: 26px;
+            line-height: 1.4;
+            font-size: var(--font-sm);
+            color: var(--text-muted);
+            font-style: italic;
+          }
+        }
+
+        .mode-toggle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: var(--spacing-sm);
+
+          .mode-label {
+            font-size: var(--font-base);
+            font-weight: 500;
+            color: var(--text-primary);
+          }
+
+          .toggle-container {
+            width: 100%;
+            max-width: 130px;
+          }
+        }
+
+        .setting-value {
+          min-width: 30px;
+          text-align: right;
+          font-weight: 500;
+          color: var(--primary-color);
+        }
       }
 
       /* ============================================================================
          TOGGLE COMPONENTS
          ============================================================================ */
-      .mode-toggle {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-sm);
-      }
 
-      .mode-label {
-        font-weight: 500;
-        color: var(--text-primary);
-        min-width: 40px;
-      }
-
+      /* Reusable Toggle Container - Base Styles */
       .toggle-container {
         display: flex;
-        background: var(--bg-light);
+        background: var(--bg-container);
         border-radius: var(--radius-sm);
         border: 1px solid var(--border-color);
         overflow: hidden;
         position: relative;
-      }
+        min-width: 80px;
 
-      .toggle-container input[type="radio"] {
-        display: none;
-      }
+        input[type='radio'],
+        input[type='checkbox'] {
+          display: none;
+        }
 
-      .toggle-option {
-        padding: 6px 12px;
-        font-size: var(--font-sm);
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        background: transparent;
-        color: var(--text-muted);
-        border: none;
-        min-width: 50px;
-        text-align: center;
-      }
+        .toggle-option {
+          padding: 6px 12px;
+          font-size: var(--font-sm);
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          background: transparent;
+          color: var(--text-muted);
+          border: none;
+          min-width: 40px;
+          text-align: center;
+          flex: 1;
+          position: relative;
+          z-index: 1;
 
-      .toggle-container input[type="radio"]:checked + .toggle-option {
-        background: var(--primary-color);
-        color: white;
-      }
+          &:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+          }
+        }
 
-      .toggle-container input[type="radio"]:checked + .toggle-option:hover {
-        background: var(--primary-color);
-      }
+        /* Radio Button Specific Styles */
+        input[type='radio']:checked + .toggle-option {
+          background: var(--primary-color);
+          color: white;
 
-      .toggle-option:hover {
-        background: var(--bg-hover);
-        color: var(--text-primary);
-      }
+          &:hover {
+            background: var(--primary-hover);
+            color: white;
+          }
+        }
 
-      /* Compact setting styles */
-      .setting-label.compact {
-        margin-bottom: 0;
-      }
+        /* Checkbox Specific Styles */
+        input[type='checkbox']:checked + .toggle-option {
+          background: var(--primary-color);
+          color: white;
 
-      .setting-range.compact {
-        width: 80px;
-        margin: 0 var(--spacing-xs);
-      }
+          &:hover {
+            background: var(--primary-hover);
+            color: white;
+          }
+        }
 
-      .setting-description {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-xs);
-        margin-top: var(--spacing-xs);
-        margin-left: 0;
+        input[type='checkbox']:checked + .toggle-option + .toggle-option {
+          background: transparent;
+          color: var(--text-muted);
+        }
+
+        input[type='checkbox']:not(:checked) + .toggle-option {
+          background: transparent;
+          color: var(--text-muted);
+        }
+
+        input[type='checkbox']:not(:checked) + .toggle-option + .toggle-option {
+          background: var(--primary-color);
+          color: white;
+        }
       }
 
       /* ============================================================================
@@ -523,7 +706,7 @@
         justify-content: space-between;
 
         .staggered-label {
-          font-size: var(--font-sm);
+          font-size: var(--font-base);
           font-weight: 500;
           color: var(--text-primary);
         }
@@ -553,16 +736,19 @@
           border-radius: 3px;
           outline: none;
           -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
 
           &::-webkit-slider-thumb {
             -webkit-appearance: none;
+            -moz-appearance: none;
             appearance: none;
             width: 18px;
             height: 18px;
             background: var(--primary-color);
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
           }
 
           &::-moz-range-thumb {
@@ -572,7 +758,7 @@
             border-radius: 50%;
             cursor: pointer;
             border: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
           }
         }
       }
@@ -603,10 +789,110 @@
         height: 100vh;
         overflow-y: auto;
         box-shadow: var(--shadow-medium);
-        transition: background-color 0.3s ease, border-color 0.3s ease;
+        transition:
+          background-color 0.3s ease,
+          border-color 0.3s ease,
+          transform 0.3s ease;
         display: flex;
         flex-direction: column;
         gap: var(--spacing-lg);
+        box-sizing: border-box;
+        z-index: 1000;
+      }
+
+      /* ============================================================================
+           MOBILE RESPONSIVE DESIGN
+           ============================================================================ */
+
+      /* Mobile breakpoint */
+      @media (max-width: 768px) {
+        body {
+          overflow-x: hidden;
+        }
+
+        .main-content {
+          margin: 0;
+          padding: var(--spacing-md);
+          padding-top: 60px; /* Account for fixed header height */
+          width: 100%;
+        }
+
+        .mobile-header {
+          display: flex;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          margin-bottom: 0;
+          z-index: 1000;
+          background: var(--bg-main);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-toggle {
+          display: flex;
+        }
+
+        .sidebar {
+          position: fixed;
+          top: 60px;
+          right: -300px;
+          width: 300px;
+          height: calc(100vh - 60px);
+          transform: translateX(0);
+          transition: transform 0.3s ease;
+          z-index: 1000;
+          border-left: none;
+          box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar.open {
+          transform: translateX(-300px);
+        }
+
+        /* Overlay when sidebar is open */
+        .sidebar-overlay {
+          position: fixed;
+          top: 60px;
+          left: 0;
+          width: 100%;
+          height: calc(100vh - 60px);
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 999;
+          opacity: 0;
+          visibility: hidden;
+          transition:
+            opacity 0.3s ease,
+            visibility 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+
+      /* Small mobile breakpoint */
+      @media (max-width: 480px) {
+        .sidebar {
+          width: 100%;
+          right: -100%;
+          top: 60px;
+          height: calc(100vh - 60px);
+        }
+
+        .sidebar.open {
+          transform: translateX(-100%);
+        }
+
+        .main-content {
+          padding: var(--spacing-sm);
+          padding-top: calc(60px + var(--spacing-sm));
+        }
+
+        .mobile-header h1 {
+          font-size: 1.25rem;
+        }
       }
 
       .controls {
@@ -645,26 +931,87 @@
         display: flex;
         align-items: center;
         gap: var(--spacing-sm);
+        cursor: pointer;
+        padding: var(--spacing-xs);
+        border-radius: var(--radius-sm);
+        transition: background-color 0.2s ease;
 
-        input {
-          width: auto;
+        &:hover {
+          background-color: var(--bg-hover);
+        }
+
+        input[type='checkbox'],
+        input[type='radio'] {
+          width: 18px;
+          height: 18px;
+          margin: 0;
+          cursor: pointer;
+          appearance: none;
+          border: 2px solid var(--border-color);
+          background-color: var(--bg-primary);
+          transition: all 0.2s ease;
+          position: relative;
+
+          &:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.1);
+          }
+
+          &:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
+          }
+
+          &:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+          }
+        }
+
+        input[type='checkbox'] {
+          border-radius: var(--radius-xs);
+
+          &:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 1;
+          }
+        }
+
+        input[type='radio'] {
+          border-radius: 50%;
+
+          &:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 50%;
+          }
         }
 
         label {
           margin: 0;
           font-weight: normal;
+          cursor: pointer;
+          color: var(--text-primary);
+          transition: color 0.2s ease;
         }
-      }
 
-      .section {
-        border: 1px solid var(--border-color);
-        padding: var(--spacing-lg);
-        border-radius: var(--radius-lg);
-        background-color: var(--bg-container);
-        transition: background-color 0.3s ease, border-color 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        gap: var(--spacing-md);
+        &:hover label {
+          color: var(--text-primary);
+        }
       }
 
       /* ============================================================================
@@ -672,43 +1019,16 @@
          ============================================================================ */
 
       .status {
-        position: fixed;
-        top: var(--spacing-lg);
-        right: var(--spacing-lg);
+        position: relative;
+        margin-top: var(--spacing-md);
+        margin-bottom: var(--spacing-md);
         padding: 10px var(--spacing-lg);
-        border-radius: var(--radius-sm);
-        color: white;
-        font-weight: bold;
-        z-index: 1000;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s, visibility 0.3s;
-
-        &.success {
-          background: var(--success-color);
-        }
-
-        &.error {
-          background: var(--danger-color);
-        }
-
-        &.show {
-          opacity: 1;
-          visibility: visible;
-        }
-      }
-
-      .status-badge {
-        position: fixed;
-        top: var(--spacing-lg);
-        left: var(--spacing-lg);
-        padding: 8px var(--spacing-md);
         border-radius: var(--radius-sm);
         color: white;
         font-weight: 500;
         font-size: 14px;
-        z-index: 1000;
         transition: all 0.3s ease;
+        display: block;
 
         &.idle {
           background: var(--secondary-color);
@@ -722,25 +1042,20 @@
           background: var(--info-color);
         }
 
-        &.determining_functions {
+        &.processing {
           background: var(--warning-color);
-          color: var(--bg-main);
         }
 
-        &.getting_values {
-          background: var(--primary-color);
-        }
-
-        &.applying_values {
-          background: var(--primary-color);
-        }
-
-        &.completed {
+        &.complete {
           background: var(--success-color);
         }
 
         &.error {
           background: var(--danger-color);
+        }
+
+        &.success {
+          background: var(--success-color);
         }
       }
 
@@ -807,11 +1122,22 @@
     </style>
   </head>
   <body>
-    <div id="status" class="status"></div>
-    <div id="statusDisplay" class="status-badge idle">Ready</div>
-
     <div class="main-content">
-      <h1>🎯 Gofakeit Autofill</h1>
+      <h1 class="main-title">🎯 Gofakeit Autofill</h1>
+
+      <div class="mobile-header">
+        <button
+          id="sidebarToggle"
+          class="sidebar-toggle"
+          aria-label="Toggle sidebar"
+        >
+          <span class="hamburger"></span>
+          <span class="hamburger"></span>
+          <span class="hamburger"></span>
+        </button>
+        <h1>🎯 Gofakeit Autofill</h1>
+        <div class="mobile-header-spacer"></div>
+      </div>
 
       <div class="container">
         <!-- RICH CONTEXT EXAMPLES - Lots of descriptive text -->
@@ -936,11 +1262,7 @@
                   >Medium</span
                 ></label
               >
-              <input
-                type="text"
-                id="jobTitle"
-                placeholder="Enter job title"
-              />
+              <input type="text" id="jobTitle" placeholder="Enter job title" />
             </div>
           </div>
           <div class="row">
@@ -979,11 +1301,7 @@
                   >Medium</span
                 ></label
               >
-              <input
-                type="text"
-                id="city"
-                placeholder="Enter city"
-              />
+              <input type="text" id="city" placeholder="Enter city" />
             </div>
             <div class="form-group">
               <label for="state"
@@ -992,11 +1310,7 @@
                   >Medium</span
                 ></label
               >
-              <input
-                type="text"
-                id="state"
-                placeholder="Enter state"
-              />
+              <input type="text" id="state" placeholder="Enter state" />
             </div>
           </div>
         </div>
@@ -1020,7 +1334,7 @@
                   >Sparse</span
                 ></label
               >
-              <input type="text" id="zipCode"  />
+              <input type="text" id="zipCode" />
             </div>
             <div class="form-group">
               <label for="country"
@@ -1029,7 +1343,7 @@
                   >Sparse</span
                 ></label
               >
-              <input type="text" id="country"  />
+              <input type="text" id="country" />
             </div>
           </div>
           <div class="row">
@@ -1040,7 +1354,7 @@
                   >Sparse</span
                 ></label
               >
-              <input type="number" id="age"  />
+              <input type="number" id="age" />
             </div>
             <div class="form-group">
               <label for="salary"
@@ -1066,7 +1380,7 @@
                   >Sparse</span
                 ></label
               >
-              <input type="color" id="color"  />
+              <input type="color" id="color" />
             </div>
             <div class="form-group">
               <label for="bio"
@@ -1083,9 +1397,7 @@
         <!-- CATEGORIES -->
         <div class="section" id="categories">
           <h3>🏷️ Categories</h3>
-          <p>
-            Testing various gofakeit categories with different input types.
-          </p>
+          <p>Testing various gofakeit categories with different input types.</p>
 
           <!-- PERSON CATEGORY -->
           <div id="person-category">
@@ -1101,21 +1413,13 @@
               </div>
               <div class="form-group">
                 <label for="gender">Gender</label>
-                <input
-                  type="text"
-                  id="gender"
-                  placeholder="Gender selection"
-                />
+                <input type="text" id="gender" placeholder="Gender selection" />
               </div>
             </div>
             <div class="row">
               <div class="form-group">
                 <label for="petName">Pet Name</label>
-                <input
-                  type="text"
-                  id="petName"
-                  placeholder="Pet name"
-                />
+                <input type="text" id="petName" placeholder="Pet name" />
               </div>
               <div class="form-group">
                 <label for="username">Username</label>
@@ -1239,11 +1543,7 @@
             <div class="row">
               <div class="form-group">
                 <label for="domainName">Domain Name</label>
-                <input
-                  type="text"
-                  id="domainName"
-                  placeholder="example.com"
-                />
+                <input type="text" id="domainName" placeholder="example.com" />
               </div>
               <div class="form-group">
                 <label for="ipv6Address">IPv6 Address</label>
@@ -1306,11 +1606,7 @@
               </div>
               <div class="form-group">
                 <label for="year">Year</label>
-                <input
-                  type="number"
-                  id="year"
-                  placeholder="Year value"
-                />
+                <input type="number" id="year" placeholder="Year value" />
               </div>
             </div>
           </div>
@@ -1344,19 +1640,11 @@
             <div class="row">
               <div class="form-group">
                 <label for="noun">Noun</label>
-                <input
-                  type="text"
-                  id="noun"
-                  placeholder="Random noun"
-                />
+                <input type="text" id="noun" placeholder="Random noun" />
               </div>
               <div class="form-group">
                 <label for="verb">Verb</label>
-                <input
-                  type="text"
-                  id="verb"
-                  placeholder="Random verb"
-                />
+                <input type="text" id="verb" placeholder="Random verb" />
               </div>
             </div>
             <div class="row">
@@ -1385,19 +1673,11 @@
             <div class="row">
               <div class="form-group">
                 <label for="hexColor">Hex Color</label>
-                <input
-                  type="text"
-                  id="hexColor"
-                  placeholder="#FF0000"
-                />
+                <input type="text" id="hexColor" placeholder="#FF0000" />
               </div>
               <div class="form-group">
                 <label for="rgbColor">RGB Color</label>
-                <input
-                  type="text"
-                  id="rgbColor"
-                  placeholder="rgb(255, 0, 0)"
-                />
+                <input type="text" id="rgbColor" placeholder="rgb(255, 0, 0)" />
               </div>
             </div>
           </div>
@@ -1408,37 +1688,21 @@
             <div class="row">
               <div class="form-group">
                 <label for="animal">Animal</label>
-                <input
-                  type="text"
-                  id="animal"
-                  placeholder="Random animal"
-                />
+                <input type="text" id="animal" placeholder="Random animal" />
               </div>
               <div class="form-group">
                 <label for="bird">Bird</label>
-                <input
-                  type="text"
-                  id="bird"
-                  placeholder="Random bird"
-                />
+                <input type="text" id="bird" placeholder="Random bird" />
               </div>
             </div>
             <div class="row">
               <div class="form-group">
                 <label for="cat">Cat</label>
-                <input
-                  type="text"
-                  id="cat"
-                  placeholder="Random cat breed"
-                />
+                <input type="text" id="cat" placeholder="Random cat breed" />
               </div>
               <div class="form-group">
                 <label for="dog">Dog</label>
-                <input
-                  type="text"
-                  id="dog"
-                  placeholder="Random dog breed"
-                />
+                <input type="text" id="dog" placeholder="Random dog breed" />
               </div>
             </div>
           </div>
@@ -1449,11 +1713,7 @@
             <div class="row">
               <div class="form-group">
                 <label for="fruit">Fruit</label>
-                <input
-                  type="text"
-                  id="fruit"
-                  placeholder="Random fruit"
-                />
+                <input type="text" id="fruit" placeholder="Random fruit" />
               </div>
               <div class="form-group">
                 <label for="vegetable">Vegetable</label>
@@ -1475,11 +1735,7 @@
               </div>
               <div class="form-group">
                 <label for="lunch">Lunch</label>
-                <input
-                  type="text"
-                  id="lunch"
-                  placeholder="Lunch food"
-                />
+                <input type="text" id="lunch" placeholder="Lunch food" />
               </div>
             </div>
           </div>
@@ -1498,11 +1754,7 @@
               </div>
               <div class="form-group">
                 <label for="carModel">Car Model</label>
-                <input
-                  type="text"
-                  id="carModel"
-                  placeholder="Car model name"
-                />
+                <input type="text" id="carModel" placeholder="Car model name" />
               </div>
             </div>
           </div>
@@ -1521,11 +1773,7 @@
               </div>
               <div class="form-group">
                 <label for="dice">Dice</label>
-                <input
-                  type="text"
-                  id="dice"
-                  placeholder="Dice roll result"
-                />
+                <input type="text" id="dice" placeholder="Dice roll result" />
               </div>
             </div>
           </div>
@@ -1536,19 +1784,11 @@
             <div class="row">
               <div class="form-group">
                 <label for="uuid">UUID</label>
-                <input
-                  type="text"
-                  id="uuid"
-                  placeholder="Unique identifier"
-                />
+                <input type="text" id="uuid" placeholder="Unique identifier" />
               </div>
               <div class="form-group">
                 <label for="bool">Boolean</label>
-                <input
-                  type="text"
-                  id="bool"
-                  placeholder="True or false"
-                />
+                <input type="text" id="bool" placeholder="True or false" />
               </div>
             </div>
           </div>
@@ -1557,9 +1797,7 @@
         <!-- CUSTOM FUNCTION EXAMPLES -->
         <div class="section" id="custom-functions">
           <h3>🎯 Custom Function Examples</h3>
-          <p>
-            Examples with specific function assignments.
-          </p>
+          <p>Examples with specific function assignments.</p>
 
           <div class="row">
             <div class="form-group">
@@ -1621,7 +1859,8 @@
         <div class="section" id="data-gofakeit-true">
           <h3>✅ Data-gofakeit="true" Fields</h3>
           <p>
-            These fields have <code>data-gofakeit="true"</code> and will be autofilled regardless of Auto Mode setting.
+            These fields have <code>data-gofakeit="true"</code> and will be
+            autofilled regardless of Auto Mode setting.
           </p>
 
           <div class="input-grid">
@@ -1709,7 +1948,9 @@
             <label for="trueCheckbox">Agree to Terms</label>
             <div class="checkbox-item">
               <input type="checkbox" id="trueCheckbox" data-gofakeit="true" />
-              <label for="trueCheckbox">I agree to the terms and conditions</label>
+              <label for="trueCheckbox"
+                >I agree to the terms and conditions</label
+              >
             </div>
             <div class="field-note">data-gofakeit="true"</div>
           </div>
@@ -1718,15 +1959,30 @@
             <label>Gender</label>
             <div class="radio-group">
               <div class="radio-item">
-                <input type="radio" id="trueMale" name="trueGender" data-gofakeit="true" />
+                <input
+                  type="radio"
+                  id="trueMale"
+                  name="trueGender"
+                  data-gofakeit="true"
+                />
                 <label for="trueMale">Male</label>
               </div>
               <div class="radio-item">
-                <input type="radio" id="trueFemale" name="trueGender" data-gofakeit="true" />
+                <input
+                  type="radio"
+                  id="trueFemale"
+                  name="trueGender"
+                  data-gofakeit="true"
+                />
                 <label for="trueFemale">Female</label>
               </div>
               <div class="radio-item">
-                <input type="radio" id="trueOther" name="trueGender" data-gofakeit="true" />
+                <input
+                  type="radio"
+                  id="trueOther"
+                  name="trueGender"
+                  data-gofakeit="true"
+                />
                 <label for="trueOther">Other</label>
               </div>
             </div>
@@ -1746,19 +2002,19 @@
             <label>Programming Languages (Checkboxes)</label>
             <div class="checkbox-group">
               <div class="checkbox-item">
-                <input type="checkbox" id="lang1"  />
+                <input type="checkbox" id="lang1" />
                 <label for="lang1">JavaScript</label>
               </div>
               <div class="checkbox-item">
-                <input type="checkbox" id="lang2"  />
+                <input type="checkbox" id="lang2" />
                 <label for="lang2">Python</label>
               </div>
               <div class="checkbox-item">
-                <input type="checkbox" id="lang3"  />
+                <input type="checkbox" id="lang3" />
                 <label for="lang3">Go</label>
               </div>
               <div class="checkbox-item">
-                <input type="checkbox" id="lang4"  />
+                <input type="checkbox" id="lang4" />
                 <label for="lang4">Rust</label>
               </div>
             </div>
@@ -1767,34 +2023,22 @@
             <label>Experience Level (Radio Buttons)</label>
             <div class="radio-group">
               <div class="radio-item">
-                <input
-                  type="radio"
-                  name="experience"
-                  id="exp1"
-                />
+                <input type="radio" name="experience" id="exp1" />
                 <label for="exp1">Beginner</label>
               </div>
               <div class="radio-item">
-                <input
-                  type="radio"
-                  name="experience"
-                  id="exp2"
-                />
+                <input type="radio" name="experience" id="exp2" />
                 <label for="exp2">Intermediate</label>
               </div>
               <div class="radio-item">
-                <input
-                  type="radio"
-                  name="experience"
-                  id="exp3"
-                />
+                <input type="radio" name="experience" id="exp3" />
                 <label for="exp3">Advanced</label>
               </div>
             </div>
           </div>
           <div class="form-group">
             <label for="timezoneSelect">Timezone (Select)</label>
-            <select id="timezoneSelect" >
+            <select id="timezoneSelect">
               <option value="">Select timezone</option>
               <option value="UTC">UTC (Coordinated Universal Time)</option>
               <option value="EST">EST (Eastern Standard Time)</option>
@@ -1808,9 +2052,7 @@
         <!-- EXCLUDED FIELDS -->
         <div class="section" id="excluded-fields">
           <h3>🚫 Excluded Fields (data-gofakeit="false")</h3>
-          <p>
-            These fields will NOT be filled by the autofill function.
-          </p>
+          <p>These fields will NOT be filled by the autofill function.</p>
 
           <div class="row">
             <div class="form-group">
@@ -1838,8 +2080,9 @@
         <div class="section" id="error-demonstration">
           <h3>⚠️ Error Demonstration</h3>
           <p>
-            These fields use invalid <code>data-gofakeit</code> values that should cause errors to be displayed.
-            This helps test error handling and user feedback.
+            These fields use invalid <code>data-gofakeit</code> values that
+            should cause errors to be displayed. This helps test error handling
+            and user feedback.
           </p>
 
           <div class="row">
@@ -1922,7 +2165,10 @@
       </div>
     </div>
 
-    <div class="sidebar">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="sidebar" id="sidebar">
       <div class="controls">
         <!-- Night Mode Toggle at the top -->
         <div class="theme-toggle">
@@ -1936,7 +2182,11 @@
         </div>
 
         <h3 style="margin-top: 0; color: var(--text-primary)">🎮 Controls</h3>
-        <button class="btn" onclick="autofill()">🚀 Autofill All Fields</button>
+
+        <!-- Status Display -->
+        <div id="status" class="status idle">Ready</div>
+
+        <button class="btn" onclick="autofill()">🚀 Fill All Fields</button>
         <button class="btn btn-secondary" onclick="autofill('#rich-context')">
           📝 Rich Context
         </button>
@@ -1946,10 +2196,7 @@
         <button class="btn btn-secondary" onclick="autofill('#sparse-context')">
           🔍 Sparse Context
         </button>
-        <button
-          class="btn btn-secondary"
-          onclick="autofill('#categories')"
-        >
+        <button class="btn btn-secondary" onclick="autofill('#categories')">
           🏷️ All Categories
         </button>
         <select
@@ -1986,7 +2233,10 @@
         >
           ✅ Data-gofakeit="true"
         </button>
-        <button class="btn btn-secondary" onclick="autofill('#no-search-inputs')">
+        <button
+          class="btn btn-secondary"
+          onclick="autofill('#no-search-inputs')"
+        >
           🚫 No Search Inputs
         </button>
         <button
@@ -2007,9 +2257,20 @@
             <div class="mode-toggle">
               <span class="mode-label">Mode:</span>
               <div class="toggle-container">
-                <input type="radio" id="modeAuto" name="mode" value="auto" checked>
+                <input
+                  type="radio"
+                  id="modeAuto"
+                  name="mode"
+                  value="auto"
+                  checked
+                />
                 <label for="modeAuto" class="toggle-option">Auto</label>
-                <input type="radio" id="modeManual" name="mode" value="manual">
+                <input
+                  type="radio"
+                  id="modeManual"
+                  name="mode"
+                  value="manual"
+                />
                 <label for="modeManual" class="toggle-option">Manual</label>
               </div>
             </div>
@@ -2018,27 +2279,66 @@
             </div>
           </div>
 
-          <!-- Staggered Timing -->
+          <!-- Stagger Timing -->
           <div class="setting-item">
-            <div class="staggered-toggle">
-              <span class="staggered-label">⏱️ Staggered:</span>
-              <div class="toggle-container">
-                <input type="radio" id="staggeredOn" name="staggered" value="on" checked>
-                <label for="staggeredOn" class="toggle-option">On</label>
-                <input type="radio" id="staggeredOff" name="staggered" value="off">
-                <label for="staggeredOff" class="toggle-option">Off</label>
-              </div>
+            <div class="setting-label">
+              <span class="setting-text"
+                >Stagger:
+                <span id="staggerValue" class="setting-value">50ms</span></span
+              >
             </div>
-            <div class="staggered-slider">
-              <input type="range" data-gofakeit="false" id="staggerDelay" min="0" max="500" value="50" class="setting-range" />
-              <div class="slider-labels">
-                <span>0ms</span>
-                <span id="staggerDelayValue" class="delay-display">50ms</span>
-                <span>500ms</span>
+            <div class="setting-slider-container">
+              <input
+                type="range"
+                data-gofakeit="false"
+                id="stagger"
+                min="0"
+                max="300"
+                value="50"
+                class="setting-range"
+              />
+            </div>
+            <div class="setting-description">
+              0ms = immediate, 50ms+ = staggered delays between fills
+            </div>
+          </div>
+
+          <!-- Badge Settings -->
+          <div class="setting-item">
+            <div class="setting-label">
+              <span class="setting-text"
+                >Badges:
+                <span id="badgesValue" class="setting-value">3000ms</span></span
+              >
+            </div>
+            <div class="setting-slider-container">
+              <input
+                type="range"
+                data-gofakeit="false"
+                id="badges"
+                min="0"
+                max="10000"
+                value="3000"
+                class="setting-range"
+              />
+            </div>
+            <div class="setting-description">
+              0ms = no badges, 1000ms+ = badges stay visible for this duration
+            </div>
+          </div>
+
+          <!-- Debug Settings -->
+          <div class="setting-item">
+            <div class="setting-label">
+              <span class="setting-text">Debug:</span>
+              <div class="toggle-container">
+                <input type="checkbox" id="debugMode" />
+                <label for="debugMode" class="toggle-option">OFF</label>
+                <label for="debugMode" class="toggle-option">ON</label>
               </div>
             </div>
             <div class="setting-description">
-              Add delays between field fills for visual effect
+              Show detailed console logs for debugging
             </div>
           </div>
         </div>
@@ -2046,53 +2346,152 @@
     </div>
 
     <script type="module">
-      import { Autofill } from "./src/index.ts";
+      import { Autofill, AutofillStatus } from './src/index.ts';
+
+      // Mobile Sidebar Functionality
+      function initMobileSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function openSidebar() {
+          sidebar.classList.add('open');
+          sidebarOverlay.classList.add('active');
+          sidebarToggle.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+          sidebar.classList.remove('open');
+          sidebarOverlay.classList.remove('active');
+          sidebarToggle.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+
+        // Toggle sidebar
+        if (sidebarToggle) {
+          sidebarToggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+              closeSidebar();
+            } else {
+              openSidebar();
+            }
+          });
+        }
+
+        // Close sidebar when clicking overlay
+        if (sidebarOverlay) {
+          sidebarOverlay.addEventListener('click', closeSidebar);
+        }
+
+        // Close sidebar on escape key
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+            closeSidebar();
+          }
+        });
+
+        // Auto-open sidebar when autofill buttons are clicked on mobile
+        function handleAutofillClick() {
+          if (window.innerWidth <= 768) {
+            openSidebar();
+          }
+        }
+
+        // Add event listeners to autofill buttons
+        const autofillButtons = document.querySelectorAll(
+          'button[onclick*="autofill"]'
+        );
+        autofillButtons.forEach(button => {
+          button.addEventListener('click', handleAutofillClick);
+        });
+      }
+
+      // Initialize mobile sidebar when DOM is loaded
+      document.addEventListener('DOMContentLoaded', initMobileSidebar);
+
+      // Helper function for mobile-aware scrolling
+      function scrollToElement(element, offset = 0) {
+        if (!element) {
+          return;
+        }
+
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+          // Calculate dynamic header offset based on actual header height + spacing
+          const mobileHeader = document.querySelector('.mobile-header');
+          const headerHeight = mobileHeader ? mobileHeader.offsetHeight : 60; // fallback to 60px
+          const spacing = 16; // CSS var(--spacing-md) = 14px, using 16px for a bit more breathing room
+          const headerOffset = headerHeight + spacing;
+
+          // For mobile, temporarily add scroll-margin-top to create offset
+          const originalScrollMargin = element.style.scrollMarginTop;
+          element.style.scrollMarginTop = headerOffset + 'px';
+
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+
+          // Remove the scroll-margin-top after scrolling completes
+          setTimeout(() => {
+            element.style.scrollMarginTop = originalScrollMargin;
+          }, 500);
+        } else {
+          // For desktop, use normal scrollIntoView
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+        }
+      }
 
       // Make functions available globally
-      window.autofill = async (target) => {
+      window.autofill = async target => {
         try {
           // Get current settings
           const settings = getCurrentSettings();
 
           if (target) {
             // If target is a string, treat it as a CSS selector (ID, class, or other)
-            if (typeof target === "string") {
+            if (typeof target === 'string') {
               // Scroll to the section first
               const element = document.querySelector(target);
               if (element) {
-                element.scrollIntoView({ behavior: "smooth", block: "start" });
-                
-                // Wait a moment for the scroll to complete, then autofill
+                scrollToElement(element);
+
+                // Wait a moment for the scroll to complete, then fill
                 setTimeout(async () => {
                   const manager = new Autofill(settings);
-                  await manager.autofill(target);
+                  await manager.fill(target);
                   showStatus(
                     `✅ ${target} section filled successfully!`,
-                    "success"
+                    'success'
                   );
                 }, 500);
               } else {
-                showStatus("❌ Element not found: " + target, "error");
+                showStatus('❌ Element not found: ' + target, 'error');
               }
             } else {
-              const manager = new AutofillManager(settings);
-              await manager.autofill(target);
-              showStatus("✅ Element filled successfully!", "success");
+              const manager = new Autofill(settings);
+              await manager.fill(target);
+              showStatus('✅ Element filled successfully!', 'success');
             }
           } else {
-            // No target - autofill all
-            const manager = new AutofillManager(settings);
-            await manager.autofill(undefined);
-            showStatus("✅ All fields filled successfully!", "success");
+            // No target - fill all
+            const manager = new Autofill(settings);
+            await manager.fill(undefined);
+            showStatus('✅ All fields filled successfully!', 'success');
           }
         } catch (error) {
-          showStatus("❌ Error filling fields: " + error.message, "error");
+          showStatus('❌ Error filling fields: ' + error.message, 'error');
         }
       };
 
       // Function to handle category selection from dropdown
       window.handleCategorySelection = async () => {
-        const selector = document.getElementById("categorySelector");
+        const selector = document.getElementById('categorySelector');
         const selectedCategory = selector.value;
 
         if (!selectedCategory) {
@@ -2102,27 +2501,27 @@
         try {
           // Map category values to their heading text
           const categoryHeadingMap = {
-            "person-category": "👤 Person Category",
-            "address-category": "🏠 Address Category",
-            "company-category": "🏢 Company Category",
-            "payment-category": "💳 Payment Category",
-            "internet-category": "🌐 Internet Category",
-            "time-category": "⏰ Time Category",
-            "language-category": "🗣️ Language Category",
-            "word-category": "📝 Word Category",
-            "color-category": "🎨 Color Category",
-            "animal-category": "🐾 Animal Category",
-            "food-category": "🍕 Food Category",
-            "car-category": "🚗 Car Category",
-            "game-category": "🎮 Game Category",
-            "misc-category": "🎲 Misc Category",
+            'person-category': '👤 Person Category',
+            'address-category': '🏠 Address Category',
+            'company-category': '🏢 Company Category',
+            'payment-category': '💳 Payment Category',
+            'internet-category': '🌐 Internet Category',
+            'time-category': '⏰ Time Category',
+            'language-category': '🗣️ Language Category',
+            'word-category': '📝 Word Category',
+            'color-category': '🎨 Color Category',
+            'animal-category': '🐾 Animal Category',
+            'food-category': '🍕 Food Category',
+            'car-category': '🚗 Car Category',
+            'game-category': '🎮 Game Category',
+            'misc-category': '🎲 Misc Category',
           };
 
           // Find the specific category heading by text content
           const headingText = categoryHeadingMap[selectedCategory];
           let categoryHeading = null;
           if (headingText) {
-            const allHeadings = document.querySelectorAll("h4");
+            const allHeadings = document.querySelectorAll('h4');
             for (const heading of allHeadings) {
               if (heading.textContent?.includes(headingText)) {
                 categoryHeading = heading;
@@ -2132,15 +2531,12 @@
           }
 
           if (categoryHeading) {
-            categoryHeading.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
+            scrollToElement(categoryHeading);
           } else {
             // Fallback: scroll to the categories section
-            const section = document.getElementById("categories");
+            const section = document.getElementById('categories');
             if (section) {
-              section.scrollIntoView({ behavior: "smooth", block: "start" });
+              scrollToElement(section);
             }
           }
 
@@ -2149,7 +2545,7 @@
             // Find the category container
             const categoryContainer = document.getElementById(selectedCategory);
             if (!categoryContainer) {
-              showStatus("❌ Category container not found!", "error");
+              showStatus('❌ Category container not found!', 'error');
               return;
             }
 
@@ -2157,18 +2553,18 @@
               // Get current settings
               const settings = getCurrentSettings();
 
-              // Use the main autofill function with the category container
+              // Use the main fill function with the category container
               const manager = new Autofill(settings);
-              await manager.autofill(categoryContainer);
+              await manager.fill(categoryContainer);
 
               // Count filled elements
               let filledCount = 0;
               const inputs = categoryContainer.querySelectorAll(
-                "input, textarea, select"
+                'input, textarea, select'
               );
-              inputs.forEach((element) => {
+              inputs.forEach(element => {
                 if (element instanceof HTMLInputElement) {
-                  if (element.type === "checkbox" || element.type === "radio") {
+                  if (element.type === 'checkbox' || element.type === 'radio') {
                     if (element.checked) filledCount++;
                   } else if (element.value) {
                     filledCount++;
@@ -2181,159 +2577,203 @@
                 }
               });
 
-              const categoryName = selector.options[selector.selectedIndex].text;
+              const categoryName =
+                selector.options[selector.selectedIndex].text;
               showStatus(
                 `✅ ${categoryName} filled successfully! (${filledCount} fields)`,
-                "success"
+                'success'
               );
             } catch (error) {
-              console.warn("Failed to fill category:", error);
+              console.warn('Failed to fill category:', error);
               showStatus(
-                "❌ Error filling category: " + error.message,
-                "error"
+                '❌ Error filling category: ' + error.message,
+                'error'
               );
             }
 
             // Reset the dropdown
-            selector.value = "";
+            selector.value = '';
           }, 500);
         } catch (error) {
-          showStatus("❌ Error filling category: " + error.message, "error");
+          showStatus('❌ Error filling category: ' + error.message, 'error');
           // Reset the dropdown even on error
-          selector.value = "";
+          selector.value = '';
         }
       };
 
       // Function to get current settings from the UI controls
       function getCurrentSettings() {
         const mode = document.querySelector('input[name="mode"]:checked').value;
-        const staggeredMode = document.querySelector('input[name="staggered"]:checked').value === 'on';
-        const staggerDelay = parseInt(
-          document.getElementById("staggerDelay").value
-        );
+        const stagger = parseInt(document.getElementById('stagger').value);
+        const badges = parseInt(document.getElementById('badges').value);
+        const debug = document.getElementById('debugMode').checked;
 
         return {
           mode: mode,
-          staggered: staggeredMode,
-          staggerDelay: staggerDelay,
+          stagger: stagger,
+          badges: badges,
+          debug: debug,
           onStatusChange: (status, state) => {
-            console.log(`[Status Update] ${status}:`, state);
-            
-            // Update status display in UI
-            const statusElement = document.getElementById('statusDisplay');
-            if (statusElement) {
-              const statusText = {
-                'idle': 'Ready',
-                'starting': 'Starting...',
-                'initializing': 'Initializing inputs...',
-                'determining_functions': 'Determining functions...',
-                'getting_values': 'Getting values...',
-                'applying_values': 'Applying values...',
-                'completed': 'Completed!',
-                'error': 'Error occurred'
-              }[status] || status;
-              
-              statusElement.textContent = statusText;
-              statusElement.className = `status-badge ${status}`;
+            if (debug) {
+              const timestamp = new Date().toLocaleTimeString();
+              const emoji =
+                status === 'error' ? '❌' : status === 'idle' ? '⏸️' : '🔄';
+              const style =
+                'color: #9c27b0; font-weight: bold; background: #f3e5f5; padding: 2px 4px; border-radius: 3px;';
+              console.log(
+                `%c[Status ${timestamp}] ${emoji} ${status.toUpperCase()}:`,
+                style,
+                state
+              );
             }
-            
-            // Show progress for certain statuses
-            if (status === 'getting_values' || status === 'applying_values') {
-              const processedCount = state.inputs.filter(input => input.value || input.error).length;
-              const totalCount = state.inputs.length;
-              if (totalCount > 0) {
-                showStatus(`Processing ${processedCount}/${totalCount} fields...`, 'info');
+
+            // Close sidebar on mobile when autofill starts
+            if (status === AutofillStatus.STARTING) {
+              const sidebar = document.getElementById('sidebar');
+              const sidebarOverlay = document.getElementById('sidebarOverlay');
+              const sidebarToggle = document.getElementById('sidebarToggle');
+
+              if (sidebar && sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+                if (sidebarToggle) sidebarToggle.classList.remove('active');
+                document.body.style.overflow = '';
               }
             }
-          }
+
+            // Update status display in UI
+            const statusElement = document.getElementById('status');
+            if (statusElement) {
+              const statusText =
+                {
+                  idle: 'Ready',
+                  starting: 'Starting...',
+                  initializing: 'Initializing inputs...',
+                  determining_functions: 'Determining functions...',
+                  getting_values: 'Getting values...',
+                  setting_values: 'Setting values...',
+                  completed: 'Completed!',
+                  error: 'Error occurred',
+                }[status] || status;
+
+              statusElement.textContent = statusText;
+              statusElement.className = `status ${status}`;
+            }
+
+            // Show progress for certain statuses
+            if (status === 'getting_values' || status === 'setting_values') {
+              const processedCount = state.elements.filter(
+                element => element.value || element.error
+              ).length;
+              const totalCount = state.elements.length;
+              if (totalCount > 0) {
+                showStatus(
+                  `Processing ${processedCount}/${totalCount} fields...`,
+                  'info'
+                );
+              }
+            }
+          },
         };
       }
 
-      // Function to autofill with current settings
+      // Function to fill with current settings
       window.autofillWithCurrentSettings = async () => {
         try {
           const settings = getCurrentSettings();
           const manager = new Autofill(settings);
-          await manager.autofill(undefined);
+          await manager.fill(undefined);
 
-          const modeText = settings.mode === 'auto' ? "Auto Mode" : "Manual Mode";
-          const staggerText = settings.staggered
-            ? ` (${settings.staggerDelay}ms delay)`
-            : " (no stagger)";
+          const modeText =
+            settings.mode === 'auto' ? 'Auto Mode' : 'Manual Mode';
+          const staggerText =
+            settings.stagger > 0
+              ? ` (${settings.stagger}ms stagger)`
+              : ' (no stagger)';
           showStatus(
             `✅ All fields filled with ${modeText}${staggerText}!`,
-            "success"
+            'success'
           );
         } catch (error) {
-          showStatus("❌ Error filling fields: " + error.message, "error");
+          showStatus('❌ Error filling fields: ' + error.message, 'error');
         }
       };
 
       // Update stagger delay value display and handle theme toggle
-      document.addEventListener("DOMContentLoaded", function () {
-        const staggerDelay = document.getElementById("staggerDelay");
-        const staggerDelayValue = document.getElementById("staggerDelayValue");
-        const themeToggle = document.getElementById("themeToggle");
-        const themeIcon = themeToggle.querySelector(".theme-icon");
+      document.addEventListener('DOMContentLoaded', function () {
+        const stagger = document.getElementById('stagger');
+        const staggerValue = document.getElementById('staggerValue');
+        const badges = document.getElementById('badges');
+        const badgesValue = document.getElementById('badgesValue');
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('.theme-icon');
 
-        if (staggerDelay && staggerDelayValue) {
-          staggerDelay.addEventListener("input", function () {
-            staggerDelayValue.textContent = this.value;
+        if (stagger && staggerValue) {
+          stagger.addEventListener('input', function () {
+            staggerValue.textContent = this.value + 'ms';
+          });
+        }
+
+        if (badges && badgesValue) {
+          badges.addEventListener('input', function () {
+            badgesValue.textContent = this.value + 'ms';
           });
         }
 
         // Handle theme toggle
         if (themeToggle) {
           // Get user's saved preference or system preference
-          const savedTheme = localStorage.getItem("theme");
+          const savedTheme = localStorage.getItem('theme');
           const systemPrefersDark = window.matchMedia(
-            "(prefers-color-scheme: dark)"
+            '(prefers-color-scheme: dark)'
           ).matches;
 
           // Use saved preference if available, otherwise use system preference
           // Since dark is now default, we need to check if user wants light mode
           const shouldUseLight =
-            savedTheme === "light" || (savedTheme === null && !systemPrefersDark);
+            savedTheme === 'light' ||
+            (savedTheme === null && !systemPrefersDark);
 
           if (shouldUseLight) {
-            document.documentElement.setAttribute("data-theme", "light");
-            themeIcon.textContent = "🌙";
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeIcon.textContent = '🌙';
           } else {
             // Dark is default, no data-theme attribute needed
-            themeIcon.textContent = "☀️";
+            themeIcon.textContent = '☀️';
           }
 
-          themeToggle.addEventListener("click", function () {
-            const isLight = document.documentElement.hasAttribute("data-theme") && 
-                           document.documentElement.getAttribute("data-theme") === "light";
+          themeToggle.addEventListener('click', function () {
+            const isLight =
+              document.documentElement.hasAttribute('data-theme') &&
+              document.documentElement.getAttribute('data-theme') === 'light';
 
             if (isLight) {
               // Switch to dark mode (default)
-              document.documentElement.removeAttribute("data-theme");
-              localStorage.setItem("theme", "dark");
-              themeIcon.textContent = "☀️";
+              document.documentElement.removeAttribute('data-theme');
+              localStorage.setItem('theme', 'dark');
+              themeIcon.textContent = '☀️';
             } else {
               // Switch to light mode
-              document.documentElement.setAttribute("data-theme", "light");
-              localStorage.setItem("theme", "light");
-              themeIcon.textContent = "🌙";
+              document.documentElement.setAttribute('data-theme', 'light');
+              localStorage.setItem('theme', 'light');
+              themeIcon.textContent = '🌙';
             }
           });
 
           // Listen for system preference changes
           window
-            .matchMedia("(prefers-color-scheme: dark)")
-            .addEventListener("change", function (e) {
+            .matchMedia('(prefers-color-scheme: dark)')
+            .addEventListener('change', function (e) {
               // Only update if user hasn't set a preference
-              if (localStorage.getItem("theme") === null) {
+              if (localStorage.getItem('theme') === null) {
                 if (e.matches) {
                   // System prefers dark, use default (dark)
-                  document.documentElement.removeAttribute("data-theme");
-                  themeIcon.textContent = "☀️";
+                  document.documentElement.removeAttribute('data-theme');
+                  themeIcon.textContent = '☀️';
                 } else {
                   // System prefers light, switch to light
-                  document.documentElement.setAttribute("data-theme", "light");
-                  themeIcon.textContent = "🌙";
+                  document.documentElement.setAttribute('data-theme', 'light');
+                  themeIcon.textContent = '🌙';
                 }
               }
             });
@@ -2342,42 +2782,44 @@
 
       window.clearAll = () => {
         // only search in main content container, not sidebar
-        const mainContent = document.querySelector(".main-content");
+        const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
-        
-        const inputs = mainContent.querySelectorAll("input, textarea, select");
-        inputs.forEach((input) => {
-          if (input.type === "checkbox" || input.type === "radio") {
+
+        const inputs = mainContent.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+          if (input.type === 'checkbox' || input.type === 'radio') {
             input.checked = false;
           } else {
-            input.value = "";
+            input.value = '';
           }
         });
-        showStatus("🧹 All fields cleared!", "success");
+        showStatus('🧹 All fields cleared!', 'success');
+      };
+
+      window.clearBadges = () => {
+        const badges = document.querySelectorAll(
+          '[data-gofakeit-badge="true"]'
+        );
+        badges.forEach(badge => badge.remove());
+        showStatus('🎯 All badges cleared!', 'success');
       };
 
       function showStatus(message, type) {
-        const status = document.getElementById("status");
+        const status = document.getElementById('status');
         status.textContent = message;
-        status.style.display = "block";
-        status.className = `status ${type} show`;
-
-        setTimeout(() => {
-          status.classList.remove("show");
-          // Hide the status element completely after animation
-          setTimeout(() => {
-            status.style.display = "none";
-          }, 300);
-        }, 3000);
+        status.className = `status ${type}`;
       }
 
       // Initialize the page
-      console.log("🎯 Gofakeit Autofill Comprehensive Testing loaded!");
+      console.log('🎯 Gofakeit Fill Comprehensive Testing loaded!');
       console.log(
-        "This page tests the search API with various input contexts and categories."
+        'This page tests the search API with various input contexts and categories.'
       );
       console.log(
-        "Check the browser network tab to see search API calls in action!"
+        'Check the browser network tab to see search API calls in action!'
+      );
+      console.log(
+        'New features: Badge system, debug mode, and improved error handling!'
       );
     </script>
   </body>
