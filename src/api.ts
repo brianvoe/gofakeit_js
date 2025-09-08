@@ -3,7 +3,7 @@ const GOFAKEIT_API_BASE = 'https://api.gofakeit.com/funcs';
 
 // Interface for function parameters
 export interface FetchFuncParams {
-  [key: string]: string | number | boolean;
+  [key: string]: string | number | boolean | string[];
 }
 
 export interface FetchFuncResponse {
@@ -23,8 +23,8 @@ export interface FetchFuncMultiRequest {
 // Multi-function response item interface
 export interface FetchFuncMultiResponseItem {
   id?: string;
-  value: string | null;
-  error: string;
+  value: string | number | boolean | null;
+  error?: string;
 }
 
 // Multi-function response interface
@@ -177,10 +177,6 @@ async function makeRequest<T>(
       data: data,
     } as T;
   } catch (error) {
-    console.error(
-      `[Gofakeit Autofill] Error in ${method} request to ${url}:`,
-      error
-    );
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
