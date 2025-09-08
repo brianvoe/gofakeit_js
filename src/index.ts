@@ -3,6 +3,7 @@
 // autofill functions
 export {
   Autofill,
+  AutofillStatus,
   type AutofillSettings,
   type AutofillState,
   type AutofillElement,
@@ -12,8 +13,8 @@ export {
 // API functions
 export {
   fetchFunc,
-  fetchFuncMulti,
   fetchFuncSearch,
+  fetchFuncMulti,
   type FetchFuncParams,
   type FetchFuncResponse,
   type FetchFuncMultiRequest,
