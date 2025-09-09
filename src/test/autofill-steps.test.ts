@@ -101,7 +101,7 @@ describe('Autofill Step-by-Step Process', () => {
 
       expect(emailInput?.function).toBe('email'); // Direct function
       expect(checkboxInput?.function).toBe('bool'); // Fallback function
-      expect(selectInput?.function).toBe('bool'); // Fallback function
+      expect(selectInput?.function).toBe('randomstring'); // Fallback function
       // searchInput should have a function from search API
       expect(searchInput?.function).toBeDefined();
     });
@@ -188,8 +188,8 @@ describe('Autofill Step-by-Step Process', () => {
       );
 
       expect(checkboxInput?.function).toBe('bool');
-      expect(radioInput?.function).toBe('bool');
-      expect(selectInput?.function).toBe('bool');
+      expect(radioInput?.function).toBe('randomstring');
+      expect(selectInput?.function).toBe('randomstring');
     });
 
     it('should set specific functions for elements with data-gofakeit', async () => {
@@ -547,9 +547,8 @@ describe('Autofill Step-by-Step Process', () => {
       ) as HTMLInputElement;
       const result = await autofill.fill(element);
 
-      expect(result.success).toBe(0);
-      // Time API doesn't support this function, so expect 0 successes
-      // expect(element.value).toBeTruthy();
+      expect(result.success).toBe(1);
+      expect(element.value).toBeTruthy();
       // expect(element.value).toMatch(/^\d{2}:\d{2}$/);
     });
 

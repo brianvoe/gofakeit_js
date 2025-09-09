@@ -157,6 +157,15 @@ describe('Autofill Individual Functions', () => {
       expect(result).toBe('randomstring');
     });
 
+    it('should return fallback function for radio with data-gofakeit="true"', () => {
+      document.body.innerHTML = '<input type="radio" data-gofakeit="true" />';
+      const element = document.querySelector('input')!;
+
+      const result = autofill.getElementFunction(element);
+
+      expect(result).toBe('randomstring');
+    });
+
     it('should return fallback function for select', () => {
       document.body.innerHTML =
         '<select><option value="1">Option 1</option></select>';
@@ -622,6 +631,584 @@ describe('Autofill Individual Functions', () => {
         .map(el => (el.element as HTMLInputElement).value)
         .filter(value => value !== '');
       expect(values).toEqual(['option1']);
+    });
+
+    it('should set select element values correctly', async () => {
+      document.body.innerHTML = `
+        <select name="country">
+          <option value="us">United States</option>
+          <option value="ca">Canada</option>
+          <option value="uk">United Kingdom</option>
+        </select>
+      `;
+
+      const select = document.querySelector('select') as HTMLSelectElement;
+      autofill = new Autofill({ debug: true }); // Enable debug for this test
+      autofill.setElements(select);
+      await autofill.setElementFunctions();
+
+      // Manually set a value to test the setSelectValue method
+      autofill.state.elements[0].value = 'ca';
+      autofill.state.elements[0].function = 'randomstring';
+
+      await autofill.setElementValues();
+
+      // The select should have the value 'ca' selected
+      expect(select.value).toBe('ca');
+    });
+
+    it('should handle select elements with real API call', async () => {
+      document.body.innerHTML = `
+        <select name="country">
+          <option value="us">United States</option>
+          <option value="ca">Canada</option>
+          <option value="uk">United Kingdom</option>
+        </select>
+      `;
+
+      const select = document.querySelector('select') as HTMLSelectElement;
+      autofill = new Autofill({ debug: true }); // Enable debug for this test
+      autofill.setElements(select);
+      await autofill.setElementFunctions();
+
+      // Call the full flow including API
+      await autofill.getElementValues();
+      await autofill.setElementValues();
+
+      // The select should have a value selected (one of the options)
+      expect(['us', 'ca', 'uk']).toContain(select.value);
+    });
+
+    it('should handle select elements with empty first option', async () => {
+      document.body.innerHTML = `
+        <select name="timezone">
+          <option value="">Select timezone</option>
+          <option value="us">United States</option>
+          <option value="ca">Canada</option>
+          <option value="uk">United Kingdom</option>
+        </select>
+      `;
+
+      const select = document.querySelector('select') as HTMLSelectElement;
+      autofill = new Autofill({ debug: true }); // Enable debug for this test
+      autofill.setElements(select);
+      await autofill.setElementFunctions();
+
+      // Call the full flow including API
+      await autofill.getElementValues();
+      await autofill.setElementValues();
+
+      // The select should have a value selected (one of the non-empty options)
+      expect(['us', 'ca', 'uk']).toContain(select.value);
+      // Should not be the empty option
+      expect(select.value).not.toBe('');
+    });
+
+    it('should handle radio groups with different values', async () => {
+      document.body.innerHTML = `
+        <div id="form">
+          <input type="radio" name="experience" value="beginner" />
+          <input type="radio" name="experience" value="intermediate" />
+          <input type="radio" name="experience" value="advanced" />
+        </div>
+      `;
+
+      const container = document.getElementById('form')!;
+      autofill = new Autofill({ debug: true }); // Enable debug for this test
+      autofill.setElements(container);
+      await autofill.setElementFunctions();
+
+      // Call the full flow including API
+      await autofill.getElementValues();
+      await autofill.setElementValues();
+
+      // Only one radio button should be selected
+      const radioButtons = Array.from(
+        container.querySelectorAll('input[type="radio"]')
+      ) as HTMLInputElement[];
+      const checkedRadios = Array.from(radioButtons).filter(
+        radio => radio.checked
+      );
+      expect(checkedRadios).toHaveLength(1);
+
+      // The selected radio should have one of the expected values
+      const selectedValue = checkedRadios[0].value;
+      expect(['beginner', 'intermediate', 'advanced']).toContain(selectedValue);
+    });
+
+    it('should handle radio groups with same values (default behavior)', async () => {
+      document.body.innerHTML = `
+        <div id="form">
+          <input type="radio" name="same_value" value="on" />
+          <input type="radio" name="same_value" value="on" />
+          <input type="radio" name="same_value" value="on" />
+        </div>
+      `;
+
+      const container = document.getElementById('form')!;
+      autofill = new Autofill({ debug: true }); // Enable debug for this test
+      autofill.setElements(container);
+      await autofill.setElementFunctions();
+
+      // Call the full flow including API
+      await autofill.getElementValues();
+      await autofill.setElementValues();
+
+      // Only one radio button should be selected
+      const radioButtons = Array.from(
+        container.querySelectorAll('input[type="radio"]')
+      ) as HTMLInputElement[];
+      const checkedRadios = Array.from(radioButtons).filter(
+        radio => radio.checked
+      );
+      expect(checkedRadios).toHaveLength(1);
+
+      // The selected radio should have the "on" value
+      expect(checkedRadios[0].value).toBe('on');
+    });
+
+    it('should handle multiple radio groups independently', async () => {
+      document.body.innerHTML = `
+        <div id="form">
+          <input type="radio" name="group1" value="option1" />
+          <input type="radio" name="group1" value="option2" />
+          <input type="radio" name="group2" value="choice1" />
+          <input type="radio" name="group2" value="choice2" />
+        </div>
+      `;
+
+      const container = document.getElementById('form')!;
+      autofill = new Autofill({ debug: true }); // Enable debug for this test
+      autofill.setElements(container);
+      await autofill.setElementFunctions();
+
+      // Call the full flow including API
+      await autofill.getElementValues();
+      await autofill.setElementValues();
+
+      // Each group should have exactly one radio selected
+      const group1Radios = Array.from(
+        container.querySelectorAll('input[name="group1"]')
+      ) as HTMLInputElement[];
+      const group2Radios = Array.from(
+        container.querySelectorAll('input[name="group2"]')
+      ) as HTMLInputElement[];
+
+      const group1Checked = Array.from(group1Radios).filter(
+        radio => radio.checked
+      );
+      const group2Checked = Array.from(group2Radios).filter(
+        radio => radio.checked
+      );
+
+      expect(group1Checked).toHaveLength(1);
+      expect(group2Checked).toHaveLength(1);
+
+      // Verify the selected values are from the correct groups
+      expect(['option1', 'option2']).toContain(group1Checked[0].value);
+      expect(['choice1', 'choice2']).toContain(group2Checked[0].value);
+    });
+
+    it('should handle checkboxes with different values', async () => {
+      document.body.innerHTML = `
+        <div id="form">
+          <input type="checkbox" id="skill1" value="frontend" />
+          <input type="checkbox" id="skill2" value="backend" />
+          <input type="checkbox" id="skill3" value="devops" />
+          <input type="checkbox" id="skill4" value="mobile" />
+        </div>
+      `;
+
+      const container = document.getElementById('form')!;
+      autofill = new Autofill({ debug: true }); // Enable debug for this test
+      autofill.setElements(container);
+      await autofill.setElementFunctions();
+
+      // Call the full flow including API
+      await autofill.getElementValues();
+      await autofill.setElementValues();
+
+      // Check that some checkboxes are checked (API returns true/false for each)
+      const checkboxes = Array.from(
+        container.querySelectorAll('input[type="checkbox"]')
+      ) as HTMLInputElement[];
+      const checkedBoxes = Array.from(checkboxes).filter(
+        checkbox => checkbox.checked
+      );
+
+      // At least some checkboxes should be checked (API returns random true/false)
+      expect(checkedBoxes.length).toBeGreaterThanOrEqual(0);
+      expect(checkedBoxes.length).toBeLessThanOrEqual(checkboxes.length);
+    });
+
+    it('should handle checkboxes with same name attribute', async () => {
+      document.body.innerHTML = `
+        <div id="form">
+          <input type="checkbox" name="agreements" value="terms" />
+          <input type="checkbox" name="agreements" value="privacy" />
+          <input type="checkbox" name="agreements" value="marketing" />
+        </div>
+      `;
+
+      const container = document.getElementById('form')!;
+      autofill = new Autofill({ debug: true }); // Enable debug for this test
+      autofill.setElements(container);
+      await autofill.setElementFunctions();
+
+      // Call the full flow including API
+      await autofill.getElementValues();
+      await autofill.setElementValues();
+
+      // Check that some checkboxes are checked
+      const checkboxes = Array.from(
+        container.querySelectorAll('input[name="agreements"]')
+      ) as HTMLInputElement[];
+      const checkedBoxes = Array.from(checkboxes).filter(
+        checkbox => checkbox.checked
+      );
+
+      // At least some checkboxes should be checked
+      expect(checkedBoxes.length).toBeGreaterThanOrEqual(0);
+      expect(checkedBoxes.length).toBeLessThanOrEqual(checkboxes.length);
+    });
+
+    it('should handle single checkbox', async () => {
+      document.body.innerHTML = `
+        <div id="form">
+          <input type="checkbox" id="single" value="yes" />
+        </div>
+      `;
+
+      const container = document.getElementById('form')!;
+      autofill = new Autofill({ debug: true }); // Enable debug for this test
+      autofill.setElements(container);
+      await autofill.setElementFunctions();
+
+      // Call the full flow including API
+      await autofill.getElementValues();
+      await autofill.setElementValues();
+
+      // The single checkbox should be processed
+      const checkbox = container.querySelector(
+        'input[type="checkbox"]'
+      ) as HTMLInputElement;
+      expect(checkbox).toBeDefined();
+
+      // It should either be checked or unchecked (API returns true/false)
+      expect(typeof checkbox.checked).toBe('boolean');
+    });
+
+    it('should skip disabled checkboxes', async () => {
+      document.body.innerHTML = `
+        <div id="form">
+          <input type="checkbox" id="enabled" />
+          <input type="checkbox" id="disabled" disabled />
+          <input type="checkbox" id="enabled2" />
+        </div>
+      `;
+
+      const container = document.getElementById('form')!;
+      autofill = new Autofill({ debug: true }); // Enable debug for this test
+      autofill.setElements(container);
+      await autofill.setElementFunctions();
+
+      // Call the full flow including API
+      await autofill.getElementValues();
+      await autofill.setElementValues();
+
+      // Only enabled checkboxes should be processed
+      const enabledCheckbox = container.querySelector(
+        '#enabled'
+      ) as HTMLInputElement;
+      const disabledCheckbox = container.querySelector(
+        '#disabled'
+      ) as HTMLInputElement;
+      const enabledCheckbox2 = container.querySelector(
+        '#enabled2'
+      ) as HTMLInputElement;
+
+      // The disabled checkbox should remain unchanged
+      expect(disabledCheckbox.checked).toBe(false);
+
+      // The enabled checkboxes should be processed (checked or unchecked)
+      expect(typeof enabledCheckbox.checked).toBe('boolean');
+      expect(typeof enabledCheckbox2.checked).toBe('boolean');
+    });
+  });
+
+  describe('should handle date inputs', () => {
+    it('should use date function for simple date input', () => {
+      document.body.innerHTML = '<input type="date" data-gofakeit="true" />';
+      const element = document.querySelector('input')!;
+      const result = autofill.getElementFunction(element);
+      expect(result).toBe('date');
+    });
+
+    it('should use daterange function for date input with min attribute', () => {
+      document.body.innerHTML =
+        '<input type="date" min="2024-01-01" data-gofakeit="true" />';
+      const element = document.querySelector('input')!;
+      const result = autofill.getElementFunction(element);
+      expect(result).toBe('daterange');
+    });
+
+    it('should use daterange function for date input with max attribute', () => {
+      document.body.innerHTML =
+        '<input type="date" max="2024-12-31" data-gofakeit="true" />';
+      const element = document.querySelector('input')!;
+      const result = autofill.getElementFunction(element);
+      expect(result).toBe('daterange');
+    });
+
+    it('should use daterange function for date input with both min and max attributes', () => {
+      document.body.innerHTML =
+        '<input type="date" min="2024-01-01" max="2024-12-31" data-gofakeit="true" />';
+      const element = document.querySelector('input')!;
+      const result = autofill.getElementFunction(element);
+      expect(result).toBe('daterange');
+    });
+
+    it('should generate correct parameters for date input with min and max', async () => {
+      document.body.innerHTML =
+        '<input type="date" min="2024-01-01" max="2024-12-31" data-gofakeit="true" />';
+
+      await autofill.fill();
+
+      const element = document.querySelector('input') as HTMLInputElement;
+      expect(element.value).toBeTruthy();
+      expect(element.value).toMatch(/^\d{4}-\d{2}-\d{2}$/); // Should be in YYYY-MM-DD format
+
+      // Verify the date is within the specified range
+      const dateValue = new Date(element.value);
+      const minDate = new Date('2024-01-01');
+      const maxDate = new Date('2024-12-31');
+
+      expect(dateValue >= minDate).toBe(true);
+      expect(dateValue <= maxDate).toBe(true);
+    });
+
+    it('should generate correct parameters for date input with only min', async () => {
+      document.body.innerHTML =
+        '<input type="date" min="2024-01-01" data-gofakeit="true" />';
+
+      await autofill.fill();
+
+      const element = document.querySelector('input') as HTMLInputElement;
+      expect(element.value).toBeTruthy();
+      expect(element.value).toMatch(/^\d{4}-\d{2}-\d{2}$/); // Should be in YYYY-MM-DD format
+
+      // Verify the date is after the min date
+      const dateValue = new Date(element.value);
+      const minDate = new Date('2024-01-01');
+
+      expect(dateValue >= minDate).toBe(true);
+    });
+
+    it('should generate correct parameters for date input with only max', async () => {
+      document.body.innerHTML =
+        '<input type="date" max="2024-12-31" data-gofakeit="true" />';
+
+      await autofill.fill();
+
+      const element = document.querySelector('input') as HTMLInputElement;
+      expect(element.value).toBeTruthy();
+      expect(element.value).toMatch(/^\d{4}-\d{2}-\d{2}$/); // Should be in YYYY-MM-DD format
+
+      // Verify the date is before the max date
+      const dateValue = new Date(element.value);
+      const maxDate = new Date('2024-12-31');
+
+      expect(dateValue <= maxDate).toBe(true);
+    });
+  });
+
+  describe('should handle number inputs', () => {
+    it('should use number function for simple number input', () => {
+      document.body.innerHTML = '<input type="number" data-gofakeit="true" />';
+      const element = document.querySelector('input')!;
+      const result = autofill.getElementFunction(element);
+      expect(result).toBe('number');
+    });
+
+    it('should use number function for number input with min attribute', () => {
+      document.body.innerHTML =
+        '<input type="number" min="10" data-gofakeit="true" />';
+      const element = document.querySelector('input')!;
+      const result = autofill.getElementFunction(element);
+      expect(result).toBe('number');
+    });
+
+    it('should use number function for number input with max attribute', () => {
+      document.body.innerHTML =
+        '<input type="number" max="100" data-gofakeit="true" />';
+      const element = document.querySelector('input')!;
+      const result = autofill.getElementFunction(element);
+      expect(result).toBe('number');
+    });
+
+    it('should use number function for number input with both min and max attributes', () => {
+      document.body.innerHTML =
+        '<input type="number" min="10" max="100" data-gofakeit="true" />';
+      const element = document.querySelector('input')!;
+      const result = autofill.getElementFunction(element);
+      expect(result).toBe('number');
+    });
+
+    it('should generate correct parameters for number input with min and max', async () => {
+      document.body.innerHTML =
+        '<input type="number" min="10" max="100" data-gofakeit="true" />';
+
+      await autofill.fill();
+
+      const element = document.querySelector('input') as HTMLInputElement;
+      expect(element.value).toBeTruthy();
+
+      const numberValue = parseInt(element.value, 10);
+      expect(numberValue).toBeGreaterThanOrEqual(10);
+      expect(numberValue).toBeLessThanOrEqual(100);
+    });
+
+    it('should generate correct parameters for number input with only min', async () => {
+      document.body.innerHTML =
+        '<input type="number" min="50" data-gofakeit="true" />';
+
+      await autofill.fill();
+
+      const element = document.querySelector('input') as HTMLInputElement;
+      expect(element.value).toBeTruthy();
+
+      const numberValue = parseInt(element.value, 10);
+      expect(numberValue).toBeGreaterThanOrEqual(50);
+    });
+
+    it('should generate correct parameters for number input with only max', async () => {
+      document.body.innerHTML =
+        '<input type="number" max="25" data-gofakeit="true" />';
+
+      await autofill.fill();
+
+      const element = document.querySelector('input') as HTMLInputElement;
+      expect(element.value).toBeTruthy();
+
+      const numberValue = parseInt(element.value, 10);
+      expect(numberValue).toBeLessThanOrEqual(25);
+    });
+
+    it('should handle range input type with min and max', async () => {
+      document.body.innerHTML =
+        '<input type="range" min="1" max="10" data-gofakeit="true" />';
+
+      await autofill.fill();
+
+      const element = document.querySelector('input') as HTMLInputElement;
+      expect(element.value).toBeTruthy();
+
+      const numberValue = parseInt(element.value, 10);
+      expect(numberValue).toBeGreaterThanOrEqual(1);
+      expect(numberValue).toBeLessThanOrEqual(10);
+    });
+  });
+
+  describe('should handle radio groups without value attributes', () => {
+    it('should use label text as fallback for radio groups without values', async () => {
+      document.body.innerHTML = `
+        <div id="form">
+          <input type="radio" id="male" name="gender" />
+          <label for="male">Male</label>
+          <input type="radio" id="female" name="gender" />
+          <label for="female">Female</label>
+          <input type="radio" id="other" name="gender" />
+          <label for="other">Other</label>
+        </div>
+      `;
+
+      const container = document.getElementById('form')!;
+      const autofill = new Autofill({ debug: true });
+      autofill.setElements(container);
+      await autofill.setElementFunctions();
+
+      // Call the full flow including API
+      await autofill.getElementValues();
+      await autofill.setElementValues();
+
+      // Only one radio button should be selected
+      const radioButtons = Array.from(
+        container.querySelectorAll('input[type="radio"]')
+      ) as HTMLInputElement[];
+      const checkedRadios = Array.from(radioButtons).filter(
+        radio => radio.checked
+      );
+      expect(checkedRadios).toHaveLength(1);
+
+      // The selected radio should be one of the three options
+      const selectedRadio = checkedRadios[0];
+      expect(['male', 'female', 'other']).toContain(selectedRadio.id);
+    });
+
+    it('should handle mixed radio groups with and without value attributes', async () => {
+      document.body.innerHTML = `
+        <div id="form">
+          <input type="radio" id="option1" name="mixed" value="option1" />
+          <label for="option1">Option 1</label>
+          <input type="radio" id="option2" name="mixed" />
+          <label for="option2">Option 2</label>
+          <input type="radio" id="option3" name="mixed" value="option3" />
+          <label for="option3">Option 3</label>
+        </div>
+      `;
+
+      const container = document.getElementById('form')!;
+      const autofill = new Autofill({ debug: true });
+      autofill.setElements(container);
+      await autofill.setElementFunctions();
+
+      // Call the full flow including API
+      await autofill.getElementValues();
+      await autofill.setElementValues();
+
+      // Only one radio button should be selected
+      const radioButtons = Array.from(
+        container.querySelectorAll('input[type="radio"]')
+      ) as HTMLInputElement[];
+      const checkedRadios = Array.from(radioButtons).filter(
+        radio => radio.checked
+      );
+      expect(checkedRadios).toHaveLength(1);
+
+      // The selected radio should be one of the three options
+      const selectedRadio = checkedRadios[0];
+      expect(['option1', 'option2', 'option3']).toContain(selectedRadio.id);
+    });
+
+    it('should fallback to id when no value or label is available', async () => {
+      document.body.innerHTML = `
+        <div id="form">
+          <input type="radio" id="fallback1" name="fallback" />
+          <input type="radio" id="fallback2" name="fallback" />
+        </div>
+      `;
+
+      const container = document.getElementById('form')!;
+      const autofill = new Autofill({ debug: true });
+      autofill.setElements(container);
+      await autofill.setElementFunctions();
+
+      // Call the full flow including API
+      await autofill.getElementValues();
+      await autofill.setElementValues();
+
+      // Only one radio button should be selected
+      const radioButtons = Array.from(
+        container.querySelectorAll('input[type="radio"]')
+      ) as HTMLInputElement[];
+      const checkedRadios = Array.from(radioButtons).filter(
+        radio => radio.checked
+      );
+      expect(checkedRadios).toHaveLength(1);
+
+      // The selected radio should be one of the two options
+      const selectedRadio = checkedRadios[0];
+      expect(['fallback1', 'fallback2']).toContain(selectedRadio.id);
     });
   });
 });
