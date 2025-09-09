@@ -20,7 +20,7 @@ const colors = {
   yellow: '\x1b[33m',
   blue: '\x1b[34m',
   magenta: '\x1b[35m',
-  cyan: '\x1b[36m'
+  cyan: '\x1b[36m',
 };
 
 function log(message, color = 'reset') {
@@ -30,10 +30,10 @@ function log(message, color = 'reset') {
 function exec(command, options = {}) {
   try {
     log(`Running: ${command}`, 'cyan');
-    execSync(command, { 
-      stdio: 'inherit', 
+    execSync(command, {
+      stdio: 'inherit',
       cwd: rootDir,
-      ...options 
+      ...options,
     });
     return true;
   } catch (error) {
@@ -56,11 +56,11 @@ function writePackageJson(packageJson) {
 function askQuestion(question) {
   const rl = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
   });
 
-  return new Promise((resolve) => {
-    rl.question(question, (answer) => {
+  return new Promise(resolve => {
+    rl.question(question, answer => {
       rl.close();
       resolve(answer);
     });
@@ -71,18 +71,21 @@ function validateVersion(currentVersion, newVersion) {
   // Check if version format is valid (x.y.z)
   const versionRegex = /^\d+\.\d+\.\d+$/;
   if (!versionRegex.test(newVersion)) {
-    log('❌ Invalid version format. Please use format: x.y.z (e.g., 1.0.1)', 'red');
+    log(
+      '❌ Invalid version format. Please use format: x.y.z (e.g., 1.0.1)',
+      'red'
+    );
     return null;
   }
-  
+
   const [major1, minor1, patch1] = currentVersion.split('.').map(Number);
   const [major2, minor2, patch2] = newVersion.split('.').map(Number);
-  
+
   // Check if new version is greater than current
   if (major2 > major1) return 'major';
   if (major2 === major1 && minor2 > minor1) return 'minor';
   if (major2 === major1 && minor2 === minor1 && patch2 > patch1) return 'patch';
-  
+
   log('❌ New version must be greater than current version', 'red');
   log(`   Current: ${currentVersion}`, 'yellow');
   log(`   New:     ${newVersion}`, 'yellow');
@@ -91,7 +94,7 @@ function validateVersion(currentVersion, newVersion) {
 
 async function main() {
   log('🚀 Starting release process...', 'bright');
-  
+
   // Step 1: Run tests
   log('\n📋 Step 1: Running tests...', 'yellow');
   if (!exec('npm test')) {
@@ -99,46 +102,77 @@ async function main() {
     process.exit(1);
   }
   log('✅ Tests passed!', 'green');
-  
+
   // Step 2: Build the project
   log('\n🔨 Step 2: Building project...', 'yellow');
-  
+
   // First run type check to catch TypeScript errors
   log('Running type check...', 'cyan');
   if (!exec('npm run type-check')) {
     log('❌ Type check failed. Aborting release.', 'red');
     process.exit(1);
   }
-  
+
   // Then build
   if (!exec('npm run build')) {
     log('❌ Build failed. Aborting release.', 'red');
     process.exit(1);
   }
   log('✅ Build successful!', 'green');
-  
-  // Step 3: Get current version and ask for new version
+
+  // Step 3: Confirm documentation update
+  log('\n📚 Step 3: Documentation update confirmation...', 'yellow');
+  log(
+    '   Please ensure you have updated the documentation before proceeding.',
+    'cyan'
+  );
+
+  let docConfirmed = false;
+  do {
+    const docAnswer = await askQuestion(
+      'Have you updated the documentation? (y/n): '
+    );
+    docConfirmed =
+      docAnswer.toLowerCase() === 'y' || docAnswer.toLowerCase() === 'yes';
+
+    if (!docConfirmed) {
+      log(
+        '❌ Please update the documentation before continuing with the release.',
+        'red'
+      );
+      log('   You can run: npm run build-docs', 'cyan');
+    }
+  } while (!docConfirmed);
+
+  log('✅ Documentation update confirmed!', 'green');
+
+  // Step 4: Get current version and ask for new version
   const packageJson = readPackageJson();
   const currentVersion = packageJson.version;
-  
+
   log(`\n📦 Current version: ${currentVersion}`, 'blue');
   log('   Format: x.y.z (e.g., 1.0.1, 1.1.0, 2.0.0)', 'cyan');
-  
+
   let newVersion;
   let versionType;
-  
+
   do {
-    newVersion = await askQuestion(`Enter new version (current: ${currentVersion}): `);
+    newVersion = await askQuestion(
+      `Enter new version (current: ${currentVersion}): `
+    );
     versionType = validateVersion(currentVersion, newVersion);
   } while (!versionType);
-  
-  log(`\n🔄 Step 3: Updating version from ${currentVersion} to ${newVersion} (${versionType} release)...`, 'yellow');
-  
+
+  log(
+    `\n🔄 Step 4: Updating version from ${currentVersion} to ${newVersion} (${versionType} release)...`,
+    'yellow'
+  );
+
   // Update package.json
   packageJson.version = newVersion;
   writePackageJson(packageJson);
   log('✅ Package.json updated!', 'green');
-  
+
   // Update package-lock.json to match the new version
   log('Updating package-lock.json...', 'cyan');
   if (!exec('npm install --package-lock-only')) {
@@ -146,7 +180,7 @@ async function main() {
     process.exit(1);
   }
   log('✅ Package-lock.json updated!', 'green');
-  
+
   // Step 5: NPM login (commented out for testing)
   log('\n🔐 Step 5: NPM login...', 'yellow');
   if (!exec('npm login')) {
@@ -154,7 +188,7 @@ async function main() {
     process.exit(1);
   }
   log('✅ NPM login successful!', 'green');
-  
+
   // Step 6: NPM publish (commented out for testing)
   log('\n📤 Step 6: Publishing to NPM...', 'yellow');
   if (!exec('npm publish')) {
@@ -162,20 +196,20 @@ async function main() {
     process.exit(1);
   }
   log('✅ Package published to NPM!', 'green');
-  
+
   log('\n🎉 Release completed successfully!', 'bright');
   log(`📦 Version ${newVersion} is now published on NPM`, 'green');
   log(`🔗 Package: https://www.npmjs.com/package/${packageJson.name}`, 'blue');
 }
 
 // Handle errors
-process.on('unhandledRejection', (error) => {
+process.on('unhandledRejection', error => {
   log(`❌ Unhandled error: ${error}`, 'red');
   process.exit(1);
 });
 
 // Run the release script
-main().catch((error) => {
+main().catch(error => {
   log(`❌ Release failed: ${error}`, 'red');
   process.exit(1);
 });
