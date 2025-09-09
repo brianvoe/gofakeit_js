@@ -424,27 +424,19 @@ export class Autofill {
       // Specific function provided - use it directly
       return gofakeitFunc;
     } else if (gofakeitFunc === 'true') {
-      // Function is 'true' - needs search
-      return null;
+      // Function is 'true' - check if element type needs search
+      const needsSearch = this.elementTypeNeedsSearch(elementType);
+
+      if (needsSearch) {
+        // Element type needs search - return null
+        return null;
+      } else {
+        // Element type doesn't need search - use fallback function even with data-gofakeit="true"
+        return this.getElementFunctionFallback(element);
+      }
     } else {
       // No function specified - check if element type needs search
-      const skipSearchTypes = [
-        'checkbox',
-        'radio',
-        'select',
-        'range',
-        'file',
-        'button',
-        'submit',
-        'reset',
-        'image',
-        'week',
-        'date',
-        'time',
-        'datetime-local',
-        'month',
-      ];
-      const needsSearch = !skipSearchTypes.includes(elementType);
+      const needsSearch = this.elementTypeNeedsSearch(elementType);
 
       if (needsSearch) {
         // Element type needs search - return null
@@ -456,6 +448,27 @@ export class Autofill {
     }
   }
 
+  private elementTypeNeedsSearch(elementType: string): boolean {
+    const skipSearchTypes = [
+      'checkbox',
+      'radio',
+      'select',
+      'number',
+      'range',
+      'file',
+      'button',
+      'submit',
+      'reset',
+      'image',
+      'week',
+      'date',
+      'time',
+      'datetime-local',
+      'month',
+    ];
+    return !skipSearchTypes.includes(elementType);
+  }
+
   // If the element doesnt have a function and search doesnt return a function,
   // we will use a fallback function
   private getElementFunctionFallback(element: Element): string {
@@ -464,15 +477,16 @@ export class Autofill {
 
       switch (elementType) {
         case 'date':
-          return 'date';
+        case 'datetime-local':
+        case 'month':
+        case 'week': {
+          // Check if input has min/max attributes to determine if it should use daterange
+          const min = element.getAttribute('min');
+          const max = element.getAttribute('max');
+          return min || max ? 'daterange' : 'date';
+        }
         case 'time':
           return 'time';
-        case 'datetime-local':
-          return 'datetime';
-        case 'month':
-          return 'month';
-        case 'week':
-          return 'week';
         case 'text':
           return 'word';
         case 'email':
@@ -486,8 +500,12 @@ export class Autofill {
         case 'search':
           return 'word';
         case 'number':
-        case 'range':
-          return 'number';
+        case 'range': {
+          // Check if input has min/max attributes to determine if it should use number with parameters
+          const min = element.getAttribute('min');
+          const max = element.getAttribute('max');
+          return min || max ? 'number' : 'number'; // Both use 'number' function, but with different parameters
+        }
         case 'checkbox':
           return 'bool';
         case 'radio':
@@ -527,6 +545,7 @@ export class Autofill {
 
     const requests: FetchFuncMultiRequest[] = [];
     const processedNames: string[] = []; // Track processed radio group names
+    const requestToElementMap: AutofillElement[] = []; // Map requests to elements
 
     // Process each element, adding parameters based on function type
     for (const el of elementsNeedingValues) {
@@ -557,6 +576,58 @@ export class Autofill {
           }
           break;
         }
+        case 'date': {
+          const params = this.paramsDate(el);
+          if (params && (params.startdate || params.enddate)) {
+            request.func = 'daterange';
+            request.params = params;
+          } else {
+            request.params = params;
+          }
+          break;
+        }
+        case 'datetime-local': {
+          const params = this.paramsDate(el);
+          if (params && (params.startdate || params.enddate)) {
+            request.func = 'daterange';
+            request.params = params;
+          } else {
+            request.params = params;
+          }
+          break;
+        }
+        case 'time': {
+          // For time inputs, use 'time' function with format
+          request.params = { format: 'HH:mm' };
+          break;
+        }
+        case 'month': {
+          const params = this.paramsDate(el);
+          if (params && (params.startdate || params.enddate)) {
+            request.func = 'daterange';
+            request.params = params;
+          } else {
+            request.params = params;
+          }
+          break;
+        }
+        case 'week': {
+          const params = this.paramsWeek(el);
+          if (params && (params.startdate || params.enddate)) {
+            request.func = 'daterange';
+            request.params = params;
+          } else {
+            request.func = 'date';
+            request.params = params;
+          }
+          break;
+        }
+        case 'number':
+        case 'range': {
+          const params = this.paramsNumber(el);
+          request.params = params;
+          break;
+        }
         // Add other element type cases here as needed
         default:
           // No special parameters needed
@@ -564,15 +635,16 @@ export class Autofill {
       }
 
       requests.push(request);
+      requestToElementMap.push(el);
     }
 
     const response = await fetchFuncMulti(requests);
 
     if (response.success && response.data) {
-      // Map results back to elements
+      // Map results back to elements using the correct mapping
       for (let i = 0; i < response.data.length; i++) {
         const result = response.data[i];
-        const el = elementsNeedingValues[i];
+        const el = requestToElementMap[i];
 
         if (result.value !== null && result.value !== undefined) {
           el.value = String(result.value);
@@ -638,10 +710,7 @@ export class Autofill {
         this.settings.badges > 0 &&
         elementToShowBadge
       ) {
-        this.showBadge(
-          elementToShowBadge.error ? 'error' : 'success',
-          elementToShowBadge
-        );
+        this.showBadge(elementToShowBadge);
       }
 
       // Add delay between applications (except for the last one) if stagger is enabled
@@ -666,16 +735,52 @@ export class Autofill {
     );
 
     // Find the radio element that matches the returned value
-    const selectedRadio = radioGroup.find(
-      radioEl => (radioEl.element as HTMLInputElement).value === el.value
-    );
+    const selectedRadio = radioGroup.find(radioEl => {
+      const input = radioEl.element as HTMLInputElement;
+
+      // Check if the value attribute is explicitly set
+      const hasExplicitValue = input.hasAttribute('value');
+
+      // First try to match by value attribute if it's explicitly set or not the default "on"
+      if (
+        (hasExplicitValue || input.value !== 'on') &&
+        input.value === el.value
+      ) {
+        return true;
+      }
+
+      // If value is "on" (default) or no match, try to match by label text
+      const label = document.querySelector(`label[for="${input.id}"]`);
+      if (label && label.textContent && label.textContent.trim() === el.value) {
+        return true;
+      }
+
+      // Final fallback: match by id
+      if (input.id === el.value) {
+        return true;
+      }
+
+      return false;
+    });
 
     if (selectedRadio && !selectedRadio.error) {
-      // Set the value on the matching radio button
-      this.setRadioValue(
-        selectedRadio.element as HTMLInputElement,
-        selectedRadio.value
+      // Uncheck all radios in the same group first
+      const radioName = (selectedRadio.element as HTMLInputElement).name;
+      if (radioName) {
+        const otherRadios = document.querySelectorAll(
+          `input[type="radio"][name="${radioName}"]`
+        );
+        otherRadios.forEach(radio => {
+          (radio as HTMLInputElement).checked = false;
+        });
+      }
+
+      // Check the selected radio button
+      (selectedRadio.element as HTMLInputElement).checked = true;
+      (selectedRadio.element as HTMLInputElement).dispatchEvent(
+        new Event('change', { bubbles: true })
       );
+
       // Return the selected radio element for badge display
       return selectedRadio;
     } else if (el.error) {
@@ -707,8 +812,11 @@ export class Autofill {
         case 'time':
         case 'datetime-local':
         case 'month':
-        case 'week':
           this.setDateTimeValue(element, el.value);
+          break;
+        case 'week':
+          // Convert date value to week format
+          this.setDateTimeValue(element, this.convertDateToWeek(el.value));
           break;
         default:
           this.setTextValue(element, el.value);
@@ -742,12 +850,6 @@ export class Autofill {
   }
 
   private setNumberValue(element: HTMLInputElement, value: string): void {
-    element.value = value;
-    element.dispatchEvent(new Event('input', { bubbles: true }));
-    element.dispatchEvent(new Event('change', { bubbles: true }));
-  }
-
-  private setRangeValue(element: HTMLInputElement, value: string): void {
     element.value = value;
     element.dispatchEvent(new Event('input', { bubbles: true }));
     element.dispatchEvent(new Event('change', { bubbles: true }));
@@ -823,51 +925,138 @@ export class Autofill {
     }
   }
 
-  private showBadge(type: 'success' | 'error', el: AutofillElement): void {
+  private showBadge(el: AutofillElement): void {
     // Remove any existing badge for this element
     this.removeBadge(el.id);
 
-    // Create badge element
+    // Create badge element with optimized styling
     const badge = document.createElement('div');
     badge.id = `gofakeit-badge-${el.id}`;
-    badge.textContent = type === 'success' ? el.function : el.error;
+    const isError = Boolean(el.error && el.error.trim() !== '');
+    badge.textContent = isError ? el.error : el.function;
 
-    // Position badge relative to input field
-    badge.style.position = 'absolute';
-    badge.style.top = '0';
-    badge.style.transform = 'translateY(-2px)';
-    badge.style.zIndex = '10';
-    badge.style.padding = `${GOFAKEIT_SPACING.quarter}px ${GOFAKEIT_SPACING.half}px`;
-    badge.style.borderRadius = `${GOFAKEIT_BORDER.radius}px`;
-    badge.style.fontSize = `${GOFAKEIT_FONT.size}px`;
-    badge.style.fontWeight = 'bold';
-    badge.style.fontFamily = GOFAKEIT_FONT.family;
-    badge.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
-    badge.style.pointerEvents = 'none';
-    badge.style.userSelect = 'none';
-    badge.style.transition = 'opacity 0.3s ease-in-out';
-    badge.style.opacity = '0';
-    badge.style.whiteSpace = 'nowrap';
+    // Batch all style changes to minimize reflows
+    const badgeStyles = {
+      position: 'fixed',
+      zIndex: '999999',
+      padding: `${GOFAKEIT_SPACING.quarter}px ${GOFAKEIT_SPACING.half}px`,
+      borderRadius: `${GOFAKEIT_BORDER.radius}px`,
+      fontSize: `${GOFAKEIT_FONT.size}px`,
+      fontWeight: 'bold',
+      fontFamily: GOFAKEIT_FONT.family,
+      boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+      pointerEvents: 'none',
+      userSelect: 'none',
+      transition: 'opacity 0.3s ease-in-out',
+      opacity: '0',
+      whiteSpace: 'nowrap',
+      backgroundColor: isError
+        ? GOFAKEIT_COLORS.error
+        : GOFAKEIT_COLORS.primary,
+      color: isError ? GOFAKEIT_COLORS.white : GOFAKEIT_COLORS.text,
+    };
 
-    // Set colors based on type
-    if (type === 'success') {
-      badge.style.backgroundColor = GOFAKEIT_COLORS.primary;
-      badge.style.color = GOFAKEIT_COLORS.text;
-    } else {
-      badge.style.backgroundColor = GOFAKEIT_COLORS.error;
-      badge.style.color = GOFAKEIT_COLORS.white;
-    }
+    // Apply all styles at once
+    Object.assign(badge.style, badgeStyles);
 
-    // Make the input field's parent container relative positioned if it isn't already
-    const inputParent = el.element.parentElement;
-    if (inputParent && getComputedStyle(inputParent).position === 'static') {
-      inputParent.style.position = 'relative';
-    }
+    // Append badge to body
+    document.body.appendChild(badge);
 
-    // Insert badge as sibling element right after the input
-    el.element.parentNode?.insertBefore(badge, el.element.nextSibling);
+    // Performance optimizations
+    let lastRect: DOMRect | null = null;
+    let animationId: number | null = null;
+    let isVisible = true;
+    let lastVisibilityCheck = 0;
+    const VISIBILITY_CHECK_INTERVAL = 100; // Check visibility every 100ms instead of every frame
 
-    // Trigger animation
+    // Cache scrollable parents to avoid repeated DOM traversal
+    const scrollableParents = this.getScrollableParents(el.element);
+    const parentRects = new Map<Element, DOMRect>();
+
+    // Function to check if element is visible (optimized)
+    const checkElementVisibility = (element: Element): boolean => {
+      const rect = element.getBoundingClientRect();
+
+      // Quick window viewport check first
+      if (
+        rect.top < 0 ||
+        rect.left < 0 ||
+        rect.bottom > window.innerHeight ||
+        rect.right > window.innerWidth
+      ) {
+        return false;
+      }
+
+      // Check cached scrollable parents
+      for (const parent of scrollableParents) {
+        let parentRect = parentRects.get(parent);
+        if (!parentRect) {
+          parentRect = parent.getBoundingClientRect();
+          parentRects.set(parent, parentRect);
+        }
+
+        // Check if element is within parent bounds
+        if (
+          rect.top < parentRect.top ||
+          rect.left < parentRect.left ||
+          rect.bottom > parentRect.bottom ||
+          rect.right > parentRect.right
+        ) {
+          return false;
+        }
+      }
+
+      return true;
+    };
+
+    // Optimized position update function
+    const updateBadgePosition = () => {
+      const rect = el.element.getBoundingClientRect();
+
+      // Check if element has moved (position or size changed)
+      const hasMoved =
+        !lastRect ||
+        rect.top !== lastRect.top ||
+        rect.left !== lastRect.left ||
+        rect.width !== lastRect.width ||
+        rect.height !== lastRect.height;
+
+      if (hasMoved) {
+        lastRect = rect;
+
+        // Only check visibility periodically to reduce DOM queries
+        const now = performance.now();
+        if (now - lastVisibilityCheck > VISIBILITY_CHECK_INTERVAL) {
+          isVisible = checkElementVisibility(el.element);
+          lastVisibilityCheck = now;
+          // Clear parent rects cache periodically
+          parentRects.clear();
+        }
+
+        if (isVisible) {
+          // Position badge above the element
+          const top = rect.top - 30; // Offset based upon badge size
+          const left = rect.left;
+
+          // Batch style updates to minimize reflows
+          badge.style.cssText += `top:${top}px;left:${left}px;display:block;`;
+        } else {
+          // Hide badge if element is not visible
+          badge.style.display = 'none';
+        }
+      }
+
+      // Continue the animation loop
+      animationId = requestAnimationFrame(updateBadgePosition);
+    };
+
+    // Start the position tracking loop
+    updateBadgePosition();
+
+    // Store animation ID for cleanup
+    (badge as any)._animationId = animationId;
+
+    // Trigger fade-in animation
     requestAnimationFrame(() => {
       badge.style.opacity = '1';
     });
@@ -876,6 +1065,25 @@ export class Autofill {
     setTimeout(() => {
       this.removeBadge(el.id);
     }, this.settings.badges);
+  }
+
+  // Helper method to cache scrollable parents
+  private getScrollableParents(element: Element): Element[] {
+    const scrollableParents: Element[] = [];
+    let parent = element.parentElement;
+
+    while (parent && parent !== document.body) {
+      const style = getComputedStyle(parent);
+      const overflow = style.overflow + style.overflowY + style.overflowX;
+
+      if (overflow.includes('scroll') || overflow.includes('auto')) {
+        scrollableParents.push(parent);
+      }
+
+      parent = parent.parentElement;
+    }
+
+    return scrollableParents;
   }
 
   private removeBadge(autofillElementId: string): void {
@@ -888,12 +1096,22 @@ export class Autofill {
       return;
     }
 
+    // Clean up animation frame immediately
+    const animationId = (existingBadge as any)._animationId;
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      (existingBadge as any)._animationId = null; // Clear reference
+    }
+
     // Trigger fade-out animation
     existingBadge.style.opacity = '0';
 
     // Remove element after animation completes
     setTimeout(() => {
-      existingBadge.remove();
+      // Double-check badge still exists before removing
+      if (existingBadge.parentNode) {
+        existingBadge.remove();
+      }
     }, 300); // Match the transition duration
   }
 
@@ -920,7 +1138,29 @@ export class Autofill {
     radioGroup: AutofillElement[]
   ): FetchFuncParams | undefined {
     const values = radioGroup
-      .map(el => (el.element as HTMLInputElement).value)
+      .map(el => {
+        const input = el.element as HTMLInputElement;
+
+        // Check if the value attribute is explicitly set
+        const hasExplicitValue = input.hasAttribute('value');
+
+        // Use value attribute if it's explicitly set or if it's not the default "on"
+        if (
+          hasExplicitValue ||
+          (input.value && input.value.trim() !== '' && input.value !== 'on')
+        ) {
+          return input.value;
+        }
+
+        // Fallback to label text
+        const label = document.querySelector(`label[for="${input.id}"]`);
+        if (label && label.textContent) {
+          return label.textContent.trim();
+        }
+
+        // Final fallback to id
+        return input.id;
+      })
       .filter(value => value !== ''); // Filter out empty values
 
     if (values.length > 0) {
@@ -929,6 +1169,136 @@ export class Autofill {
       };
     }
     return undefined;
+  }
+
+  private convertDateToWeek(dateValue: string): string {
+    // Convert date string (yyyy-MM-dd) to week format (yyyy-Www)
+    try {
+      const date = new Date(dateValue + 'T00:00:00');
+      const year = date.getFullYear();
+
+      // Get the week number using ISO week calculation
+      const startOfYear = new Date(year, 0, 1);
+      const days = Math.floor(
+        (date.getTime() - startOfYear.getTime()) / (24 * 60 * 60 * 1000)
+      );
+      const weekNumber = Math.ceil((days + startOfYear.getDay() + 1) / 7);
+
+      // Format as yyyy-Www (with leading zero for week number)
+      return `${year}-W${weekNumber.toString().padStart(2, '0')}`;
+    } catch (error) {
+      // If conversion fails, return a default week value
+      const currentYear = new Date().getFullYear();
+      return `${currentYear}-W01`;
+    }
+  }
+
+  private convertWeekToDate(weekValue: string): string {
+    // Convert week format (yyyy-Www) to date format (yyyy-MM-dd)
+    try {
+      const match = weekValue.match(/^(\d{4})-W(\d{2})$/);
+      if (!match) {
+        throw new Error('Invalid week format');
+      }
+
+      const year = parseInt(match[1]);
+      const week = parseInt(match[2]);
+
+      // Calculate the date for the first day of the week
+      const jan1 = new Date(year, 0, 1);
+      const daysToAdd = (week - 1) * 7;
+      const targetDate = new Date(
+        jan1.getTime() + daysToAdd * 24 * 60 * 60 * 1000
+      );
+
+      // Format as yyyy-MM-dd
+      const month = (targetDate.getMonth() + 1).toString().padStart(2, '0');
+      const day = targetDate.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    } catch (error) {
+      // If conversion fails, return a default date
+      const currentYear = new Date().getFullYear();
+      return `${currentYear}-01-01`;
+    }
+  }
+
+  private paramsDate(el: AutofillElement): FetchFuncParams | undefined {
+    const input = el.element as HTMLInputElement;
+    const min = input.getAttribute('min');
+    const max = input.getAttribute('max');
+
+    // Determine format based on input type
+    let format: string;
+    switch (el.type) {
+      case 'datetime-local':
+        format = 'yyyy-MM-ddTHH:mm';
+        break;
+      case 'month':
+        format = 'yyyy-MM';
+        break;
+      case 'date':
+      default:
+        format = 'yyyy-MM-dd';
+        break;
+    }
+
+    const params: any = {
+      format: format,
+    };
+
+    // If no min/max attributes, return just format
+    if (!min && !max) {
+      return params;
+    }
+
+    // Set startdate (min) or allow api to use default
+    if (min) {
+      params.startdate = min;
+    }
+
+    // Set enddate (max) or allow api to use default
+    if (max) {
+      params.enddate = max;
+    }
+
+    return params;
+  }
+
+  private paramsWeek(el: AutofillElement): FetchFuncParams {
+    const input = el.element as HTMLInputElement;
+    const min = input.getAttribute('min');
+    const max = input.getAttribute('max');
+
+    const params: any = {
+      format: 'yyyy-MM-dd', // Week inputs use date format for API calls
+    };
+
+    // Convert week format min/max attributes to date format for API
+    if (min) {
+      params.startdate = this.convertWeekToDate(min);
+    }
+
+    if (max) {
+      params.enddate = this.convertWeekToDate(max);
+    }
+
+    return params;
+  }
+
+  private paramsNumber(el: AutofillElement): FetchFuncParams {
+    const input = el.element as HTMLInputElement;
+    const min = input.getAttribute('min');
+    const max = input.getAttribute('max');
+
+    const params: any = {};
+
+    if (min) {
+      params.min = parseInt(min, 10);
+    }
+    if (max) {
+      params.max = parseInt(max, 10);
+    }
+    return params;
   }
 
   // ============================================================================
@@ -1012,41 +1382,5 @@ export class Autofill {
     }
 
     return resultsData;
-  }
-
-  // Date/Time generation helpers
-  private generateTime(): string {
-    const hours = Math.floor(Math.random() * 24)
-      .toString()
-      .padStart(2, '0');
-    const minutes = Math.floor(Math.random() * 60)
-      .toString()
-      .padStart(2, '0');
-    return `${hours}:${minutes}`;
-  }
-
-  private generateMonth(): string {
-    const year = new Date().getFullYear();
-    const month = Math.floor(Math.random() * 12) + 1;
-    return `${year}-${month.toString().padStart(2, '0')}`;
-  }
-
-  private generateWeek(): string {
-    const year = new Date().getFullYear();
-    const week = Math.floor(Math.random() * 52) + 1;
-    return `${year}-W${week.toString().padStart(2, '0')}`;
-  }
-
-  private generateDate(): string {
-    const year = 2020 + Math.floor(Math.random() * 5);
-    const month = Math.floor(Math.random() * 12) + 1;
-    const day = Math.floor(Math.random() * 28) + 1;
-    return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-  }
-
-  private generateDateTime(): string {
-    const date = this.generateDate();
-    const time = this.generateTime();
-    return `${date}T${time}`;
   }
 }
