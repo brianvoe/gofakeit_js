@@ -1,6 +1,7 @@
+# Ignore specific files
+coverage/
 dist/
 node_modules/
-coverage/
-*.min.js
-*.min.css
-package-lock.json
+
+# Ignore specific patterns in README if needed
+README.md
