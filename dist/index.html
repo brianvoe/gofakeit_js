@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -13,7 +13,7 @@
       /* ============================================================================
          CSS VARIABLES
          ============================================================================ */
-      
+
       :root {
         /* Colors - Dark Theme (Default) */
         --primary-color: #4dabf7;
@@ -42,7 +42,7 @@
       }
 
       /* Light Theme Variables */
-      [data-theme="light"] {
+      [data-theme='light'] {
         --primary-color: #007bff;
         --primary-hover: #0056b3;
         --secondary-color: #6c757d;
@@ -87,10 +87,15 @@
         /* Shadows */
         --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
         --shadow-medium: -2px 0 10px rgba(0, 0, 0, 0.1);
+
+        /* Scrollbar colors */
+        --scrollbar-track: var(--bg-light);
+        --scrollbar-thumb: var(--text-muted);
+        --scrollbar-thumb-hover: var(--text-secondary);
       }
 
       /* ============================================================================
-         BASE ELEMENTS
+         BASE ELEMENTS & LAYOUT
          ============================================================================ */
 
       body {
@@ -100,26 +105,41 @@
         background-color: var(--bg-main);
         display: flex;
         transition: background-color 0.3s ease;
+        box-sizing: border-box;
+        height: 100vh;
+        overflow: hidden;
       }
 
       /* ============================================================================
-         SEMANTIC STYLING
+         CUSTOM SCROLLBAR STYLING
          ============================================================================ */
 
-      /* Text styling */
-      .text-muted {
-        color: var(--text-muted);
-        transition: color 0.3s ease;
+      /* Webkit browsers (Chrome, Safari, Edge) */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
       }
 
-      .text-primary {
-        color: var(--text-primary);
-        transition: color 0.3s ease;
+      ::-webkit-scrollbar-track {
+        background: var(--scrollbar-track);
       }
 
-      /* ============================================================================
-         LAYOUT CONTAINERS
-         ============================================================================ */
+      ::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-thumb);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--scrollbar-thumb-hover);
+      }
+
+      /* Firefox */
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+      }
+
+      /* Main Layout Containers */
       .main-content {
         flex: 1;
         padding: var(--spacing-lg);
@@ -128,6 +148,109 @@
         display: flex;
         flex-direction: column;
         gap: var(--spacing-lg);
+        overflow-y: auto;
+        box-sizing: border-box;
+      }
+
+      /* Mobile Header */
+      .mobile-header {
+        display: none;
+        height: 60px;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+        padding: var(--spacing-md);
+        border-bottom: 1px solid var(--border-color);
+        position: relative;
+        background: var(--bg-main);
+        z-index: 1000;
+        box-sizing: border-box;
+      }
+
+      .mobile-header h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        flex: 1;
+        text-align: center;
+      }
+
+      .mobile-header-spacer {
+        width: 30px; /* Same width as hamburger button to balance layout */
+      }
+
+      /* Main Title */
+      .main-title {
+        margin: 0 0 var(--spacing-lg) 0;
+        font-size: 2rem;
+        color: var(--text-primary);
+        display: block;
+      }
+
+      /* Desktop: Hide mobile header, show main title */
+      @media (min-width: 769px) {
+        .mobile-header {
+          display: none !important;
+        }
+
+        .main-title {
+          display: block;
+        }
+      }
+
+      /* Mobile: Hide main title, show mobile header */
+      @media (max-width: 768px) {
+        .main-title {
+          display: none;
+        }
+      }
+
+      /* Sidebar Toggle Button */
+      .sidebar-toggle {
+        display: none;
+        width: 30px;
+        height: 30px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 1001;
+        position: relative;
+      }
+
+      .hamburger {
+        width: 100%;
+        height: 3px;
+        background-color: var(--text-primary);
+        position: absolute;
+        left: 0;
+        transition:
+          transform 0.3s ease-in-out,
+          opacity 0.3s ease-in-out;
+      }
+
+      .hamburger:nth-child(1) {
+        top: 0;
+      }
+
+      .hamburger:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .hamburger:nth-child(3) {
+        bottom: 0;
+      }
+
+      .sidebar-toggle.active .hamburger:nth-child(1) {
+        transform: translateY(13px) rotate(45deg);
+      }
+
+      .sidebar-toggle.active .hamburger:nth-child(2) {
+        opacity: 0;
+      }
+
+      .sidebar-toggle.active .hamburger:nth-child(3) {
+        transform: translateY(-13px) rotate(-45deg);
       }
 
       .container {
@@ -141,7 +264,12 @@
         gap: var(--spacing-lg);
       }
 
-      h1, h2, h3, h4, h5, h6 {
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
         color: var(--text-primary);
         margin: 0;
         padding: 0;
@@ -159,6 +287,37 @@
         padding: 0;
         font-size: var(--font-base);
         line-height: 1.5;
+      }
+
+      /* ============================================================================
+         CONTENT SECTIONS
+         ============================================================================ */
+
+      .section {
+        border: 1px solid var(--border-color);
+        padding: var(--spacing-lg);
+        border-radius: var(--radius-lg);
+        background-color: var(--bg-container);
+        transition:
+          background-color 0.3s ease,
+          border-color 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
+
+      /* ============================================================================
+         SEMANTIC STYLING
+         ============================================================================ */
+
+      .text-muted {
+        color: var(--text-muted);
+        transition: color 0.3s ease;
+      }
+
+      .text-primary {
+        color: var(--text-primary);
+        transition: color 0.3s ease;
       }
 
       /* ============================================================================
@@ -189,24 +348,30 @@
       select {
         width: 100%;
         padding: 10px;
+        margin: 0;
         border: 2px solid var(--border-color);
         border-radius: var(--radius-sm);
         font-size: var(--font-base);
         background-color: var(--bg-container);
         color: var(--text-primary);
-        transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+        transition:
+          border-color 0.3s,
+          background-color 0.3s,
+          color 0.3s;
         box-sizing: border-box;
       }
 
       /* Special styling for color input */
-      input[type="color"] {
+      input[type='color'] {
         height: 50px;
         padding: 5px;
         cursor: pointer;
         border-radius: var(--radius-md);
         border: 2px solid var(--border-color);
         background-color: var(--bg-container);
-        transition: border-color 0.3s, background-color 0.3s;
+        transition:
+          border-color 0.3s,
+          background-color 0.3s;
 
         &:hover {
           border-color: var(--primary-color);
@@ -214,12 +379,14 @@
       }
 
       /* Dark mode styling for checkboxes and radio buttons */
-      input[type="checkbox"],
-      input[type="radio"] {
+      input[type='checkbox'],
+      input[type='radio'] {
         accent-color: var(--primary-color);
         background-color: var(--bg-container);
         border: 2px solid var(--border-color);
-        transition: border-color 0.3s, background-color 0.3s;
+        transition:
+          border-color 0.3s,
+          background-color 0.3s;
 
         &:hover {
           border-color: var(--primary-color);
@@ -251,7 +418,7 @@
         appearance: none;
 
         /* Dark mode select arrow (default) */
-        &:not([data-theme="light"]) {
+        &:not([data-theme='light']) {
           background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
         }
       }
@@ -394,124 +561,175 @@
       /* ============================================================================
          SETTINGS COMPONENTS
          ============================================================================ */
-      .setting-item {
-        background: var(--bg-light);
-        padding: var(--spacing-md);
-        border-radius: var(--radius-sm);
-        border: 1px solid var(--border-color);
-      }
 
-      .setting-label {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-sm);
-        cursor: pointer;
-        font-weight: 500;
+      .settings-section {
+        margin-top: var(--spacing-lg);
 
-        input[type="checkbox"] {
-          width: 18px;
-          height: 18px;
-          margin: 0;
-          cursor: pointer;
+        h4 {
+          margin: 0 0 var(--spacing-md) 0;
+          color: var(--text-primary);
+          font-size: var(--font-base);
+          font-weight: 600;
         }
-      }
 
-      .setting-text {
-        flex: 1;
-        font-size: var(--font-base);
-      }
+        .setting-item {
+          background: var(--bg-light);
+          padding: var(--spacing-sm);
+          border-radius: var(--radius-sm);
+          border: 1px solid var(--border-color);
+          margin-bottom: var(--spacing-sm);
 
-      .setting-description {
-        margin-top: var(--spacing-sm);
-        margin-left: 26px;
-        line-height: 1.4;
-        font-size: var(--font-sm);
-        color: var(--text-muted);
-      }
+          &:last-child {
+            margin-bottom: 0;
+          }
 
-      .setting-range {
-        width: 100px;
-        margin: 0 var(--spacing-sm);
-      }
+          .setting-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--spacing-sm);
+            cursor: pointer;
+            font-weight: 500;
 
-      .setting-value {
-        min-width: 30px;
-        text-align: right;
-        font-weight: 500;
-        color: var(--primary-color);
+            input[type='checkbox'] {
+              width: 18px;
+              height: 18px;
+              margin: 0;
+              cursor: pointer;
+            }
+
+            .setting-text {
+              flex: 1;
+              font-size: var(--font-base);
+              font-weight: 500;
+              color: var(--text-primary);
+            }
+          }
+
+          .setting-slider-container {
+            margin-top: var(--spacing-xs);
+            padding: 2px 0;
+
+            .setting-range {
+              margin: 0;
+              padding: 0;
+              height: 20px;
+              width: 150px;
+            }
+          }
+
+          .setting-description {
+            margin-top: var(--spacing-sm);
+            margin-left: 26px;
+            line-height: 1.4;
+            font-size: var(--font-sm);
+            color: var(--text-muted);
+            font-style: italic;
+          }
+        }
+
+        .mode-toggle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: var(--spacing-sm);
+
+          .mode-label {
+            font-size: var(--font-base);
+            font-weight: 500;
+            color: var(--text-primary);
+          }
+
+          .toggle-container {
+            width: 100%;
+            max-width: 130px;
+          }
+        }
+
+        .setting-value {
+          min-width: 30px;
+          text-align: right;
+          font-weight: 500;
+          color: var(--primary-color);
+        }
       }
 
       /* ============================================================================
          TOGGLE COMPONENTS
          ============================================================================ */
-      .mode-toggle {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-sm);
-      }
 
-      .mode-label {
-        font-weight: 500;
-        color: var(--text-primary);
-        min-width: 40px;
-      }
-
+      /* Reusable Toggle Container - Base Styles */
       .toggle-container {
         display: flex;
-        background: var(--bg-light);
+        background: var(--bg-container);
         border-radius: var(--radius-sm);
         border: 1px solid var(--border-color);
         overflow: hidden;
         position: relative;
-      }
+        min-width: 80px;
 
-      .toggle-container input[type="radio"] {
-        display: none;
-      }
+        input[type='radio'],
+        input[type='checkbox'] {
+          display: none;
+        }
 
-      .toggle-option {
-        padding: 6px 12px;
-        font-size: var(--font-sm);
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        background: transparent;
-        color: var(--text-muted);
-        border: none;
-        min-width: 50px;
-        text-align: center;
-      }
+        .toggle-option {
+          padding: 6px 12px;
+          font-size: var(--font-sm);
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          background: transparent;
+          color: var(--text-muted);
+          border: none;
+          min-width: 40px;
+          text-align: center;
+          flex: 1;
+          position: relative;
+          z-index: 1;
 
-      .toggle-container input[type="radio"]:checked + .toggle-option {
-        background: var(--primary-color);
-        color: white;
-      }
+          &:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+          }
+        }
 
-      .toggle-container input[type="radio"]:checked + .toggle-option:hover {
-        background: var(--primary-color);
-      }
+        /* Radio Button Specific Styles */
+        input[type='radio']:checked + .toggle-option {
+          background: var(--primary-color);
+          color: white;
 
-      .toggle-option:hover {
-        background: var(--bg-hover);
-        color: var(--text-primary);
-      }
+          &:hover {
+            background: var(--primary-hover);
+            color: white;
+          }
+        }
 
-      /* Compact setting styles */
-      .setting-label.compact {
-        margin-bottom: 0;
-      }
+        /* Checkbox Specific Styles */
+        input[type='checkbox']:checked + .toggle-option {
+          background: var(--primary-color);
+          color: white;
 
-      .setting-range.compact {
-        width: 80px;
-        margin: 0 var(--spacing-xs);
-      }
+          &:hover {
+            background: var(--primary-hover);
+            color: white;
+          }
+        }
 
-      .setting-description {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-xs);
-        margin-top: var(--spacing-xs);
-        margin-left: 0;
+        input[type='checkbox']:checked + .toggle-option + .toggle-option {
+          background: transparent;
+          color: var(--text-muted);
+        }
+
+        input[type='checkbox']:not(:checked) + .toggle-option {
+          background: transparent;
+          color: var(--text-muted);
+        }
+
+        input[type='checkbox']:not(:checked) + .toggle-option + .toggle-option {
+          background: var(--primary-color);
+          color: white;
+        }
       }
 
       /* ============================================================================
@@ -523,7 +741,7 @@
         justify-content: space-between;
 
         .staggered-label {
-          font-size: var(--font-sm);
+          font-size: var(--font-base);
           font-weight: 500;
           color: var(--text-primary);
         }
@@ -553,16 +771,19 @@
           border-radius: 3px;
           outline: none;
           -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
 
           &::-webkit-slider-thumb {
             -webkit-appearance: none;
+            -moz-appearance: none;
             appearance: none;
             width: 18px;
             height: 18px;
             background: var(--primary-color);
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
           }
 
           &::-moz-range-thumb {
@@ -572,7 +793,7 @@
             border-radius: 50%;
             cursor: pointer;
             border: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
           }
         }
       }
@@ -603,10 +824,110 @@
         height: 100vh;
         overflow-y: auto;
         box-shadow: var(--shadow-medium);
-        transition: background-color 0.3s ease, border-color 0.3s ease;
+        transition:
+          background-color 0.3s ease,
+          border-color 0.3s ease,
+          transform 0.3s ease;
         display: flex;
         flex-direction: column;
         gap: var(--spacing-lg);
+        box-sizing: border-box;
+        z-index: 1000;
+      }
+
+      /* ============================================================================
+           MOBILE RESPONSIVE DESIGN
+           ============================================================================ */
+
+      /* Mobile breakpoint */
+      @media (max-width: 768px) {
+        body {
+          overflow-x: hidden;
+        }
+
+        .main-content {
+          margin: 0;
+          padding: var(--spacing-md);
+          padding-top: 60px; /* Account for fixed header height */
+          width: 100%;
+        }
+
+        .mobile-header {
+          display: flex;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          margin-bottom: 0;
+          z-index: 1000;
+          background: var(--bg-main);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-toggle {
+          display: flex;
+        }
+
+        .sidebar {
+          position: fixed;
+          top: 60px;
+          right: -300px;
+          width: 300px;
+          height: calc(100vh - 60px);
+          transform: translateX(0);
+          transition: transform 0.3s ease;
+          z-index: 1000;
+          border-left: none;
+          box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar.open {
+          transform: translateX(-300px);
+        }
+
+        /* Overlay when sidebar is open */
+        .sidebar-overlay {
+          position: fixed;
+          top: 60px;
+          left: 0;
+          width: 100%;
+          height: calc(100vh - 60px);
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 999;
+          opacity: 0;
+          visibility: hidden;
+          transition:
+            opacity 0.3s ease,
+            visibility 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+
+      /* Small mobile breakpoint */
+      @media (max-width: 480px) {
+        .sidebar {
+          width: 100%;
+          right: -100%;
+          top: 60px;
+          height: calc(100vh - 60px);
+        }
+
+        .sidebar.open {
+          transform: translateX(-100%);
+        }
+
+        .main-content {
+          padding: var(--spacing-sm);
+          padding-top: calc(60px + var(--spacing-sm));
+        }
+
+        .mobile-header h1 {
+          font-size: 1.25rem;
+        }
       }
 
       .controls {
@@ -645,26 +966,87 @@
         display: flex;
         align-items: center;
         gap: var(--spacing-sm);
+        cursor: pointer;
+        padding: var(--spacing-xs);
+        border-radius: var(--radius-sm);
+        transition: background-color 0.2s ease;
 
-        input {
-          width: auto;
+        &:hover {
+          background-color: var(--bg-hover);
+        }
+
+        input[type='checkbox'],
+        input[type='radio'] {
+          width: 18px;
+          height: 18px;
+          margin: 0;
+          cursor: pointer;
+          appearance: none;
+          border: 2px solid var(--border-color);
+          background-color: var(--bg-primary);
+          transition: all 0.2s ease;
+          position: relative;
+
+          &:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.1);
+          }
+
+          &:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
+          }
+
+          &:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+          }
+        }
+
+        input[type='checkbox'] {
+          border-radius: var(--radius-xs);
+
+          &:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 1;
+          }
+        }
+
+        input[type='radio'] {
+          border-radius: 50%;
+
+          &:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 50%;
+          }
         }
 
         label {
           margin: 0;
           font-weight: normal;
+          cursor: pointer;
+          color: var(--text-primary);
+          transition: color 0.2s ease;
         }
-      }
 
-      .section {
-        border: 1px solid var(--border-color);
-        padding: var(--spacing-lg);
-        border-radius: var(--radius-lg);
-        background-color: var(--bg-container);
-        transition: background-color 0.3s ease, border-color 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        gap: var(--spacing-md);
+        &:hover label {
+          color: var(--text-primary);
+        }
       }
 
       /* ============================================================================
@@ -672,43 +1054,16 @@
          ============================================================================ */
 
       .status {
-        position: fixed;
-        top: var(--spacing-lg);
-        right: var(--spacing-lg);
+        position: relative;
+        margin-top: var(--spacing-md);
+        margin-bottom: var(--spacing-md);
         padding: 10px var(--spacing-lg);
-        border-radius: var(--radius-sm);
-        color: white;
-        font-weight: bold;
-        z-index: 1000;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s, visibility 0.3s;
-
-        &.success {
-          background: var(--success-color);
-        }
-
-        &.error {
-          background: var(--danger-color);
-        }
-
-        &.show {
-          opacity: 1;
-          visibility: visible;
-        }
-      }
-
-      .status-badge {
-        position: fixed;
-        top: var(--spacing-lg);
-        left: var(--spacing-lg);
-        padding: 8px var(--spacing-md);
         border-radius: var(--radius-sm);
         color: white;
         font-weight: 500;
         font-size: 14px;
-        z-index: 1000;
         transition: all 0.3s ease;
+        display: block;
 
         &.idle {
           background: var(--secondary-color);
@@ -722,25 +1077,20 @@
           background: var(--info-color);
         }
 
-        &.determining_functions {
+        &.processing {
           background: var(--warning-color);
-          color: var(--bg-main);
         }
 
-        &.getting_values {
-          background: var(--primary-color);
-        }
-
-        &.applying_values {
-          background: var(--primary-color);
-        }
-
-        &.completed {
+        &.complete {
           background: var(--success-color);
         }
 
         &.error {
           background: var(--danger-color);
+        }
+
+        &.success {
+          background: var(--success-color);
         }
       }
 
@@ -808,11 +1158,22 @@
     <script type="module" crossorigin src="/index.cjs"></script>
   </head>
   <body>
-    <div id="status" class="status"></div>
-    <div id="statusDisplay" class="status-badge idle">Ready</div>
-
     <div class="main-content">
-      <h1>🎯 Gofakeit Autofill</h1>
+      <h1 class="main-title">🎯 Gofakeit Autofill</h1>
+
+      <div class="mobile-header">
+        <button
+          id="sidebarToggle"
+          class="sidebar-toggle"
+          aria-label="Toggle sidebar"
+        >
+          <span class="hamburger"></span>
+          <span class="hamburger"></span>
+          <span class="hamburger"></span>
+        </button>
+        <h1>🎯 Gofakeit Autofill</h1>
+        <div class="mobile-header-spacer"></div>
+      </div>
 
       <div class="container">
         <!-- RICH CONTEXT EXAMPLES - Lots of descriptive text -->
@@ -937,11 +1298,7 @@
                   >Medium</span
                 ></label
               >
-              <input
-                type="text"
-                id="jobTitle"
-                placeholder="Enter job title"
-              />
+              <input type="text" id="jobTitle" placeholder="Enter job title" />
             </div>
           </div>
           <div class="row">
@@ -980,11 +1337,7 @@
                   >Medium</span
                 ></label
               >
-              <input
-                type="text"
-                id="city"
-                placeholder="Enter city"
-              />
+              <input type="text" id="city" placeholder="Enter city" />
             </div>
             <div class="form-group">
               <label for="state"
@@ -993,11 +1346,7 @@
                   >Medium</span
                 ></label
               >
-              <input
-                type="text"
-                id="state"
-                placeholder="Enter state"
-              />
+              <input type="text" id="state" placeholder="Enter state" />
             </div>
           </div>
         </div>
@@ -1021,7 +1370,7 @@
                   >Sparse</span
                 ></label
               >
-              <input type="text" id="zipCode"  />
+              <input type="text" id="zipCode" />
             </div>
             <div class="form-group">
               <label for="country"
@@ -1030,7 +1379,7 @@
                   >Sparse</span
                 ></label
               >
-              <input type="text" id="country"  />
+              <input type="text" id="country" />
             </div>
           </div>
           <div class="row">
@@ -1041,7 +1390,7 @@
                   >Sparse</span
                 ></label
               >
-              <input type="number" id="age"  />
+              <input type="number" id="age" />
             </div>
             <div class="form-group">
               <label for="salary"
@@ -1067,7 +1416,7 @@
                   >Sparse</span
                 ></label
               >
-              <input type="color" id="color"  />
+              <input type="color" id="color" />
             </div>
             <div class="form-group">
               <label for="bio"
@@ -1084,9 +1433,7 @@
         <!-- CATEGORIES -->
         <div class="section" id="categories">
           <h3>🏷️ Categories</h3>
-          <p>
-            Testing various gofakeit categories with different input types.
-          </p>
+          <p>Testing various gofakeit categories with different input types.</p>
 
           <!-- PERSON CATEGORY -->
           <div id="person-category">
@@ -1102,21 +1449,13 @@
               </div>
               <div class="form-group">
                 <label for="gender">Gender</label>
-                <input
-                  type="text"
-                  id="gender"
-                  placeholder="Gender selection"
-                />
+                <input type="text" id="gender" placeholder="Gender selection" />
               </div>
             </div>
             <div class="row">
               <div class="form-group">
                 <label for="petName">Pet Name</label>
-                <input
-                  type="text"
-                  id="petName"
-                  placeholder="Pet name"
-                />
+                <input type="text" id="petName" placeholder="Pet name" />
               </div>
               <div class="form-group">
                 <label for="username">Username</label>
@@ -1240,11 +1579,7 @@
             <div class="row">
               <div class="form-group">
                 <label for="domainName">Domain Name</label>
-                <input
-                  type="text"
-                  id="domainName"
-                  placeholder="example.com"
-                />
+                <input type="text" id="domainName" placeholder="example.com" />
               </div>
               <div class="form-group">
                 <label for="ipv6Address">IPv6 Address</label>
@@ -1278,6 +1613,9 @@
           <!-- TIME CATEGORY -->
           <div id="time-category">
             <h4>⏰ Time Category</h4>
+
+            <!-- Text-based Time Fields -->
+            <h5>📝 Text-based Time Fields</h5>
             <div class="row">
               <div class="form-group">
                 <label for="timezone">Timezone</label>
@@ -1307,11 +1645,7 @@
               </div>
               <div class="form-group">
                 <label for="year">Year</label>
-                <input
-                  type="number"
-                  id="year"
-                  placeholder="Year value"
-                />
+                <input type="number" id="year" placeholder="Year value" />
               </div>
             </div>
           </div>
@@ -1345,19 +1679,11 @@
             <div class="row">
               <div class="form-group">
                 <label for="noun">Noun</label>
-                <input
-                  type="text"
-                  id="noun"
-                  placeholder="Random noun"
-                />
+                <input type="text" id="noun" placeholder="Random noun" />
               </div>
               <div class="form-group">
                 <label for="verb">Verb</label>
-                <input
-                  type="text"
-                  id="verb"
-                  placeholder="Random verb"
-                />
+                <input type="text" id="verb" placeholder="Random verb" />
               </div>
             </div>
             <div class="row">
@@ -1386,19 +1712,11 @@
             <div class="row">
               <div class="form-group">
                 <label for="hexColor">Hex Color</label>
-                <input
-                  type="text"
-                  id="hexColor"
-                  placeholder="#FF0000"
-                />
+                <input type="text" id="hexColor" placeholder="#FF0000" />
               </div>
               <div class="form-group">
                 <label for="rgbColor">RGB Color</label>
-                <input
-                  type="text"
-                  id="rgbColor"
-                  placeholder="rgb(255, 0, 0)"
-                />
+                <input type="text" id="rgbColor" placeholder="rgb(255, 0, 0)" />
               </div>
             </div>
           </div>
@@ -1409,37 +1727,21 @@
             <div class="row">
               <div class="form-group">
                 <label for="animal">Animal</label>
-                <input
-                  type="text"
-                  id="animal"
-                  placeholder="Random animal"
-                />
+                <input type="text" id="animal" placeholder="Random animal" />
               </div>
               <div class="form-group">
                 <label for="bird">Bird</label>
-                <input
-                  type="text"
-                  id="bird"
-                  placeholder="Random bird"
-                />
+                <input type="text" id="bird" placeholder="Random bird" />
               </div>
             </div>
             <div class="row">
               <div class="form-group">
                 <label for="cat">Cat</label>
-                <input
-                  type="text"
-                  id="cat"
-                  placeholder="Random cat breed"
-                />
+                <input type="text" id="cat" placeholder="Random cat breed" />
               </div>
               <div class="form-group">
                 <label for="dog">Dog</label>
-                <input
-                  type="text"
-                  id="dog"
-                  placeholder="Random dog breed"
-                />
+                <input type="text" id="dog" placeholder="Random dog breed" />
               </div>
             </div>
           </div>
@@ -1450,11 +1752,7 @@
             <div class="row">
               <div class="form-group">
                 <label for="fruit">Fruit</label>
-                <input
-                  type="text"
-                  id="fruit"
-                  placeholder="Random fruit"
-                />
+                <input type="text" id="fruit" placeholder="Random fruit" />
               </div>
               <div class="form-group">
                 <label for="vegetable">Vegetable</label>
@@ -1476,11 +1774,7 @@
               </div>
               <div class="form-group">
                 <label for="lunch">Lunch</label>
-                <input
-                  type="text"
-                  id="lunch"
-                  placeholder="Lunch food"
-                />
+                <input type="text" id="lunch" placeholder="Lunch food" />
               </div>
             </div>
           </div>
@@ -1499,11 +1793,7 @@
               </div>
               <div class="form-group">
                 <label for="carModel">Car Model</label>
-                <input
-                  type="text"
-                  id="carModel"
-                  placeholder="Car model name"
-                />
+                <input type="text" id="carModel" placeholder="Car model name" />
               </div>
             </div>
           </div>
@@ -1522,11 +1812,7 @@
               </div>
               <div class="form-group">
                 <label for="dice">Dice</label>
-                <input
-                  type="text"
-                  id="dice"
-                  placeholder="Dice roll result"
-                />
+                <input type="text" id="dice" placeholder="Dice roll result" />
               </div>
             </div>
           </div>
@@ -1537,18 +1823,215 @@
             <div class="row">
               <div class="form-group">
                 <label for="uuid">UUID</label>
-                <input
-                  type="text"
-                  id="uuid"
-                  placeholder="Unique identifier"
-                />
+                <input type="text" id="uuid" placeholder="Unique identifier" />
               </div>
               <div class="form-group">
                 <label for="bool">Boolean</label>
+                <input type="text" id="bool" placeholder="True or false" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DATE & TIME INPUTS -->
+        <div class="section" id="date-time-inputs">
+          <h3>📅 Date & Time Inputs</h3>
+          <p>
+            Testing date and time input types with and without range
+            constraints.
+          </p>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="dateInputDefault">Date Input (Simple)</label>
+              <input type="date" id="dateInputDefault" data-gofakeit="true" />
+            </div>
+            <div class="form-group">
+              <label for="dateInputRange"
+                >Date Input (Current Year Range)</label
+              >
+              <input
+                type="date"
+                id="dateInputRange"
+                min="2024-01-01"
+                max="2024-12-31"
+                data-gofakeit="true"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="timeInputDefault">Time Input (Simple)</label>
+              <input type="time" id="timeInputDefault" data-gofakeit="true" />
+            </div>
+            <div class="form-group">
+              <label for="timeInputRange">Time Input (Business Hours)</label>
+              <input
+                type="time"
+                id="timeInputRange"
+                min="09:00"
+                max="17:00"
+                step="900"
+                data-gofakeit="true"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="datetimeLocalInputDefault"
+                >DateTime Local Input (Simple)</label
+              >
+              <input
+                type="datetime-local"
+                id="datetimeLocalInputDefault"
+                data-gofakeit="true"
+              />
+            </div>
+            <div class="form-group">
+              <label for="datetimeLocalInputRange"
+                >DateTime Local Input (1 Hour Steps)</label
+              >
+              <input
+                type="datetime-local"
+                id="datetimeLocalInputRange"
+                min="2024-01-01T00:00"
+                max="2024-12-31T23:59"
+                step="3600"
+                data-gofakeit="true"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="monthInputDefault">Month Input (Simple)</label>
+              <input type="month" id="monthInputDefault" data-gofakeit="true" />
+            </div>
+            <div class="form-group">
+              <label for="monthInputRange">Month Input (Current Year)</label>
+              <input
+                type="month"
+                id="monthInputRange"
+                min="2024-01"
+                max="2024-12"
+                data-gofakeit="true"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="weekInputDefault">Week Input (Simple)</label>
+              <input type="week" id="weekInputDefault" data-gofakeit="true" />
+            </div>
+            <div class="form-group">
+              <label for="weekInputRange">Week Input (Current Year)</label>
+              <input
+                type="week"
+                id="weekInputRange"
+                min="2024-W01"
+                max="2024-W52"
+                data-gofakeit="true"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="yearInputDefault">Year Input (Simple)</label>
+              <input
+                type="number"
+                id="yearInputDefault"
+                data-gofakeit="true"
+                placeholder="Year value"
+              />
+            </div>
+            <div class="form-group">
+              <label for="yearInputRange">Year Input (Recent Years)</label>
+              <input
+                type="number"
+                id="yearInputRange"
+                min="2020"
+                max="2030"
+                step="1"
+                data-gofakeit="true"
+                placeholder="Year value"
+              />
+            </div>
+          </div>
+
+          <!-- Additional Range Examples -->
+          <h4>🔍 Additional Range Examples</h4>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="dateInputPast">Date Input (Past 5 Years)</label>
                 <input
-                  type="text"
-                  id="bool"
-                  placeholder="True or false"
+                  type="date"
+                  id="dateInputPast"
+                  min="2019-01-01"
+                  max="2024-12-31"
+                  data-gofakeit="true"
+                />
+              </div>
+              <div class="form-group">
+                <label for="timeInput24h">Time Input (24 Hour)</label>
+                <input
+                  type="time"
+                  id="timeInput24h"
+                  min="00:00"
+                  max="23:59"
+                  step="60"
+                  data-gofakeit="true"
+                />
+              </div>
+              <div class="form-group">
+                <label for="datetimeLocalInputFuture"
+                  >DateTime Local Input (Future 1 Year)</label
+                >
+                <input
+                  type="datetime-local"
+                  id="datetimeLocalInputFuture"
+                  min="2024-01-01T00:00"
+                  max="2025-12-31T23:59"
+                  step="1800"
+                  data-gofakeit="true"
+                />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label for="monthInputRange2">Month Input (2 Year Range)</label>
+                <input
+                  type="month"
+                  id="monthInputRange2"
+                  min="2023-01"
+                  max="2024-12"
+                  data-gofakeit="true"
+                />
+              </div>
+              <div class="form-group">
+                <label for="weekInputRange2">Week Input (Academic Year)</label>
+                <input
+                  type="week"
+                  id="weekInputRange2"
+                  min="2024-W35"
+                  max="2025-W15"
+                  data-gofakeit="true"
+                />
+              </div>
+              <div class="form-group">
+                <label for="yearInputDecade">Year Input (Decade Range)</label>
+                <input
+                  type="number"
+                  id="yearInputDecade"
+                  min="2010"
+                  max="2020"
+                  step="1"
+                  data-gofakeit="true"
+                  placeholder="Year value"
                 />
               </div>
             </div>
@@ -1558,9 +2041,7 @@
         <!-- CUSTOM FUNCTION EXAMPLES -->
         <div class="section" id="custom-functions">
           <h3>🎯 Custom Function Examples</h3>
-          <p>
-            Examples with specific function assignments.
-          </p>
+          <p>Examples with specific function assignments.</p>
 
           <div class="row">
             <div class="form-group">
@@ -1622,7 +2103,8 @@
         <div class="section" id="data-gofakeit-true">
           <h3>✅ Data-gofakeit="true" Fields</h3>
           <p>
-            These fields have <code>data-gofakeit="true"</code> and will be autofilled regardless of Auto Mode setting.
+            These fields have <code>data-gofakeit="true"</code> and will be
+            autofilled regardless of Auto Mode setting.
           </p>
 
           <div class="input-grid">
@@ -1710,7 +2192,9 @@
             <label for="trueCheckbox">Agree to Terms</label>
             <div class="checkbox-item">
               <input type="checkbox" id="trueCheckbox" data-gofakeit="true" />
-              <label for="trueCheckbox">I agree to the terms and conditions</label>
+              <label for="trueCheckbox"
+                >I agree to the terms and conditions</label
+              >
             </div>
             <div class="field-note">data-gofakeit="true"</div>
           </div>
@@ -1719,15 +2203,30 @@
             <label>Gender</label>
             <div class="radio-group">
               <div class="radio-item">
-                <input type="radio" id="trueMale" name="trueGender" data-gofakeit="true" />
+                <input
+                  type="radio"
+                  id="trueMale"
+                  name="trueGender"
+                  data-gofakeit="true"
+                />
                 <label for="trueMale">Male</label>
               </div>
               <div class="radio-item">
-                <input type="radio" id="trueFemale" name="trueGender" data-gofakeit="true" />
+                <input
+                  type="radio"
+                  id="trueFemale"
+                  name="trueGender"
+                  data-gofakeit="true"
+                />
                 <label for="trueFemale">Female</label>
               </div>
               <div class="radio-item">
-                <input type="radio" id="trueOther" name="trueGender" data-gofakeit="true" />
+                <input
+                  type="radio"
+                  id="trueOther"
+                  name="trueGender"
+                  data-gofakeit="true"
+                />
                 <label for="trueOther">Other</label>
               </div>
             </div>
@@ -1747,20 +2246,103 @@
             <label>Programming Languages (Checkboxes)</label>
             <div class="checkbox-group">
               <div class="checkbox-item">
-                <input type="checkbox" id="lang1"  />
+                <input type="checkbox" id="lang1" />
                 <label for="lang1">JavaScript</label>
               </div>
               <div class="checkbox-item">
-                <input type="checkbox" id="lang2"  />
+                <input type="checkbox" id="lang2" />
                 <label for="lang2">Python</label>
               </div>
               <div class="checkbox-item">
-                <input type="checkbox" id="lang3"  />
+                <input type="checkbox" id="lang3" />
                 <label for="lang3">Go</label>
               </div>
               <div class="checkbox-item">
-                <input type="checkbox" id="lang4"  />
+                <input type="checkbox" id="lang4" />
                 <label for="lang4">Rust</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Skills & Interests (Checkboxes with Values)</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="skill1" value="frontend" />
+                <label for="skill1">Frontend Development</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="skill2" value="backend" />
+                <label for="skill2">Backend Development</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="skill3" value="devops" />
+                <label for="skill3">DevOps</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="skill4" value="mobile" />
+                <label for="skill4">Mobile Development</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Agreements (Checkboxes with Same Name)</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input
+                  type="checkbox"
+                  id="agree1"
+                  name="agreements"
+                  value="terms"
+                />
+                <label for="agree1">I agree to the Terms of Service</label>
+              </div>
+              <div class="checkbox-item">
+                <input
+                  type="checkbox"
+                  id="agree2"
+                  name="agreements"
+                  value="privacy"
+                />
+                <label for="agree2">I agree to the Privacy Policy</label>
+              </div>
+              <div class="checkbox-item">
+                <input
+                  type="checkbox"
+                  id="agree3"
+                  name="agreements"
+                  value="marketing"
+                />
+                <label for="agree3">I agree to receive marketing emails</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Preferences (Mixed Checkbox States)</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="pref1" checked />
+                <label for="pref1">Dark Mode (Pre-checked)</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="pref2" disabled />
+                <label for="pref2">Admin Settings (Disabled)</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="pref3" />
+                <label for="pref3">Notifications</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="pref4" value="advanced" />
+                <label for="pref4">Advanced Features</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Single Checkbox (Edge Case)</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="single" value="yes" />
+                <label for="single">I am a single checkbox</label>
               </div>
             </div>
           </div>
@@ -1772,6 +2354,7 @@
                   type="radio"
                   name="experience"
                   id="exp1"
+                  value="beginner"
                 />
                 <label for="exp1">Beginner</label>
               </div>
@@ -1780,6 +2363,7 @@
                   type="radio"
                   name="experience"
                   id="exp2"
+                  value="intermediate"
                 />
                 <label for="exp2">Intermediate</label>
               </div>
@@ -1788,14 +2372,58 @@
                   type="radio"
                   name="experience"
                   id="exp3"
+                  value="advanced"
                 />
                 <label for="exp3">Advanced</label>
               </div>
             </div>
           </div>
           <div class="form-group">
+            <label>Preferred Language (Radio Buttons)</label>
+            <div class="radio-group">
+              <div class="radio-item">
+                <input
+                  type="radio"
+                  name="language"
+                  id="lang1"
+                  value="javascript"
+                />
+                <label for="lang1">JavaScript</label>
+              </div>
+              <div class="radio-item">
+                <input type="radio" name="language" id="lang2" value="python" />
+                <label for="lang2">Python</label>
+              </div>
+              <div class="radio-item">
+                <input type="radio" name="language" id="lang3" value="go" />
+                <label for="lang3">Go</label>
+              </div>
+              <div class="radio-item">
+                <input type="radio" name="language" id="lang4" value="rust" />
+                <label for="lang4">Rust</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Work Environment (Radio Buttons)</label>
+            <div class="radio-group">
+              <div class="radio-item">
+                <input type="radio" name="work_env" id="work1" value="remote" />
+                <label for="work1">Remote</label>
+              </div>
+              <div class="radio-item">
+                <input type="radio" name="work_env" id="work2" value="office" />
+                <label for="work2">Office</label>
+              </div>
+              <div class="radio-item">
+                <input type="radio" name="work_env" id="work3" value="hybrid" />
+                <label for="work3">Hybrid</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
             <label for="timezoneSelect">Timezone (Select)</label>
-            <select id="timezoneSelect" >
+            <select id="timezoneSelect">
               <option value="">Select timezone</option>
               <option value="UTC">UTC (Coordinated Universal Time)</option>
               <option value="EST">EST (Eastern Standard Time)</option>
@@ -1804,14 +2432,35 @@
               <option value="PST">PST (Pacific Standard Time)</option>
             </select>
           </div>
+          <div class="form-group">
+            <label for="countrySelect">Country (Select)</label>
+            <select id="countrySelect">
+              <option value="">Choose a country</option>
+              <option value="US">United States</option>
+              <option value="CA">Canada</option>
+              <option value="UK">United Kingdom</option>
+              <option value="DE">Germany</option>
+              <option value="FR">France</option>
+              <option value="JP">Japan</option>
+              <option value="AU">Australia</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="prioritySelect">Priority Level (Select)</label>
+            <select id="prioritySelect">
+              <option value="">Select priority</option>
+              <option value="low">Low Priority</option>
+              <option value="medium">Medium Priority</option>
+              <option value="high">High Priority</option>
+              <option value="urgent">Urgent</option>
+            </select>
+          </div>
         </div>
 
         <!-- EXCLUDED FIELDS -->
         <div class="section" id="excluded-fields">
           <h3>🚫 Excluded Fields (data-gofakeit="false")</h3>
-          <p>
-            These fields will NOT be filled by the autofill function.
-          </p>
+          <p>These fields will NOT be filled by the autofill function.</p>
 
           <div class="row">
             <div class="form-group">
@@ -1839,8 +2488,9 @@
         <div class="section" id="error-demonstration">
           <h3>⚠️ Error Demonstration</h3>
           <p>
-            These fields use invalid <code>data-gofakeit</code> values that should cause errors to be displayed.
-            This helps test error handling and user feedback.
+            These fields use invalid <code>data-gofakeit</code> values that
+            should cause errors to be displayed. This helps test error handling
+            and user feedback.
           </p>
 
           <div class="row">
@@ -1920,10 +2570,745 @@
             <div class="field-note">data-gofakeit="invalidtextarea"</div>
           </div>
         </div>
+
+        <!-- BADGE POSITIONING TEST SECTION -->
+        <div class="section" id="badge-positioning-tests">
+          <h3>🎯 Badge Positioning Tests</h3>
+          <p>
+            This section tests various badge positioning scenarios including
+            subscrolling containers, complex layouts, and viewport visibility to
+            ensure badges work correctly in all situations.
+          </p>
+
+          <!-- Test 1: Subscrolling Container -->
+          <div class="form-group">
+            <h4>📜 Subscrolling Container Test</h4>
+            <p>
+              Scroll within this container to test badge positioning with
+              subscrolling:
+            </p>
+            <div
+              style="
+                height: 200px;
+                overflow-y: auto;
+                border: 2px solid var(--border-color);
+                padding: 16px;
+                border-radius: 8px;
+                background: var(--bg-light);
+              "
+            >
+              <div
+                style="
+                  height: 400px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 16px;
+                "
+              >
+                <div class="form-group">
+                  <label for="scrollTest1">Input 1 (Top of scroll area)</label>
+                  <input
+                    type="text"
+                    id="scrollTest1"
+                    placeholder="This should show badge above"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="scrollTest2"
+                    >Input 2 (Middle of scroll area)</label
+                  >
+                  <input
+                    type="text"
+                    id="scrollTest2"
+                    placeholder="This should show badge above"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="scrollTest3"
+                    >Input 3 (Middle of scroll area)</label
+                  >
+                  <input
+                    type="text"
+                    id="scrollTest3"
+                    placeholder="This should show badge above"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="scrollTest4"
+                    >Input 4 (Bottom of scroll area)</label
+                  >
+                  <input
+                    type="text"
+                    id="scrollTest4"
+                    placeholder="This should show badge above"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="scrollTest5">Input 5 (Very bottom)</label>
+                  <input
+                    type="text"
+                    id="scrollTest5"
+                    placeholder="This should show badge above"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Test 2: Multiple Subscrolling Containers -->
+          <div class="form-group">
+            <h4>🔄 Multiple Subscrolling Containers</h4>
+            <p>Test badges in multiple nested scrollable containers:</p>
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px"
+            >
+              <div
+                style="
+                  height: 150px;
+                  overflow-y: auto;
+                  border: 2px solid var(--border-color);
+                  padding: 12px;
+                  border-radius: 8px;
+                  background: var(--bg-light);
+                "
+              >
+                <div
+                  style="
+                    height: 300px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                  "
+                >
+                  <div class="form-group">
+                    <label for="multiScroll1">Left Container Input 1</label>
+                    <input
+                      type="text"
+                      id="multiScroll1"
+                      placeholder="Left scroll test"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="multiScroll2">Left Container Input 2</label>
+                    <input
+                      type="text"
+                      id="multiScroll2"
+                      placeholder="Left scroll test"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="multiScroll3">Left Container Input 3</label>
+                    <input
+                      type="text"
+                      id="multiScroll3"
+                      placeholder="Left scroll test"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style="
+                  height: 150px;
+                  overflow-y: auto;
+                  border: 2px solid var(--border-color);
+                  padding: 12px;
+                  border-radius: 8px;
+                  background: var(--bg-light);
+                "
+              >
+                <div
+                  style="
+                    height: 300px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                  "
+                >
+                  <div class="form-group">
+                    <label for="multiScroll4">Right Container Input 1</label>
+                    <input
+                      type="text"
+                      id="multiScroll4"
+                      placeholder="Right scroll test"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="multiScroll5">Right Container Input 2</label>
+                    <input
+                      type="text"
+                      id="multiScroll5"
+                      placeholder="Right scroll test"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="multiScroll6">Right Container Input 3</label>
+                    <input
+                      type="text"
+                      id="multiScroll6"
+                      placeholder="Right scroll test"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Test 3: Viewport Visibility Test -->
+          <div class="form-group">
+            <h4>👁️ Viewport Visibility Test</h4>
+            <p>Test that badges disappear when elements are out of viewport:</p>
+            <div
+              style="
+                height: 100px;
+                background: var(--bg-light);
+                border: 2px solid var(--border-color);
+                border-radius: 8px;
+                padding: 16px;
+                margin-bottom: 16px;
+              "
+            >
+              <div class="form-group">
+                <label for="viewportTest1">Input Above Viewport</label>
+                <input
+                  type="text"
+                  id="viewportTest1"
+                  placeholder="Scroll up to hide this"
+                />
+              </div>
+            </div>
+            <div
+              style="
+                height: 100px;
+                background: var(--bg-light);
+                border: 2px solid var(--border-color);
+                border-radius: 8px;
+                padding: 16px;
+                margin-bottom: 16px;
+              "
+            >
+              <div class="form-group">
+                <label for="viewportTest2">Input In Viewport</label>
+                <input
+                  type="text"
+                  id="viewportTest2"
+                  placeholder="This should show badge"
+                />
+              </div>
+            </div>
+            <div
+              style="
+                height: 100px;
+                background: var(--bg-light);
+                border: 2px solid var(--border-color);
+                border-radius: 8px;
+                padding: 16px;
+                margin-bottom: 16px;
+              "
+            >
+              <div class="form-group">
+                <label for="viewportTest3">Input Below Viewport</label>
+                <input
+                  type="text"
+                  id="viewportTest3"
+                  placeholder="Scroll down to hide this"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Test 4: Mixed Element Types in Complex Layout -->
+          <div class="form-group">
+            <h4>🎭 Mixed Element Types in Complex Layout</h4>
+            <p>
+              Test badges with different element types in a complex nested
+              layout:
+            </p>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+                background: var(--bg-light);
+                padding: 16px;
+                border-radius: 8px;
+                border: 2px solid var(--border-color);
+              "
+            >
+              <div style="display: flex; flex-direction: column; gap: 12px">
+                <div class="form-group">
+                  <label for="complexTest1">Text Input</label>
+                  <input
+                    type="text"
+                    id="complexTest1"
+                    placeholder="Text input test"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="complexTest2">Email Input</label>
+                  <input
+                    type="email"
+                    id="complexTest2"
+                    placeholder="Email input test"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="complexTest3">Select Dropdown</label>
+                  <select id="complexTest3">
+                    <option value="">Choose option</option>
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 12px">
+                <div class="form-group">
+                  <label>Radio Group</label>
+                  <div class="radio-group">
+                    <div class="radio-item">
+                      <input
+                        type="radio"
+                        name="complexRadio"
+                        id="complexRadio1"
+                        value="option1"
+                      />
+                      <label for="complexRadio1">Option 1</label>
+                    </div>
+                    <div class="radio-item">
+                      <input
+                        type="radio"
+                        name="complexRadio"
+                        id="complexRadio2"
+                        value="option2"
+                      />
+                      <label for="complexRadio2">Option 2</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Checkbox Group</label>
+                  <div class="checkbox-group">
+                    <div class="checkbox-item">
+                      <input
+                        type="checkbox"
+                        id="complexCheck1"
+                        value="check1"
+                      />
+                      <label for="complexCheck1">Check 1</label>
+                    </div>
+                    <div class="checkbox-item">
+                      <input
+                        type="checkbox"
+                        id="complexCheck2"
+                        value="check2"
+                      />
+                      <label for="complexCheck2">Check 2</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="complexTest4">Textarea</label>
+                  <textarea
+                    id="complexTest4"
+                    rows="2"
+                    placeholder="Textarea test"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Test 5: Horizontal Scrolling Test -->
+          <div class="form-group">
+            <h4>↔️ Horizontal Scrolling Test</h4>
+            <p>Test badges in a horizontally scrollable container:</p>
+            <div
+              style="
+                width: 100%;
+                overflow-x: auto;
+                border: 2px solid var(--border-color);
+                border-radius: 8px;
+                background: var(--bg-light);
+              "
+            >
+              <div
+                style="width: 800px; display: flex; gap: 16px; padding: 16px"
+              >
+                <div class="form-group" style="min-width: 200px">
+                  <label for="horizontalTest1">Input 1 (Left)</label>
+                  <input
+                    type="text"
+                    id="horizontalTest1"
+                    placeholder="Left side"
+                  />
+                </div>
+                <div class="form-group" style="min-width: 200px">
+                  <label for="horizontalTest2">Input 2 (Center-Left)</label>
+                  <input
+                    type="text"
+                    id="horizontalTest2"
+                    placeholder="Center-left"
+                  />
+                </div>
+                <div class="form-group" style="min-width: 200px">
+                  <label for="horizontalTest3">Input 3 (Center-Right)</label>
+                  <input
+                    type="text"
+                    id="horizontalTest3"
+                    placeholder="Center-right"
+                  />
+                </div>
+                <div class="form-group" style="min-width: 200px">
+                  <label for="horizontalTest4">Input 4 (Right)</label>
+                  <input
+                    type="text"
+                    id="horizontalTest4"
+                    placeholder="Right side"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Test 6: Nested Scrollable Containers -->
+          <div class="form-group">
+            <h4>🪆 Nested Scrollable Containers</h4>
+            <p>Test badges in deeply nested scrollable containers:</p>
+            <div
+              style="
+                height: 200px;
+                overflow-y: auto;
+                border: 2px solid var(--border-color);
+                padding: 16px;
+                border-radius: 8px;
+                background: var(--bg-light);
+              "
+            >
+              <div
+                style="
+                  height: 400px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 16px;
+                "
+              >
+                <div class="form-group">
+                  <label for="nestedTest1">Outer Container Input 1</label>
+                  <input
+                    type="text"
+                    id="nestedTest1"
+                    placeholder="Outer container"
+                  />
+                </div>
+                <div
+                  style="
+                    height: 150px;
+                    overflow-y: auto;
+                    border: 1px solid var(--border-color);
+                    padding: 12px;
+                    border-radius: 4px;
+                    background: var(--bg-container);
+                  "
+                >
+                  <div
+                    style="
+                      height: 300px;
+                      display: flex;
+                      flex-direction: column;
+                      gap: 12px;
+                    "
+                  >
+                    <div class="form-group">
+                      <label for="nestedTest2">Inner Container Input 1</label>
+                      <input
+                        type="text"
+                        id="nestedTest2"
+                        placeholder="Inner container"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="nestedTest3">Inner Container Input 2</label>
+                      <input
+                        type="text"
+                        id="nestedTest3"
+                        placeholder="Inner container"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="nestedTest4">Inner Container Input 3</label>
+                      <input
+                        type="text"
+                        id="nestedTest4"
+                        placeholder="Inner container"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="nestedTest5">Outer Container Input 2</label>
+                  <input
+                    type="text"
+                    id="nestedTest5"
+                    placeholder="Outer container"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Test 7: Transform and Position Test -->
+          <div class="form-group">
+            <h4>🔄 Transform and Position Test</h4>
+            <p>
+              Test badges with elements that have CSS transforms and
+              positioning:
+            </p>
+            <div
+              style="
+                position: relative;
+                height: 200px;
+                background: var(--bg-light);
+                border: 2px solid var(--border-color);
+                border-radius: 8px;
+                padding: 16px;
+              "
+            >
+              <div
+                style="
+                  position: absolute;
+                  top: 20px;
+                  left: 20px;
+                  transform: rotate(5deg);
+                "
+              >
+                <div class="form-group">
+                  <label for="transformTest1">Rotated Input</label>
+                  <input
+                    type="text"
+                    id="transformTest1"
+                    placeholder="Rotated element"
+                  />
+                </div>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  top: 20px;
+                  right: 20px;
+                  transform: scale(1.1);
+                "
+              >
+                <div class="form-group">
+                  <label for="transformTest2">Scaled Input</label>
+                  <input
+                    type="text"
+                    id="transformTest2"
+                    placeholder="Scaled element"
+                  />
+                </div>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  bottom: 20px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                "
+              >
+                <div class="form-group">
+                  <label for="transformTest3">Centered Input</label>
+                  <input
+                    type="text"
+                    id="transformTest3"
+                    placeholder="Centered element"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Test 8: Z-Index and Overlay Test -->
+          <div class="form-group">
+            <h4>📚 Z-Index and Overlay Test</h4>
+            <p>Test badges with elements that have different z-index values:</p>
+            <div
+              style="
+                position: relative;
+                height: 150px;
+                background: var(--bg-light);
+                border: 2px solid var(--border-color);
+                border-radius: 8px;
+                padding: 16px;
+              "
+            >
+              <div
+                style="
+                  position: absolute;
+                  top: 20px;
+                  left: 20px;
+                  z-index: 1;
+                  background: var(--bg-container);
+                  padding: 8px;
+                  border-radius: 4px;
+                "
+              >
+                <div class="form-group">
+                  <label for="zindexTest1">Z-Index 1</label>
+                  <input type="text" id="zindexTest1" placeholder="Z-index 1" />
+                </div>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  top: 40px;
+                  left: 40px;
+                  z-index: 2;
+                  background: var(--bg-container);
+                  padding: 8px;
+                  border-radius: 4px;
+                "
+              >
+                <div class="form-group">
+                  <label for="zindexTest2">Z-Index 2</label>
+                  <input type="text" id="zindexTest2" placeholder="Z-index 2" />
+                </div>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  top: 60px;
+                  left: 60px;
+                  z-index: 3;
+                  background: var(--bg-container);
+                  padding: 8px;
+                  border-radius: 4px;
+                "
+              >
+                <div class="form-group">
+                  <label for="zindexTest3">Z-Index 3</label>
+                  <input type="text" id="zindexTest3" placeholder="Z-index 3" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Test 9: Border and Margin Test -->
+          <div class="form-group">
+            <h4>📏 Border and Margin Test</h4>
+            <p>
+              Test badges with elements that have borders, margins, and padding
+              to see positioning accuracy:
+            </p>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+                background: var(--bg-light);
+                padding: 16px;
+                border-radius: 8px;
+                border: 2px solid var(--border-color);
+              "
+            >
+              <div style="display: flex; flex-direction: column; gap: 12px">
+                <div class="form-group">
+                  <label for="borderTest1"
+                    >Normal Input (No Border/Margin)</label
+                  >
+                  <input
+                    type="text"
+                    id="borderTest1"
+                    placeholder="Normal input"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="borderTest2">Input with Border</label>
+                  <input
+                    type="text"
+                    id="borderTest2"
+                    placeholder="Input with border"
+                    style="border: 3px solid var(--primary-color)"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="borderTest3">Input with Margin</label>
+                  <input
+                    type="text"
+                    id="borderTest3"
+                    placeholder="Input with margin"
+                    style="margin: 10px"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="borderTest4">Input with Padding</label>
+                  <input
+                    type="text"
+                    id="borderTest4"
+                    placeholder="Input with padding"
+                    style="padding: 15px"
+                  />
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 12px">
+                <div class="form-group">
+                  <label for="borderTest5">Input with Border + Margin</label>
+                  <input
+                    type="text"
+                    id="borderTest5"
+                    placeholder="Border + margin"
+                    style="border: 2px solid var(--success-color); margin: 8px"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="borderTest6">Input with Border + Padding</label>
+                  <input
+                    type="text"
+                    id="borderTest6"
+                    placeholder="Border + padding"
+                    style="
+                      border: 2px solid var(--warning-color);
+                      padding: 12px;
+                    "
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="borderTest7"
+                    >Input with All (Border + Margin + Padding)</label
+                  >
+                  <input
+                    type="text"
+                    id="borderTest7"
+                    placeholder="All styling"
+                    style="
+                      border: 3px solid var(--danger-color);
+                      margin: 6px;
+                      padding: 10px;
+                    "
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="borderTest8">Select with Border</label>
+                  <select
+                    id="borderTest8"
+                    style="border: 2px solid var(--info-color)"
+                  >
+                    <option value="">Select option</option>
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="sidebar">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="sidebar" id="sidebar">
       <div class="controls">
         <!-- Night Mode Toggle at the top -->
         <div class="theme-toggle">
@@ -1937,7 +3322,11 @@
         </div>
 
         <h3 style="margin-top: 0; color: var(--text-primary)">🎮 Controls</h3>
-        <button class="btn" onclick="autofill()">🚀 Autofill All Fields</button>
+
+        <!-- Status Display -->
+        <div id="status" class="status idle">Ready</div>
+
+        <button class="btn" onclick="autofill()">🚀 Fill All Fields</button>
         <button class="btn btn-secondary" onclick="autofill('#rich-context')">
           📝 Rich Context
         </button>
@@ -1947,10 +3336,7 @@
         <button class="btn btn-secondary" onclick="autofill('#sparse-context')">
           🔍 Sparse Context
         </button>
-        <button
-          class="btn btn-secondary"
-          onclick="autofill('#categories')"
-        >
+        <button class="btn btn-secondary" onclick="autofill('#categories')">
           🏷️ All Categories
         </button>
         <select
@@ -1977,6 +3363,12 @@
         </select>
         <button
           class="btn btn-secondary"
+          onclick="autofill('#date-time-inputs')"
+        >
+          📅 Date & Time
+        </button>
+        <button
+          class="btn btn-secondary"
           onclick="autofill('#custom-functions')"
         >
           🎯 Custom Functions
@@ -1987,7 +3379,10 @@
         >
           ✅ Data-gofakeit="true"
         </button>
-        <button class="btn btn-secondary" onclick="autofill('#no-search-inputs')">
+        <button
+          class="btn btn-secondary"
+          onclick="autofill('#no-search-inputs')"
+        >
           🚫 No Search Inputs
         </button>
         <button
@@ -1995,6 +3390,12 @@
           onclick="autofill('#error-demonstration')"
         >
           ⚠️ Error Demonstration
+        </button>
+        <button
+          class="btn btn-secondary"
+          onclick="autofill('#badge-positioning-tests')"
+        >
+          🎯 Badge Tests
         </button>
         <button class="btn btn-success" onclick="clearAll()">
           🧹 Clear All
@@ -2008,9 +3409,22 @@
             <div class="mode-toggle">
               <span class="mode-label">Mode:</span>
               <div class="toggle-container">
-                <input type="radio" id="modeAuto" name="mode" value="auto" checked>
+                <input
+                  type="radio"
+                  id="modeAuto"
+                  name="mode"
+                  value="auto"
+                  data-gofakeit="false"
+                  checked
+                />
                 <label for="modeAuto" class="toggle-option">Auto</label>
-                <input type="radio" id="modeManual" name="mode" value="manual">
+                <input
+                  type="radio"
+                  id="modeManual"
+                  name="mode"
+                  value="manual"
+                  data-gofakeit="false"
+                />
                 <label for="modeManual" class="toggle-option">Manual</label>
               </div>
             </div>
@@ -2019,27 +3433,66 @@
             </div>
           </div>
 
-          <!-- Staggered Timing -->
+          <!-- Stagger Timing -->
           <div class="setting-item">
-            <div class="staggered-toggle">
-              <span class="staggered-label">⏱️ Staggered:</span>
-              <div class="toggle-container">
-                <input type="radio" id="staggeredOn" name="staggered" value="on" checked>
-                <label for="staggeredOn" class="toggle-option">On</label>
-                <input type="radio" id="staggeredOff" name="staggered" value="off">
-                <label for="staggeredOff" class="toggle-option">Off</label>
-              </div>
+            <div class="setting-label">
+              <span class="setting-text"
+                >Stagger:
+                <span id="staggerValue" class="setting-value">50ms</span></span
+              >
             </div>
-            <div class="staggered-slider">
-              <input type="range" data-gofakeit="false" id="staggerDelay" min="0" max="500" value="50" class="setting-range" />
-              <div class="slider-labels">
-                <span>0ms</span>
-                <span id="staggerDelayValue" class="delay-display">50ms</span>
-                <span>500ms</span>
+            <div class="setting-slider-container">
+              <input
+                type="range"
+                data-gofakeit="false"
+                id="stagger"
+                min="0"
+                max="300"
+                value="50"
+                class="setting-range"
+              />
+            </div>
+            <div class="setting-description">
+              0ms = immediate, 50ms+ = staggered delays between fills
+            </div>
+          </div>
+
+          <!-- Badge Settings -->
+          <div class="setting-item">
+            <div class="setting-label">
+              <span class="setting-text"
+                >Badges:
+                <span id="badgesValue" class="setting-value">3000ms</span></span
+              >
+            </div>
+            <div class="setting-slider-container">
+              <input
+                type="range"
+                data-gofakeit="false"
+                id="badges"
+                min="0"
+                max="10000"
+                value="3000"
+                class="setting-range"
+              />
+            </div>
+            <div class="setting-description">
+              0ms = no badges, 1000ms+ = badges stay visible for this duration
+            </div>
+          </div>
+
+          <!-- Debug Settings -->
+          <div class="setting-item">
+            <div class="setting-label">
+              <span class="setting-text">Debug:</span>
+              <div class="toggle-container">
+                <input type="checkbox" id="debugMode" data-gofakeit="false" />
+                <label for="debugMode" class="toggle-option">OFF</label>
+                <label for="debugMode" class="toggle-option">ON</label>
               </div>
             </div>
             <div class="setting-description">
-              Add delays between field fills for visual effect
+              Show detailed console logs for debugging
             </div>
           </div>
         </div>

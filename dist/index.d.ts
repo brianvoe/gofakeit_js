@@ -1,84 +1,147 @@
-declare interface ApiResponse {
+export declare class Autofill {
+    settings: AutofillSettings;
+    state: AutofillState;
+    constructor(settings?: AutofillSettings);
+    fill(target?: HTMLElement | Element | string): Promise<Results>;
+    setElements(target?: HTMLElement | Element | string): void;
+    shouldSkipElement(element: Element): boolean;
+    private getElementType;
+    getElementSearch(el: Element): string;
+    setElementFunctions(): Promise<void>;
+    getElementFunction(element: Element): string | null;
+    private elementTypeNeedsSearch;
+    private getElementFunctionFallback;
+    getElementValues(): Promise<void>;
+    setElementValues(): Promise<void>;
+    private setRadioGroup;
+    private setElementValue;
+    private setDateTimeValue;
+    private setTextValue;
+    private setTextareaValue;
+    private setNumberValue;
+    private setCheckboxValue;
+    private setRadioValue;
+    private setSelectValue;
+    private showBadge;
+    private getScrollableParents;
+    private removeBadge;
+    private paramsSelect;
+    private paramsRadio;
+    private convertDateToWeek;
+    private convertWeekToDate;
+    private paramsDate;
+    private paramsWeek;
+    private paramsNumber;
+    private debug;
+    resetState(): void;
+    private updateStatus;
+    private results;
+}
+
+export declare interface AutofillElement {
+    id: string;
+    name: string;
+    element: Element;
+    type: string;
+    function: string;
+    search: string;
+    value: string;
+    error: string;
+}
+
+export declare interface AutofillResult {
+    elements: AutofillElement[];
+    error?: string;
+}
+
+export declare interface AutofillSettings {
+    mode?: 'auto' | 'manual';
+    stagger?: number;
+    badges?: number;
+    debug?: boolean;
+    onStatusChange?: (status: AutofillStatus, state: AutofillState) => void;
+}
+
+export declare interface AutofillState {
+    status: AutofillStatus;
+    elements: AutofillElement[];
+}
+
+export declare enum AutofillStatus {
+    IDLE = "idle",
+    STARTING = "starting",
+    INITIALIZING = "initializing",
+    DETERMINING_FUNCTIONS = "determining_functions",
+    GETTING_VALUES = "getting_values",
+    SETTING_VALUES = "setting_values",
+    COMPLETED = "completed",
+    ERROR = "error"
+}
+
+export declare function fetchFunc(func: string, params?: FetchFuncParams): Promise<FetchFuncResponse>;
+
+export declare function fetchFuncMulti(requests: FetchFuncMultiRequest[]): Promise<FetchFuncMultiResponse>;
+
+export declare interface FetchFuncMultiRequest {
+    id?: string;
+    func: string;
+    params?: FetchFuncParams;
+}
+
+export declare interface FetchFuncMultiResponse {
+    success: boolean;
+    data?: FetchFuncMultiResponseItem[];
+    error?: string;
+    status?: number;
+}
+
+declare interface FetchFuncMultiResponseItem {
+    id?: string;
+    value: string | number | boolean | null;
+    error?: string;
+}
+
+export declare interface FetchFuncParams {
+    [key: string]: string | number | boolean | string[];
+}
+
+export declare interface FetchFuncResponse {
     success: boolean;
     data?: string;
     error?: string;
     status?: number;
 }
 
-export declare class Autofill {
-    settings: AutofillSettings;
-    state: AutofillState;
-    constructor(settings?: AutofillSettings);
-    private updateStatus;
-    autofill(target?: HTMLElement | Element | string): Promise<boolean | void>;
-    getElements(target?: HTMLElement | Element | string): GetElementsResult;
-    resetState(): void;
-    private queryFormElements;
-    private getUniqueElements;
-    private initializeInputs;
-    private determineFunctions;
-    private getValues;
-    private isLocalGenerationFunction;
-    private generateLocalValue;
-    private applyValues;
-    private applyValueToElement;
-    handleError(element: Element, error: string, functionName?: string): void;
-    private getAssociatedLabelText;
-    private needsSearchApi;
-    getDefaultFunctionForInputType(inputType: string): string;
-    private getTypeSpecificFallback;
-    private createSearchQuery;
-    private findFormContainer;
-    private showNotification;
-    private showDetailedResults;
-    private getElementInfo;
-    private getInputTypeFunction;
-    private getDateTimeFunction;
-    private setDateTimeValue;
-    private getTextFunction;
-    private setTextValue;
-    private setTextareaValue;
-    private getNumberFunction;
-    private setNumberValue;
-    private setRangeValue;
-    private getCheckboxFunction;
-    private setCheckboxValue;
-    private getRadioFunction;
-    private setRadioValue;
-    private getSelectFunction;
-    private setSelectValue;
-    private generateTime;
-    private generateMonth;
-    private generateWeek;
-    private generateDate;
-    private generateDateTime;
+export declare function fetchFuncSearch(requests: FetchFuncSearchRequest[]): Promise<FetchFuncSearchResponse>;
+
+export declare interface FetchFuncSearchRequest {
+    id: string;
+    query: string;
 }
 
-export declare interface AutofillElement {
-    element: Element;
-    type: string;
-    function: string;
-    value: string;
-    error: string;
-}
-
-export declare interface AutofillSettings {
-    mode?: 'auto' | 'manual';
-    staggered?: boolean;
-    staggerDelay?: number;
-    onStatusChange?: (status: string, state: AutofillState) => void;
-}
-
-export declare interface AutofillState {
-    status: string;
-    inputs: AutofillElement[];
-}
-
-export declare function callFunc(func: string): Promise<ApiResponse>;
-
-export declare interface GetElementsResult {
-    elements: Element[];
+export declare interface FetchFuncSearchResponse {
+    success: boolean;
+    data?: FetchFuncSearchResponseItem[];
     error?: string;
+    status?: number;
+}
+
+declare interface FetchFuncSearchResponseItem {
+    id: string;
+    query: string;
+    results: FetchFuncSearchResult[];
+}
+
+declare interface FetchFuncSearchResult {
+    name: string;
+    score: number;
+    reasons: string[];
+}
+
+declare interface Results {
+    success: number;
+    failed: number;
+    elements: AutofillElement[];
 }
 
 export { }
