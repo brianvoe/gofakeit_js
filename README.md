@@ -1,136 +1,135 @@
 # Gofakeit Plugin
 
-A powerful autofill plugin for form field automation using the Gofakeit API with intelligent function detection.
+A powerful autofill plugin for form field automation using the Gofakeit API.
 
-![Tests](https://img.shields.io/badge/tests-140%20passed-brightgreen) ![Coverage](https://img.shields.io/badge/coverage-75.1%25-green)
+![Tests](https://img.shields.io/badge/tests-197%20passed-brightgreen) ![Coverage](https://img.shields.io/badge/coverage-85%25-green)
 
 🚀 **[Try the Live Demo](https://brianvoe.github.io/gofakeit_js/)** - See the autofill plugin in action!
 
-## Features
-
-- 🎯 **Smart Form Detection**: Automatically detects and fills form fields based on context, labels, and attributes
-- 🌐 **API Integration**: Seamless integration with Gofakeit API for data generation
-- ⚡ **Batch Processing**: Efficient batch processing with individual handling for special input types
-- 🎨 **Visual Feedback**: Function badges show which gofakeit function was used for each field
-- ⏱️ **Staggered Timing**: Configurable delays for visual effect during autofill
-- 🎯 **String Selector Support**: Target elements using CSS selectors (ID, class, complex selectors)
-- 🚫 **Error Handling**: Comprehensive error display with visual feedback for invalid functions
-- 🔧 **TypeScript**: Full TypeScript support with type definitions
-- 📦 **Modern Build**: ES modules and CommonJS support with minification
-- 🧪 **Comprehensive Testing**: Full test suite with Vitest and jsdom (140+ tests)
-- 🛠️ **Extensible**: Easy to add new input types and functions
-
-### Excluded Input Types
-
-Certain input types are excluded from the search API and use direct function assignment:
-- `checkbox`, `radio`, `select` - Use predefined selection logic
-- `date`, `time`, `datetime-local`, `month`, `week` - Use local date/time generation
-- `color`, `range`, `file`, `button`, `image` - Use specific handlers
-
-## Installation
+## Quick Start
 
 ```bash
 npm install gofakeit
 ```
 
-## Usage
+```typescript
+import { Autofill } from 'gofakeit';
 
-### Autofill Function
+// Create an autofill instance and fill all form fields
+const autofill = new Autofill();
+await autofill.fill();
 
-The `autofill()` function is the main entry point that handles all autofill scenarios:
+// Or target specific elements
+await autofill.fill('#myForm'); // Target by ID
+await autofill.fill('.form-container'); // Target by class
+```
+
+## Features
+
+- 🎯 **Smart Detection**: Automatically detects and fills form fields based on context and labels
+- 🌐 **API Integration**: Complete integration with Gofakeit API for all data generation
+- 🎨 **Visual Feedback**: Function badges show which gofakeit function was used
+- 📅 **Date/Time Support**: All date/time input types with min/max constraints
+- 🔢 **Number Support**: Number and range inputs with min/max parameters
+- ✅ **Form Controls**: Checkboxes, radio buttons, and select elements
+- 🚫 **Error Handling**: Visual feedback for invalid functions
+- 🔧 **TypeScript**: Full TypeScript support with type definitions
+
+### Supported Input Types
+
+- **Text inputs**: `text`, `email`, `password`, `tel`, `url`, `search` - Auto-detected via search API
+- **Form controls**: `checkbox`, `radio`, `select` - Uses appropriate API functions
+- **Date/Time**: `date`, `time`, `datetime-local`, `month`, `week` - With min/max constraints
+- **Numbers**: `number`, `range` - With min/max parameters
+- **Others**: `color`, `file`, `button` - Specific handlers
+
+### Unsupported Input Types
+
+- **File inputs**: `file` - Currently Not supported by the Gofakeit API
+- **Image inputs**: `image` - Currently Not supported by the Gofakeit API
+- **Button inputs**: `button` - Not a valid input type for autofill
+- **Submit inputs**: `submit` - Not a valid input type for autofill
+- **Reset inputs**: `reset` - Not a valid input type for autofill
+
+## Advanced Usage
 
 ```typescript
-import { autofill, type AutofillSettings } from 'gofakeit'
+import { Autofill } from 'gofakeit';
 
-// Autofill all form fields on the page (with default settings)
-await autofill()
+// Create an autofill instance with default settings
+const autofill = new Autofill({
+  mode: 'auto', // 'auto' or 'manual'(data-gofakeit only)
+  stagger: 50, // Delay between field fills (ms)
+  badges: 3000, // How long to show function badges (ms)
+  debug: true, // Enable debug logging
+});
 
-// Autofill with custom settings
-await autofill(undefined, { mode: 'auto' }) // Enable auto-fill mode (default)
-await autofill(undefined, { mode: 'manual' }) // Only fill fields with data-gofakeit attributes
+// Autofill all form fields on the page
+await autofill.fill();
 
-// Autofill using string selectors (NEW!)
-await autofill('#myForm') // Target by ID
-await autofill('.form-container') // Target by class
-await autofill('.form-section input[type="email"]') // Complex CSS selector
+// Autofill using string selectors
+await autofill.fill('#myForm'); // Target by ID
+await autofill.fill('.form-container'); // Target by class
+await autofill.fill('.form-section input[type="email"]'); // Complex CSS selector
 
 // Autofill all fields within a specific container
-const form = document.getElementById('myForm')
-await autofill(form, { mode: 'auto' })
+const form = document.getElementById('myForm');
+await autofill.fill(form);
 
 // Autofill a single form element
-const input = document.getElementById('email')
-await autofill(input, { mode: 'manual' })
+const input = document.getElementById('email');
+await autofill.fill(input);
 ```
-
-### Settings
-
-The `autofill()` function accepts an optional settings object:
-
-```typescript
-interface AutofillSettings {
-  mode?: 'auto' | 'manual'; // Default: 'auto' - Control which fields to fill
-  staggered?: boolean;      // Default: true - Add delays between field fills for visual effect
-  staggerDelay?: number;    // Default: 50 - Delay in milliseconds between field fills
-}
-```
-
-- **`mode: 'auto'`** (default): Fills ALL form fields on the page, intelligently detecting appropriate data types using the search API
-- **`mode: 'manual'`**: Only fills fields that have explicit `data-gofakeit` attributes
-- **`staggered: true`** (default): Adds visual delays between field fills for better user experience
-- **`staggered: false`**: Fills all fields instantly (fast mode)
-- **`staggerDelay: number`**: Customize the delay between field fills (default: 50ms)
 
 ### API Functions
 
-```typescript
-import { callFunc } from 'gofakeit'
+The plugin provides direct access to the Gofakeit API
 
-// Call a specific gofakeit function
-const data = await callFunc('person')
-```
-
-### Function List
+See full list of available functions
 
 ```typescript
-// Get available functions and utilities
-import { hasFunc, getFuncs, type Func } from 'gofakeit'
+import { fetchFunc, fetchFuncMulti, fetchFuncSearch } from 'gofakeit';
 
-// Check if a function exists
-const isValid = hasFunc('person')
+// Call a gofakeit function
+const data = await fetchFunc('uuid');
 
-// Get all available functions
-const allFunctions = getFuncs()
+// Call a gofakeit function with params
+const data = await fetchFunc('password', {
+  lower: true,
+  upper: true,
+  numeric: true,
+  special: true,
+  length: 10,
+})
 
-// Outputs
-[
-  {
-    "value":"password",
-    "display":"Password",
-    "category":"auth"
-  },
-  {
-    "value":"gamertag",
-    "display":"Gamertag",
-    "category":"game"
-  }
-  // etc...
-]
+// Call multiple functions in batch
+const results = await fetchFuncMulti([
+  { func: 'name' },
+  { func: 'email' },
+  { func: 'randomstring', { strs: ['first', 'second', 'third'] }}
+]);
+
+// Search for best function to use
+const searchResults = await fetchFuncSearch('email address');
 ```
+
+### Advanced Input Type Features
+
+The plugin provides intelligent handling for complex input types with constraints
 
 ### Data Attributes
 
 You can control autofill behavior using HTML data attributes:
 
 ```html
-<!-- Exclude field from autofill -->
-<input type="text" data-gofakeit="false" />
-
 <!-- Specify a specific function -->
 <input type="text" data-gofakeit="email" />
 
 <!-- Enable autofill (always filled, regardless of mode) -->
 <input type="text" data-gofakeit="true" />
+
+<!-- Exclude field from autofill -->
+<input type="text" data-gofakeit="false" />
 
 <!-- No attribute: Only filled in Auto Mode (default) -->
 <input type="text" />
@@ -144,56 +143,6 @@ The plugin provides comprehensive error handling with visual feedback:
 <!-- Invalid function names will show error badges -->
 <input type="text" data-gofakeit="invalidFunction" />
 ```
-
-- **Error Badges**: Red badges appear above fields with invalid function names
-- **API Errors**: Errors from the Gofakeit API are displayed with clear messaging
-- **Graceful Fallbacks**: The plugin falls back to default functions when errors occur
-
-## Development
-
-### Quick Start
-
-Start the development server with hot reload:
-
-```bash
-npm run dev
-```
-
-This will start a development server at `http://localhost:5173` with an interactive example page demonstrating all autofill features, including:
-
-- **Rich Context Examples**: Fields with descriptive labels and context
-- **Custom Function Examples**: Demonstrating specific function usage
-- **Error Demonstration**: Invalid functions to test error handling
-- **Data-gofakeit='true' Examples**: Fields that are always filled
-- **Scope Isolation**: Section-specific autofill targeting
-- **String Selector Support**: CSS selector targeting examples
-
-### Testing
-
-Run the comprehensive test suite:
-
-```bash
-npm test
-```
-
-The test suite includes:
-- **140+ tests** covering all functionality
-- **Scope isolation tests** ensuring precise targeting
-- **String selector tests** for CSS selector support
-- **Error handling tests** for robust error management
-- **API integration tests** with real endpoint calls
-
-## Recent Improvements
-
-### v1.3.2 Updates
-
-- ✅ **String Selector Support**: Target elements using CSS selectors (`#id`, `.class`, complex selectors)
-- ✅ **Enhanced Error Handling**: Visual error badges and comprehensive error display
-- ✅ **Improved Scope Isolation**: Precise targeting ensures only intended fields are filled
-- ✅ **Error Demonstration Section**: Interactive examples of error handling
-- ✅ **Data-gofakeit='true' Showcase**: Dedicated section demonstrating always-filled fields
-- ✅ **Expanded Test Coverage**: Added 38+ new tests for scope isolation and string selectors
-- ✅ **UI Improvements**: Better section organization and user experience
 
 ## Contributing
 
