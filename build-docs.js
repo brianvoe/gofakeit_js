@@ -18,19 +18,22 @@ if (!existsSync(docsDir)) {
   console.log('✅ Created docs directory');
 }
 
-// Copy necessary files from dist to docs
-const filesToCopy = ['index.html', 'gofakeit.iife.js'];
+// Copy necessary files to docs
+const filesToCopy = [
+  { source: 'index.html', dest: 'index.html' }, // Copy from root
+  { source: 'dist/gofakeit.iife.js', dest: 'gofakeit.iife.js' }, // Copy from dist
+];
 
 console.log('📋 Copying files to docs...');
 filesToCopy.forEach(file => {
-  const sourcePath = join('dist', file);
-  const destPath = join(docsDir, file);
+  const sourcePath = file.source;
+  const destPath = join(docsDir, file.dest);
 
   if (existsSync(sourcePath)) {
     copyFileSync(sourcePath, destPath);
-    console.log(`✅ Copied ${file}`);
+    console.log(`✅ Copied ${file.dest}`);
   } else {
-    console.warn(`⚠️  Warning: ${file} not found in dist/`);
+    console.warn(`⚠️  Warning: ${file.source} not found`);
   }
 });
 
