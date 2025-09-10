@@ -465,6 +465,7 @@ export class Autofill {
       'time',
       'datetime-local',
       'month',
+      'color',
     ];
     return !skipSearchTypes.includes(elementType);
   }
@@ -506,6 +507,8 @@ export class Autofill {
           const max = element.getAttribute('max');
           return min || max ? 'number' : 'number'; // Both use 'number' function, but with different parameters
         }
+        case 'color':
+          return 'hexcolor';
         case 'checkbox':
           return 'bool';
         case 'radio':
@@ -576,17 +579,9 @@ export class Autofill {
           }
           break;
         }
-        case 'date': {
-          const params = this.paramsDate(el);
-          if (params && (params.startdate || params.enddate)) {
-            request.func = 'daterange';
-            request.params = params;
-          } else {
-            request.params = params;
-          }
-          break;
-        }
-        case 'datetime-local': {
+        case 'date':
+        case 'datetime-local':
+        case 'month': {
           const params = this.paramsDate(el);
           if (params && (params.startdate || params.enddate)) {
             request.func = 'daterange';
@@ -599,16 +594,6 @@ export class Autofill {
         case 'time': {
           // For time inputs, use 'time' function with format
           request.params = { format: 'HH:mm' };
-          break;
-        }
-        case 'month': {
-          const params = this.paramsDate(el);
-          if (params && (params.startdate || params.enddate)) {
-            request.func = 'daterange';
-            request.params = params;
-          } else {
-            request.params = params;
-          }
           break;
         }
         case 'week': {
@@ -806,23 +791,22 @@ export class Autofill {
           break;
         case 'number':
         case 'range':
-          this.setNumberValue(element, el.value);
-          break;
         case 'date':
         case 'time':
         case 'datetime-local':
         case 'month':
-          this.setDateTimeValue(element, el.value);
+        case 'color':
+          this.setGeneralValue(element, el.value);
           break;
         case 'week':
           // Convert date value to week format
-          this.setDateTimeValue(element, this.convertDateToWeek(el.value));
+          this.setGeneralValue(element, this.convertDateToWeek(el.value));
           break;
         default:
-          this.setTextValue(element, el.value);
+          this.setGeneralValue(element, el.value);
       }
     } else if (element instanceof HTMLTextAreaElement) {
-      this.setTextareaValue(element, el.value);
+      this.setGeneralValue(element, el.value);
     } else if (element instanceof HTMLSelectElement) {
       this.setSelectValue(element, el.value);
     }
@@ -832,24 +816,10 @@ export class Autofill {
   // ELEMENT TYPE SPECIFIC FUNCTIONS
   // ============================================================================
 
-  private setDateTimeValue(element: HTMLInputElement, value: string): void {
-    element.value = value;
-    element.dispatchEvent(new Event('change', { bubbles: true }));
-  }
-
-  private setTextValue(element: HTMLInputElement, value: string): void {
-    element.value = value;
-    element.dispatchEvent(new Event('input', { bubbles: true }));
-    element.dispatchEvent(new Event('change', { bubbles: true }));
-  }
-
-  private setTextareaValue(element: HTMLTextAreaElement, value: string): void {
-    element.value = value;
-    element.dispatchEvent(new Event('input', { bubbles: true }));
-    element.dispatchEvent(new Event('change', { bubbles: true }));
-  }
-
-  private setNumberValue(element: HTMLInputElement, value: string): void {
+  private setGeneralValue(
+    element: HTMLInputElement | HTMLTextAreaElement,
+    value: string
+  ): void {
     element.value = value;
     element.dispatchEvent(new Event('input', { bubbles: true }));
     element.dispatchEvent(new Event('change', { bubbles: true }));

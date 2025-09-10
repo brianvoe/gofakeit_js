@@ -1109,6 +1109,44 @@ describe('Autofill Individual Functions', () => {
     });
   });
 
+  describe('should handle color inputs', () => {
+    it('should use hexcolor function for color input', () => {
+      document.body.innerHTML = '<input type="color" data-gofakeit="true" />';
+      const element = document.querySelector('input')!;
+      const result = autofill.getElementFunction(element);
+      expect(result).toBe('hexcolor');
+    });
+
+    it('should generate hex color value for color input', async () => {
+      document.body.innerHTML = '<input type="color" data-gofakeit="true" />';
+
+      await autofill.fill();
+
+      const element = document.querySelector('input') as HTMLInputElement;
+      expect(element.value).toBeTruthy();
+
+      // Check if the value is a valid hex color (starts with # and is 7 characters)
+      expect(element.value).toMatch(/^#[0-9A-Fa-f]{6}$/);
+    });
+
+    it('should generate different hex color values on multiple runs', async () => {
+      document.body.innerHTML = '<input type="color" data-gofakeit="true" />';
+
+      // Run autofill multiple times to get different values
+      const values = new Set();
+      for (let i = 0; i < 5; i++) {
+        await autofill.fill();
+        const element = document.querySelector('input') as HTMLInputElement;
+        values.add(element.value);
+        // Clear the value for next iteration
+        element.value = '';
+      }
+
+      // Should have generated at least 2 different values (very likely with 5 runs)
+      expect(values.size).toBeGreaterThan(1);
+    });
+  });
+
   describe('should handle radio groups without value attributes', () => {
     it('should use label text as fallback for radio groups without values', async () => {
       document.body.innerHTML = `

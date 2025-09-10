@@ -41,7 +41,7 @@ await autofill.fill('.form-container'); // Target by class
 - **Form controls**: `checkbox`, `radio`, `select` - Uses appropriate API functions
 - **Date/Time**: `date`, `time`, `datetime-local`, `month`, `week` - With min/max constraints
 - **Numbers**: `number`, `range` - With min/max parameters
-- **Others**: `color`, `file`, `button` - Specific handlers
+- **Color**: `color` - Uses hexcolor function for hex color values
 
 ### Unsupported Input Types
 

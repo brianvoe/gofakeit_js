@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Autofill } from '../autofill';
 
 describe('Autofill Input Filling', () => {
@@ -1062,6 +1062,53 @@ describe('Autofill Input Filling', () => {
       expect(badges).toHaveLength(2);
       // The last badge should have the new function name
       expect(badges[badges.length - 1]?.textContent).toBe('email');
+    });
+  });
+
+  describe('Color Input Filling', () => {
+    it('should fill color input with hex color value', async () => {
+      const autofill = new Autofill();
+
+      document.body.innerHTML = `
+        <input type="color" name="backgroundColor" data-gofakeit="true">
+      `;
+
+      const element = document.querySelector(
+        'input[name="backgroundColor"]'
+      ) as HTMLInputElement;
+      const result = await autofill.fill(element);
+
+      expect(result.success).toBeGreaterThan(0);
+      expect(element.value).toBeTruthy();
+
+      // Check if the value is a valid hex color (starts with # and is 7 characters)
+      expect(element.value).toMatch(/^#[0-9A-Fa-f]{6}$/);
+    });
+
+    it('should dispatch change and input events for color input', async () => {
+      const autofill = new Autofill();
+
+      document.body.innerHTML = `
+        <input type="color" name="themeColor" data-gofakeit="true">
+      `;
+
+      const element = document.querySelector(
+        'input[name="themeColor"]'
+      ) as HTMLInputElement;
+
+      const dispatchSpy = vi.spyOn(element, 'dispatchEvent');
+
+      await autofill.fill(element);
+
+      // Check that events were dispatched
+      expect(dispatchSpy).toHaveBeenCalled();
+
+      // Check that both input and change events were dispatched
+      const calls = dispatchSpy.mock.calls;
+      const eventTypes = calls.map(call => call[0].type);
+
+      expect(eventTypes).toContain('input');
+      expect(eventTypes).toContain('change');
     });
   });
 });
