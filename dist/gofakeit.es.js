@@ -986,4 +986,4 @@ console.log(
 console.log(
   "New features: Badge system, debug mode, and improved error handling!"
 );
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=gofakeit.es.js.map
