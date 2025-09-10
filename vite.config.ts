@@ -17,9 +17,9 @@ export default defineConfig({
       external: [],
       output: {
         globals: {},
-      },
-      input: {
-        main: resolve(__dirname, 'index.html'),
+        // Use named exports only for better tree shaking
+        // and to avoid mixed export warnings
+        exports: 'named',
       },
     },
     sourcemap: true,
