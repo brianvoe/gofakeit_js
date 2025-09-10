@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 
-import { existsSync, mkdirSync, copyFileSync, readFileSync, writeFileSync } from 'fs';
+import {
+  existsSync,
+  mkdirSync,
+  copyFileSync,
+  readFileSync,
+  writeFileSync,
+} from 'fs';
 import { join } from 'path';
 
 console.log('📚 Building docs for GitHub Pages...');
@@ -13,16 +19,13 @@ if (!existsSync(docsDir)) {
 }
 
 // Copy necessary files from dist to docs
-const filesToCopy = [
-  'index.html',
-  'index.js'
-];
+const filesToCopy = ['index.html', 'gofakeit.iife.js'];
 
 console.log('📋 Copying files to docs...');
 filesToCopy.forEach(file => {
   const sourcePath = join('dist', file);
   const destPath = join(docsDir, file);
-  
+
   if (existsSync(sourcePath)) {
     copyFileSync(sourcePath, destPath);
     console.log(`✅ Copied ${file}`);
@@ -35,7 +38,10 @@ filesToCopy.forEach(file => {
 const htmlPath = join(docsDir, 'index.html');
 if (existsSync(htmlPath)) {
   let htmlContent = readFileSync(htmlPath, 'utf8');
-  htmlContent = htmlContent.replace('src="/index.cjs"', 'src="./index.js"');
+  htmlContent = htmlContent.replace(
+    'src="/gofakeit.iife.js"',
+    'src="./gofakeit.iife.js"'
+  );
   writeFileSync(htmlPath, htmlContent);
   console.log('✅ Fixed import path in index.html');
 }

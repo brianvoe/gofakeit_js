@@ -14,6 +14,7 @@ https://github.com/user-attachments/assets/f70c4152-65d3-4b22-ba8c-c871d0dae993
 npm install gofakeit
 ```
 
+### ES Modules (Recommended)
 ```typescript
 import { Autofill } from 'gofakeit';
 
@@ -24,6 +25,24 @@ await autofill.fill();
 // Or target specific elements
 await autofill.fill('#myForm'); // Target by ID
 await autofill.fill('.form-container'); // Target by class
+```
+
+### Browser (UMD)
+```html
+<script src="https://unpkg.com/gofakeit/dist/gofakeit.umd.js"></script>
+<script>
+  const autofill = new Gofakeit.Autofill();
+  await autofill.fill();
+</script>
+```
+
+### Browser (IIFE)
+```html
+<script src="https://unpkg.com/gofakeit/dist/gofakeit.iife.js"></script>
+<script>
+  const autofill = new Gofakeit.Autofill();
+  await autofill.fill();
+</script>
 ```
 
 ## Features

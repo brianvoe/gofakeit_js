@@ -16,15 +16,19 @@
     "url": "https://github.com/brianvoe/gofakeit_js.git"
   },
   "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "dist/gofakeit.es.js",
+  "module": "dist/gofakeit.es.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
-    }
+      "browser": "./dist/gofakeit.umd.js",
+      "import": "./dist/gofakeit.es.js",
+      "default": "./dist/gofakeit.es.js"
+    },
+    "./umd": "./dist/gofakeit.umd.js",
+    "./iife": "./dist/gofakeit.iife.js",
+    "./es": "./dist/gofakeit.es.js"
   },
   "scripts": {
     "dev": "vite",

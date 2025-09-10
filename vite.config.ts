@@ -1,35 +1,35 @@
-import { defineConfig } from 'vite'
-import { resolve, dirname } from 'path'
-import { fileURLToPath } from 'url'
-import dts from 'vite-plugin-dts'
+import { fileURLToPath } from 'url';
+import { resolve, dirname } from 'path';
+import { defineConfig } from 'vite';
+import dts from 'vite-plugin-dts';
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'Gofakeit',
-      fileName: 'index',
-      formats: ['es', 'cjs']
+      fileName: format => `gofakeit.${format}.js`,
+      formats: ['es', 'cjs', 'umd', 'iife'],
     },
     rollupOptions: {
       external: [],
       output: {
-        globals: {}
+        globals: {},
       },
       input: {
-        main: resolve(__dirname, 'index.html')
-      }
+        main: resolve(__dirname, 'index.html'),
+      },
     },
     sourcemap: true,
-    minify: true
+    minify: true,
   },
   plugins: [
     dts({
       insertTypesEntry: true,
-      rollupTypes: true
-    })
+      rollupTypes: true,
+    }),
   ],
   // @ts-ignore - test config is valid for Vitest
   test: {
@@ -39,15 +39,8 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      include: [
-        'src/*.ts'
-      ],
-      exclude: [
-        'node_modules/',
-        'src/test/',
-        'dist/',
-        '**/*.d.ts'
-      ]
-    }
-  }
-})
+      include: ['src/*.ts'],
+      exclude: ['node_modules/', 'src/test/', 'dist/', '**/*.d.ts'],
+    },
+  },
+});
