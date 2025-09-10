@@ -54,7 +54,7 @@ export interface AutofillResult {
   error?: string;
 }
 
-export interface Results {
+export interface AutofillResults {
   success: number;
   failed: number;
   elements: AutofillElement[];
@@ -83,7 +83,9 @@ export class Autofill {
   // MAIN FILL FUNCTION
   // ============================================================================
 
-  async fill(target?: HTMLElement | Element | string): Promise<Results> {
+  async fill(
+    target?: HTMLElement | Element | string
+  ): Promise<AutofillResults> {
     this.updateStatus(AutofillStatus.STARTING);
     this.state.elements = []; // Clear previous elements
 
@@ -1313,14 +1315,14 @@ export class Autofill {
     }
   }
 
-  private results(): Results {
+  private results(): AutofillResults {
     const successfulElements = this.state.elements.filter(
       element => element.value && !element.error
     );
     const failedElements = this.state.elements.filter(element => element.error);
 
     // Prepare results data for callback
-    const resultsData: Results = {
+    const resultsData: AutofillResults = {
       success: successfulElements.length,
       failed: failedElements.length,
       elements: this.state.elements,
