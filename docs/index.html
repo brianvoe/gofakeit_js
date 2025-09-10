@@ -1155,7 +1155,6 @@
         color: white;
       }
     </style>
-    <script type="module" crossorigin src="./gofakeit.iife.js"></script>
   </head>
   <body>
     <div class="main-content">
@@ -3499,5 +3498,482 @@
       </div>
     </div>
 
+    <script type="module">
+      import { Autofill, AutofillStatus } from './src/index.ts';
+
+      // Mobile Sidebar Functionality
+      function initMobileSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function openSidebar() {
+          sidebar.classList.add('open');
+          sidebarOverlay.classList.add('active');
+          sidebarToggle.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+          sidebar.classList.remove('open');
+          sidebarOverlay.classList.remove('active');
+          sidebarToggle.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+
+        // Toggle sidebar
+        if (sidebarToggle) {
+          sidebarToggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+              closeSidebar();
+            } else {
+              openSidebar();
+            }
+          });
+        }
+
+        // Close sidebar when clicking overlay
+        if (sidebarOverlay) {
+          sidebarOverlay.addEventListener('click', closeSidebar);
+        }
+
+        // Close sidebar on escape key
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+            closeSidebar();
+          }
+        });
+
+        // Auto-open sidebar when autofill buttons are clicked on mobile
+        function handleAutofillClick() {
+          if (window.innerWidth <= 768) {
+            openSidebar();
+          }
+        }
+
+        // Add event listeners to autofill buttons
+        const autofillButtons = document.querySelectorAll(
+          'button[onclick*="autofill"]'
+        );
+        autofillButtons.forEach(button => {
+          button.addEventListener('click', handleAutofillClick);
+        });
+      }
+
+      // Initialize mobile sidebar when DOM is loaded
+      document.addEventListener('DOMContentLoaded', initMobileSidebar);
+
+      // Helper function for mobile-aware scrolling
+      function scrollToElement(element, offset = 0) {
+        if (!element) {
+          return;
+        }
+
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+          // Calculate dynamic header offset based on actual header height + spacing
+          const mobileHeader = document.querySelector('.mobile-header');
+          const headerHeight = mobileHeader ? mobileHeader.offsetHeight : 60; // fallback to 60px
+          const spacing = 16; // CSS var(--spacing-md) = 14px, using 16px for a bit more breathing room
+          const headerOffset = headerHeight + spacing;
+
+          // For mobile, temporarily add scroll-margin-top to create offset
+          const originalScrollMargin = element.style.scrollMarginTop;
+          element.style.scrollMarginTop = headerOffset + 'px';
+
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+
+          // Remove the scroll-margin-top after scrolling completes
+          setTimeout(() => {
+            element.style.scrollMarginTop = originalScrollMargin;
+          }, 500);
+        } else {
+          // For desktop, use normal scrollIntoView
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+        }
+      }
+
+      // Make functions available globally
+      window.autofill = async target => {
+        try {
+          // Get current settings
+          const settings = getCurrentSettings();
+
+          if (target) {
+            // If target is a string, treat it as a CSS selector (ID, class, or other)
+            if (typeof target === 'string') {
+              // Scroll to the section first
+              const element = document.querySelector(target);
+              if (element) {
+                scrollToElement(element);
+
+                // Wait a moment for the scroll to complete, then fill
+                setTimeout(async () => {
+                  const manager = new Autofill(settings);
+                  await manager.fill(target);
+                  showStatus(
+                    `✅ ${target} section filled successfully!`,
+                    'success'
+                  );
+                }, 500);
+              } else {
+                showStatus('❌ Element not found: ' + target, 'error');
+              }
+            } else {
+              const manager = new Autofill(settings);
+              await manager.fill(target);
+              showStatus('✅ Element filled successfully!', 'success');
+            }
+          } else {
+            // No target - fill all
+            const manager = new Autofill(settings);
+            await manager.fill(undefined);
+            showStatus('✅ All fields filled successfully!', 'success');
+          }
+        } catch (error) {
+          showStatus('❌ Error filling fields: ' + error.message, 'error');
+        }
+      };
+
+      // Function to handle category selection from dropdown
+      window.handleCategorySelection = async () => {
+        const selector = document.getElementById('categorySelector');
+        const selectedCategory = selector.value;
+
+        if (!selectedCategory) {
+          return;
+        }
+
+        try {
+          // Map category values to their heading text
+          const categoryHeadingMap = {
+            'person-category': '👤 Person Category',
+            'address-category': '🏠 Address Category',
+            'company-category': '🏢 Company Category',
+            'payment-category': '💳 Payment Category',
+            'internet-category': '🌐 Internet Category',
+            'time-category': '⏰ Time Category',
+            'language-category': '🗣️ Language Category',
+            'word-category': '📝 Word Category',
+            'color-category': '🎨 Color Category',
+            'animal-category': '🐾 Animal Category',
+            'food-category': '🍕 Food Category',
+            'car-category': '🚗 Car Category',
+            'game-category': '🎮 Game Category',
+            'misc-category': '🎲 Misc Category',
+          };
+
+          // Find the specific category heading by text content
+          const headingText = categoryHeadingMap[selectedCategory];
+          let categoryHeading = null;
+          if (headingText) {
+            const allHeadings = document.querySelectorAll('h4');
+            for (const heading of allHeadings) {
+              if (heading.textContent?.includes(headingText)) {
+                categoryHeading = heading;
+                break;
+              }
+            }
+          }
+
+          if (categoryHeading) {
+            scrollToElement(categoryHeading);
+          } else {
+            // Fallback: scroll to the categories section
+            const section = document.getElementById('categories');
+            if (section) {
+              scrollToElement(section);
+            }
+          }
+
+          // Wait a moment for the scroll to complete, then autofill the specific fields
+          setTimeout(async () => {
+            // Find the category container
+            const categoryContainer = document.getElementById(selectedCategory);
+            if (!categoryContainer) {
+              showStatus('❌ Category container not found!', 'error');
+              return;
+            }
+
+            try {
+              // Get current settings
+              const settings = getCurrentSettings();
+
+              // Use the main fill function with the category container
+              const manager = new Autofill(settings);
+              await manager.fill(categoryContainer);
+
+              // Count filled elements
+              let filledCount = 0;
+              const inputs = categoryContainer.querySelectorAll(
+                'input, textarea, select'
+              );
+              inputs.forEach(element => {
+                if (element instanceof HTMLInputElement) {
+                  if (element.type === 'checkbox' || element.type === 'radio') {
+                    if (element.checked) filledCount++;
+                  } else if (element.value) {
+                    filledCount++;
+                  }
+                } else if (
+                  element instanceof HTMLTextAreaElement ||
+                  element instanceof HTMLSelectElement
+                ) {
+                  if (element.value) filledCount++;
+                }
+              });
+
+              const categoryName =
+                selector.options[selector.selectedIndex].text;
+              showStatus(
+                `✅ ${categoryName} filled successfully! (${filledCount} fields)`,
+                'success'
+              );
+            } catch (error) {
+              console.warn('Failed to fill category:', error);
+              showStatus(
+                '❌ Error filling category: ' + error.message,
+                'error'
+              );
+            }
+
+            // Reset the dropdown
+            selector.value = '';
+          }, 500);
+        } catch (error) {
+          showStatus('❌ Error filling category: ' + error.message, 'error');
+          // Reset the dropdown even on error
+          selector.value = '';
+        }
+      };
+
+      // Function to get current settings from the UI controls
+      function getCurrentSettings() {
+        const mode = document.querySelector('input[name="mode"]:checked').value;
+        const stagger = parseInt(document.getElementById('stagger').value);
+        const badges = parseInt(document.getElementById('badges').value);
+        const debug = document.getElementById('debugMode').checked;
+
+        return {
+          mode: mode,
+          stagger: stagger,
+          badges: badges,
+          debug: debug,
+          onStatusChange: (status, state) => {
+            if (debug) {
+              const timestamp = new Date().toLocaleTimeString();
+              const emoji =
+                status === 'error' ? '❌' : status === 'idle' ? '⏸️' : '🔄';
+              const style =
+                'color: #9c27b0; font-weight: bold; background: #f3e5f5; padding: 2px 4px; border-radius: 3px;';
+              console.log(
+                `%c[Status ${timestamp}] ${emoji} ${status.toUpperCase()}:`,
+                style,
+                state
+              );
+            }
+
+            // Close sidebar on mobile when autofill starts
+            if (status === AutofillStatus.STARTING) {
+              const sidebar = document.getElementById('sidebar');
+              const sidebarOverlay = document.getElementById('sidebarOverlay');
+              const sidebarToggle = document.getElementById('sidebarToggle');
+
+              if (sidebar && sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+                if (sidebarToggle) sidebarToggle.classList.remove('active');
+                document.body.style.overflow = '';
+              }
+            }
+
+            // Update status display in UI
+            const statusElement = document.getElementById('status');
+            if (statusElement) {
+              const statusText =
+                {
+                  idle: 'Ready',
+                  starting: 'Starting...',
+                  initializing: 'Initializing inputs...',
+                  determining_functions: 'Determining functions...',
+                  getting_values: 'Getting values...',
+                  setting_values: 'Setting values...',
+                  completed: 'Completed!',
+                  error: 'Error occurred',
+                }[status] || status;
+
+              statusElement.textContent = statusText;
+              statusElement.className = `status ${status}`;
+            }
+
+            // Show progress for certain statuses
+            if (status === 'getting_values' || status === 'setting_values') {
+              const processedCount = state.elements.filter(
+                element => element.value || element.error
+              ).length;
+              const totalCount = state.elements.length;
+              if (totalCount > 0) {
+                showStatus(
+                  `Processing ${processedCount}/${totalCount} fields...`,
+                  'info'
+                );
+              }
+            }
+          },
+        };
+      }
+
+      // Function to fill with current settings
+      window.autofillWithCurrentSettings = async () => {
+        try {
+          const settings = getCurrentSettings();
+          const manager = new Autofill(settings);
+          await manager.fill(undefined);
+
+          const modeText =
+            settings.mode === 'auto' ? 'Auto Mode' : 'Manual Mode';
+          const staggerText =
+            settings.stagger > 0
+              ? ` (${settings.stagger}ms stagger)`
+              : ' (no stagger)';
+          showStatus(
+            `✅ All fields filled with ${modeText}${staggerText}!`,
+            'success'
+          );
+        } catch (error) {
+          showStatus('❌ Error filling fields: ' + error.message, 'error');
+        }
+      };
+
+      // Update stagger delay value display and handle theme toggle
+      document.addEventListener('DOMContentLoaded', function () {
+        const stagger = document.getElementById('stagger');
+        const staggerValue = document.getElementById('staggerValue');
+        const badges = document.getElementById('badges');
+        const badgesValue = document.getElementById('badgesValue');
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('.theme-icon');
+
+        if (stagger && staggerValue) {
+          stagger.addEventListener('input', function () {
+            staggerValue.textContent = this.value + 'ms';
+          });
+        }
+
+        if (badges && badgesValue) {
+          badges.addEventListener('input', function () {
+            badgesValue.textContent = this.value + 'ms';
+          });
+        }
+
+        // Handle theme toggle
+        if (themeToggle) {
+          // Get user's saved preference or system preference
+          const savedTheme = localStorage.getItem('theme');
+          const systemPrefersDark = window.matchMedia(
+            '(prefers-color-scheme: dark)'
+          ).matches;
+
+          // Use saved preference if available, otherwise use system preference
+          // Since dark is now default, we need to check if user wants light mode
+          const shouldUseLight =
+            savedTheme === 'light' ||
+            (savedTheme === null && !systemPrefersDark);
+
+          if (shouldUseLight) {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeIcon.textContent = '🌙';
+          } else {
+            // Dark is default, no data-theme attribute needed
+            themeIcon.textContent = '☀️';
+          }
+
+          themeToggle.addEventListener('click', function () {
+            const isLight =
+              document.documentElement.hasAttribute('data-theme') &&
+              document.documentElement.getAttribute('data-theme') === 'light';
+
+            if (isLight) {
+              // Switch to dark mode (default)
+              document.documentElement.removeAttribute('data-theme');
+              localStorage.setItem('theme', 'dark');
+              themeIcon.textContent = '☀️';
+            } else {
+              // Switch to light mode
+              document.documentElement.setAttribute('data-theme', 'light');
+              localStorage.setItem('theme', 'light');
+              themeIcon.textContent = '🌙';
+            }
+          });
+
+          // Listen for system preference changes
+          window
+            .matchMedia('(prefers-color-scheme: dark)')
+            .addEventListener('change', function (e) {
+              // Only update if user hasn't set a preference
+              if (localStorage.getItem('theme') === null) {
+                if (e.matches) {
+                  // System prefers dark, use default (dark)
+                  document.documentElement.removeAttribute('data-theme');
+                  themeIcon.textContent = '☀️';
+                } else {
+                  // System prefers light, switch to light
+                  document.documentElement.setAttribute('data-theme', 'light');
+                  themeIcon.textContent = '🌙';
+                }
+              }
+            });
+        }
+      });
+
+      window.clearAll = () => {
+        // only search in main content container, not sidebar
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+
+        const inputs = mainContent.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+          if (input.type === 'checkbox' || input.type === 'radio') {
+            input.checked = false;
+          } else {
+            input.value = '';
+          }
+        });
+        showStatus('🧹 All fields cleared!', 'success');
+      };
+
+      window.clearBadges = () => {
+        const badges = document.querySelectorAll(
+          '[data-gofakeit-badge="true"]'
+        );
+        badges.forEach(badge => badge.remove());
+        showStatus('🎯 All badges cleared!', 'success');
+      };
+
+      function showStatus(message, type) {
+        const status = document.getElementById('status');
+        status.textContent = message;
+        status.className = `status ${type}`;
+      }
+
+      // Initialize the page
+      console.log('🎯 Gofakeit Fill Comprehensive Testing loaded!');
+      console.log(
+        'This page tests the search API with various input contexts and categories.'
+      );
+      console.log(
+        'Check the browser network tab to see search API calls in action!'
+      );
+      console.log(
+        'New features: Badge system, debug mode, and improved error handling!'
+      );
+    </script>
   </body>
 </html>

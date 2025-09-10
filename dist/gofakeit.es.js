@@ -1,119 +1,100 @@
-(function() {
-  const e = document.createElement("link").relList;
-  if (e && e.supports && e.supports("modulepreload")) return;
-  for (const n of document.querySelectorAll('link[rel="modulepreload"]')) s(n);
-  new MutationObserver((n) => {
-    for (const a of n)
-      if (a.type === "childList")
-        for (const o of a.addedNodes) o.tagName === "LINK" && o.rel === "modulepreload" && s(o);
-  }).observe(document, {
-    childList: !0,
-    subtree: !0
-  });
-  function t(n) {
-    const a = {};
-    return n.integrity && (a.integrity = n.integrity), n.referrerPolicy && (a.referrerPolicy = n.referrerPolicy), n.crossOrigin === "use-credentials" ? a.credentials = "include" : n.crossOrigin === "anonymous" ? a.credentials = "omit" : a.credentials = "same-origin", a;
-  }
-  function s(n) {
-    if (n.ep) return;
-    n.ep = !0;
-    const a = t(n);
-    fetch(n.href, a);
-  }
-})();
-const k = "https://api.gofakeit.com/funcs";
-async function A(r) {
-  if (r.length === 0)
+const E = "https://api.gofakeit.com/funcs";
+async function C(c, e) {
+  const { func: t, params: n } = S(c), s = { ...n, ...e || {} };
+  return w("POST", `${E}/${t}`, s);
+}
+async function x(c) {
+  if (c.length === 0)
     return {
       success: !1,
       error: "No functions provided"
     };
-  const e = r.map(
-    (t, s) => {
-      const { func: n, id: a, params: o } = t, { func: i, params: c } = $(n), l = { ...c, ...o || {} };
+  const e = c.map(
+    (t, n) => {
+      const { func: s, id: r, params: a } = t, { func: o, params: i } = S(s), d = { ...i, ...a || {} };
       return {
-        id: a || `req_${s}`,
-        func: i,
-        params: l
+        id: r || `req_${n}`,
+        func: o,
+        params: d
       };
     }
   );
-  return C(
+  return w(
     "POST",
-    `${k}/multi`,
+    `${E}/multi`,
     e
   );
 }
-async function M(r) {
-  return r.length === 0 ? {
+async function L(c) {
+  return c.length === 0 ? {
     success: !1,
     error: "No search queries provided"
-  } : C(
+  } : w(
     "POST",
-    `${k}/search`,
-    r
+    `${E}/search`,
+    c
   );
 }
-async function C(r, e, t) {
+async function w(c, e, t) {
   try {
-    const s = {
-      method: r,
+    const n = {
+      method: c,
       headers: {
         "Content-Type": "application/json"
       }
     };
-    r === "POST" && t && (s.body = JSON.stringify(t));
-    const n = await fetch(e, s);
-    if (!n.ok)
+    c === "POST" && t && (n.body = JSON.stringify(t));
+    const s = await fetch(e, n);
+    if (!s.ok)
       return {
         success: !1,
-        error: `HTTP error! status: ${n.status}`,
-        status: n.status
+        error: `HTTP error! status: ${s.status}`,
+        status: s.status
       };
-    let a;
-    return e.includes("/multi") || e.includes("/search") ? a = await n.json() : a = await n.text(), {
+    let r;
+    return e.includes("/multi") || e.includes("/search") ? r = await s.json() : r = await s.text(), {
       success: !0,
-      data: a
+      data: r
     };
-  } catch (s) {
+  } catch (n) {
     return {
       success: !1,
-      error: s instanceof Error ? s.message : "Unknown error"
+      error: n instanceof Error ? n.message : "Unknown error"
     };
   }
 }
-function $(r) {
-  const e = r.indexOf("?");
+function S(c) {
+  const e = c.indexOf("?");
   if (e !== -1) {
-    const t = r.substring(0, e), s = r.substring(e + 1), n = {}, a = new URLSearchParams(s);
-    for (const [o, i] of a.entries()) {
-      const c = parseFloat(i);
-      n[o] = isNaN(c) ? i : c;
+    const t = c.substring(0, e), n = c.substring(e + 1), s = {}, r = new URLSearchParams(n);
+    for (const [a, o] of r.entries()) {
+      const i = parseFloat(o);
+      s[a] = isNaN(i) ? o : i;
     }
-    return { func: t, params: n };
+    return { func: t, params: s };
   } else
-    return { func: r, params: {} };
+    return { func: c, params: {} };
 }
-const E = {
+const b = {
   primary: "#ffa000",
   white: "#ffffff",
   error: "#ff3860",
   text: "#333333"
-}, T = {
+}, v = {
   // px
   half: 8,
   // px
   quarter: 4
   // px
-}, N = {
+}, A = {
   radius: 4
-}, x = {
+}, T = {
   size: 12,
   // px
   family: "Helvetica, Arial, sans-serif"
 };
-var L = /* @__PURE__ */ ((r) => (r.IDLE = "idle", r.STARTING = "starting", r.INITIALIZING = "initializing", r.DETERMINING_FUNCTIONS = "determining_functions", r.GETTING_VALUES = "getting_values", r.SETTING_VALUES = "setting_values", r.COMPLETED = "completed", r.ERROR = "error", r))(L || {});
-class y {
+var I = /* @__PURE__ */ ((c) => (c.IDLE = "idle", c.STARTING = "starting", c.INITIALIZING = "initializing", c.DETERMINING_FUNCTIONS = "determining_functions", c.GETTING_VALUES = "getting_values", c.SETTING_VALUES = "setting_values", c.COMPLETED = "completed", c.ERROR = "error", c))(I || {});
+class M {
   settings;
   state;
   constructor(e = {}) {
@@ -160,21 +141,21 @@ class y {
     const t = [];
     if (e) {
       if (typeof e == "string") {
-        const o = document.querySelectorAll(e);
-        if (o.length === 0) {
+        const a = document.querySelectorAll(e);
+        if (a.length === 0) {
           this.debug("error", `No element found with selector: "${e}"`), this.updateStatus(
             "error"
             /* ERROR */
           ), this.state.elements = [];
           return;
         }
-        o.forEach((i) => {
-          if (i instanceof HTMLInputElement || i instanceof HTMLTextAreaElement || i instanceof HTMLSelectElement) {
-            if (this.shouldSkipElement(i)) return;
-            t.push(i);
+        a.forEach((o) => {
+          if (o instanceof HTMLInputElement || o instanceof HTMLTextAreaElement || o instanceof HTMLSelectElement) {
+            if (this.shouldSkipElement(o)) return;
+            t.push(o);
           } else
-            i.querySelectorAll("input, textarea, select").forEach((p) => {
-              this.shouldSkipElement(p) || t.push(p);
+            o.querySelectorAll("input, textarea, select").forEach((h) => {
+              this.shouldSkipElement(h) || t.push(h);
             });
         });
       } else if (e instanceof HTMLElement || e instanceof Element)
@@ -185,35 +166,35 @@ class y {
           }
           t.push(e);
         } else
-          e.querySelectorAll("input, textarea, select").forEach((c) => {
-            this.shouldSkipElement(c) || t.push(c);
+          e.querySelectorAll("input, textarea, select").forEach((i) => {
+            this.shouldSkipElement(i) || t.push(i);
           });
     } else
-      document.querySelectorAll("input, textarea, select").forEach((c) => {
-        this.shouldSkipElement(c) || t.push(c);
+      document.querySelectorAll("input, textarea, select").forEach((i) => {
+        this.shouldSkipElement(i) || t.push(i);
       });
-    const s = this.settings.mode ?? "auto", n = [];
-    for (const o of t) {
-      const i = o.getAttribute("data-gofakeit");
-      typeof i == "string" && i.trim().toLowerCase() === "false" || s === "manual" && !i || n.push(o);
+    const n = this.settings.mode ?? "auto", s = [];
+    for (const a of t) {
+      const o = a.getAttribute("data-gofakeit");
+      typeof o == "string" && o.trim().toLowerCase() === "false" || n === "manual" && !o || s.push(a);
     }
-    const a = [];
-    for (const o of n) {
-      const i = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-      a.push({
-        id: i,
-        name: o.getAttribute("name") || "",
-        element: o,
-        type: this.getElementType(o),
+    const r = [];
+    for (const a of s) {
+      const o = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      r.push({
+        id: o,
+        name: a.getAttribute("name") || "",
+        element: a,
+        type: this.getElementType(a),
         function: "",
-        search: this.getElementSearch(o),
+        search: this.getElementSearch(a),
         value: "",
         error: ""
       });
     }
-    this.state.elements = a, a.length > 0 && this.debug(
+    this.state.elements = r, r.length > 0 && this.debug(
       "info",
-      `Found ${a.length} elements to generate data for`
+      `Found ${r.length} elements to generate data for`
     );
   }
   // Check if an element should be skipped (hidden, disabled, or readonly)
@@ -226,30 +207,30 @@ class y {
   }
   // Get the comprehensive search string for an element
   getElementSearch(e) {
-    const t = [], s = e.id, n = e.getAttribute("aria-labelledby");
-    if (n && n.split(/\s+/).forEach((u) => {
-      const f = document.getElementById(u);
-      f && f.textContent && t.push(f.textContent);
-    }), s) {
-      const u = document.querySelector(
-        'label[for="' + s.replace(/"/g, '\\"') + '"]'
-      );
+    const t = [], n = e.id, s = e.getAttribute("aria-labelledby");
+    if (s && s.split(/\s+/).forEach((l) => {
+      const u = document.getElementById(l);
       u && u.textContent && t.push(u.textContent);
+    }), n) {
+      const l = document.querySelector(
+        'label[for="' + n.replace(/"/g, '\\"') + '"]'
+      );
+      l && l.textContent && t.push(l.textContent);
     }
-    const a = e.closest("label");
-    a && a.textContent && t.push(a.textContent);
-    const o = e.previousElementSibling;
-    o && o.tagName === "LABEL" && o.textContent && t.push(o.textContent);
-    const i = t.join(" ").toLowerCase(), c = e instanceof HTMLInputElement ? e.type.toLowerCase() : "", l = (e.getAttribute("name") || "").toLowerCase(), p = (e.id || "").toLowerCase(), d = e instanceof HTMLInputElement ? (e.placeholder || "").toLowerCase() : "", v = e instanceof HTMLInputElement ? (e.autocomplete || "").toLowerCase() : "", b = (e.getAttribute("aria-label") || "").toLowerCase();
+    const r = e.closest("label");
+    r && r.textContent && t.push(r.textContent);
+    const a = e.previousElementSibling;
+    a && a.tagName === "LABEL" && a.textContent && t.push(a.textContent);
+    const o = t.join(" ").toLowerCase(), i = e instanceof HTMLInputElement ? e.type.toLowerCase() : "", d = (e.getAttribute("name") || "").toLowerCase(), h = (e.id || "").toLowerCase(), p = e instanceof HTMLInputElement ? (e.placeholder || "").toLowerCase() : "", y = e instanceof HTMLInputElement ? (e.autocomplete || "").toLowerCase() : "", g = (e.getAttribute("aria-label") || "").toLowerCase();
     return [
-      c,
-      l,
-      p,
+      i,
       d,
-      v,
-      b,
-      i
-    ].filter((u) => u && u.trim()).join(" ").toLowerCase().replace(/[^\w\s]/g, " ").replace(/\s+/g, " ").trim();
+      h,
+      p,
+      y,
+      g,
+      o
+    ].filter((l) => l && l.trim()).join(" ").toLowerCase().replace(/[^\w\s]/g, " ").replace(/\s+/g, " ").trim();
   }
   // ============================================================================
   // Step 2: Determine functions for elements that need search
@@ -261,32 +242,32 @@ class y {
     );
     const e = [];
     for (const t of this.state.elements) {
-      const s = this.getElementFunction(t.element);
-      s !== null ? t.function = s : e.push(t);
+      const n = this.getElementFunction(t.element);
+      n !== null ? t.function = n : e.push(t);
     }
     if (e.length > 0) {
       this.debug(
         "info",
         `${e.length} elements need function search`
       );
-      const t = e.map((n, a) => ({
-        id: n.element.id || n.element.getAttribute("name") || `input_${a}`,
-        query: n.search
-      })), s = await M(t);
-      if (s.success && s.data)
-        for (let n = 0; n < s.data.length; n++) {
-          const a = s.data[n], o = e[n];
-          a.results && a.results.length > 0 ? o.function = a.results[0].name : o.function = this.getElementFunctionFallback(o.element);
+      const t = e.map((s, r) => ({
+        id: s.element.id || s.element.getAttribute("name") || `input_${r}`,
+        query: s.search
+      })), n = await L(t);
+      if (n.success && n.data)
+        for (let s = 0; s < n.data.length; s++) {
+          const r = n.data[s], a = e[s];
+          r.results && r.results.length > 0 ? a.function = r.results[0].name : a.function = this.getElementFunctionFallback(a.element);
         }
       else
-        for (const n of e)
-          n.function = this.getElementFunctionFallback(n.element);
+        for (const s of e)
+          s.function = this.getElementFunctionFallback(s.element);
     }
     this.debug("info", "Function determination complete");
   }
   getElementFunction(e) {
-    const t = e.getAttribute("data-gofakeit"), s = this.getElementType(e);
-    return t && t !== "true" ? t : t === "true" ? this.elementTypeNeedsSearch(s) ? null : this.getElementFunctionFallback(e) : this.elementTypeNeedsSearch(s) ? null : this.getElementFunctionFallback(e);
+    const t = e.getAttribute("data-gofakeit"), n = this.getElementType(e);
+    return t && t !== "true" ? t : t === "true" ? this.elementTypeNeedsSearch(n) ? null : this.getElementFunctionFallback(e) : this.elementTypeNeedsSearch(n) ? null : this.getElementFunctionFallback(e);
   }
   elementTypeNeedsSearch(e) {
     return ![
@@ -317,8 +298,8 @@ class y {
         case "datetime-local":
         case "month":
         case "week": {
-          const s = e.getAttribute("min"), n = e.getAttribute("max");
-          return s || n ? "daterange" : "date";
+          const n = e.getAttribute("min"), s = e.getAttribute("max");
+          return n || s ? "daterange" : "date";
         }
         case "time":
           return "time";
@@ -336,7 +317,7 @@ class y {
           return "word";
         case "number":
         case "range": {
-          const s = e.getAttribute("min"), n = e.getAttribute("max");
+          const n = e.getAttribute("min"), s = e.getAttribute("max");
           return "number";
         }
         case "color":
@@ -363,7 +344,7 @@ class y {
   async getElementValues() {
     this.debug("info", "Starting value generation...");
     const e = this.state.elements.filter(
-      (o) => o.function && !o.error
+      (a) => a.function && !a.error
     );
     if (e.length === 0) {
       this.debug("info", "No elements need value generation");
@@ -373,59 +354,59 @@ class y {
       "info",
       `Getting values for ${e.length} elements from API`
     );
-    const t = [], s = [], n = [];
-    for (const o of e) {
-      if (o.type === "radio" && o.name && s.includes(o.name))
+    const t = [], n = [], s = [];
+    for (const a of e) {
+      if (a.type === "radio" && a.name && n.includes(a.name))
         continue;
-      const i = {
-        id: o.id,
-        func: o.function
+      const o = {
+        id: a.id,
+        func: a.function
       };
-      switch (o.type) {
+      switch (a.type) {
         case "select":
-          i.params = this.paramsSelect(o.element);
+          o.params = this.paramsSelect(a.element);
           break;
         case "radio": {
-          const c = e.filter(
-            (l) => l.type === "radio" && l.name === o.name
+          const i = e.filter(
+            (d) => d.type === "radio" && d.name === a.name
           );
-          i.params = this.paramsRadio(c), o.name && s.push(o.name);
+          o.params = this.paramsRadio(i), a.name && n.push(a.name);
           break;
         }
         case "date":
         case "datetime-local":
         case "month": {
-          const c = this.paramsDate(o);
-          c && (c.startdate || c.enddate) && (i.func = "daterange"), i.params = c;
+          const i = this.paramsDate(a);
+          i && (i.startdate || i.enddate) && (o.func = "daterange"), o.params = i;
           break;
         }
         case "time": {
-          i.params = { format: "HH:mm" };
+          o.params = { format: "HH:mm" };
           break;
         }
         case "week": {
-          const c = this.paramsWeek(o);
-          c && (c.startdate || c.enddate) ? (i.func = "daterange", i.params = c) : (i.func = "date", i.params = c);
+          const i = this.paramsWeek(a);
+          i && (i.startdate || i.enddate) ? (o.func = "daterange", o.params = i) : (o.func = "date", o.params = i);
           break;
         }
         case "number":
         case "range": {
-          const c = this.paramsNumber(o);
-          i.params = c;
+          const i = this.paramsNumber(a);
+          o.params = i;
           break;
         }
       }
-      t.push(i), n.push(o);
+      t.push(o), s.push(a);
     }
-    const a = await A(t);
-    if (a.success && a.data)
-      for (let o = 0; o < a.data.length; o++) {
-        const i = a.data[o], c = n[o];
-        i.value !== null && i.value !== void 0 ? c.value = String(i.value) : i.error ? c.error = i.error : c.error = "Unknown API error";
+    const r = await x(t);
+    if (r.success && r.data)
+      for (let a = 0; a < r.data.length; a++) {
+        const o = r.data[a], i = s[a];
+        o.value !== null && o.value !== void 0 ? i.value = String(o.value) : o.error ? i.error = o.error : i.error = "Unknown API error";
       }
     else
-      for (const o of e)
-        o.error = a.error || "API request failed";
+      for (const a of e)
+        a.error = r.error || "API request failed";
     this.debug("info", "Value generation complete");
   }
   // ============================================================================
@@ -440,41 +421,41 @@ class y {
     this.debug("info", `Processing ${this.state.elements.length} elements`);
     const e = [];
     for (let t = 0; t < this.state.elements.length; t++) {
-      const s = this.state.elements[t];
-      let n = null;
-      switch (s.type) {
+      const n = this.state.elements[t];
+      let s = null;
+      switch (n.type) {
         case "radio":
-          s.name && !e.includes(s.name) && (e.push(s.name), n = this.setRadioGroup(s));
+          n.name && !e.includes(n.name) && (e.push(n.name), s = this.setRadioGroup(n));
           break;
         default:
-          s.value !== void 0 && s.value !== null && !s.error && this.setElementValue(s), n = s;
+          n.value !== void 0 && n.value !== null && !n.error && this.setElementValue(n), s = n;
           break;
       }
-      this.settings.badges && this.settings.badges > 0 && n && this.showBadge(n), this.settings.stagger && this.settings.stagger > 0 && t < this.state.elements.length - 1 && await new Promise(
-        (a) => setTimeout(a, this.settings.stagger)
+      this.settings.badges && this.settings.badges > 0 && s && this.showBadge(s), this.settings.stagger && this.settings.stagger > 0 && t < this.state.elements.length - 1 && await new Promise(
+        (r) => setTimeout(r, this.settings.stagger)
       );
     }
     this.debug("info", "Value application complete");
   }
   setRadioGroup(e) {
-    const s = this.state.elements.filter(
-      (n) => n.type === "radio" && n.name === e.name
-    ).find((n) => {
-      const a = n.element;
-      if ((a.hasAttribute("value") || a.value !== "on") && a.value === e.value)
+    const n = this.state.elements.filter(
+      (s) => s.type === "radio" && s.name === e.name
+    ).find((s) => {
+      const r = s.element;
+      if ((r.hasAttribute("value") || r.value !== "on") && r.value === e.value)
         return !0;
-      const i = document.querySelector(`label[for="${a.id}"]`);
-      return !!(i && i.textContent && i.textContent.trim() === e.value || a.id === e.value);
+      const o = document.querySelector(`label[for="${r.id}"]`);
+      return !!(o && o.textContent && o.textContent.trim() === e.value || r.id === e.value);
     });
-    if (s && !s.error) {
-      const n = s.element.name;
-      return n && document.querySelectorAll(
-        `input[type="radio"][name="${n}"]`
-      ).forEach((o) => {
-        o.checked = !1;
-      }), s.element.checked = !0, s.element.dispatchEvent(
+    if (n && !n.error) {
+      const s = n.element.name;
+      return s && document.querySelectorAll(
+        `input[type="radio"][name="${s}"]`
+      ).forEach((a) => {
+        a.checked = !1;
+      }), n.element.checked = !0, n.element.dispatchEvent(
         new Event("change", { bubbles: !0 })
-      ), s;
+      ), n;
     } else if (e.error)
       return e;
     return null;
@@ -513,91 +494,91 @@ class y {
     e.value = t, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 }));
   }
   setCheckboxValue(e, t) {
-    const s = t === "true" || t === !0;
-    e.checked = s, e.dispatchEvent(new Event("change", { bubbles: !0 }));
+    const n = t === "true" || t === !0;
+    e.checked = n, e.dispatchEvent(new Event("change", { bubbles: !0 }));
   }
   setRadioValue(e, t) {
     if (t === "true" || t === !0) {
-      const n = e.name;
-      n && document.querySelectorAll(
-        `input[type="radio"][name="${n}"]`
-      ).forEach((o) => {
-        o !== e && (o.checked = !1);
+      const s = e.name;
+      s && document.querySelectorAll(
+        `input[type="radio"][name="${s}"]`
+      ).forEach((a) => {
+        a !== e && (a.checked = !1);
       }), e.checked = !0, e.dispatchEvent(new Event("change", { bubbles: !0 }));
     } else
       e.checked = !1, e.dispatchEvent(new Event("change", { bubbles: !0 }));
   }
   setSelectValue(e, t) {
     if (Array.from(e.options).find(
-      (o) => o.value === t
+      (a) => a.value === t
     )) {
       e.value = t, e.dispatchEvent(new Event("change", { bubbles: !0 }));
       return;
     }
-    const n = Array.from(e.options).find(
-      (o) => o.textContent?.toLowerCase().includes(t.toLowerCase())
+    const s = Array.from(e.options).find(
+      (a) => a.textContent?.toLowerCase().includes(t.toLowerCase())
     );
-    if (n) {
-      e.value = n.value, e.dispatchEvent(new Event("change", { bubbles: !0 }));
+    if (s) {
+      e.value = s.value, e.dispatchEvent(new Event("change", { bubbles: !0 }));
       return;
     }
-    const a = Array.from(e.options).filter(
-      (o) => o.value && o.value.trim() !== ""
+    const r = Array.from(e.options).filter(
+      (a) => a.value && a.value.trim() !== ""
     );
-    if (a.length > 0) {
-      const o = a[Math.floor(Math.random() * a.length)];
-      e.value = o.value, e.dispatchEvent(new Event("change", { bubbles: !0 }));
+    if (r.length > 0) {
+      const a = r[Math.floor(Math.random() * r.length)];
+      e.value = a.value, e.dispatchEvent(new Event("change", { bubbles: !0 }));
     }
   }
   showBadge(e) {
     this.removeBadge(e.id);
     const t = document.createElement("div");
     t.id = `gofakeit-badge-${e.id}`;
-    const s = !!(e.error && e.error.trim() !== "");
-    t.textContent = s ? e.error : e.function;
-    const n = {
+    const n = !!(e.error && e.error.trim() !== "");
+    t.textContent = n ? e.error : e.function;
+    const s = {
       position: "fixed",
       zIndex: "999999",
-      padding: `${T.quarter}px ${T.half}px`,
-      borderRadius: `${N.radius}px`,
-      fontSize: `${x.size}px`,
+      padding: `${v.quarter}px ${v.half}px`,
+      borderRadius: `${A.radius}px`,
+      fontSize: `${T.size}px`,
       fontWeight: "bold",
-      fontFamily: x.family,
+      fontFamily: T.family,
       boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
       pointerEvents: "none",
       userSelect: "none",
       transition: "opacity 0.3s ease-in-out",
       opacity: "0",
       whiteSpace: "nowrap",
-      backgroundColor: s ? E.error : E.primary,
-      color: s ? E.white : E.text
+      backgroundColor: n ? b.error : b.primary,
+      color: n ? b.white : b.text
     };
-    Object.assign(t.style, n), document.body.appendChild(t);
-    let a = null, o = null, i = !0, c = 0;
-    const l = 100, p = this.getScrollableParents(e.element), d = /* @__PURE__ */ new Map(), v = (g) => {
-      const h = g.getBoundingClientRect();
-      if (h.top < 0 || h.left < 0 || h.bottom > window.innerHeight || h.right > window.innerWidth)
+    Object.assign(t.style, s), document.body.appendChild(t);
+    let r = null, a = null, o = !0, i = 0;
+    const d = 100, h = this.getScrollableParents(e.element), p = /* @__PURE__ */ new Map(), y = (f) => {
+      const m = f.getBoundingClientRect();
+      if (m.top < 0 || m.left < 0 || m.bottom > window.innerHeight || m.right > window.innerWidth)
         return !1;
-      for (const u of p) {
-        let f = d.get(u);
-        if (f || (f = u.getBoundingClientRect(), d.set(u, f)), h.top < f.top || h.left < f.left || h.bottom > f.bottom || h.right > f.right)
+      for (const l of h) {
+        let u = p.get(l);
+        if (u || (u = l.getBoundingClientRect(), p.set(l, u)), m.top < u.top || m.left < u.left || m.bottom > u.bottom || m.right > u.right)
           return !1;
       }
       return !0;
-    }, b = () => {
-      const g = e.element.getBoundingClientRect();
-      if (!a || g.top !== a.top || g.left !== a.left || g.width !== a.width || g.height !== a.height) {
-        a = g;
-        const u = performance.now();
-        if (u - c > l && (i = v(e.element), c = u, d.clear()), i) {
-          const f = g.top - 30, I = g.left;
-          t.style.cssText += `top:${f}px;left:${I}px;display:block;`;
+    }, g = () => {
+      const f = e.element.getBoundingClientRect();
+      if (!r || f.top !== r.top || f.left !== r.left || f.width !== r.width || f.height !== r.height) {
+        r = f;
+        const l = performance.now();
+        if (l - i > d && (o = y(e.element), i = l, p.clear()), o) {
+          const u = f.top - 30, k = f.left;
+          t.style.cssText += `top:${u}px;left:${k}px;display:block;`;
         } else
           t.style.display = "none";
       }
-      o = requestAnimationFrame(b);
+      a = requestAnimationFrame(g);
     };
-    b(), t._animationId = o, requestAnimationFrame(() => {
+    g(), t._animationId = a, requestAnimationFrame(() => {
       t.style.opacity = "1";
     }), setTimeout(() => {
       this.removeBadge(e.id);
@@ -606,10 +587,10 @@ class y {
   // Helper method to cache scrollable parents
   getScrollableParents(e) {
     const t = [];
-    let s = e.parentElement;
-    for (; s && s !== document.body; ) {
-      const n = getComputedStyle(s), a = n.overflow + n.overflowY + n.overflowX;
-      (a.includes("scroll") || a.includes("auto")) && t.push(s), s = s.parentElement;
+    let n = e.parentElement;
+    for (; n && n !== document.body; ) {
+      const s = getComputedStyle(n), r = s.overflow + s.overflowY + s.overflowX;
+      (r.includes("scroll") || r.includes("auto")) && t.push(n), n = n.parentElement;
     }
     return t;
   }
@@ -619,8 +600,8 @@ class y {
     );
     if (!t)
       return;
-    const s = t._animationId;
-    s && (cancelAnimationFrame(s), t._animationId = null), t.style.opacity = "0", setTimeout(() => {
+    const n = t._animationId;
+    n && (cancelAnimationFrame(n), t._animationId = null), t.style.opacity = "0", setTimeout(() => {
       t.parentNode && t.remove();
     }, 300);
   }
@@ -628,20 +609,20 @@ class y {
   // PARAMETER GENERATION FUNCTIONS
   // ============================================================================
   paramsSelect(e) {
-    const t = Array.from(e.options).map((s) => s.value).filter((s) => s !== "");
+    const t = Array.from(e.options).map((n) => n.value).filter((n) => n !== "");
     if (t.length > 0)
       return {
         strs: t
       };
   }
   paramsRadio(e) {
-    const t = e.map((s) => {
-      const n = s.element;
-      if (n.hasAttribute("value") || n.value && n.value.trim() !== "" && n.value !== "on")
-        return n.value;
-      const o = document.querySelector(`label[for="${n.id}"]`);
-      return o && o.textContent ? o.textContent.trim() : n.id;
-    }).filter((s) => s !== "");
+    const t = e.map((n) => {
+      const s = n.element;
+      if (s.hasAttribute("value") || s.value && s.value.trim() !== "" && s.value !== "on")
+        return s.value;
+      const a = document.querySelector(`label[for="${s.id}"]`);
+      return a && a.textContent ? a.textContent.trim() : s.id;
+    }).filter((n) => n !== "");
     if (t.length > 0)
       return {
         strs: t
@@ -649,10 +630,10 @@ class y {
   }
   convertDateToWeek(e) {
     try {
-      const t = /* @__PURE__ */ new Date(e + "T00:00:00"), s = t.getFullYear(), n = new Date(s, 0, 1), a = Math.floor(
-        (t.getTime() - n.getTime()) / (1440 * 60 * 1e3)
-      ), o = Math.ceil((a + n.getDay() + 1) / 7);
-      return `${s}-W${o.toString().padStart(2, "0")}`;
+      const t = /* @__PURE__ */ new Date(e + "T00:00:00"), n = t.getFullYear(), s = new Date(n, 0, 1), r = Math.floor(
+        (t.getTime() - s.getTime()) / (1440 * 60 * 1e3)
+      ), a = Math.ceil((r + s.getDay() + 1) / 7);
+      return `${n}-W${a.toString().padStart(2, "0")}`;
     } catch {
       return `${(/* @__PURE__ */ new Date()).getFullYear()}-W01`;
     }
@@ -662,44 +643,44 @@ class y {
       const t = e.match(/^(\d{4})-W(\d{2})$/);
       if (!t)
         throw new Error("Invalid week format");
-      const s = parseInt(t[1]), n = parseInt(t[2]), a = new Date(s, 0, 1), o = (n - 1) * 7, i = new Date(
-        a.getTime() + o * 24 * 60 * 60 * 1e3
-      ), c = (i.getMonth() + 1).toString().padStart(2, "0"), l = i.getDate().toString().padStart(2, "0");
-      return `${s}-${c}-${l}`;
+      const n = parseInt(t[1]), s = parseInt(t[2]), r = new Date(n, 0, 1), a = (s - 1) * 7, o = new Date(
+        r.getTime() + a * 24 * 60 * 60 * 1e3
+      ), i = (o.getMonth() + 1).toString().padStart(2, "0"), d = o.getDate().toString().padStart(2, "0");
+      return `${n}-${i}-${d}`;
     } catch {
       return `${(/* @__PURE__ */ new Date()).getFullYear()}-01-01`;
     }
   }
   paramsDate(e) {
-    const t = e.element, s = t.getAttribute("min"), n = t.getAttribute("max");
-    let a;
+    const t = e.element, n = t.getAttribute("min"), s = t.getAttribute("max");
+    let r;
     switch (e.type) {
       case "datetime-local":
-        a = "yyyy-MM-ddTHH:mm";
+        r = "yyyy-MM-ddTHH:mm";
         break;
       case "month":
-        a = "yyyy-MM";
+        r = "yyyy-MM";
         break;
       case "date":
       default:
-        a = "yyyy-MM-dd";
+        r = "yyyy-MM-dd";
         break;
     }
-    const o = {
-      format: a
+    const a = {
+      format: r
     };
-    return !s && !n || (s && (o.startdate = s), n && (o.enddate = n)), o;
+    return !n && !s || (n && (a.startdate = n), s && (a.enddate = s)), a;
   }
   paramsWeek(e) {
-    const t = e.element, s = t.getAttribute("min"), n = t.getAttribute("max"), a = {
+    const t = e.element, n = t.getAttribute("min"), s = t.getAttribute("max"), r = {
       format: "yyyy-MM-dd"
       // Week inputs use date format for API calls
     };
-    return s && (a.startdate = this.convertWeekToDate(s)), n && (a.enddate = this.convertWeekToDate(n)), a;
+    return n && (r.startdate = this.convertWeekToDate(n)), s && (r.enddate = this.convertWeekToDate(s)), r;
   }
   paramsNumber(e) {
-    const t = e.element, s = t.getAttribute("min"), n = t.getAttribute("max"), a = {};
-    return s && (a.min = parseInt(s, 10)), n && (a.max = parseInt(n, 10)), a;
+    const t = e.element, n = t.getAttribute("min"), s = t.getAttribute("max"), r = {};
+    return n && (r.min = parseInt(n, 10)), s && (r.max = parseInt(s, 10)), r;
   }
   // ============================================================================
   // MISC UTILITY FUNCTIONS
@@ -707,17 +688,17 @@ class y {
   // Debug logging function controlled by settings.debug
   debug(e, t) {
     if (this.settings.debug) {
-      const s = `[Gofakeit] ${e.toUpperCase()}:`;
+      const n = `[Gofakeit] ${e.toUpperCase()}:`;
       switch (e) {
         case "error":
-          console.error(s, t);
+          console.error(n, t);
           break;
         case "warning":
-          console.warn(s, t);
+          console.warn(n, t);
           break;
         case "info":
         default:
-          console.log(s, t);
+          console.log(n, t);
           break;
       }
     }
@@ -738,8 +719,8 @@ class y {
   }
   results() {
     const e = this.state.elements.filter(
-      (n) => n.value && !n.error
-    ), t = this.state.elements.filter((n) => n.error), s = {
+      (s) => s.value && !s.error
+    ), t = this.state.elements.filter((s) => s.error), n = {
       success: e.length,
       failed: t.length,
       elements: this.state.elements
@@ -754,236 +735,15 @@ class y {
     ) : t.length > 0 ? this.debug(
       "error",
       `Failed to generate data for ${t.length} fields`
-    ) : this.debug("warning", "No fields were processed"), s;
+    ) : this.debug("warning", "No fields were processed"), n;
   }
 }
-function F() {
-  const r = document.getElementById("sidebar"), e = document.getElementById("sidebarToggle"), t = document.getElementById("sidebarOverlay");
-  function s() {
-    r.classList.add("open"), t.classList.add("active"), e.classList.add("active"), document.body.style.overflow = "hidden";
-  }
-  function n() {
-    r.classList.remove("open"), t.classList.remove("active"), e.classList.remove("active"), document.body.style.overflow = "";
-  }
-  e && e.addEventListener("click", () => {
-    r.classList.contains("open") ? n() : s();
-  }), t && t.addEventListener("click", n), document.addEventListener("keydown", (i) => {
-    i.key === "Escape" && r.classList.contains("open") && n();
-  });
-  function a() {
-    window.innerWidth <= 768 && s();
-  }
-  document.querySelectorAll(
-    'button[onclick*="autofill"]'
-  ).forEach((i) => {
-    i.addEventListener("click", a);
-  });
-}
-document.addEventListener("DOMContentLoaded", F);
-function w(r, e = 0) {
-  if (!r)
-    return;
-  if (window.innerWidth <= 768) {
-    const s = document.querySelector(".mobile-header"), o = (s ? s.offsetHeight : 60) + 16, i = r.style.scrollMarginTop;
-    r.style.scrollMarginTop = o + "px", r.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    }), setTimeout(() => {
-      r.style.scrollMarginTop = i;
-    }, 500);
-  } else
-    r.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-}
-window.autofill = async (r) => {
-  try {
-    const e = S();
-    if (r)
-      if (typeof r == "string") {
-        const t = document.querySelector(r);
-        t ? (w(t), setTimeout(async () => {
-          await new y(e).fill(r), m(
-            `✅ ${r} section filled successfully!`,
-            "success"
-          );
-        }, 500)) : m("❌ Element not found: " + r, "error");
-      } else
-        await new y(e).fill(r), m("✅ Element filled successfully!", "success");
-    else
-      await new y(e).fill(void 0), m("✅ All fields filled successfully!", "success");
-  } catch (e) {
-    m("❌ Error filling fields: " + e.message, "error");
-  }
+export {
+  M as Autofill,
+  I as AutofillStatus,
+  C as fetchFunc,
+  x as fetchFuncMulti,
+  L as fetchFuncSearch,
+  S as parseFunctionString
 };
-window.handleCategorySelection = async () => {
-  const r = document.getElementById("categorySelector"), e = r.value;
-  if (e)
-    try {
-      const s = {
-        "person-category": "👤 Person Category",
-        "address-category": "🏠 Address Category",
-        "company-category": "🏢 Company Category",
-        "payment-category": "💳 Payment Category",
-        "internet-category": "🌐 Internet Category",
-        "time-category": "⏰ Time Category",
-        "language-category": "🗣️ Language Category",
-        "word-category": "📝 Word Category",
-        "color-category": "🎨 Color Category",
-        "animal-category": "🐾 Animal Category",
-        "food-category": "🍕 Food Category",
-        "car-category": "🚗 Car Category",
-        "game-category": "🎮 Game Category",
-        "misc-category": "🎲 Misc Category"
-      }[e];
-      let n = null;
-      if (s) {
-        const a = document.querySelectorAll("h4");
-        for (const o of a)
-          if (o.textContent?.includes(s)) {
-            n = o;
-            break;
-          }
-      }
-      if (n)
-        w(n);
-      else {
-        const a = document.getElementById("categories");
-        a && w(a);
-      }
-      setTimeout(async () => {
-        const a = document.getElementById(e);
-        if (!a) {
-          m("❌ Category container not found!", "error");
-          return;
-        }
-        try {
-          const o = S();
-          await new y(o).fill(a);
-          let c = 0;
-          a.querySelectorAll(
-            "input, textarea, select"
-          ).forEach((d) => {
-            d instanceof HTMLInputElement ? d.type === "checkbox" || d.type === "radio" ? d.checked && c++ : d.value && c++ : (d instanceof HTMLTextAreaElement || d instanceof HTMLSelectElement) && d.value && c++;
-          });
-          const p = r.options[r.selectedIndex].text;
-          m(
-            `✅ ${p} filled successfully! (${c} fields)`,
-            "success"
-          );
-        } catch (o) {
-          console.warn("Failed to fill category:", o), m(
-            "❌ Error filling category: " + o.message,
-            "error"
-          );
-        }
-        r.value = "";
-      }, 500);
-    } catch (t) {
-      m("❌ Error filling category: " + t.message, "error"), r.value = "";
-    }
-};
-function S() {
-  const r = document.querySelector('input[name="mode"]:checked').value, e = parseInt(document.getElementById("stagger").value), t = parseInt(document.getElementById("badges").value), s = document.getElementById("debugMode").checked;
-  return {
-    mode: r,
-    stagger: e,
-    badges: t,
-    debug: s,
-    onStatusChange: (n, a) => {
-      if (s) {
-        const i = (/* @__PURE__ */ new Date()).toLocaleTimeString();
-        console.log(
-          `%c[Status ${i}] ${n === "error" ? "❌" : n === "idle" ? "⏸️" : "🔄"} ${n.toUpperCase()}:`,
-          "color: #9c27b0; font-weight: bold; background: #f3e5f5; padding: 2px 4px; border-radius: 3px;",
-          a
-        );
-      }
-      if (n === L.STARTING) {
-        const i = document.getElementById("sidebar"), c = document.getElementById("sidebarOverlay"), l = document.getElementById("sidebarToggle");
-        i && i.classList.contains("open") && (i.classList.remove("open"), c && c.classList.remove("active"), l && l.classList.remove("active"), document.body.style.overflow = "");
-      }
-      const o = document.getElementById("status");
-      if (o) {
-        const i = {
-          idle: "Ready",
-          starting: "Starting...",
-          initializing: "Initializing inputs...",
-          determining_functions: "Determining functions...",
-          getting_values: "Getting values...",
-          setting_values: "Setting values...",
-          completed: "Completed!",
-          error: "Error occurred"
-        }[n] || n;
-        o.textContent = i, o.className = `status ${n}`;
-      }
-      if (n === "getting_values" || n === "setting_values") {
-        const i = a.elements.filter(
-          (l) => l.value || l.error
-        ).length, c = a.elements.length;
-        c > 0 && m(
-          `Processing ${i}/${c} fields...`,
-          "info"
-        );
-      }
-    }
-  };
-}
-window.autofillWithCurrentSettings = async () => {
-  try {
-    const r = S();
-    await new y(r).fill(void 0);
-    const t = r.mode === "auto" ? "Auto Mode" : "Manual Mode", s = r.stagger > 0 ? ` (${r.stagger}ms stagger)` : " (no stagger)";
-    m(
-      `✅ All fields filled with ${t}${s}!`,
-      "success"
-    );
-  } catch (r) {
-    m("❌ Error filling fields: " + r.message, "error");
-  }
-};
-document.addEventListener("DOMContentLoaded", function() {
-  const r = document.getElementById("stagger"), e = document.getElementById("staggerValue"), t = document.getElementById("badges"), s = document.getElementById("badgesValue"), n = document.getElementById("themeToggle"), a = n.querySelector(".theme-icon");
-  if (r && e && r.addEventListener("input", function() {
-    e.textContent = this.value + "ms";
-  }), t && s && t.addEventListener("input", function() {
-    s.textContent = this.value + "ms";
-  }), n) {
-    const o = localStorage.getItem("theme"), i = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    o === "light" || o === null && !i ? (document.documentElement.setAttribute("data-theme", "light"), a.textContent = "🌙") : a.textContent = "☀️", n.addEventListener("click", function() {
-      document.documentElement.hasAttribute("data-theme") && document.documentElement.getAttribute("data-theme") === "light" ? (document.documentElement.removeAttribute("data-theme"), localStorage.setItem("theme", "dark"), a.textContent = "☀️") : (document.documentElement.setAttribute("data-theme", "light"), localStorage.setItem("theme", "light"), a.textContent = "🌙");
-    }), window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function(l) {
-      localStorage.getItem("theme") === null && (l.matches ? (document.documentElement.removeAttribute("data-theme"), a.textContent = "☀️") : (document.documentElement.setAttribute("data-theme", "light"), a.textContent = "🌙"));
-    });
-  }
-});
-window.clearAll = () => {
-  const r = document.querySelector(".main-content");
-  if (!r) return;
-  r.querySelectorAll("input, textarea, select").forEach((t) => {
-    t.type === "checkbox" || t.type === "radio" ? t.checked = !1 : t.value = "";
-  }), m("🧹 All fields cleared!", "success");
-};
-window.clearBadges = () => {
-  document.querySelectorAll(
-    '[data-gofakeit-badge="true"]'
-  ).forEach((e) => e.remove()), m("🎯 All badges cleared!", "success");
-};
-function m(r, e) {
-  const t = document.getElementById("status");
-  t.textContent = r, t.className = `status ${e}`;
-}
-console.log("🎯 Gofakeit Fill Comprehensive Testing loaded!");
-console.log(
-  "This page tests the search API with various input contexts and categories."
-);
-console.log(
-  "Check the browser network tab to see search API calls in action!"
-);
-console.log(
-  "New features: Badge system, debug mode, and improved error handling!"
-);
 //# sourceMappingURL=gofakeit.es.js.map

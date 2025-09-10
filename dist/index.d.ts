@@ -2,7 +2,7 @@ export declare class Autofill {
     settings: AutofillSettings;
     state: AutofillState;
     constructor(settings?: AutofillSettings);
-    fill(target?: HTMLElement | Element | string): Promise<Results>;
+    fill(target?: HTMLElement | Element | string): Promise<AutofillResults>;
     setElements(target?: HTMLElement | Element | string): void;
     shouldSkipElement(element: Element): boolean;
     private getElementType;
@@ -51,6 +51,12 @@ export declare interface AutofillResult {
     error?: string;
 }
 
+export declare interface AutofillResults {
+    success: number;
+    failed: number;
+    elements: AutofillElement[];
+}
+
 export declare interface AutofillSettings {
     mode?: 'auto' | 'manual';
     stagger?: number;
@@ -92,7 +98,7 @@ export declare interface FetchFuncMultiResponse {
     status?: number;
 }
 
-declare interface FetchFuncMultiResponseItem {
+export declare interface FetchFuncMultiResponseItem {
     id?: string;
     value: string | number | boolean | null;
     error?: string;
@@ -123,22 +129,21 @@ export declare interface FetchFuncSearchResponse {
     status?: number;
 }
 
-declare interface FetchFuncSearchResponseItem {
+export declare interface FetchFuncSearchResponseItem {
     id: string;
     query: string;
     results: FetchFuncSearchResult[];
 }
 
-declare interface FetchFuncSearchResult {
+export declare interface FetchFuncSearchResult {
     name: string;
     score: number;
     reasons: string[];
 }
 
-declare interface Results {
-    success: number;
-    failed: number;
-    elements: AutofillElement[];
-}
+export declare function parseFunctionString(func: string): {
+    func: string;
+    params: FetchFuncParams;
+};
 
 export { }
