@@ -22,18 +22,18 @@
   }
 })();
 const k = "https://api.gofakeit.com/funcs";
-async function A(i) {
-  if (i.length === 0)
+async function A(r) {
+  if (r.length === 0)
     return {
       success: !1,
       error: "No functions provided"
     };
-  const e = i.map(
+  const e = r.map(
     (t, s) => {
-      const { func: n, id: a, params: o } = t, { func: r, params: c } = $(n), l = { ...c, ...o || {} };
+      const { func: n, id: a, params: o } = t, { func: i, params: c } = $(n), l = { ...c, ...o || {} };
       return {
         id: a || `req_${s}`,
-        func: r,
+        func: i,
         params: l
       };
     }
@@ -44,25 +44,25 @@ async function A(i) {
     e
   );
 }
-async function M(i) {
-  return i.length === 0 ? {
+async function M(r) {
+  return r.length === 0 ? {
     success: !1,
     error: "No search queries provided"
   } : C(
     "POST",
     `${k}/search`,
-    i
+    r
   );
 }
-async function C(i, e, t) {
+async function C(r, e, t) {
   try {
     const s = {
-      method: i,
+      method: r,
       headers: {
         "Content-Type": "application/json"
       }
     };
-    i === "POST" && t && (s.body = JSON.stringify(t));
+    r === "POST" && t && (s.body = JSON.stringify(t));
     const n = await fetch(e, s);
     if (!n.ok)
       return {
@@ -82,24 +82,24 @@ async function C(i, e, t) {
     };
   }
 }
-function $(i) {
-  const e = i.indexOf("?");
+function $(r) {
+  const e = r.indexOf("?");
   if (e !== -1) {
-    const t = i.substring(0, e), s = i.substring(e + 1), n = {}, a = new URLSearchParams(s);
-    for (const [o, r] of a.entries()) {
-      const c = parseFloat(r);
-      n[o] = isNaN(c) ? r : c;
+    const t = r.substring(0, e), s = r.substring(e + 1), n = {}, a = new URLSearchParams(s);
+    for (const [o, i] of a.entries()) {
+      const c = parseFloat(i);
+      n[o] = isNaN(c) ? i : c;
     }
     return { func: t, params: n };
   } else
-    return { func: i, params: {} };
+    return { func: r, params: {} };
 }
 const E = {
   primary: "#ffa000",
   white: "#ffffff",
   error: "#ff3860",
   text: "#333333"
-}, S = {
+}, T = {
   // px
   half: 8,
   // px
@@ -112,8 +112,8 @@ const E = {
   // px
   family: "Helvetica, Arial, sans-serif"
 };
-var L = /* @__PURE__ */ ((i) => (i.IDLE = "idle", i.STARTING = "starting", i.INITIALIZING = "initializing", i.DETERMINING_FUNCTIONS = "determining_functions", i.GETTING_VALUES = "getting_values", i.SETTING_VALUES = "setting_values", i.COMPLETED = "completed", i.ERROR = "error", i))(L || {});
-class b {
+var L = /* @__PURE__ */ ((r) => (r.IDLE = "idle", r.STARTING = "starting", r.INITIALIZING = "initializing", r.DETERMINING_FUNCTIONS = "determining_functions", r.GETTING_VALUES = "getting_values", r.SETTING_VALUES = "setting_values", r.COMPLETED = "completed", r.ERROR = "error", r))(L || {});
+class y {
   settings;
   state;
   constructor(e = {}) {
@@ -168,12 +168,12 @@ class b {
           ), this.state.elements = [];
           return;
         }
-        o.forEach((r) => {
-          if (r instanceof HTMLInputElement || r instanceof HTMLTextAreaElement || r instanceof HTMLSelectElement) {
-            if (this.shouldSkipElement(r)) return;
-            t.push(r);
+        o.forEach((i) => {
+          if (i instanceof HTMLInputElement || i instanceof HTMLTextAreaElement || i instanceof HTMLSelectElement) {
+            if (this.shouldSkipElement(i)) return;
+            t.push(i);
           } else
-            r.querySelectorAll("input, textarea, select").forEach((p) => {
+            i.querySelectorAll("input, textarea, select").forEach((p) => {
               this.shouldSkipElement(p) || t.push(p);
             });
         });
@@ -194,14 +194,14 @@ class b {
       });
     const s = this.settings.mode ?? "auto", n = [];
     for (const o of t) {
-      const r = o.getAttribute("data-gofakeit");
-      typeof r == "string" && r.trim().toLowerCase() === "false" || s === "manual" && !r || n.push(o);
+      const i = o.getAttribute("data-gofakeit");
+      typeof i == "string" && i.trim().toLowerCase() === "false" || s === "manual" && !i || n.push(o);
     }
     const a = [];
     for (const o of n) {
-      const r = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      const i = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
       a.push({
-        id: r,
+        id: i,
         name: o.getAttribute("name") || "",
         element: o,
         type: this.getElementType(o),
@@ -240,15 +240,15 @@ class b {
     a && a.textContent && t.push(a.textContent);
     const o = e.previousElementSibling;
     o && o.tagName === "LABEL" && o.textContent && t.push(o.textContent);
-    const r = t.join(" ").toLowerCase(), c = e instanceof HTMLInputElement ? e.type.toLowerCase() : "", l = (e.getAttribute("name") || "").toLowerCase(), p = (e.id || "").toLowerCase(), d = e instanceof HTMLInputElement ? (e.placeholder || "").toLowerCase() : "", v = e instanceof HTMLInputElement ? (e.autocomplete || "").toLowerCase() : "", y = (e.getAttribute("aria-label") || "").toLowerCase();
+    const i = t.join(" ").toLowerCase(), c = e instanceof HTMLInputElement ? e.type.toLowerCase() : "", l = (e.getAttribute("name") || "").toLowerCase(), p = (e.id || "").toLowerCase(), d = e instanceof HTMLInputElement ? (e.placeholder || "").toLowerCase() : "", v = e instanceof HTMLInputElement ? (e.autocomplete || "").toLowerCase() : "", b = (e.getAttribute("aria-label") || "").toLowerCase();
     return [
       c,
       l,
       p,
       d,
       v,
-      y,
-      r
+      b,
+      i
     ].filter((u) => u && u.trim()).join(" ").toLowerCase().replace(/[^\w\s]/g, " ").replace(/\s+/g, " ").trim();
   }
   // ============================================================================
@@ -304,7 +304,8 @@ class b {
       "date",
       "time",
       "datetime-local",
-      "month"
+      "month",
+      "color"
     ].includes(e);
   }
   // If the element doesnt have a function and search doesnt return a function,
@@ -338,6 +339,8 @@ class b {
           const s = e.getAttribute("min"), n = e.getAttribute("max");
           return "number";
         }
+        case "color":
+          return "hexcolor";
         case "checkbox":
           return "bool";
         case "radio":
@@ -374,59 +377,51 @@ class b {
     for (const o of e) {
       if (o.type === "radio" && o.name && s.includes(o.name))
         continue;
-      const r = {
+      const i = {
         id: o.id,
         func: o.function
       };
       switch (o.type) {
         case "select":
-          r.params = this.paramsSelect(o.element);
+          i.params = this.paramsSelect(o.element);
           break;
         case "radio": {
           const c = e.filter(
             (l) => l.type === "radio" && l.name === o.name
           );
-          r.params = this.paramsRadio(c), o.name && s.push(o.name);
+          i.params = this.paramsRadio(c), o.name && s.push(o.name);
           break;
         }
-        case "date": {
+        case "date":
+        case "datetime-local":
+        case "month": {
           const c = this.paramsDate(o);
-          c && (c.startdate || c.enddate) && (r.func = "daterange"), r.params = c;
-          break;
-        }
-        case "datetime-local": {
-          const c = this.paramsDate(o);
-          c && (c.startdate || c.enddate) && (r.func = "daterange"), r.params = c;
+          c && (c.startdate || c.enddate) && (i.func = "daterange"), i.params = c;
           break;
         }
         case "time": {
-          r.params = { format: "HH:mm" };
-          break;
-        }
-        case "month": {
-          const c = this.paramsDate(o);
-          c && (c.startdate || c.enddate) && (r.func = "daterange"), r.params = c;
+          i.params = { format: "HH:mm" };
           break;
         }
         case "week": {
           const c = this.paramsWeek(o);
-          c && (c.startdate || c.enddate) ? (r.func = "daterange", r.params = c) : (r.func = "date", r.params = c);
+          c && (c.startdate || c.enddate) ? (i.func = "daterange", i.params = c) : (i.func = "date", i.params = c);
           break;
         }
         case "number":
         case "range": {
           const c = this.paramsNumber(o);
-          r.params = c;
+          i.params = c;
           break;
         }
       }
-      t.push(r), n.push(o);
+      t.push(i), n.push(o);
     }
     const a = await A(t);
     if (a.success && a.data)
       for (let o = 0; o < a.data.length; o++) {
-        const r = a.data[o], c = n[o];
-        r.value !== null && r.value !== void 0 ? c.value = String(r.value) : r.error ? c.error = r.error : c.error = "Unknown API error";
+        const i = a.data[o], c = n[o];
+        i.value !== null && i.value !== void 0 ? c.value = String(i.value) : i.error ? c.error = i.error : c.error = "Unknown API error";
       }
     else
       for (const o of e)
@@ -468,8 +463,8 @@ class b {
       const a = n.element;
       if ((a.hasAttribute("value") || a.value !== "on") && a.value === e.value)
         return !0;
-      const r = document.querySelector(`label[for="${a.id}"]`);
-      return !!(r && r.textContent && r.textContent.trim() === e.value || a.id === e.value);
+      const i = document.querySelector(`label[for="${a.id}"]`);
+      return !!(i && i.textContent && i.textContent.trim() === e.value || a.id === e.value);
     });
     if (s && !s.error) {
       const n = s.element.name;
@@ -496,35 +491,25 @@ class b {
           break;
         case "number":
         case "range":
-          this.setNumberValue(t, e.value);
-          break;
         case "date":
         case "time":
         case "datetime-local":
         case "month":
-          this.setDateTimeValue(t, e.value);
+        case "color":
+          this.setGeneralValue(t, e.value);
           break;
         case "week":
-          this.setDateTimeValue(t, this.convertDateToWeek(e.value));
+          this.setGeneralValue(t, this.convertDateToWeek(e.value));
           break;
         default:
-          this.setTextValue(t, e.value);
+          this.setGeneralValue(t, e.value);
       }
-    else t instanceof HTMLTextAreaElement ? this.setTextareaValue(t, e.value) : t instanceof HTMLSelectElement && this.setSelectValue(t, e.value);
+    else t instanceof HTMLTextAreaElement ? this.setGeneralValue(t, e.value) : t instanceof HTMLSelectElement && this.setSelectValue(t, e.value);
   }
   // ============================================================================
   // ELEMENT TYPE SPECIFIC FUNCTIONS
   // ============================================================================
-  setDateTimeValue(e, t) {
-    e.value = t, e.dispatchEvent(new Event("change", { bubbles: !0 }));
-  }
-  setTextValue(e, t) {
-    e.value = t, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 }));
-  }
-  setTextareaValue(e, t) {
-    e.value = t, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 }));
-  }
-  setNumberValue(e, t) {
+  setGeneralValue(e, t) {
     e.value = t, e.dispatchEvent(new Event("input", { bubbles: !0 })), e.dispatchEvent(new Event("change", { bubbles: !0 }));
   }
   setCheckboxValue(e, t) {
@@ -573,7 +558,7 @@ class b {
     const n = {
       position: "fixed",
       zIndex: "999999",
-      padding: `${S.quarter}px ${S.half}px`,
+      padding: `${T.quarter}px ${T.half}px`,
       borderRadius: `${N.radius}px`,
       fontSize: `${x.size}px`,
       fontWeight: "bold",
@@ -588,7 +573,7 @@ class b {
       color: s ? E.white : E.text
     };
     Object.assign(t.style, n), document.body.appendChild(t);
-    let a = null, o = null, r = !0, c = 0;
+    let a = null, o = null, i = !0, c = 0;
     const l = 100, p = this.getScrollableParents(e.element), d = /* @__PURE__ */ new Map(), v = (g) => {
       const h = g.getBoundingClientRect();
       if (h.top < 0 || h.left < 0 || h.bottom > window.innerHeight || h.right > window.innerWidth)
@@ -599,20 +584,20 @@ class b {
           return !1;
       }
       return !0;
-    }, y = () => {
+    }, b = () => {
       const g = e.element.getBoundingClientRect();
       if (!a || g.top !== a.top || g.left !== a.left || g.width !== a.width || g.height !== a.height) {
         a = g;
         const u = performance.now();
-        if (u - c > l && (r = v(e.element), c = u, d.clear()), r) {
+        if (u - c > l && (i = v(e.element), c = u, d.clear()), i) {
           const f = g.top - 30, I = g.left;
           t.style.cssText += `top:${f}px;left:${I}px;display:block;`;
         } else
           t.style.display = "none";
       }
-      o = requestAnimationFrame(y);
+      o = requestAnimationFrame(b);
     };
-    y(), t._animationId = o, requestAnimationFrame(() => {
+    b(), t._animationId = o, requestAnimationFrame(() => {
       t.style.opacity = "1";
     }), setTimeout(() => {
       this.removeBadge(e.id);
@@ -677,9 +662,9 @@ class b {
       const t = e.match(/^(\d{4})-W(\d{2})$/);
       if (!t)
         throw new Error("Invalid week format");
-      const s = parseInt(t[1]), n = parseInt(t[2]), a = new Date(s, 0, 1), o = (n - 1) * 7, r = new Date(
+      const s = parseInt(t[1]), n = parseInt(t[2]), a = new Date(s, 0, 1), o = (n - 1) * 7, i = new Date(
         a.getTime() + o * 24 * 60 * 60 * 1e3
-      ), c = (r.getMonth() + 1).toString().padStart(2, "0"), l = r.getDate().toString().padStart(2, "0");
+      ), c = (i.getMonth() + 1).toString().padStart(2, "0"), l = i.getDate().toString().padStart(2, "0");
       return `${s}-${c}-${l}`;
     } catch {
       return `${(/* @__PURE__ */ new Date()).getFullYear()}-01-01`;
@@ -772,68 +757,68 @@ class b {
     ) : this.debug("warning", "No fields were processed"), s;
   }
 }
-function V() {
-  const i = document.getElementById("sidebar"), e = document.getElementById("sidebarToggle"), t = document.getElementById("sidebarOverlay");
+function F() {
+  const r = document.getElementById("sidebar"), e = document.getElementById("sidebarToggle"), t = document.getElementById("sidebarOverlay");
   function s() {
-    i.classList.add("open"), t.classList.add("active"), e.classList.add("active"), document.body.style.overflow = "hidden";
+    r.classList.add("open"), t.classList.add("active"), e.classList.add("active"), document.body.style.overflow = "hidden";
   }
   function n() {
-    i.classList.remove("open"), t.classList.remove("active"), e.classList.remove("active"), document.body.style.overflow = "";
+    r.classList.remove("open"), t.classList.remove("active"), e.classList.remove("active"), document.body.style.overflow = "";
   }
   e && e.addEventListener("click", () => {
-    i.classList.contains("open") ? n() : s();
-  }), t && t.addEventListener("click", n), document.addEventListener("keydown", (r) => {
-    r.key === "Escape" && i.classList.contains("open") && n();
+    r.classList.contains("open") ? n() : s();
+  }), t && t.addEventListener("click", n), document.addEventListener("keydown", (i) => {
+    i.key === "Escape" && r.classList.contains("open") && n();
   });
   function a() {
     window.innerWidth <= 768 && s();
   }
   document.querySelectorAll(
     'button[onclick*="autofill"]'
-  ).forEach((r) => {
-    r.addEventListener("click", a);
+  ).forEach((i) => {
+    i.addEventListener("click", a);
   });
 }
-document.addEventListener("DOMContentLoaded", V);
-function w(i, e = 0) {
-  if (!i)
+document.addEventListener("DOMContentLoaded", F);
+function w(r, e = 0) {
+  if (!r)
     return;
   if (window.innerWidth <= 768) {
-    const s = document.querySelector(".mobile-header"), o = (s ? s.offsetHeight : 60) + 16, r = i.style.scrollMarginTop;
-    i.style.scrollMarginTop = o + "px", i.scrollIntoView({
+    const s = document.querySelector(".mobile-header"), o = (s ? s.offsetHeight : 60) + 16, i = r.style.scrollMarginTop;
+    r.style.scrollMarginTop = o + "px", r.scrollIntoView({
       behavior: "smooth",
       block: "start"
     }), setTimeout(() => {
-      i.style.scrollMarginTop = r;
+      r.style.scrollMarginTop = i;
     }, 500);
   } else
-    i.scrollIntoView({
+    r.scrollIntoView({
       behavior: "smooth",
       block: "start"
     });
 }
-window.autofill = async (i) => {
+window.autofill = async (r) => {
   try {
-    const e = T();
-    if (i)
-      if (typeof i == "string") {
-        const t = document.querySelector(i);
+    const e = S();
+    if (r)
+      if (typeof r == "string") {
+        const t = document.querySelector(r);
         t ? (w(t), setTimeout(async () => {
-          await new b(e).fill(i), m(
-            `✅ ${i} section filled successfully!`,
+          await new y(e).fill(r), m(
+            `✅ ${r} section filled successfully!`,
             "success"
           );
-        }, 500)) : m("❌ Element not found: " + i, "error");
+        }, 500)) : m("❌ Element not found: " + r, "error");
       } else
-        await new b(e).fill(i), m("✅ Element filled successfully!", "success");
+        await new y(e).fill(r), m("✅ Element filled successfully!", "success");
     else
-      await new b(e).fill(void 0), m("✅ All fields filled successfully!", "success");
+      await new y(e).fill(void 0), m("✅ All fields filled successfully!", "success");
   } catch (e) {
     m("❌ Error filling fields: " + e.message, "error");
   }
 };
 window.handleCategorySelection = async () => {
-  const i = document.getElementById("categorySelector"), e = i.value;
+  const r = document.getElementById("categorySelector"), e = r.value;
   if (e)
     try {
       const s = {
@@ -874,15 +859,15 @@ window.handleCategorySelection = async () => {
           return;
         }
         try {
-          const o = T();
-          await new b(o).fill(a);
+          const o = S();
+          await new y(o).fill(a);
           let c = 0;
           a.querySelectorAll(
             "input, textarea, select"
           ).forEach((d) => {
             d instanceof HTMLInputElement ? d.type === "checkbox" || d.type === "radio" ? d.checked && c++ : d.value && c++ : (d instanceof HTMLTextAreaElement || d instanceof HTMLSelectElement) && d.value && c++;
           });
-          const p = i.options[i.selectedIndex].text;
+          const p = r.options[r.selectedIndex].text;
           m(
             `✅ ${p} filled successfully! (${c} fields)`,
             "success"
@@ -893,35 +878,35 @@ window.handleCategorySelection = async () => {
             "error"
           );
         }
-        i.value = "";
+        r.value = "";
       }, 500);
     } catch (t) {
-      m("❌ Error filling category: " + t.message, "error"), i.value = "";
+      m("❌ Error filling category: " + t.message, "error"), r.value = "";
     }
 };
-function T() {
-  const i = document.querySelector('input[name="mode"]:checked').value, e = parseInt(document.getElementById("stagger").value), t = parseInt(document.getElementById("badges").value), s = document.getElementById("debugMode").checked;
+function S() {
+  const r = document.querySelector('input[name="mode"]:checked').value, e = parseInt(document.getElementById("stagger").value), t = parseInt(document.getElementById("badges").value), s = document.getElementById("debugMode").checked;
   return {
-    mode: i,
+    mode: r,
     stagger: e,
     badges: t,
     debug: s,
     onStatusChange: (n, a) => {
       if (s) {
-        const r = (/* @__PURE__ */ new Date()).toLocaleTimeString();
+        const i = (/* @__PURE__ */ new Date()).toLocaleTimeString();
         console.log(
-          `%c[Status ${r}] ${n === "error" ? "❌" : n === "idle" ? "⏸️" : "🔄"} ${n.toUpperCase()}:`,
+          `%c[Status ${i}] ${n === "error" ? "❌" : n === "idle" ? "⏸️" : "🔄"} ${n.toUpperCase()}:`,
           "color: #9c27b0; font-weight: bold; background: #f3e5f5; padding: 2px 4px; border-radius: 3px;",
           a
         );
       }
       if (n === L.STARTING) {
-        const r = document.getElementById("sidebar"), c = document.getElementById("sidebarOverlay"), l = document.getElementById("sidebarToggle");
-        r && r.classList.contains("open") && (r.classList.remove("open"), c && c.classList.remove("active"), l && l.classList.remove("active"), document.body.style.overflow = "");
+        const i = document.getElementById("sidebar"), c = document.getElementById("sidebarOverlay"), l = document.getElementById("sidebarToggle");
+        i && i.classList.contains("open") && (i.classList.remove("open"), c && c.classList.remove("active"), l && l.classList.remove("active"), document.body.style.overflow = "");
       }
       const o = document.getElementById("status");
       if (o) {
-        const r = {
+        const i = {
           idle: "Ready",
           starting: "Starting...",
           initializing: "Initializing inputs...",
@@ -931,14 +916,14 @@ function T() {
           completed: "Completed!",
           error: "Error occurred"
         }[n] || n;
-        o.textContent = r, o.className = `status ${n}`;
+        o.textContent = i, o.className = `status ${n}`;
       }
       if (n === "getting_values" || n === "setting_values") {
-        const r = a.elements.filter(
+        const i = a.elements.filter(
           (l) => l.value || l.error
         ).length, c = a.elements.length;
         c > 0 && m(
-          `Processing ${r}/${c} fields...`,
+          `Processing ${i}/${c} fields...`,
           "info"
         );
       }
@@ -947,28 +932,28 @@ function T() {
 }
 window.autofillWithCurrentSettings = async () => {
   try {
-    const i = T();
-    await new b(i).fill(void 0);
-    const t = i.mode === "auto" ? "Auto Mode" : "Manual Mode", s = i.stagger > 0 ? ` (${i.stagger}ms stagger)` : " (no stagger)";
+    const r = S();
+    await new y(r).fill(void 0);
+    const t = r.mode === "auto" ? "Auto Mode" : "Manual Mode", s = r.stagger > 0 ? ` (${r.stagger}ms stagger)` : " (no stagger)";
     m(
       `✅ All fields filled with ${t}${s}!`,
       "success"
     );
-  } catch (i) {
-    m("❌ Error filling fields: " + i.message, "error");
+  } catch (r) {
+    m("❌ Error filling fields: " + r.message, "error");
   }
 };
 document.addEventListener("DOMContentLoaded", function() {
-  const i = document.getElementById("stagger"), e = document.getElementById("staggerValue"), t = document.getElementById("badges"), s = document.getElementById("badgesValue"), n = document.getElementById("themeToggle"), a = n.querySelector(".theme-icon");
-  if (i && e && i.addEventListener("input", function() {
+  const r = document.getElementById("stagger"), e = document.getElementById("staggerValue"), t = document.getElementById("badges"), s = document.getElementById("badgesValue"), n = document.getElementById("themeToggle"), a = n.querySelector(".theme-icon");
+  if (r && e && r.addEventListener("input", function() {
     e.textContent = this.value + "ms";
   }), t && s && t.addEventListener("input", function() {
     s.textContent = this.value + "ms";
   }), n) {
-    const o = localStorage.getItem("theme"), r = window.matchMedia(
+    const o = localStorage.getItem("theme"), i = window.matchMedia(
       "(prefers-color-scheme: dark)"
     ).matches;
-    o === "light" || o === null && !r ? (document.documentElement.setAttribute("data-theme", "light"), a.textContent = "🌙") : a.textContent = "☀️", n.addEventListener("click", function() {
+    o === "light" || o === null && !i ? (document.documentElement.setAttribute("data-theme", "light"), a.textContent = "🌙") : a.textContent = "☀️", n.addEventListener("click", function() {
       document.documentElement.hasAttribute("data-theme") && document.documentElement.getAttribute("data-theme") === "light" ? (document.documentElement.removeAttribute("data-theme"), localStorage.setItem("theme", "dark"), a.textContent = "☀️") : (document.documentElement.setAttribute("data-theme", "light"), localStorage.setItem("theme", "light"), a.textContent = "🌙");
     }), window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function(l) {
       localStorage.getItem("theme") === null && (l.matches ? (document.documentElement.removeAttribute("data-theme"), a.textContent = "☀️") : (document.documentElement.setAttribute("data-theme", "light"), a.textContent = "🌙"));
@@ -976,9 +961,9 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 window.clearAll = () => {
-  const i = document.querySelector(".main-content");
-  if (!i) return;
-  i.querySelectorAll("input, textarea, select").forEach((t) => {
+  const r = document.querySelector(".main-content");
+  if (!r) return;
+  r.querySelectorAll("input, textarea, select").forEach((t) => {
     t.type === "checkbox" || t.type === "radio" ? t.checked = !1 : t.value = "";
   }), m("🧹 All fields cleared!", "success");
 };
@@ -987,9 +972,9 @@ window.clearBadges = () => {
     '[data-gofakeit-badge="true"]'
   ).forEach((e) => e.remove()), m("🎯 All badges cleared!", "success");
 };
-function m(i, e) {
+function m(r, e) {
   const t = document.getElementById("status");
-  t.textContent = i, t.className = `status ${e}`;
+  t.textContent = r, t.className = `status ${e}`;
 }
 console.log("🎯 Gofakeit Fill Comprehensive Testing loaded!");
 console.log(

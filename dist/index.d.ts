@@ -15,10 +15,7 @@ export declare class Autofill {
     setElementValues(): Promise<void>;
     private setRadioGroup;
     private setElementValue;
-    private setDateTimeValue;
-    private setTextValue;
-    private setTextareaValue;
-    private setNumberValue;
+    private setGeneralValue;
     private setCheckboxValue;
     private setRadioValue;
     private setSelectValue;
