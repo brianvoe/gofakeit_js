@@ -4,7 +4,9 @@ A powerful autofill plugin for form field automation using the Gofakeit API.
 
 ![Tests](https://img.shields.io/badge/tests-197%20passed-brightgreen) ![Coverage](https://img.shields.io/badge/coverage-85%25-green)
 
-🚀 **[Try the Live Demo](https://brianvoe.github.io/gofakeit_js/)** - See the autofill plugin in action!
+<iframe width="560" height="315" src="https://www.youtube.com/embed/tKS_ERFRd1M" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+[Try the Live Demo](https://brianvoe.github.io/gofakeit_js/) - Demo page
 
 ## Quick Start
 
