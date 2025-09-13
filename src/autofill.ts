@@ -79,6 +79,10 @@ export class Autofill {
     };
   }
 
+  public updateSettings(settings: AutofillSettings): void {
+    this.settings = { ...this.settings, ...settings };
+  }
+
   // ============================================================================
   // MAIN FILL FUNCTION
   // ============================================================================
