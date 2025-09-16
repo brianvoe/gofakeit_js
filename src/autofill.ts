@@ -30,7 +30,10 @@ export interface AutofillSettings {
   debug?: boolean;
 
   // Callbacks
-  onStatusChange?: (status: AutofillStatus, state: AutofillState) => void;
+  onStatusChange?: (
+    status: AutofillStatus,
+    elements: AutofillElement[]
+  ) => void;
 }
 
 export interface AutofillState {
@@ -1313,9 +1316,9 @@ export class Autofill {
   private updateStatus(status: AutofillStatus): void {
     this.state.status = status;
     if (this.settings.onStatusChange) {
-      // Create a copy of state to prevent reference issues
-      const stateCopy = { ...this.state, elements: [...this.state.elements] };
-      this.settings.onStatusChange(status, stateCopy);
+      // Create a copy of elements to prevent reference issues
+      const elementsCopy = [...this.state.elements];
+      this.settings.onStatusChange(status, elementsCopy);
     }
   }
 

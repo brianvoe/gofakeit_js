@@ -31,23 +31,23 @@ describe('Autofill Step-by-Step Process', () => {
       // Check status progression
       expect(statusCallback).toHaveBeenCalledWith(
         'starting',
-        expect.any(Object)
+        expect.any(Array)
       );
       expect(statusCallback).toHaveBeenCalledWith(
         'determining_functions',
-        expect.any(Object)
+        expect.any(Array)
       );
       expect(statusCallback).toHaveBeenCalledWith(
         'getting_values',
-        expect.any(Object)
+        expect.any(Array)
       );
       expect(statusCallback).toHaveBeenCalledWith(
         'setting_values',
-        expect.any(Object)
+        expect.any(Array)
       );
       expect(statusCallback).toHaveBeenCalledWith(
         'completed',
-        expect.any(Object)
+        expect.any(Array)
       );
 
       // Check that inputs were populated
@@ -396,7 +396,7 @@ describe('Autofill Step-by-Step Process', () => {
       const result = await autofill.fill('invalid-selector');
 
       expect(result.success).toBe(0);
-      expect(statusCallback).toHaveBeenCalledWith('error', expect.any(Object));
+      expect(statusCallback).toHaveBeenCalledWith('error', expect.any(Array));
     });
 
     it('should handle empty page gracefully', async () => {
@@ -663,12 +663,12 @@ describe('Autofill Step-by-Step Process', () => {
       // Check that inputs array was populated
       const calls = statusCallback.mock.calls;
       const lastCall = calls[calls.length - 1];
-      const finalState = lastCall[1];
+      const finalElements = lastCall[1];
 
-      expect(finalState.elements.length).toBeGreaterThan(0);
+      expect(finalElements.length).toBeGreaterThan(0);
 
       // Verify AutofillElement structure
-      finalState.elements.forEach((el: any) => {
+      finalElements.forEach((el: any) => {
         expect(el).toHaveProperty('element');
         expect(el).toHaveProperty('type');
         expect(el).toHaveProperty('function');
