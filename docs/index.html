@@ -3766,7 +3766,7 @@
           stagger: stagger,
           badges: badges,
           debug: debug,
-          onStatusChange: (status, state) => {
+          onStatusChange: (status, elements) => {
             if (debug) {
               const timestamp = new Date().toLocaleTimeString();
               const emoji =
@@ -3776,7 +3776,7 @@
               console.log(
                 `%c[Status ${timestamp}] ${emoji} ${status.toUpperCase()}:`,
                 style,
-                state
+                elements
               );
             }
 

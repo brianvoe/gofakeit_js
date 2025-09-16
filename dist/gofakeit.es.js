@@ -109,6 +109,9 @@ class M {
       elements: []
     };
   }
+  updateSettings(e) {
+    this.settings = { ...this.settings, ...e };
+  }
   // ============================================================================
   // MAIN FILL FUNCTION
   // ============================================================================
@@ -713,7 +716,7 @@ class M {
   // Update status and trigger callback
   updateStatus(e) {
     if (this.state.status = e, this.settings.onStatusChange) {
-      const t = { ...this.state, elements: [...this.state.elements] };
+      const t = [...this.state.elements];
       this.settings.onStatusChange(e, t);
     }
   }

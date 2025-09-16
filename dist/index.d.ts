@@ -2,6 +2,7 @@ export declare class Autofill {
     settings: AutofillSettings;
     state: AutofillState;
     constructor(settings?: AutofillSettings);
+    updateSettings(settings: AutofillSettings): void;
     fill(target?: HTMLElement | Element | string): Promise<AutofillResults>;
     setElements(target?: HTMLElement | Element | string): void;
     shouldSkipElement(element: Element): boolean;
@@ -62,7 +63,7 @@ export declare interface AutofillSettings {
     stagger?: number;
     badges?: number;
     debug?: boolean;
-    onStatusChange?: (status: AutofillStatus, state: AutofillState) => void;
+    onStatusChange?: (status: AutofillStatus, elements: AutofillElement[]) => void;
 }
 
 export declare interface AutofillState {
