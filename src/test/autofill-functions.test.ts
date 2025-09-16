@@ -40,10 +40,10 @@ describe('Autofill Individual Functions', () => {
       expect(autofill.settings.onStatusChange).toBe(statusCallback);
     });
 
-    it('should initialize with idle status and empty inputs array', () => {
+    it('should initialize with undefined status and empty inputs array', () => {
       const autofill = new Autofill();
 
-      expect(autofill.state.status).toBe(AutofillStatus.IDLE);
+      expect(autofill.state.status).toBeUndefined();
       expect(autofill.state.elements).toEqual([]);
     });
   });
@@ -410,7 +410,7 @@ describe('Autofill Individual Functions', () => {
 
       autofill.resetState();
 
-      expect(autofill.state.status).toBe(AutofillStatus.IDLE);
+      expect(autofill.state.status).toBeUndefined();
       expect(autofill.state.elements).toHaveLength(0);
     });
   });

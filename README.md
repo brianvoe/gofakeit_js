@@ -119,16 +119,19 @@ const autofill = new Autofill({
 
     switch (status) {
       case AutofillStatus.STARTING:
-        console.log('Autofill process started');
+        console.log('Autofill process starting');
         break;
-      case AutofillStatus.DETERMINING_FUNCTIONS:
-        console.log('Determining which functions to use for each element');
+      case AutofillStatus.FOUND:
+        console.log('Form elements found and identified');
         break;
-      case AutofillStatus.GETTING_VALUES:
-        console.log('Generating values from the API');
+      case AutofillStatus.DETERMINED:
+        console.log('Functions determined for each element');
         break;
-      case AutofillStatus.SETTING_VALUES:
-        console.log('Applying values to form elements');
+      case AutofillStatus.GENERATED:
+        console.log('Values generated from the API');
+        break;
+      case AutofillStatus.SET:
+        console.log('Values applied to form elements');
         break;
       case AutofillStatus.COMPLETED:
         console.log('Autofill process completed successfully');
@@ -147,12 +150,11 @@ await autofill.fill();
 
 The `onStatusChange` callback receives the following status values:
 
-- **`IDLE`** - Initial state, no autofill process running
-- **`STARTING`** - Autofill process has begun, elements are being identified
-- **`INITIALIZING`** - Internal initialization phase
-- **`DETERMINING_FUNCTIONS`** - Determining which gofakeit functions to use for each element
-- **`GETTING_VALUES`** - Making API calls to generate values for all elements
-- **`SETTING_VALUES`** - Applying the generated values to the actual form elements
+- **`STARTING`** - Autofill process is starting
+- **`FOUND`** - Form elements have been found and identified
+- **`DETERMINED`** - Functions have been determined for each element
+- **`GENERATED`** - Values have been generated from the API
+- **`SET`** - Values have been applied to the form elements
 - **`COMPLETED`** - Autofill process finished successfully
 - **`ERROR`** - An error occurred during the autofill process
 

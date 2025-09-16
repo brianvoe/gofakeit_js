@@ -33,18 +33,16 @@ describe('Autofill Step-by-Step Process', () => {
         'starting',
         expect.any(Array)
       );
+      expect(statusCallback).toHaveBeenCalledWith('found', expect.any(Array));
       expect(statusCallback).toHaveBeenCalledWith(
-        'determining_functions',
+        'determined',
         expect.any(Array)
       );
       expect(statusCallback).toHaveBeenCalledWith(
-        'getting_values',
+        'generated',
         expect.any(Array)
       );
-      expect(statusCallback).toHaveBeenCalledWith(
-        'setting_values',
-        expect.any(Array)
-      );
+      expect(statusCallback).toHaveBeenCalledWith('set', expect.any(Array));
       expect(statusCallback).toHaveBeenCalledWith(
         'completed',
         expect.any(Array)

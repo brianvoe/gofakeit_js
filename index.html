@@ -1065,23 +1065,27 @@
         transition: all 0.3s ease;
         display: block;
 
-        &.idle {
-          background: var(--secondary-color);
-        }
-
         &.starting {
           background: var(--info-color);
         }
 
-        &.initializing {
+        &.found {
           background: var(--info-color);
         }
 
-        &.processing {
+        &.determined {
+          background: var(--info-color);
+        }
+
+        &.generated {
           background: var(--warning-color);
         }
 
-        &.complete {
+        &.set {
+          background: var(--warning-color);
+        }
+
+        &.completed {
           background: var(--success-color);
         }
 
@@ -3323,7 +3327,7 @@
         <h3 style="margin-top: 0; color: var(--text-primary)">🎮 Controls</h3>
 
         <!-- Status Display -->
-        <div id="status" class="status idle">Ready</div>
+        <div id="status" class="status">Ready</div>
 
         <button class="btn" onclick="autofill()">🚀 Fill All Fields</button>
         <button class="btn btn-secondary" onclick="autofill('#rich-context')">
@@ -3769,8 +3773,7 @@
           onStatusChange: (status, elements) => {
             if (debug) {
               const timestamp = new Date().toLocaleTimeString();
-              const emoji =
-                status === 'error' ? '❌' : status === 'idle' ? '⏸️' : '🔄';
+              const emoji = status === 'error' ? '❌' : '🔄';
               const style =
                 'color: #9c27b0; font-weight: bold; background: #f3e5f5; padding: 2px 4px; border-radius: 3px;';
               console.log(
@@ -3799,12 +3802,11 @@
             if (statusElement) {
               const statusText =
                 {
-                  idle: 'Ready',
                   starting: 'Starting...',
-                  initializing: 'Initializing inputs...',
-                  determining_functions: 'Determining functions...',
-                  getting_values: 'Getting values...',
-                  setting_values: 'Setting values...',
+                  found: 'Found...',
+                  determined: 'Determined...',
+                  generated: 'Generated...',
+                  set: 'Set...',
                   completed: 'Completed!',
                   error: 'Error occurred',
                 }[status] || status;
@@ -3814,7 +3816,7 @@
             }
 
             // Show progress for certain statuses
-            if (status === 'getting_values' || status === 'setting_values') {
+            if (status === 'generated' || status === 'set') {
               const processedCount = state.elements.filter(
                 element => element.value || element.error
               ).length;

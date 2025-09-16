@@ -13,12 +13,11 @@ import {
 } from './styles';
 
 export enum AutofillStatus {
-  IDLE = 'idle',
   STARTING = 'starting',
-  INITIALIZING = 'initializing',
-  DETERMINING_FUNCTIONS = 'determining_functions',
-  GETTING_VALUES = 'getting_values',
-  SETTING_VALUES = 'setting_values',
+  FOUND = 'found',
+  DETERMINED = 'determined',
+  GENERATED = 'generated',
+  SET = 'set',
   COMPLETED = 'completed',
   ERROR = 'error',
 }
@@ -37,7 +36,7 @@ export interface AutofillSettings {
 }
 
 export interface AutofillState {
-  status: AutofillStatus;
+  status?: AutofillStatus;
   elements: AutofillElement[];
 }
 
@@ -77,7 +76,6 @@ export class Autofill {
     };
 
     this.state = {
-      status: AutofillStatus.IDLE,
       elements: [],
     };
   }
@@ -93,32 +91,29 @@ export class Autofill {
   async fill(
     target?: HTMLElement | Element | string
   ): Promise<AutofillResults> {
-    this.updateStatus(AutofillStatus.STARTING);
     this.state.elements = []; // Clear previous elements
+    this.updateStatus(AutofillStatus.STARTING);
 
     // Step 1: Set all target elements based on the target parameter
     this.setElements(target);
-
     if (this.state.elements.length === 0) {
       this.debug('info', 'No form fields found to fill');
-      // Only set to idle if we're not already in error state
-      if (this.state.status !== AutofillStatus.ERROR) {
-        this.updateStatus(AutofillStatus.IDLE);
-      }
+      this.updateStatus(AutofillStatus.COMPLETED);
       return this.results();
     }
+    this.updateStatus(AutofillStatus.FOUND);
 
     // Step 2: Determine functions for elements that need search
     await this.setElementFunctions();
-    this.updateStatus(AutofillStatus.DETERMINING_FUNCTIONS);
+    this.updateStatus(AutofillStatus.DETERMINED);
 
     // Step 3: Get values for all elements via multi-function API
     await this.getElementValues();
-    this.updateStatus(AutofillStatus.GETTING_VALUES);
+    this.updateStatus(AutofillStatus.GENERATED);
 
     // Step 4: set values to the actual form elements
     await this.setElementValues();
-    this.updateStatus(AutofillStatus.SETTING_VALUES);
+    this.updateStatus(AutofillStatus.SET);
 
     // Return the results
     this.updateStatus(AutofillStatus.COMPLETED);
@@ -1307,7 +1302,6 @@ export class Autofill {
   // Reset state to initial values - useful for testing
   public resetState(): void {
     this.state = {
-      status: AutofillStatus.IDLE,
       elements: [],
     };
   }
