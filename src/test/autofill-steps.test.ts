@@ -823,4 +823,131 @@ describe('Autofill Step-by-Step Process', () => {
       // Auto field might be filled depending on search API results
     });
   });
+
+  describe('Function Override', () => {
+    it('should use specified function for all elements when function override is provided', async () => {
+      document.body.innerHTML = `
+        <form>
+          <input type="text" name="username" />
+          <input type="email" name="email" />
+          <input type="password" name="password" />
+        </form>
+      `;
+
+      const result = await autofill.fill('form', 'password');
+
+      expect(result.success).toBe(3);
+      expect(result.elements).toHaveLength(3);
+
+      // All elements should have the 'password' function assigned
+      result.elements.forEach(element => {
+        expect(element.function).toBe('password');
+      });
+    });
+
+    it('should use specified function for single element when target is specific element', async () => {
+      document.body.innerHTML = `
+        <form>
+          <input type="text" name="username" />
+          <input type="email" name="email" />
+        </form>
+      `;
+
+      const emailInput = document.querySelector(
+        'input[name="email"]'
+      ) as HTMLInputElement;
+      const result = await autofill.fill(emailInput, 'uuid');
+
+      expect(result.success).toBe(1);
+      expect(result.elements).toHaveLength(1);
+      expect(result.elements[0].function).toBe('uuid');
+      expect(result.elements[0].name).toBe('email');
+    });
+
+    it('should use specified function for elements matching CSS selector', async () => {
+      document.body.innerHTML = `
+        <form>
+          <input type="text" name="username" />
+          <input type="email" name="email" />
+          <input type="password" name="password" />
+        </form>
+      `;
+
+      const result = await autofill.fill('input[type="email"]', 'email');
+
+      expect(result.success).toBe(1);
+      expect(result.elements).toHaveLength(1);
+      expect(result.elements[0].function).toBe('email');
+      expect(result.elements[0].name).toBe('email');
+    });
+
+    it('should use specified function with custom parameters', async () => {
+      document.body.innerHTML = `
+        <form>
+          <input type="text" name="username" />
+          <input type="password" name="password" />
+        </form>
+      `;
+
+      const passwordParams = { length: 12, special: true, upper: true };
+      const result = await autofill.fill('form', 'password', passwordParams);
+
+      expect(result.success).toBe(2);
+      expect(result.elements).toHaveLength(2);
+
+      // All elements should have the 'password' function and params assigned
+      result.elements.forEach(element => {
+        expect(element.function).toBe('password');
+        expect(element.params).toEqual(passwordParams);
+      });
+    });
+
+    it('should use specified function with custom parameters for single element', async () => {
+      document.body.innerHTML = `
+        <form>
+          <input type="text" name="username" />
+          <input type="email" name="email" />
+        </form>
+      `;
+
+      const emailInput = document.querySelector(
+        'input[name="email"]'
+      ) as HTMLInputElement;
+      const emailParams = { domain: 'example.com' };
+      const result = await autofill.fill(emailInput, 'email', emailParams);
+
+      expect(result.success).toBe(1);
+      expect(result.elements).toHaveLength(1);
+      expect(result.elements[0].function).toBe('email');
+      expect(result.elements[0].params).toEqual(emailParams);
+      expect(result.elements[0].name).toBe('email');
+    });
+
+    it('should use specified function with custom parameters for CSS selector', async () => {
+      document.body.innerHTML = `
+        <form>
+          <input type="text" name="username" />
+          <input type="number" name="age" />
+          <input type="number" name="score" />
+        </form>
+      `;
+
+      const numberParams = { min: 1, max: 100 };
+      const result = await autofill.fill(
+        'input[type="number"]',
+        'number',
+        numberParams
+      );
+
+      expect(result.success).toBe(2);
+      expect(result.elements).toHaveLength(2);
+
+      // Both number inputs should have the 'number' function and params assigned
+      result.elements.forEach(element => {
+        expect(element.function).toBe('number');
+        expect(element.params).toEqual(numberParams);
+        expect(element.type).toBe('number');
+      });
+    });
+  });
 });

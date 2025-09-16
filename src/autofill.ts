@@ -46,6 +46,7 @@ export interface AutofillElement {
   element: Element; // element to autofill
   type: string; // element type
   function: string; // function that will be used to autofill the element
+  params?: Record<string, any>; // parameters for the function
   search: string; // search query that will be used to autofill the element
   value: string; // value of the autofill result
   error: string; // error message
@@ -89,7 +90,9 @@ export class Autofill {
   // ============================================================================
 
   async fill(
-    target?: HTMLElement | Element | string
+    target?: HTMLElement | Element | string,
+    functionName?: string,
+    params?: Record<string, any>
   ): Promise<AutofillResults> {
     this.state.elements = []; // Clear previous elements
     this.updateStatus(AutofillStatus.STARTING);
@@ -104,7 +107,7 @@ export class Autofill {
     this.updateStatus(AutofillStatus.FOUND);
 
     // Step 2: Determine functions for elements that need search
-    await this.setElementFunctions();
+    await this.setElementFunctions(functionName, params);
     this.updateStatus(AutofillStatus.DETERMINED);
 
     // Step 3: Get values for all elements via multi-function API
@@ -353,11 +356,26 @@ export class Autofill {
   // Step 2: Determine functions for elements that need search
   // ============================================================================
 
-  public async setElementFunctions(): Promise<void> {
+  public async setElementFunctions(
+    functionOverride?: string,
+    params?: Record<string, any>
+  ): Promise<void> {
     this.debug(
       'info',
       `Determining functions for ${this.state.elements.length} elements`
     );
+
+    // If function override is provided, apply it to all elements
+    if (functionOverride) {
+      this.debug('info', `Using function override: ${functionOverride}`);
+      for (const el of this.state.elements) {
+        el.function = functionOverride;
+        if (params) {
+          el.params = params;
+        }
+      }
+      return;
+    }
 
     // Step 1: Loop through elements and set functions for types that don't need search
     const elementsNeedingSearch: AutofillElement[] = [];
@@ -566,61 +584,66 @@ export class Autofill {
         func: el.function,
       };
 
-      // Add parameters based on element type
-      switch (el.type) {
-        case 'select':
-          request.params = this.paramsSelect(el.element as HTMLSelectElement);
-          break;
-        case 'radio': {
-          // For radio groups, get all radio elements with the same name
-          const radioGroup = elementsNeedingValues.filter(
-            otherEl => otherEl.type === 'radio' && otherEl.name === el.name
-          );
-          request.params = this.paramsRadio(radioGroup);
-          // Mark this radio group as processed
-          if (el.name) {
-            processedNames.push(el.name);
+      // Use custom params if provided, otherwise use default parameter logic
+      if (el.params) {
+        request.params = el.params;
+      } else {
+        // Add parameters based on element type
+        switch (el.type) {
+          case 'select':
+            request.params = this.paramsSelect(el.element as HTMLSelectElement);
+            break;
+          case 'radio': {
+            // For radio groups, get all radio elements with the same name
+            const radioGroup = elementsNeedingValues.filter(
+              otherEl => otherEl.type === 'radio' && otherEl.name === el.name
+            );
+            request.params = this.paramsRadio(radioGroup);
+            // Mark this radio group as processed
+            if (el.name) {
+              processedNames.push(el.name);
+            }
+            break;
           }
-          break;
-        }
-        case 'date':
-        case 'datetime-local':
-        case 'month': {
-          const params = this.paramsDate(el);
-          if (params && (params.startdate || params.enddate)) {
-            request.func = 'daterange';
-            request.params = params;
-          } else {
-            request.params = params;
+          case 'date':
+          case 'datetime-local':
+          case 'month': {
+            const params = this.paramsDate(el);
+            if (params && (params.startdate || params.enddate)) {
+              request.func = 'daterange';
+              request.params = params;
+            } else {
+              request.params = params;
+            }
+            break;
           }
-          break;
-        }
-        case 'time': {
-          // For time inputs, use 'time' function with format
-          request.params = { format: 'HH:mm' };
-          break;
-        }
-        case 'week': {
-          const params = this.paramsWeek(el);
-          if (params && (params.startdate || params.enddate)) {
-            request.func = 'daterange';
-            request.params = params;
-          } else {
-            request.func = 'date';
-            request.params = params;
+          case 'time': {
+            // For time inputs, use 'time' function with format
+            request.params = { format: 'HH:mm' };
+            break;
           }
-          break;
+          case 'week': {
+            const params = this.paramsWeek(el);
+            if (params && (params.startdate || params.enddate)) {
+              request.func = 'daterange';
+              request.params = params;
+            } else {
+              request.func = 'date';
+              request.params = params;
+            }
+            break;
+          }
+          case 'number':
+          case 'range': {
+            const params = this.paramsNumber(el);
+            request.params = params;
+            break;
+          }
+          // Add other element type cases here as needed
+          default:
+            // No special parameters needed
+            break;
         }
-        case 'number':
-        case 'range': {
-          const params = this.paramsNumber(el);
-          request.params = params;
-          break;
-        }
-        // Add other element type cases here as needed
-        default:
-          // No special parameters needed
-          break;
       }
 
       requests.push(request);

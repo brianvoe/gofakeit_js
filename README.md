@@ -104,6 +104,14 @@ await autofill.fill(form);
 // Autofill a single form element
 const input = document.getElementById('email');
 await autofill.fill(input);
+
+// Autofill with a specific function override
+await autofill.fill('#myForm', 'password'); // Use 'password' function for all elements
+await autofill.fill(input, 'uuid'); // Use 'uuid' function for this specific element
+
+// Autofill with function and custom parameters
+await autofill.fill('#myForm', 'password', { length: 12, special: true }); // Custom password params
+await autofill.fill(input, 'number', { min: 1, max: 100 }); // Custom number range
 ```
 
 ### Status Callbacks
@@ -159,6 +167,42 @@ The `onStatusChange` callback receives the following status values:
 - **`ERROR`** - An error occurred during the autofill process
 
 The callback also receives the current `elements` array, which contains all the form elements being processed with their current state (function, value, error, etc.).
+
+### Function Override
+
+You can override the automatic function detection by specifying a gofakeit function name as the second parameter:
+
+```typescript
+// Use a specific function for all elements in a form
+await autofill.fill('#myForm', 'password');
+
+// Use a specific function for a single element
+const emailInput = document.getElementById('email');
+await autofill.fill(emailInput, 'uuid');
+
+// Use a specific function for elements matching a CSS selector
+await autofill.fill('input[type="date"]', 'date');
+
+// Use a function with custom parameters
+await autofill.fill('#myForm', 'password', {
+  length: 12,
+  special: true,
+  upper: true
+});
+
+// Use a function with custom parameters for specific elements
+await autofill.fill('input[type="number"]', 'number', {
+  min: 1,
+  max: 100
+});
+```
+
+This is particularly useful when you need:
+- Consistent data types across multiple fields
+- Specific formatting requirements
+- Testing with known function outputs
+- Overriding the automatic detection for complex input types
+- Custom parameters for gofakeit functions (e.g., password length, number ranges, date ranges)
 
 ### API Functions
 
