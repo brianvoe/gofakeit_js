@@ -83,6 +83,10 @@ const autofill = new Autofill({
   stagger: 50, // Delay between field fills (ms)
   badges: 3000, // How long to show function badges (ms)
   debug: true, // Enable debug logging
+  onStatusChange: (status, elements) => {
+    // Track autofill progress
+    console.log(`Status: ${status}, Elements: ${elements.length}`);
+  }
 });
 
 // Autofill all form fields on the page
@@ -101,6 +105,58 @@ await autofill.fill(form);
 const input = document.getElementById('email');
 await autofill.fill(input);
 ```
+
+### Status Callbacks
+
+You can track the autofill process using the `onStatusChange` callback:
+
+```typescript
+import { Autofill, AutofillStatus } from 'gofakeit';
+
+const autofill = new Autofill({
+  onStatusChange: (status, elements) => {
+    console.log(`Status: ${status}, Elements: ${elements.length}`);
+
+    switch (status) {
+      case AutofillStatus.STARTING:
+        console.log('Autofill process started');
+        break;
+      case AutofillStatus.DETERMINING_FUNCTIONS:
+        console.log('Determining which functions to use for each element');
+        break;
+      case AutofillStatus.GETTING_VALUES:
+        console.log('Generating values from the API');
+        break;
+      case AutofillStatus.SETTING_VALUES:
+        console.log('Applying values to form elements');
+        break;
+      case AutofillStatus.COMPLETED:
+        console.log('Autofill process completed successfully');
+        break;
+      case AutofillStatus.ERROR:
+        console.log('An error occurred during autofill');
+        break;
+    }
+  }
+});
+
+await autofill.fill();
+```
+
+#### Status Values
+
+The `onStatusChange` callback receives the following status values:
+
+- **`IDLE`** - Initial state, no autofill process running
+- **`STARTING`** - Autofill process has begun, elements are being identified
+- **`INITIALIZING`** - Internal initialization phase
+- **`DETERMINING_FUNCTIONS`** - Determining which gofakeit functions to use for each element
+- **`GETTING_VALUES`** - Making API calls to generate values for all elements
+- **`SETTING_VALUES`** - Applying the generated values to the actual form elements
+- **`COMPLETED`** - Autofill process finished successfully
+- **`ERROR`** - An error occurred during the autofill process
+
+The callback also receives the current `elements` array, which contains all the form elements being processed with their current state (function, value, error, etc.).
 
 ### API Functions
 
