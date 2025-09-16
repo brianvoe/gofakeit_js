@@ -1,6 +1,6 @@
 const E = "https://api.gofakeit.com/funcs";
 async function C(c, e) {
-  const { func: t, params: n } = S(c), s = { ...n, ...e || {} };
+  const { func: t, params: n } = T(c), s = { ...n, ...e || {} };
   return w("POST", `${E}/${t}`, s);
 }
 async function x(c) {
@@ -11,7 +11,7 @@ async function x(c) {
     };
   const e = c.map(
     (t, n) => {
-      const { func: s, id: r, params: a } = t, { func: o, params: i } = S(s), d = { ...i, ...a || {} };
+      const { func: s, id: r, params: a } = t, { func: o, params: i } = T(s), d = { ...i, ...a || {} };
       return {
         id: r || `req_${n}`,
         func: o,
@@ -25,7 +25,7 @@ async function x(c) {
     e
   );
 }
-async function L(c) {
+async function A(c) {
   return c.length === 0 ? {
     success: !1,
     error: "No search queries provided"
@@ -63,7 +63,7 @@ async function w(c, e, t) {
     };
   }
 }
-function S(c) {
+function T(c) {
   const e = c.indexOf("?");
   if (e !== -1) {
     const t = c.substring(0, e), n = c.substring(e + 1), s = {}, r = new URLSearchParams(n);
@@ -86,15 +86,15 @@ const b = {
   // px
   quarter: 4
   // px
-}, A = {
+}, L = {
   radius: 4
-}, T = {
+}, S = {
   size: 12,
   // px
   family: "Helvetica, Arial, sans-serif"
 };
-var I = /* @__PURE__ */ ((c) => (c.IDLE = "idle", c.STARTING = "starting", c.INITIALIZING = "initializing", c.DETERMINING_FUNCTIONS = "determining_functions", c.GETTING_VALUES = "getting_values", c.SETTING_VALUES = "setting_values", c.COMPLETED = "completed", c.ERROR = "error", c))(I || {});
-class M {
+var M = /* @__PURE__ */ ((c) => (c.STARTING = "starting", c.FOUND = "found", c.DETERMINED = "determined", c.GENERATED = "generated", c.SET = "set", c.COMPLETED = "completed", c.ERROR = "error", c))(M || {});
+class I {
   settings;
   state;
   constructor(e = {}) {
@@ -105,7 +105,6 @@ class M {
       debug: !1,
       ...e
     }, this.state = {
-      status: "idle",
       elements: []
     };
   }
@@ -116,21 +115,24 @@ class M {
   // MAIN FILL FUNCTION
   // ============================================================================
   async fill(e) {
-    return this.updateStatus(
+    return this.state.elements = [], this.updateStatus(
       "starting"
       /* STARTING */
-    ), this.state.elements = [], this.setElements(e), this.state.elements.length === 0 ? (this.debug("info", "No form fields found to fill"), this.state.status !== "error" && this.updateStatus(
-      "idle"
-      /* IDLE */
-    ), this.results()) : (await this.setElementFunctions(), this.updateStatus(
-      "determining_functions"
-      /* DETERMINING_FUNCTIONS */
+    ), this.setElements(e), this.state.elements.length === 0 ? (this.debug("info", "No form fields found to fill"), this.updateStatus(
+      "completed"
+      /* COMPLETED */
+    ), this.results()) : (this.updateStatus(
+      "found"
+      /* FOUND */
+    ), await this.setElementFunctions(), this.updateStatus(
+      "determined"
+      /* DETERMINED */
     ), await this.getElementValues(), this.updateStatus(
-      "getting_values"
-      /* GETTING_VALUES */
+      "generated"
+      /* GENERATED */
     ), await this.setElementValues(), this.updateStatus(
-      "setting_values"
-      /* SETTING_VALUES */
+      "set"
+      /* SET */
     ), this.updateStatus(
       "completed"
       /* COMPLETED */
@@ -256,7 +258,7 @@ class M {
       const t = e.map((s, r) => ({
         id: s.element.id || s.element.getAttribute("name") || `input_${r}`,
         query: s.search
-      })), n = await L(t);
+      })), n = await A(t);
       if (n.success && n.data)
         for (let s = 0; s < n.data.length; s++) {
           const r = n.data[s], a = e[s];
@@ -543,10 +545,10 @@ class M {
       position: "fixed",
       zIndex: "999999",
       padding: `${v.quarter}px ${v.half}px`,
-      borderRadius: `${A.radius}px`,
-      fontSize: `${T.size}px`,
+      borderRadius: `${L.radius}px`,
+      fontSize: `${S.size}px`,
       fontWeight: "bold",
-      fontFamily: T.family,
+      fontFamily: S.family,
       boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
       pointerEvents: "none",
       userSelect: "none",
@@ -709,7 +711,6 @@ class M {
   // Reset state to initial values - useful for testing
   resetState() {
     this.state = {
-      status: "idle",
       elements: []
     };
   }
@@ -742,11 +743,11 @@ class M {
   }
 }
 export {
-  M as Autofill,
-  I as AutofillStatus,
+  I as Autofill,
+  M as AutofillStatus,
   C as fetchFunc,
   x as fetchFuncMulti,
-  L as fetchFuncSearch,
-  S as parseFunctionString
+  A as fetchFuncSearch,
+  T as parseFunctionString
 };
 //# sourceMappingURL=gofakeit.es.js.map

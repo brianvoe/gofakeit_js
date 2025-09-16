@@ -67,17 +67,16 @@ export declare interface AutofillSettings {
 }
 
 export declare interface AutofillState {
-    status: AutofillStatus;
+    status?: AutofillStatus;
     elements: AutofillElement[];
 }
 
 export declare enum AutofillStatus {
-    IDLE = "idle",
     STARTING = "starting",
-    INITIALIZING = "initializing",
-    DETERMINING_FUNCTIONS = "determining_functions",
-    GETTING_VALUES = "getting_values",
-    SETTING_VALUES = "setting_values",
+    FOUND = "found",
+    DETERMINED = "determined",
+    GENERATED = "generated",
+    SET = "set",
     COMPLETED = "completed",
     ERROR = "error"
 }
