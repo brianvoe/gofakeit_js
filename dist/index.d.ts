@@ -3,12 +3,12 @@ export declare class Autofill {
     state: AutofillState;
     constructor(settings?: AutofillSettings);
     updateSettings(settings: AutofillSettings): void;
-    fill(target?: HTMLElement | Element | string): Promise<AutofillResults>;
+    fill(target?: HTMLElement | Element | string, functionName?: string, params?: Record<string, any>): Promise<AutofillResults>;
     setElements(target?: HTMLElement | Element | string): void;
     shouldSkipElement(element: Element): boolean;
     private getElementType;
     getElementSearch(el: Element): string;
-    setElementFunctions(): Promise<void>;
+    setElementFunctions(functionOverride?: string, params?: Record<string, any>): Promise<void>;
     getElementFunction(element: Element): string | null;
     private elementTypeNeedsSearch;
     private getElementFunctionFallback;
@@ -42,6 +42,7 @@ export declare interface AutofillElement {
     element: Element;
     type: string;
     function: string;
+    params?: Record<string, any>;
     search: string;
     value: string;
     error: string;
