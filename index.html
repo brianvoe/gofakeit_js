@@ -1515,6 +1515,18 @@
                 />
               </div>
             </div>
+            <div class="row">
+              <div class="form-group">
+                <label for="einNumber">EIN Number</label>
+                <input
+                  type="text"
+                  id="einNumber"
+                  data-gofakeit="true"
+                  placeholder="12-3456789"
+                />
+                <div class="field-note">Uses search to find ein function</div>
+              </div>
+            </div>
           </div>
 
           <!-- PAYMENT CATEGORY -->
@@ -1801,6 +1813,73 @@
             </div>
           </div>
 
+          <!-- PRODUCT CATEGORY -->
+          <div id="product-category">
+            <h4>📦 Product Category</h4>
+            <div class="row">
+              <div class="form-group">
+                <label for="productName">Product Name</label>
+                <input
+                  type="text"
+                  id="productName"
+                  data-gofakeit="true"
+                  placeholder="Product name"
+                />
+                <div class="field-note">
+                  Uses search to find product function
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="productCategory">Product Category</label>
+                <input
+                  type="text"
+                  id="productCategory"
+                  data-gofakeit="true"
+                  placeholder="Product category"
+                />
+                <div class="field-note">
+                  Uses search to find category function
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <label for="productBrand">Brand</label>
+                <input
+                  type="text"
+                  id="productBrand"
+                  data-gofakeit="true"
+                  placeholder="Brand name"
+                />
+                <div class="field-note">Uses search to find brand function</div>
+              </div>
+              <div class="form-group">
+                <label for="productSku">SKU</label>
+                <input
+                  type="text"
+                  id="productSku"
+                  data-gofakeit="true"
+                  placeholder="Product SKU"
+                />
+                <div class="field-note">Uses search to find sku function</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <label for="productDescription">Description</label>
+                <textarea
+                  id="productDescription"
+                  data-gofakeit="true"
+                  placeholder="Product description"
+                  rows="3"
+                ></textarea>
+                <div class="field-note">
+                  Uses search to find description function
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- GAME CATEGORY -->
           <div id="game-category">
             <h4>🎮 Game Category</h4>
@@ -2036,6 +2115,177 @@
                   data-gofakeit="true"
                   placeholder="Year value"
                 />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NUMBER INPUT EXAMPLES -->
+        <div class="section" id="number-inputs">
+          <h3>🔢 Number Input Examples</h3>
+          <p>
+            Testing number input types with various contexts that benefit from
+            search functionality.
+          </p>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="routingNumber">Routing Number</label>
+              <input
+                type="number"
+                id="routingNumber"
+                data-gofakeit="true"
+                placeholder="9-digit routing number"
+              />
+              <div class="field-note">
+                Uses search to find routingnumber function
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="accountNumber">Account Number</label>
+              <input
+                type="number"
+                id="accountNumber"
+                data-gofakeit="true"
+                placeholder="Account number"
+              />
+              <div class="field-note">
+                Uses search to find accountnumber function
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="creditCardNumber">Credit Card Number</label>
+              <input
+                type="number"
+                id="creditCardNumber"
+                data-gofakeit="true"
+                placeholder="16-digit credit card"
+              />
+              <div class="field-note">
+                Uses search to find creditcard function
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="cvvNumber">CVV Number</label>
+              <input
+                type="number"
+                id="cvvNumber"
+                data-gofakeit="true"
+                placeholder="3-4 digit CVV"
+                min="100"
+                max="9999"
+              />
+              <div class="field-note">Uses search to find cvv function</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="phoneNumber">Phone Number</label>
+              <input
+                type="number"
+                id="phoneNumber"
+                data-gofakeit="true"
+                placeholder="10-digit phone number"
+              />
+              <div class="field-note">Uses search to find phone function</div>
+            </div>
+            <div class="form-group">
+              <label for="zipCode">ZIP Code</label>
+              <input
+                type="number"
+                id="zipCode"
+                data-gofakeit="true"
+                placeholder="5-digit ZIP code"
+                min="10000"
+                max="99999"
+              />
+              <div class="field-note">Uses search to find zipcode function</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="ssnNumber">Social Security Number</label>
+              <input
+                type="number"
+                id="ssnNumber"
+                data-gofakeit="true"
+                placeholder="9-digit SSN"
+              />
+              <div class="field-note">Uses search to find ssn function</div>
+            </div>
+            <div class="form-group">
+              <label for="priceNumber">Price</label>
+              <input
+                type="number"
+                id="priceNumber"
+                data-gofakeit="true"
+                placeholder="Product price"
+                min="0"
+                step="0.01"
+              />
+              <div class="field-note">Uses search to find price function</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="ageNumber">Age</label>
+              <input
+                type="number"
+                id="ageNumber"
+                data-gofakeit="true"
+                placeholder="Person's age"
+                min="1"
+                max="120"
+              />
+              <div class="field-note">Uses search to find age function</div>
+            </div>
+            <div class="form-group">
+              <label for="yearNumber">Year</label>
+              <input
+                type="number"
+                id="yearNumber"
+                data-gofakeit="true"
+                placeholder="Year value"
+                min="1900"
+                max="2100"
+              />
+              <div class="field-note">Uses search to find year function</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="quantityNumber">Quantity</label>
+              <input
+                type="number"
+                id="quantityNumber"
+                data-gofakeit="true"
+                placeholder="Item quantity"
+                min="1"
+                max="1000"
+              />
+              <div class="field-note">
+                Uses search to find quantity function
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="randomNumber">Random Number (Fallback)</label>
+              <input
+                type="number"
+                id="randomNumber"
+                data-gofakeit="number"
+                placeholder="Random number"
+                min="1"
+                max="100"
+              />
+              <div class="field-note">
+                data-gofakeit="number" - uses number function directly
               </div>
             </div>
           </div>
@@ -3361,6 +3611,7 @@
           <option value="animal-category">🐾 Animal Category</option>
           <option value="food-category">🍕 Food Category</option>
           <option value="car-category">🚗 Car Category</option>
+          <option value="product-category">📦 Product Category</option>
           <option value="game-category">🎮 Game Category</option>
           <option value="misc-category">🎲 Misc Category</option>
         </select>
@@ -3369,6 +3620,9 @@
           onclick="autofill('#date-time-inputs')"
         >
           📅 Date & Time
+        </button>
+        <button class="btn btn-secondary" onclick="autofill('#number-inputs')">
+          🔢 Number Inputs
         </button>
         <button
           class="btn btn-secondary"
@@ -3670,6 +3924,7 @@
             'animal-category': '🐾 Animal Category',
             'food-category': '🍕 Food Category',
             'car-category': '🚗 Car Category',
+            'product-category': '📦 Product Category',
             'game-category': '🎮 Game Category',
             'misc-category': '🎲 Misc Category',
           };
@@ -3817,10 +4072,10 @@
 
             // Show progress for certain statuses
             if (status === 'generated' || status === 'set') {
-              const processedCount = state.elements.filter(
+              const processedCount = elements.filter(
                 element => element.value || element.error
               ).length;
-              const totalCount = state.elements.length;
+              const totalCount = elements.length;
               if (totalCount > 0) {
                 showStatus(
                   `Processing ${processedCount}/${totalCount} fields...`,
