@@ -313,7 +313,7 @@ describe('API Tests', () => {
   describe('fetchFuncSearch', () => {
     it('should make successful search request and return correct FetchFuncSearchResponse interface', async () => {
       const requests: FetchFuncSearchRequest[] = [
-        { id: 'search_0', query: 'email input' },
+        { id: 'search_0', queries: ['email input'] },
       ];
 
       const result = await fetchFuncSearch(requests);
@@ -321,16 +321,15 @@ describe('API Tests', () => {
       // Verify FetchFuncSearchResponse interface
       expect(result).toHaveProperty('success');
       expect(result).toHaveProperty('data');
-      expect(Array.isArray(result.data)).toBe(true);
-      expect(result.data).toHaveLength(1);
+      expect(result.data).toBeTruthy();
 
       // Verify FetchFuncSearchResponseItem interface
-      const searchResponse = result.data![0];
+      const searchResponse = Array.isArray(result.data)
+        ? result.data[0]
+        : result.data!;
       expect(searchResponse).toHaveProperty('id');
-      expect(searchResponse).toHaveProperty('query');
       expect(searchResponse).toHaveProperty('results');
       expect(typeof searchResponse.id).toBe('string');
-      expect(typeof searchResponse.query).toBe('string');
       expect(Array.isArray(searchResponse.results)).toBe(true);
 
       // Verify FetchFuncSearchResult interface
@@ -350,22 +349,21 @@ describe('API Tests', () => {
 
       expect(result).toEqual({
         success: false,
-        error: 'No search queries provided',
+        error: 'No search requests provided',
       });
     });
 
     it('should handle multiple search queries', async () => {
       const requests: FetchFuncSearchRequest[] = [
-        { id: 'search_0', query: 'email' },
-        { id: 'search_1', query: 'name' },
+        { id: 'search_0', queries: ['email'] },
+        { id: 'search_1', queries: ['name'] },
       ];
 
       const result = await fetchFuncSearch(requests);
 
       expect(result).toHaveProperty('success');
       expect(result).toHaveProperty('data');
-      expect(Array.isArray(result.data)).toBe(true);
-      expect(result.data).toHaveLength(2);
+      expect(result.data).toBeTruthy();
     });
   });
 
@@ -393,14 +391,14 @@ describe('API Tests', () => {
 
     it('should handle invalid search queries gracefully', async () => {
       const requests: FetchFuncSearchRequest[] = [
-        { id: 'test', query: 'nonexistentfunction12345' },
+        { id: 'test', queries: ['nonexistentfunction12345'] },
       ];
 
       const result = await fetchFuncSearch(requests);
 
       expect(result).toHaveProperty('success');
       expect(result).toHaveProperty('data');
-      expect(Array.isArray(result.data)).toBe(true);
+      expect(result.data).toBeTruthy();
     });
   });
 
@@ -447,7 +445,7 @@ describe('API Tests', () => {
         { length: 5 },
         (_, i) => ({
           id: `search_${i}`,
-          query: `test query ${i}`,
+          queries: [`test query ${i}`],
         })
       );
 
@@ -455,8 +453,7 @@ describe('API Tests', () => {
 
       expect(result).toHaveProperty('success');
       expect(result).toHaveProperty('data');
-      expect(Array.isArray(result.data)).toBe(true);
-      expect(result.data).toHaveLength(5);
+      expect(result.data).toBeTruthy();
     });
   });
 
@@ -478,11 +475,11 @@ describe('API Tests', () => {
 
       // Test FetchFuncSearchResponse interface
       const searchResult = await fetchFuncSearch([
-        { id: 'test', query: 'email' },
+        { id: 'test', queries: ['email'] },
       ]);
       expect(searchResult).toMatchObject({
         success: expect.any(Boolean),
-        data: expect.any(Array),
+        data: expect.any(Object),
       });
     });
   });

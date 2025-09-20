@@ -38,7 +38,7 @@ export interface FetchFuncMultiResponse {
 // Function search request interface
 export interface FetchFuncSearchRequest {
   id: string;
-  query: string;
+  queries: string[];
 }
 
 // Function search result interface
@@ -51,14 +51,13 @@ export interface FetchFuncSearchResult {
 // Function search response item interface
 export interface FetchFuncSearchResponseItem {
   id: string;
-  query: string;
   results: FetchFuncSearchResult[];
 }
 
 // Multi-function search response interface
 export interface FetchFuncSearchResponse {
   success: boolean;
-  data?: FetchFuncSearchResponseItem[];
+  data?: FetchFuncSearchResponseItem | FetchFuncSearchResponseItem[];
   error?: string;
   status?: number;
 }
@@ -120,7 +119,7 @@ export async function fetchFuncSearch(
   if (requests.length === 0) {
     return {
       success: false,
-      error: 'No search queries provided',
+      error: 'No search requests provided',
     };
   }
 
