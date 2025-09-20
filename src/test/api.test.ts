@@ -6,6 +6,7 @@ import {
   parseFunctionString,
   type FetchFuncMultiRequest,
   type FetchFuncSearchRequest,
+  type FetchFuncSearchResponseItem,
 } from '../api';
 
 describe('API Tests', () => {
@@ -225,38 +226,30 @@ describe('API Tests', () => {
       const result = await fetchFunc('email');
 
       // Verify FetchFuncResponse interface
-      expect(result).toHaveProperty('success');
-      expect(result).toHaveProperty('data');
-      expect(typeof result.success).toBe('boolean');
-      expect(typeof result.data).toBe('string');
-      expect(result.success).toBe(true);
+      expect(result).toHaveProperty('result');
+      expect(typeof result.result).toBe('string');
+      expect(result.result).toBeTruthy();
     });
 
     it('should handle function with parameters', async () => {
       const result = await fetchFunc('number?min=1&max=100');
 
-      expect(result).toHaveProperty('success');
-      expect(result).toHaveProperty('data');
-      expect(typeof result.success).toBe('boolean');
-      expect(typeof result.data).toBe('string');
+      expect(result).toHaveProperty('result');
+      expect(typeof result.result).toBe('string');
     });
 
     it('should handle function with separate parameters', async () => {
       const result = await fetchFunc('word', { length: 5 });
 
-      expect(result).toHaveProperty('success');
-      expect(result).toHaveProperty('data');
-      expect(typeof result.success).toBe('boolean');
-      expect(typeof result.data).toBe('string');
+      expect(result).toHaveProperty('result');
+      expect(typeof result.result).toBe('string');
     });
 
     it('should merge provided params with extracted params (provided takes precedence)', async () => {
       const result = await fetchFunc('number?min=1&max=100', { min: 5 });
 
-      expect(result).toHaveProperty('success');
-      expect(result).toHaveProperty('data');
-      expect(typeof result.success).toBe('boolean');
-      expect(typeof result.data).toBe('string');
+      expect(result).toHaveProperty('result');
+      expect(typeof result.result).toBe('string');
     });
   });
 
@@ -270,13 +263,12 @@ describe('API Tests', () => {
       const result = await fetchFuncMulti(requests);
 
       // Verify FetchFuncMultiResponse interface
-      expect(result).toHaveProperty('success');
-      expect(result).toHaveProperty('data');
-      expect(Array.isArray(result.data)).toBe(true);
-      expect(result.data).toHaveLength(2);
+      expect(result).toHaveProperty('results');
+      expect(Array.isArray(result.results)).toBe(true);
+      expect(result.results).toHaveLength(2);
 
       // Verify FetchFuncMultiResponseItem interface for each item
-      result.data!.forEach(item => {
+      result.results!.forEach(item => {
         expect(item).toHaveProperty('id');
         expect(item).toHaveProperty('value');
         // Error property may or may not be present depending on API response
@@ -291,7 +283,6 @@ describe('API Tests', () => {
       const result = await fetchFuncMulti([]);
 
       expect(result).toEqual({
-        success: false,
         error: 'No functions provided',
       });
     });
@@ -303,15 +294,48 @@ describe('API Tests', () => {
 
       const result = await fetchFuncMulti(requests);
 
-      expect(result).toHaveProperty('success');
-      expect(result).toHaveProperty('data');
-      expect(Array.isArray(result.data)).toBe(true);
-      expect(result.data).toHaveLength(1);
+      expect(result).toHaveProperty('results');
+      expect(Array.isArray(result.results)).toBe(true);
+      expect(result.results).toHaveLength(1);
     });
   });
 
   describe('fetchFuncSearch', () => {
-    it('should make successful search request and return correct FetchFuncSearchResponse interface', async () => {
+    it('should make successful search request with single request and return single object response', async () => {
+      const request: FetchFuncSearchRequest = {
+        id: 'search_0',
+        queries: ['email input'],
+      };
+
+      const result = await fetchFuncSearch(request);
+
+      // Verify FetchFuncSearchResponse interface
+      expect(result).toHaveProperty('results');
+      expect(result.results).toBeTruthy();
+
+      // Verify that single input returns single object (not array)
+      expect(Array.isArray(result.results)).toBe(false);
+      expect(result.results).toBeTruthy();
+      expect(result.results).toHaveProperty('id');
+      expect(result.results).toHaveProperty('results');
+
+      const singleResponse = result.results as FetchFuncSearchResponseItem;
+      expect(typeof singleResponse.id).toBe('string');
+      expect(Array.isArray(singleResponse.results)).toBe(true);
+
+      // Verify FetchFuncSearchResult interface
+      if (singleResponse.results.length > 0) {
+        const searchResult = singleResponse.results[0];
+        expect(searchResult).toHaveProperty('name');
+        expect(searchResult).toHaveProperty('score');
+        expect(searchResult).toHaveProperty('reasons');
+        expect(typeof searchResult.name).toBe('string');
+        expect(typeof searchResult.score).toBe('number');
+        expect(Array.isArray(searchResult.reasons)).toBe(true);
+      }
+    });
+
+    it('should make successful search request with array of requests and return array response', async () => {
       const requests: FetchFuncSearchRequest[] = [
         { id: 'search_0', queries: ['email input'] },
       ];
@@ -319,14 +343,17 @@ describe('API Tests', () => {
       const result = await fetchFuncSearch(requests);
 
       // Verify FetchFuncSearchResponse interface
-      expect(result).toHaveProperty('success');
-      expect(result).toHaveProperty('data');
-      expect(result.data).toBeTruthy();
+      expect(result).toHaveProperty('results');
+      expect(result.results).toBeTruthy();
+
+      // Verify that array input returns array response
+      expect(Array.isArray(result.results)).toBe(true);
+      expect(result.results).toHaveLength(1);
 
       // Verify FetchFuncSearchResponseItem interface
-      const searchResponse = Array.isArray(result.data)
-        ? result.data[0]
-        : result.data!;
+      const searchResponse = (
+        result.results as FetchFuncSearchResponseItem[]
+      )[0];
       expect(searchResponse).toHaveProperty('id');
       expect(searchResponse).toHaveProperty('results');
       expect(typeof searchResponse.id).toBe('string');
@@ -348,12 +375,11 @@ describe('API Tests', () => {
       const result = await fetchFuncSearch([]);
 
       expect(result).toEqual({
-        success: false,
         error: 'No search requests provided',
       });
     });
 
-    it('should handle multiple search queries', async () => {
+    it('should handle multiple search queries in array and return array response', async () => {
       const requests: FetchFuncSearchRequest[] = [
         { id: 'search_0', queries: ['email'] },
         { id: 'search_1', queries: ['name'] },
@@ -361,9 +387,50 @@ describe('API Tests', () => {
 
       const result = await fetchFuncSearch(requests);
 
-      expect(result).toHaveProperty('success');
-      expect(result).toHaveProperty('data');
-      expect(result.data).toBeTruthy();
+      expect(result).toHaveProperty('results');
+      expect(result.results).toBeTruthy();
+
+      // Verify that array input returns array response
+      expect(Array.isArray(result.results)).toBe(true);
+      expect(result.results).toHaveLength(2);
+
+      const arrayResponse = result.results as FetchFuncSearchResponseItem[];
+      expect(arrayResponse[0]).toHaveProperty('id');
+      expect(arrayResponse[0]).toHaveProperty('results');
+    });
+
+    it('should handle single request with multiple queries and return single object response', async () => {
+      const request: FetchFuncSearchRequest = {
+        id: 'search_0',
+        queries: ['email', 'address', 'contact'],
+      };
+
+      const result = await fetchFuncSearch(request);
+
+      expect(result).toHaveProperty('results');
+      expect(result.results).toBeTruthy();
+
+      // Verify that single input returns single object (not array)
+      expect(Array.isArray(result.results)).toBe(false);
+    });
+
+    it('should handle array with single request (edge case) and return array response', async () => {
+      const requests: FetchFuncSearchRequest[] = [
+        { id: 'search_0', queries: ['phone number'] },
+      ];
+
+      const result = await fetchFuncSearch(requests);
+
+      expect(result).toHaveProperty('results');
+      expect(result.results).toBeTruthy();
+
+      // Verify that array input returns array response (even with single item)
+      expect(Array.isArray(result.results)).toBe(true);
+      expect(result.results).toHaveLength(1);
+
+      const arrayResponse = result.results as FetchFuncSearchResponseItem[];
+      expect(arrayResponse[0]).toHaveProperty('id');
+      expect(arrayResponse[0]).toHaveProperty('results');
     });
   });
 
@@ -371,9 +438,8 @@ describe('API Tests', () => {
     it('should handle invalid function names gracefully', async () => {
       const result = await fetchFunc('nonexistentfunction12345');
 
-      expect(result).toHaveProperty('success');
-      expect(result.success).toBe(false);
       expect(result).toHaveProperty('error');
+      expect(result.error).toBeTruthy();
     });
 
     it('should handle invalid function names in multi-request', async () => {
@@ -384,9 +450,8 @@ describe('API Tests', () => {
 
       const result = await fetchFuncMulti(requests);
 
-      expect(result).toHaveProperty('success');
-      expect(result).toHaveProperty('data');
-      expect(Array.isArray(result.data)).toBe(true);
+      expect(result).toHaveProperty('results');
+      expect(Array.isArray(result.results)).toBe(true);
     });
 
     it('should handle invalid search queries gracefully', async () => {
@@ -396,9 +461,8 @@ describe('API Tests', () => {
 
       const result = await fetchFuncSearch(requests);
 
-      expect(result).toHaveProperty('success');
-      expect(result).toHaveProperty('data');
-      expect(result.data).toBeTruthy();
+      expect(result).toHaveProperty('results');
+      expect(result.results).toBeTruthy();
     });
   });
 
@@ -408,19 +472,15 @@ describe('API Tests', () => {
         'word?length=10&lang=en&special=test%20value'
       );
 
-      expect(result).toHaveProperty('success');
-      expect(result).toHaveProperty('data');
-      expect(typeof result.success).toBe('boolean');
-      expect(typeof result.data).toBe('string');
+      expect(result).toHaveProperty('result');
+      expect(typeof result.result).toBe('string');
     });
 
     it('should handle functions with boolean parameters', async () => {
       const result = await fetchFunc('bool');
 
-      expect(result).toHaveProperty('success');
-      expect(result).toHaveProperty('data');
-      expect(typeof result.success).toBe('boolean');
-      expect(typeof result.data).toBe('string');
+      expect(result).toHaveProperty('result');
+      expect(typeof result.result).toBe('string');
     });
 
     it('should handle large multi-requests', async () => {
@@ -434,10 +494,9 @@ describe('API Tests', () => {
 
       const result = await fetchFuncMulti(requests);
 
-      expect(result).toHaveProperty('success');
-      expect(result).toHaveProperty('data');
-      expect(Array.isArray(result.data)).toBe(true);
-      expect(result.data).toHaveLength(10);
+      expect(result).toHaveProperty('results');
+      expect(Array.isArray(result.results)).toBe(true);
+      expect(result.results).toHaveLength(10);
     });
 
     it('should handle large search requests', async () => {
@@ -451,9 +510,8 @@ describe('API Tests', () => {
 
       const result = await fetchFuncSearch(requests);
 
-      expect(result).toHaveProperty('success');
-      expect(result).toHaveProperty('data');
-      expect(result.data).toBeTruthy();
+      expect(result).toHaveProperty('results');
+      expect(result.results).toBeTruthy();
     });
   });
 
@@ -462,15 +520,13 @@ describe('API Tests', () => {
       // Test FetchFuncResponse interface
       const apiResult = await fetchFunc('email');
       expect(apiResult).toMatchObject({
-        success: expect.any(Boolean),
-        data: expect.any(String),
+        result: expect.any(String),
       });
 
       // Test FetchFuncMultiResponse interface
       const multiResult = await fetchFuncMulti([{ func: 'email' }]);
       expect(multiResult).toMatchObject({
-        success: expect.any(Boolean),
-        data: expect.any(Array),
+        results: expect.any(Array),
       });
 
       // Test FetchFuncSearchResponse interface
@@ -478,8 +534,7 @@ describe('API Tests', () => {
         { id: 'test', queries: ['email'] },
       ]);
       expect(searchResult).toMatchObject({
-        success: expect.any(Boolean),
-        data: expect.any(Object),
+        results: expect.any(Object),
       });
     });
   });

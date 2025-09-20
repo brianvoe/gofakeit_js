@@ -7,10 +7,8 @@ export interface FetchFuncParams {
 }
 
 export interface FetchFuncResponse {
-  success: boolean;
-  data?: string;
+  result?: string;
   error?: string;
-  status?: number;
 }
 
 // Multi-function request interface
@@ -29,10 +27,8 @@ export interface FetchFuncMultiResponseItem {
 
 // Multi-function response interface
 export interface FetchFuncMultiResponse {
-  success: boolean;
-  data?: FetchFuncMultiResponseItem[];
+  results?: FetchFuncMultiResponseItem[];
   error?: string;
-  status?: number;
 }
 
 // Function search request interface
@@ -56,10 +52,8 @@ export interface FetchFuncSearchResponseItem {
 
 // Multi-function search response interface
 export interface FetchFuncSearchResponse {
-  success: boolean;
-  data?: FetchFuncSearchResponseItem | FetchFuncSearchResponseItem[];
+  results?: FetchFuncSearchResponseItem | FetchFuncSearchResponseItem[];
   error?: string;
-  status?: number;
 }
 
 // Fetch data from gofakeit API
@@ -72,8 +66,21 @@ export async function fetchFunc(
   // Merge extracted params with provided params (provided params take precedence)
   const finalParams = { ...extractedParams, ...(params || {}) };
 
-  // Always use POST request
-  return makeRequest('POST', `${GOFAKEIT_API_BASE}/${funcName}`, finalParams);
+  try {
+    // Always use POST request
+    const result = await makeRequest<string>(
+      'POST',
+      `${GOFAKEIT_API_BASE}/${funcName}`,
+      finalParams
+    );
+    return {
+      result: result,
+    };
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
 }
 
 // Call multiple functions in a single request
@@ -82,52 +89,77 @@ export async function fetchFuncMulti(
 ): Promise<FetchFuncMultiResponse> {
   if (requests.length === 0) {
     return {
-      success: false,
       error: 'No functions provided',
     };
   }
 
-  // Process each request to extract function name and parameters
-  const processedRequests: FetchFuncMultiRequest[] = requests.map(
-    (req, index) => {
-      const { func, id, params } = req;
-      const { func: funcName, params: extractedParams } =
-        parseFunctionString(func);
+  try {
+    // Process each request to extract function name and parameters
+    const processedRequests: FetchFuncMultiRequest[] = requests.map(
+      (req, index) => {
+        const { func, id, params } = req;
+        const { func: funcName, params: extractedParams } =
+          parseFunctionString(func);
 
-      // Merge extracted params with provided params (provided params take precedence)
-      const finalParams = { ...extractedParams, ...(params || {}) };
+        // Merge extracted params with provided params (provided params take precedence)
+        const finalParams = { ...extractedParams, ...(params || {}) };
 
-      return {
-        id: id || `req_${index}`,
-        func: funcName,
-        params: finalParams,
-      };
-    }
-  );
+        return {
+          id: id || `req_${index}`,
+          func: funcName,
+          params: finalParams,
+        };
+      }
+    );
 
-  return makeRequest<FetchFuncMultiResponse>(
-    'POST',
-    `${GOFAKEIT_API_BASE}/multi`,
-    processedRequests
-  );
+    const response = await makeRequest<FetchFuncMultiResponseItem[]>(
+      'POST',
+      `${GOFAKEIT_API_BASE}/multi`,
+      processedRequests
+    );
+
+    return { results: response };
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
 }
 
 // Search for multiple functions in a single request
 export async function fetchFuncSearch(
-  requests: FetchFuncSearchRequest[]
+  requests: FetchFuncSearchRequest | FetchFuncSearchRequest[]
 ): Promise<FetchFuncSearchResponse> {
-  if (requests.length === 0) {
+  // Handle single request by converting to array for API call
+  const requestArray = Array.isArray(requests) ? requests : [requests];
+  if (requestArray.length === 0) {
     return {
-      success: false,
       error: 'No search requests provided',
     };
   }
 
-  return makeRequest<FetchFuncSearchResponse>(
-    'POST',
-    `${GOFAKEIT_API_BASE}/search`,
-    requests
-  );
+  try {
+    const response = await makeRequest<FetchFuncSearchResponseItem[]>(
+      'POST',
+      `${GOFAKEIT_API_BASE}/search`,
+      requestArray
+    );
+
+    // Maintain input/output structure consistency
+    // If input was a single object, ensure response results is a single object
+    // If input was an array, ensure response results is an array
+    if (!Array.isArray(requests)) {
+      // Input was single object - ensure response is single object
+      return { results: response[0] };
+    } else {
+      // Input was array - ensure response is array
+      return { results: response };
+    }
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
 }
 
 // Base HTTP request function
@@ -156,30 +188,17 @@ async function makeRequest<T>(
     const response = await fetch(url, options);
 
     if (!response.ok) {
-      return {
-        success: false,
-        error: `HTTP error! status: ${response.status}`,
-        status: response.status,
-      } as T;
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     // Determine response parsing based on URL
-    let data;
     if (url.includes('/multi') || url.includes('/search')) {
-      data = await response.json();
+      return await response.json();
     } else {
-      data = await response.text();
+      return (await response.text()) as T;
     }
-
-    return {
-      success: true,
-      data: data,
-    } as T;
   } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-    } as T;
+    throw new Error(error instanceof Error ? error.message : 'Unknown error');
   }
 }
 

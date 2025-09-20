@@ -16,7 +16,6 @@ export {
   fetchFunc,
   fetchFuncSearch,
   fetchFuncMulti,
-  parseFunctionString,
   type FetchFuncParams,
   type FetchFuncResponse,
   type FetchFuncMultiRequest,
