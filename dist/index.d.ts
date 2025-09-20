@@ -7,7 +7,7 @@ export declare class Autofill {
     setElements(target?: HTMLElement | Element | string): void;
     shouldSkipElement(element: Element): boolean;
     private getElementType;
-    getElementSearch(el: Element): string;
+    getElementSearch(el: Element): string[];
     setElementFunctions(functionOverride?: string, params?: Record<string, any>): Promise<void>;
     getElementFunction(element: Element): string | null;
     private elementTypeNeedsSearch;
@@ -43,7 +43,7 @@ export declare interface AutofillElement {
     type: string;
     function: string;
     params?: Record<string, any>;
-    search: string;
+    search: string[];
     value: string;
     error: string;
 }
@@ -120,19 +120,18 @@ export declare function fetchFuncSearch(requests: FetchFuncSearchRequest[]): Pro
 
 export declare interface FetchFuncSearchRequest {
     id: string;
-    query: string;
+    queries: string[];
 }
 
 export declare interface FetchFuncSearchResponse {
     success: boolean;
-    data?: FetchFuncSearchResponseItem[];
+    data?: FetchFuncSearchResponseItem | FetchFuncSearchResponseItem[];
     error?: string;
     status?: number;
 }
 
 export declare interface FetchFuncSearchResponseItem {
     id: string;
-    query: string;
     results: FetchFuncSearchResult[];
 }
 
