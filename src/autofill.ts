@@ -421,11 +421,11 @@ export class Autofill {
 
       const response = await fetchFuncSearch(searchRequests);
 
-      if (response.success && response.data) {
+      if (response.results && !response.error) {
         // Handle both single object and array responses
-        const searchResults = Array.isArray(response.data)
-          ? response.data
-          : [response.data];
+        const searchResults = Array.isArray(response.results)
+          ? response.results
+          : [response.results];
 
         // Map results back to elements - use first result regardless of score
         for (
@@ -679,10 +679,10 @@ export class Autofill {
 
     const response = await fetchFuncMulti(requests);
 
-    if (response.success && response.data) {
+    if (response.results && !response.error) {
       // Map results back to elements using the correct mapping
-      for (let i = 0; i < response.data.length; i++) {
-        const result = response.data[i];
+      for (let i = 0; i < response.results.length; i++) {
+        const result = response.results[i];
         const el = requestToElementMap[i];
 
         if (result.value !== null && result.value !== undefined) {
