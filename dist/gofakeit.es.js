@@ -1,39 +1,65 @@
 const y = "https://api.gofakeit.com/funcs";
 async function C(c, e) {
-  const { func: t, params: n } = T(c), s = { ...n, ...e || {} };
-  return w("POST", `${y}/${t}`, s);
+  const { func: t, params: n } = k(c), r = { ...n, ...e || {} };
+  try {
+    return {
+      result: await w(
+        "POST",
+        `${y}/${t}`,
+        r
+      )
+    };
+  } catch (a) {
+    return {
+      error: a instanceof Error ? a.message : "Unknown error"
+    };
+  }
 }
 async function x(c) {
   if (c.length === 0)
     return {
-      success: !1,
       error: "No functions provided"
     };
-  const e = c.map(
-    (t, n) => {
-      const { func: s, id: r, params: a } = t, { func: o, params: i } = T(s), u = { ...i, ...a || {} };
-      return {
-        id: r || `req_${n}`,
-        func: o,
-        params: u
-      };
-    }
-  );
-  return w(
-    "POST",
-    `${y}/multi`,
-    e
-  );
+  try {
+    const e = c.map(
+      (n, r) => {
+        const { func: a, id: s, params: o } = n, { func: i, params: u } = k(a), d = { ...u, ...o || {} };
+        return {
+          id: s || `req_${r}`,
+          func: i,
+          params: d
+        };
+      }
+    );
+    return { results: await w(
+      "POST",
+      `${y}/multi`,
+      e
+    ) };
+  } catch (e) {
+    return {
+      error: e instanceof Error ? e.message : "Unknown error"
+    };
+  }
 }
 async function A(c) {
-  return c.length === 0 ? {
-    success: !1,
-    error: "No search requests provided"
-  } : w(
-    "POST",
-    `${y}/search`,
-    c
-  );
+  const e = Array.isArray(c) ? c : [c];
+  if (e.length === 0)
+    return {
+      error: "No search requests provided"
+    };
+  try {
+    const t = await w(
+      "POST",
+      `${y}/search`,
+      e
+    );
+    return Array.isArray(c) ? { results: t } : { results: t[0] };
+  } catch (t) {
+    return {
+      error: t instanceof Error ? t.message : "Unknown error"
+    };
+  }
 }
 async function w(c, e, t) {
   try {
@@ -44,34 +70,23 @@ async function w(c, e, t) {
       }
     };
     c === "POST" && t && (n.body = JSON.stringify(t));
-    const s = await fetch(e, n);
-    if (!s.ok)
-      return {
-        success: !1,
-        error: `HTTP error! status: ${s.status}`,
-        status: s.status
-      };
-    let r;
-    return e.includes("/multi") || e.includes("/search") ? r = await s.json() : r = await s.text(), {
-      success: !0,
-      data: r
-    };
+    const r = await fetch(e, n);
+    if (!r.ok)
+      throw new Error(`HTTP error! status: ${r.status}`);
+    return e.includes("/multi") || e.includes("/search") ? await r.json() : await r.text();
   } catch (n) {
-    return {
-      success: !1,
-      error: n instanceof Error ? n.message : "Unknown error"
-    };
+    throw new Error(n instanceof Error ? n.message : "Unknown error");
   }
 }
-function T(c) {
+function k(c) {
   const e = c.indexOf("?");
   if (e !== -1) {
-    const t = c.substring(0, e), n = c.substring(e + 1), s = {}, r = new URLSearchParams(n);
-    for (const [a, o] of r.entries()) {
+    const t = c.substring(0, e), n = c.substring(e + 1), r = {}, a = new URLSearchParams(n);
+    for (const [s, o] of a.entries()) {
       const i = parseFloat(o);
-      s[a] = isNaN(i) ? o : i;
+      r[s] = isNaN(i) ? o : i;
     }
-    return { func: t, params: s };
+    return { func: t, params: r };
   } else
     return { func: c, params: {} };
 }
@@ -146,21 +161,21 @@ class F {
     const t = [];
     if (e) {
       if (typeof e == "string") {
-        const a = document.querySelectorAll(e);
-        if (a.length === 0) {
+        const s = document.querySelectorAll(e);
+        if (s.length === 0) {
           this.debug("error", `No element found with selector: "${e}"`), this.updateStatus(
             "error"
             /* ERROR */
           ), this.state.elements = [];
           return;
         }
-        a.forEach((o) => {
+        s.forEach((o) => {
           if (o instanceof HTMLInputElement || o instanceof HTMLTextAreaElement || o instanceof HTMLSelectElement) {
             if (this.shouldSkipElement(o)) return;
             t.push(o);
           } else
-            o.querySelectorAll("input, textarea, select").forEach((m) => {
-              this.shouldSkipElement(m) || t.push(m);
+            o.querySelectorAll("input, textarea, select").forEach((d) => {
+              this.shouldSkipElement(d) || t.push(d);
             });
         });
       } else if (e instanceof HTMLElement || e instanceof Element)
@@ -178,28 +193,28 @@ class F {
       document.querySelectorAll("input, textarea, select").forEach((i) => {
         this.shouldSkipElement(i) || t.push(i);
       });
-    const n = this.settings.mode ?? "auto", s = [];
-    for (const a of t) {
-      const o = a.getAttribute("data-gofakeit");
-      typeof o == "string" && o.trim().toLowerCase() === "false" || n === "manual" && !o || s.push(a);
+    const n = this.settings.mode ?? "auto", r = [];
+    for (const s of t) {
+      const o = s.getAttribute("data-gofakeit");
+      typeof o == "string" && o.trim().toLowerCase() === "false" || n === "manual" && !o || r.push(s);
     }
-    const r = [];
-    for (const a of s) {
+    const a = [];
+    for (const s of r) {
       const o = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-      r.push({
+      a.push({
         id: o,
-        name: a.getAttribute("name") || "",
-        element: a,
-        type: this.getElementType(a),
+        name: s.getAttribute("name") || "",
+        element: s,
+        type: this.getElementType(s),
         function: "",
-        search: this.getElementSearch(a),
+        search: this.getElementSearch(s),
         value: "",
         error: ""
       });
     }
-    this.state.elements = r, r.length > 0 && this.debug(
+    this.state.elements = a, a.length > 0 && this.debug(
       "info",
-      `Found ${r.length} elements to generate data for`
+      `Found ${a.length} elements to generate data for`
     );
   }
   // Check if an element should be skipped (hidden, disabled, or readonly)
@@ -212,18 +227,18 @@ class F {
   }
   // Get search query parts for an element
   getElementSearch(e) {
-    const t = [], n = [], s = e.id, r = e.getAttribute("aria-labelledby");
-    if (r && r.split(/\s+/).forEach((l) => {
-      const d = document.getElementById(l);
-      d && d.textContent && n.push(d.textContent);
-    }), s) {
+    const t = [], n = [], r = e.id, a = e.getAttribute("aria-labelledby");
+    if (a && a.split(/\s+/).forEach((l) => {
+      const f = document.getElementById(l);
+      f && f.textContent && n.push(f.textContent);
+    }), r) {
       const l = document.querySelector(
-        'label[for="' + s.replace(/"/g, '\\"') + '"]'
+        'label[for="' + r.replace(/"/g, '\\"') + '"]'
       );
       l && l.textContent && n.push(l.textContent);
     }
-    const a = e.closest("label");
-    a && a.textContent && n.push(a.textContent);
+    const s = e.closest("label");
+    s && s.textContent && n.push(s.textContent);
     const o = e.previousElementSibling;
     o && o.tagName === "LABEL" && o.textContent && n.push(o.textContent), n.forEach((l) => {
       l && l.trim() && t.push(l.trim().toLowerCase());
@@ -232,8 +247,8 @@ class F {
     i && i.trim() && t.push(i);
     const u = e.getAttribute("name") || "";
     u && u.trim() && t.push(u.toLowerCase());
-    const m = e.id || "";
-    m && m.trim() && t.push(m.toLowerCase());
+    const d = e.id || "";
+    d && d.trim() && t.push(d.toLowerCase());
     const h = e instanceof HTMLInputElement && e.placeholder || "";
     h && h.trim() && t.push(h.toLowerCase());
     const b = e instanceof HTMLInputElement && e.autocomplete || "";
@@ -250,37 +265,37 @@ class F {
       `Determining functions for ${this.state.elements.length} elements`
     ), e) {
       this.debug("info", `Using function override: ${e}`);
-      for (const s of this.state.elements)
-        s.function = e, t && (s.params = t);
+      for (const r of this.state.elements)
+        r.function = e, t && (r.params = t);
       return;
     }
     const n = [];
-    for (const s of this.state.elements) {
-      const r = this.getElementFunction(s.element);
-      r !== null ? s.function = r : n.push(s);
+    for (const r of this.state.elements) {
+      const a = this.getElementFunction(r.element);
+      a !== null ? r.function = a : n.push(r);
     }
     if (n.length > 0) {
       this.debug(
         "info",
         `${n.length} elements need function search`
       );
-      const s = n.map((a, o) => ({
-        id: a.element.id || a.element.getAttribute("name") || `input_${o}`,
-        queries: a.search
-      })), r = await A(s);
-      if (r.success && r.data) {
-        const a = Array.isArray(r.data) ? r.data : [r.data];
-        for (let o = 0; o < a.length && o < n.length; o++) {
-          const i = a[o], u = n[o];
+      const r = n.map((s, o) => ({
+        id: s.element.id || s.element.getAttribute("name") || `input_${o}`,
+        queries: s.search
+      })), a = await A(r);
+      if (a.results && !a.error) {
+        const s = Array.isArray(a.results) ? a.results : [a.results];
+        for (let o = 0; o < s.length && o < n.length; o++) {
+          const i = s[o], u = n[o];
           i.results && i.results.length > 0 ? u.function = i.results[0].name : u.function = this.getElementFunctionFallback(u.element);
         }
-        for (let o = a.length; o < n.length; o++)
+        for (let o = s.length; o < n.length; o++)
           n[o].function = this.getElementFunctionFallback(
             n[o].element
           );
       } else
-        for (const a of n)
-          a.function = this.getElementFunctionFallback(a.element);
+        for (const s of n)
+          s.function = this.getElementFunctionFallback(s.element);
     }
     this.debug("info", "Function determination complete");
   }
@@ -316,8 +331,8 @@ class F {
         case "datetime-local":
         case "month":
         case "week": {
-          const n = e.getAttribute("min"), s = e.getAttribute("max");
-          return n || s ? "daterange" : "date";
+          const n = e.getAttribute("min"), r = e.getAttribute("max");
+          return n || r ? "daterange" : "date";
         }
         case "time":
           return "time";
@@ -335,7 +350,7 @@ class F {
           return "word";
         case "number":
         case "range": {
-          const n = e.getAttribute("min"), s = e.getAttribute("max");
+          const n = e.getAttribute("min"), r = e.getAttribute("max");
           return "number";
         }
         case "color":
@@ -362,7 +377,7 @@ class F {
   async getElementValues() {
     this.debug("info", "Starting value generation...");
     const e = this.state.elements.filter(
-      (a) => a.function && !a.error
+      (s) => s.function && !s.error
     );
     if (e.length === 0) {
       this.debug("info", "No elements need value generation");
@@ -372,32 +387,32 @@ class F {
       "info",
       `Getting values for ${e.length} elements from API`
     );
-    const t = [], n = [], s = [];
-    for (const a of e) {
-      if (a.type === "radio" && a.name && n.includes(a.name))
+    const t = [], n = [], r = [];
+    for (const s of e) {
+      if (s.type === "radio" && s.name && n.includes(s.name))
         continue;
       const o = {
-        id: a.id,
-        func: a.function
+        id: s.id,
+        func: s.function
       };
-      if (a.params)
-        o.params = a.params;
+      if (s.params)
+        o.params = s.params;
       else
-        switch (a.type) {
+        switch (s.type) {
           case "select":
-            o.params = this.paramsSelect(a.element);
+            o.params = this.paramsSelect(s.element);
             break;
           case "radio": {
             const i = e.filter(
-              (u) => u.type === "radio" && u.name === a.name
+              (u) => u.type === "radio" && u.name === s.name
             );
-            o.params = this.paramsRadio(i), a.name && n.push(a.name);
+            o.params = this.paramsRadio(i), s.name && n.push(s.name);
             break;
           }
           case "date":
           case "datetime-local":
           case "month": {
-            const i = this.paramsDate(a);
+            const i = this.paramsDate(s);
             i && (i.startdate || i.enddate) && (o.func = "daterange"), o.params = i;
             break;
           }
@@ -406,28 +421,28 @@ class F {
             break;
           }
           case "week": {
-            const i = this.paramsWeek(a);
+            const i = this.paramsWeek(s);
             i && (i.startdate || i.enddate) ? (o.func = "daterange", o.params = i) : (o.func = "date", o.params = i);
             break;
           }
           case "number":
           case "range": {
-            const i = this.paramsNumber(a);
+            const i = this.paramsNumber(s);
             o.params = i;
             break;
           }
         }
-      t.push(o), s.push(a);
+      t.push(o), r.push(s);
     }
-    const r = await x(t);
-    if (r.success && r.data)
-      for (let a = 0; a < r.data.length; a++) {
-        const o = r.data[a], i = s[a];
+    const a = await x(t);
+    if (a.results && !a.error)
+      for (let s = 0; s < a.results.length; s++) {
+        const o = a.results[s], i = r[s];
         o.value !== null && o.value !== void 0 ? i.value = String(o.value) : o.error ? i.error = o.error : i.error = "Unknown API error";
       }
     else
-      for (const a of e)
-        a.error = r.error || "API request failed";
+      for (const s of e)
+        s.error = a.error || "API request failed";
     this.debug("info", "Value generation complete");
   }
   // ============================================================================
@@ -443,37 +458,37 @@ class F {
     const e = [];
     for (let t = 0; t < this.state.elements.length; t++) {
       const n = this.state.elements[t];
-      let s = null;
+      let r = null;
       switch (n.type) {
         case "radio":
-          n.name && !e.includes(n.name) && (e.push(n.name), s = this.setRadioGroup(n));
+          n.name && !e.includes(n.name) && (e.push(n.name), r = this.setRadioGroup(n));
           break;
         default:
-          n.value !== void 0 && n.value !== null && !n.error && this.setElementValue(n), s = n;
+          n.value !== void 0 && n.value !== null && !n.error && this.setElementValue(n), r = n;
           break;
       }
-      this.settings.badges && this.settings.badges > 0 && s && this.showBadge(s), this.settings.stagger && this.settings.stagger > 0 && t < this.state.elements.length - 1 && await new Promise(
-        (r) => setTimeout(r, this.settings.stagger)
+      this.settings.badges && this.settings.badges > 0 && r && this.showBadge(r), this.settings.stagger && this.settings.stagger > 0 && t < this.state.elements.length - 1 && await new Promise(
+        (a) => setTimeout(a, this.settings.stagger)
       );
     }
     this.debug("info", "Value application complete");
   }
   setRadioGroup(e) {
     const n = this.state.elements.filter(
-      (s) => s.type === "radio" && s.name === e.name
-    ).find((s) => {
-      const r = s.element;
-      if ((r.hasAttribute("value") || r.value !== "on") && r.value === e.value)
+      (r) => r.type === "radio" && r.name === e.name
+    ).find((r) => {
+      const a = r.element;
+      if ((a.hasAttribute("value") || a.value !== "on") && a.value === e.value)
         return !0;
-      const o = document.querySelector(`label[for="${r.id}"]`);
-      return !!(o && o.textContent && o.textContent.trim() === e.value || r.id === e.value);
+      const o = document.querySelector(`label[for="${a.id}"]`);
+      return !!(o && o.textContent && o.textContent.trim() === e.value || a.id === e.value);
     });
     if (n && !n.error) {
-      const s = n.element.name;
-      return s && document.querySelectorAll(
-        `input[type="radio"][name="${s}"]`
-      ).forEach((a) => {
-        a.checked = !1;
+      const r = n.element.name;
+      return r && document.querySelectorAll(
+        `input[type="radio"][name="${r}"]`
+      ).forEach((s) => {
+        s.checked = !1;
       }), n.element.checked = !0, n.element.dispatchEvent(
         new Event("change", { bubbles: !0 })
       ), n;
@@ -520,35 +535,35 @@ class F {
   }
   setRadioValue(e, t) {
     if (t === "true" || t === !0) {
-      const s = e.name;
-      s && document.querySelectorAll(
-        `input[type="radio"][name="${s}"]`
-      ).forEach((a) => {
-        a !== e && (a.checked = !1);
+      const r = e.name;
+      r && document.querySelectorAll(
+        `input[type="radio"][name="${r}"]`
+      ).forEach((s) => {
+        s !== e && (s.checked = !1);
       }), e.checked = !0, e.dispatchEvent(new Event("change", { bubbles: !0 }));
     } else
       e.checked = !1, e.dispatchEvent(new Event("change", { bubbles: !0 }));
   }
   setSelectValue(e, t) {
     if (Array.from(e.options).find(
-      (a) => a.value === t
+      (s) => s.value === t
     )) {
       e.value = t, e.dispatchEvent(new Event("change", { bubbles: !0 }));
       return;
     }
-    const s = Array.from(e.options).find(
-      (a) => a.textContent?.toLowerCase().includes(t.toLowerCase())
+    const r = Array.from(e.options).find(
+      (s) => s.textContent?.toLowerCase().includes(t.toLowerCase())
     );
-    if (s) {
-      e.value = s.value, e.dispatchEvent(new Event("change", { bubbles: !0 }));
+    if (r) {
+      e.value = r.value, e.dispatchEvent(new Event("change", { bubbles: !0 }));
       return;
     }
-    const r = Array.from(e.options).filter(
-      (a) => a.value && a.value.trim() !== ""
+    const a = Array.from(e.options).filter(
+      (s) => s.value && s.value.trim() !== ""
     );
-    if (r.length > 0) {
-      const a = r[Math.floor(Math.random() * r.length)];
-      e.value = a.value, e.dispatchEvent(new Event("change", { bubbles: !0 }));
+    if (a.length > 0) {
+      const s = a[Math.floor(Math.random() * a.length)];
+      e.value = s.value, e.dispatchEvent(new Event("change", { bubbles: !0 }));
     }
   }
   showBadge(e) {
@@ -557,7 +572,7 @@ class F {
     t.id = `gofakeit-badge-${e.id}`;
     const n = !!(e.error && e.error.trim() !== "");
     t.textContent = n ? e.error : e.function;
-    const s = {
+    const r = {
       position: "fixed",
       zIndex: "999999",
       padding: `${v.quarter}px ${v.half}px`,
@@ -574,32 +589,32 @@ class F {
       backgroundColor: n ? E.error : E.primary,
       color: n ? E.white : E.text
     };
-    Object.assign(t.style, s), document.body.appendChild(t);
-    let r = null, a = null, o = !0, i = 0;
-    const u = 100, m = this.getScrollableParents(e.element), h = /* @__PURE__ */ new Map(), b = (l) => {
-      const d = l.getBoundingClientRect();
-      if (d.top < 0 || d.left < 0 || d.bottom > window.innerHeight || d.right > window.innerWidth)
+    Object.assign(t.style, r), document.body.appendChild(t);
+    let a = null, s = null, o = !0, i = 0;
+    const u = 100, d = this.getScrollableParents(e.element), h = /* @__PURE__ */ new Map(), b = (l) => {
+      const f = l.getBoundingClientRect();
+      if (f.top < 0 || f.left < 0 || f.bottom > window.innerHeight || f.right > window.innerWidth)
         return !1;
-      for (const g of m) {
-        let f = h.get(g);
-        if (f || (f = g.getBoundingClientRect(), h.set(g, f)), d.top < f.top || d.left < f.left || d.bottom > f.bottom || d.right > f.right)
+      for (const g of d) {
+        let m = h.get(g);
+        if (m || (m = g.getBoundingClientRect(), h.set(g, m)), f.top < m.top || f.left < m.left || f.bottom > m.bottom || f.right > m.right)
           return !1;
       }
       return !0;
     }, p = () => {
       const l = e.element.getBoundingClientRect();
-      if (!r || l.top !== r.top || l.left !== r.left || l.width !== r.width || l.height !== r.height) {
-        r = l;
+      if (!a || l.top !== a.top || l.left !== a.left || l.width !== a.width || l.height !== a.height) {
+        a = l;
         const g = performance.now();
         if (g - i > u && (o = b(e.element), i = g, h.clear()), o) {
-          const f = l.top - 30, k = l.left;
-          t.style.cssText += `top:${f}px;left:${k}px;display:block;`;
+          const m = l.top - 30, T = l.left;
+          t.style.cssText += `top:${m}px;left:${T}px;display:block;`;
         } else
           t.style.display = "none";
       }
-      a = requestAnimationFrame(p);
+      s = requestAnimationFrame(p);
     };
-    p(), t._animationId = a, requestAnimationFrame(() => {
+    p(), t._animationId = s, requestAnimationFrame(() => {
       t.style.opacity = "1";
     }), setTimeout(() => {
       this.removeBadge(e.id);
@@ -610,8 +625,8 @@ class F {
     const t = [];
     let n = e.parentElement;
     for (; n && n !== document.body; ) {
-      const s = getComputedStyle(n), r = s.overflow + s.overflowY + s.overflowX;
-      (r.includes("scroll") || r.includes("auto")) && t.push(n), n = n.parentElement;
+      const r = getComputedStyle(n), a = r.overflow + r.overflowY + r.overflowX;
+      (a.includes("scroll") || a.includes("auto")) && t.push(n), n = n.parentElement;
     }
     return t;
   }
@@ -638,11 +653,11 @@ class F {
   }
   paramsRadio(e) {
     const t = e.map((n) => {
-      const s = n.element;
-      if (s.hasAttribute("value") || s.value && s.value.trim() !== "" && s.value !== "on")
-        return s.value;
-      const a = document.querySelector(`label[for="${s.id}"]`);
-      return a && a.textContent ? a.textContent.trim() : s.id;
+      const r = n.element;
+      if (r.hasAttribute("value") || r.value && r.value.trim() !== "" && r.value !== "on")
+        return r.value;
+      const s = document.querySelector(`label[for="${r.id}"]`);
+      return s && s.textContent ? s.textContent.trim() : r.id;
     }).filter((n) => n !== "");
     if (t.length > 0)
       return {
@@ -651,10 +666,10 @@ class F {
   }
   convertDateToWeek(e) {
     try {
-      const t = /* @__PURE__ */ new Date(e + "T00:00:00"), n = t.getFullYear(), s = new Date(n, 0, 1), r = Math.floor(
-        (t.getTime() - s.getTime()) / (1440 * 60 * 1e3)
-      ), a = Math.ceil((r + s.getDay() + 1) / 7);
-      return `${n}-W${a.toString().padStart(2, "0")}`;
+      const t = /* @__PURE__ */ new Date(e + "T00:00:00"), n = t.getFullYear(), r = new Date(n, 0, 1), a = Math.floor(
+        (t.getTime() - r.getTime()) / (1440 * 60 * 1e3)
+      ), s = Math.ceil((a + r.getDay() + 1) / 7);
+      return `${n}-W${s.toString().padStart(2, "0")}`;
     } catch {
       return `${(/* @__PURE__ */ new Date()).getFullYear()}-W01`;
     }
@@ -664,8 +679,8 @@ class F {
       const t = e.match(/^(\d{4})-W(\d{2})$/);
       if (!t)
         throw new Error("Invalid week format");
-      const n = parseInt(t[1]), s = parseInt(t[2]), r = new Date(n, 0, 1), a = (s - 1) * 7, o = new Date(
-        r.getTime() + a * 24 * 60 * 60 * 1e3
+      const n = parseInt(t[1]), r = parseInt(t[2]), a = new Date(n, 0, 1), s = (r - 1) * 7, o = new Date(
+        a.getTime() + s * 24 * 60 * 60 * 1e3
       ), i = (o.getMonth() + 1).toString().padStart(2, "0"), u = o.getDate().toString().padStart(2, "0");
       return `${n}-${i}-${u}`;
     } catch {
@@ -673,35 +688,35 @@ class F {
     }
   }
   paramsDate(e) {
-    const t = e.element, n = t.getAttribute("min"), s = t.getAttribute("max");
-    let r;
+    const t = e.element, n = t.getAttribute("min"), r = t.getAttribute("max");
+    let a;
     switch (e.type) {
       case "datetime-local":
-        r = "yyyy-MM-ddTHH:mm";
+        a = "yyyy-MM-ddTHH:mm";
         break;
       case "month":
-        r = "yyyy-MM";
+        a = "yyyy-MM";
         break;
       case "date":
       default:
-        r = "yyyy-MM-dd";
+        a = "yyyy-MM-dd";
         break;
     }
-    const a = {
-      format: r
+    const s = {
+      format: a
     };
-    return !n && !s || (n && (a.startdate = n), s && (a.enddate = s)), a;
+    return !n && !r || (n && (s.startdate = n), r && (s.enddate = r)), s;
   }
   paramsWeek(e) {
-    const t = e.element, n = t.getAttribute("min"), s = t.getAttribute("max"), r = {
+    const t = e.element, n = t.getAttribute("min"), r = t.getAttribute("max"), a = {
       format: "yyyy-MM-dd"
       // Week inputs use date format for API calls
     };
-    return n && (r.startdate = this.convertWeekToDate(n)), s && (r.enddate = this.convertWeekToDate(s)), r;
+    return n && (a.startdate = this.convertWeekToDate(n)), r && (a.enddate = this.convertWeekToDate(r)), a;
   }
   paramsNumber(e) {
-    const t = e.element, n = t.getAttribute("min"), s = t.getAttribute("max"), r = {};
-    return n && (r.min = parseInt(n, 10)), s && (r.max = parseInt(s, 10)), r;
+    const t = e.element, n = t.getAttribute("min"), r = t.getAttribute("max"), a = {};
+    return n && (a.min = parseInt(n, 10)), r && (a.max = parseInt(r, 10)), a;
   }
   // ============================================================================
   // MISC UTILITY FUNCTIONS
@@ -739,8 +754,8 @@ class F {
   }
   results() {
     const e = this.state.elements.filter(
-      (s) => s.value && !s.error
-    ), t = this.state.elements.filter((s) => s.error), n = {
+      (r) => r.value && !r.error
+    ), t = this.state.elements.filter((r) => r.error), n = {
       success: e.length,
       failed: t.length,
       elements: this.state.elements
@@ -763,7 +778,6 @@ export {
   M as AutofillStatus,
   C as fetchFunc,
   x as fetchFuncMulti,
-  A as fetchFuncSearch,
-  T as parseFunctionString
+  A as fetchFuncSearch
 };
 //# sourceMappingURL=gofakeit.es.js.map

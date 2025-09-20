@@ -93,10 +93,8 @@ export declare interface FetchFuncMultiRequest {
 }
 
 export declare interface FetchFuncMultiResponse {
-    success: boolean;
-    data?: FetchFuncMultiResponseItem[];
+    results?: FetchFuncMultiResponseItem[];
     error?: string;
-    status?: number;
 }
 
 export declare interface FetchFuncMultiResponseItem {
@@ -110,13 +108,11 @@ export declare interface FetchFuncParams {
 }
 
 export declare interface FetchFuncResponse {
-    success: boolean;
-    data?: string;
+    result?: string;
     error?: string;
-    status?: number;
 }
 
-export declare function fetchFuncSearch(requests: FetchFuncSearchRequest[]): Promise<FetchFuncSearchResponse>;
+export declare function fetchFuncSearch(requests: FetchFuncSearchRequest | FetchFuncSearchRequest[]): Promise<FetchFuncSearchResponse>;
 
 export declare interface FetchFuncSearchRequest {
     id: string;
@@ -124,10 +120,8 @@ export declare interface FetchFuncSearchRequest {
 }
 
 export declare interface FetchFuncSearchResponse {
-    success: boolean;
-    data?: FetchFuncSearchResponseItem | FetchFuncSearchResponseItem[];
+    results?: FetchFuncSearchResponseItem | FetchFuncSearchResponseItem[];
     error?: string;
-    status?: number;
 }
 
 export declare interface FetchFuncSearchResponseItem {
@@ -140,10 +134,5 @@ export declare interface FetchFuncSearchResult {
     score: number;
     reasons: string[];
 }
-
-export declare function parseFunctionString(func: string): {
-    func: string;
-    params: FetchFuncParams;
-};
 
 export { }
