@@ -47,7 +47,7 @@ export interface AutofillElement {
   type: string; // element type
   function: string; // function that will be used to autofill the element
   params?: Record<string, any>; // parameters for the function
-  search: string; // search query that will be used to autofill the element
+  search: string[]; // search queries that will be used to autofill the element
   value: string; // value of the autofill result
   error: string; // error message
 }
@@ -239,7 +239,7 @@ export class Autofill {
         element,
         type: this.getElementType(element),
         function: '',
-        search: this.getElementSearch(element as HTMLInputElement),
+        search: this.getElementSearch(element),
         value: '',
         error: '',
       });
@@ -280,13 +280,15 @@ export class Autofill {
     return 'unknown';
   }
 
-  // Get the comprehensive search string for an element
-  public getElementSearch(el: Element): string {
-    // Get label text from various sources
+  // Get search query parts for an element
+  public getElementSearch(el: Element): string[] {
+    const queries: string[] = [];
+
+    // Get label text from various sources (prioritized by relevance)
     const labelTexts: string[] = [];
     const id = el.id;
 
-    // aria-labelledby
+    // aria-labelledby (highest priority - explicit accessibility)
     const labelledBy = el.getAttribute('aria-labelledby');
     if (labelledBy) {
       labelledBy.split(/\s+/).forEach(ref => {
@@ -296,7 +298,7 @@ export class Autofill {
       });
     }
 
-    // explicit label[for]
+    // explicit label[for] (high priority - semantic association)
     if (id) {
       const lbl = document.querySelector(
         'label[for="' + id.replace(/"/g, '\\"') + '"]'
@@ -304,52 +306,58 @@ export class Autofill {
       if (lbl && lbl.textContent) labelTexts.push(lbl.textContent);
     }
 
-    // implicit parent label
+    // implicit parent label (medium priority)
     const closestLabel = el.closest('label');
     if (closestLabel && closestLabel.textContent)
       labelTexts.push(closestLabel.textContent);
 
-    // previous sibling label (common in some UIs)
+    // previous sibling label (lower priority)
     const prev = el.previousElementSibling as HTMLElement | null;
     if (prev && prev.tagName === 'LABEL' && prev.textContent)
       labelTexts.push(prev.textContent);
 
-    const labelText = labelTexts.join(' ').toLowerCase();
+    // Add each label text as a separate query
+    labelTexts.forEach(labelText => {
+      if (labelText && labelText.trim()) {
+        queries.push(labelText.trim().toLowerCase());
+      }
+    });
 
-    // Get additional element attributes for comprehensive search
+    // Get additional element attributes and add each as separate queries
     const type = el instanceof HTMLInputElement ? el.type.toLowerCase() : '';
-    const name = (el.getAttribute('name') || '').toLowerCase();
-    const elementId = (el.id || '').toLowerCase();
+    if (type && type.trim()) {
+      queries.push(type);
+    }
+
+    const name = el.getAttribute('name') || '';
+    if (name && name.trim()) {
+      queries.push(name.toLowerCase());
+    }
+
+    const elementId = el.id || '';
+    if (elementId && elementId.trim()) {
+      queries.push(elementId.toLowerCase());
+    }
+
     const placeholder =
-      el instanceof HTMLInputElement
-        ? (el.placeholder || '').toLowerCase()
-        : '';
+      el instanceof HTMLInputElement ? el.placeholder || '' : '';
+    if (placeholder && placeholder.trim()) {
+      queries.push(placeholder.toLowerCase());
+    }
+
     const autocomplete =
-      el instanceof HTMLInputElement
-        ? (el.autocomplete || '').toLowerCase()
-        : '';
-    const ariaLabel = (el.getAttribute('aria-label') || '').toLowerCase();
+      el instanceof HTMLInputElement ? el.autocomplete || '' : '';
+    if (autocomplete && autocomplete.trim()) {
+      queries.push(autocomplete.toLowerCase());
+    }
 
-    // Build a comprehensive search query with all available information
-    const queryParts = [
-      type,
-      name,
-      elementId,
-      placeholder,
-      autocomplete,
-      ariaLabel,
-      labelText,
-    ].filter(part => part && part.trim());
+    const ariaLabel = el.getAttribute('aria-label') || '';
+    if (ariaLabel && ariaLabel.trim()) {
+      queries.push(ariaLabel.toLowerCase());
+    }
 
-    // Join all parts with spaces to create a comprehensive search query
-    const searchQuery = queryParts
-      .join(' ')
-      .toLowerCase()
-      .replace(/[^\w\s]/g, ' ') // Remove special characters
-      .replace(/\s+/g, ' ') // Normalize whitespace
-      .trim();
-
-    return searchQuery;
+    // Filter out empty queries and return
+    return queries.filter(query => query && query.trim());
   }
 
   // ============================================================================
@@ -399,7 +407,7 @@ export class Autofill {
         `${elementsNeedingSearch.length} elements need function search`
       );
 
-      // Create search requests using existing search values from state
+      // Create search requests using separate query parts
       const searchRequests: FetchFuncSearchRequest[] =
         elementsNeedingSearch.map((el, index) => {
           return {
@@ -407,16 +415,25 @@ export class Autofill {
               el.element.id ||
               el.element.getAttribute('name') ||
               `input_${index}`,
-            query: el.search,
+            queries: el.search,
           };
         });
 
       const response = await fetchFuncSearch(searchRequests);
 
       if (response.success && response.data) {
+        // Handle both single object and array responses
+        const searchResults = Array.isArray(response.data)
+          ? response.data
+          : [response.data];
+
         // Map results back to elements - use first result regardless of score
-        for (let i = 0; i < response.data.length; i++) {
-          const searchResult = response.data[i];
+        for (
+          let i = 0;
+          i < searchResults.length && i < elementsNeedingSearch.length;
+          i++
+        ) {
+          const searchResult = searchResults[i];
           const el = elementsNeedingSearch[i];
 
           if (searchResult.results && searchResult.results.length > 0) {
@@ -426,6 +443,17 @@ export class Autofill {
             // Fallback to type-specific function if no search results
             el.function = this.getElementFunctionFallback(el.element);
           }
+        }
+
+        // If we have more elements than search results, use fallback for remaining elements
+        for (
+          let i = searchResults.length;
+          i < elementsNeedingSearch.length;
+          i++
+        ) {
+          elementsNeedingSearch[i].function = this.getElementFunctionFallback(
+            elementsNeedingSearch[i].element
+          );
         }
       } else {
         // Fallback to type-specific functions if search fails
@@ -475,7 +503,6 @@ export class Autofill {
       'checkbox',
       'radio',
       'select',
-      'number',
       'range',
       'file',
       'button',

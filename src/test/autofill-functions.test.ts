@@ -1023,35 +1023,50 @@ describe('Autofill Individual Functions', () => {
   });
 
   describe('should handle number inputs', () => {
-    it('should use number function for simple number input', () => {
+    it('should use search for number input with data-gofakeit="true"', () => {
       document.body.innerHTML = '<input type="number" data-gofakeit="true" />';
       const element = document.querySelector('input')!;
       const result = autofill.getElementFunction(element);
-      expect(result).toBe('number');
+      expect(result).toBe(null); // Number inputs now use search when data-gofakeit="true"
     });
 
-    it('should use number function for number input with min attribute', () => {
+    it('should use search for number input with min attribute and data-gofakeit="true"', () => {
       document.body.innerHTML =
         '<input type="number" min="10" data-gofakeit="true" />';
       const element = document.querySelector('input')!;
       const result = autofill.getElementFunction(element);
-      expect(result).toBe('number');
+      expect(result).toBe(null); // Number inputs now use search when data-gofakeit="true"
     });
 
-    it('should use number function for number input with max attribute', () => {
+    it('should use search for number input with max attribute and data-gofakeit="true"', () => {
       document.body.innerHTML =
         '<input type="number" max="100" data-gofakeit="true" />';
       const element = document.querySelector('input')!;
       const result = autofill.getElementFunction(element);
-      expect(result).toBe('number');
+      expect(result).toBe(null); // Number inputs now use search when data-gofakeit="true"
     });
 
-    it('should use number function for number input with both min and max attributes', () => {
+    it('should use search for number input with both min and max attributes and data-gofakeit="true"', () => {
       document.body.innerHTML =
         '<input type="number" min="10" max="100" data-gofakeit="true" />';
       const element = document.querySelector('input')!;
       const result = autofill.getElementFunction(element);
-      expect(result).toBe('number');
+      expect(result).toBe(null); // Number inputs now use search when data-gofakeit="true"
+    });
+
+    it('should use search for number input without data-gofakeit', () => {
+      document.body.innerHTML = '<input type="number" />';
+      const element = document.querySelector('input')!;
+      const result = autofill.getElementFunction(element);
+      expect(result).toBe(null); // Number inputs now use search by default
+    });
+
+    it('should use specific function for number input with data-gofakeit="number"', () => {
+      document.body.innerHTML =
+        '<input type="number" data-gofakeit="number" />';
+      const element = document.querySelector('input')!;
+      const result = autofill.getElementFunction(element);
+      expect(result).toBe('number'); // Specific function overrides search behavior
     });
 
     it('should generate correct parameters for number input with min and max', async () => {
