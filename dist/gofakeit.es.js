@@ -1,39 +1,46 @@
-const y = "https://api.gofakeit.com/funcs";
-async function C(c, e) {
-  const { func: t, params: n } = k(c), r = { ...n, ...e || {} };
-  try {
-    return {
-      result: await w(
-        "POST",
-        `${y}/${t}`,
-        r
-      )
-    };
-  } catch (a) {
-    return {
-      error: a instanceof Error ? a.message : "Unknown error"
-    };
+(function() {
+  const e = document.createElement("link").relList;
+  if (e && e.supports && e.supports("modulepreload")) return;
+  for (const s of document.querySelectorAll('link[rel="modulepreload"]')) n(s);
+  new MutationObserver((s) => {
+    for (const o of s)
+      if (o.type === "childList")
+        for (const r of o.addedNodes) r.tagName === "LINK" && r.rel === "modulepreload" && n(r);
+  }).observe(document, {
+    childList: !0,
+    subtree: !0
+  });
+  function t(s) {
+    const o = {};
+    return s.integrity && (o.integrity = s.integrity), s.referrerPolicy && (o.referrerPolicy = s.referrerPolicy), s.crossOrigin === "use-credentials" ? o.credentials = "include" : s.crossOrigin === "anonymous" ? o.credentials = "omit" : o.credentials = "same-origin", o;
   }
-}
-async function x(c) {
-  if (c.length === 0)
+  function n(s) {
+    if (s.ep) return;
+    s.ep = !0;
+    const o = t(s);
+    fetch(s.href, o);
+  }
+})();
+const x = "https://api.gofakeit.com/funcs";
+async function I(i) {
+  if (i.length === 0)
     return {
       error: "No functions provided"
     };
   try {
-    const e = c.map(
-      (n, r) => {
-        const { func: a, id: s, params: o } = n, { func: i, params: u } = k(a), d = { ...u, ...o || {} };
+    const e = i.map(
+      (n, s) => {
+        const { func: o, id: r, params: a } = n, { func: c, params: l } = $(o), g = { ...l, ...a || {} };
         return {
-          id: s || `req_${r}`,
-          func: i,
-          params: d
+          id: r || `req_${s}`,
+          func: c,
+          params: g
         };
       }
     );
-    return { results: await w(
+    return { results: await C(
       "POST",
-      `${y}/multi`,
+      `${x}/multi`,
       e
     ) };
   } catch (e) {
@@ -42,74 +49,74 @@ async function x(c) {
     };
   }
 }
-async function A(c) {
-  const e = Array.isArray(c) ? c : [c];
+async function M(i) {
+  const e = Array.isArray(i) ? i : [i];
   if (e.length === 0)
     return {
       error: "No search requests provided"
     };
   try {
-    const t = await w(
+    const t = await C(
       "POST",
-      `${y}/search`,
+      `${x}/search`,
       e
     );
-    return Array.isArray(c) ? { results: t } : { results: t[0] };
+    return Array.isArray(i) ? { results: t } : { results: t[0] };
   } catch (t) {
     return {
       error: t instanceof Error ? t.message : "Unknown error"
     };
   }
 }
-async function w(c, e, t) {
+async function C(i, e, t) {
   try {
     const n = {
-      method: c,
+      method: i,
       headers: {
         "Content-Type": "application/json"
       }
     };
-    c === "POST" && t && (n.body = JSON.stringify(t));
-    const r = await fetch(e, n);
-    if (!r.ok)
-      throw new Error(`HTTP error! status: ${r.status}`);
-    return e.includes("/multi") || e.includes("/search") ? await r.json() : await r.text();
+    i === "POST" && t && (n.body = JSON.stringify(t));
+    const s = await fetch(e, n);
+    if (!s.ok)
+      throw new Error(`HTTP error! status: ${s.status}`);
+    return e.includes("/multi") || e.includes("/search") ? await s.json() : await s.text();
   } catch (n) {
     throw new Error(n instanceof Error ? n.message : "Unknown error");
   }
 }
-function k(c) {
-  const e = c.indexOf("?");
+function $(i) {
+  const e = i.indexOf("?");
   if (e !== -1) {
-    const t = c.substring(0, e), n = c.substring(e + 1), r = {}, a = new URLSearchParams(n);
-    for (const [s, o] of a.entries()) {
-      const i = parseFloat(o);
-      r[s] = isNaN(i) ? o : i;
+    const t = i.substring(0, e), n = i.substring(e + 1), s = {}, o = new URLSearchParams(n);
+    for (const [r, a] of o.entries()) {
+      const c = parseFloat(a);
+      s[r] = isNaN(c) ? a : c;
     }
-    return { func: t, params: r };
+    return { func: t, params: s };
   } else
-    return { func: c, params: {} };
+    return { func: i, params: {} };
 }
-const E = {
+const w = {
   primary: "#ffa000",
   white: "#ffffff",
   error: "#ff3860",
   text: "#333333"
-}, v = {
+}, T = {
   // px
   half: 8,
   // px
   quarter: 4
   // px
-}, L = {
+}, F = {
   radius: 4
-}, S = {
+}, k = {
   size: 12,
   // px
   family: "Helvetica, Arial, sans-serif"
 };
-var M = /* @__PURE__ */ ((c) => (c.STARTING = "starting", c.FOUND = "found", c.DETERMINED = "determined", c.GENERATED = "generated", c.SET = "set", c.COMPLETED = "completed", c.ERROR = "error", c))(M || {});
-class F {
+var L = /* @__PURE__ */ ((i) => (i.STARTING = "starting", i.FOUND = "found", i.DETERMINED = "determined", i.GENERATED = "generated", i.SET = "set", i.COMPLETED = "completed", i.ERROR = "error", i))(L || {});
+class E {
   settings;
   state;
   constructor(e = {}) {
@@ -161,21 +168,21 @@ class F {
     const t = [];
     if (e) {
       if (typeof e == "string") {
-        const s = document.querySelectorAll(e);
-        if (s.length === 0) {
+        const r = document.querySelectorAll(e);
+        if (r.length === 0) {
           this.debug("error", `No element found with selector: "${e}"`), this.updateStatus(
             "error"
             /* ERROR */
           ), this.state.elements = [];
           return;
         }
-        s.forEach((o) => {
-          if (o instanceof HTMLInputElement || o instanceof HTMLTextAreaElement || o instanceof HTMLSelectElement) {
-            if (this.shouldSkipElement(o)) return;
-            t.push(o);
+        r.forEach((a) => {
+          if (a instanceof HTMLInputElement || a instanceof HTMLTextAreaElement || a instanceof HTMLSelectElement) {
+            if (this.shouldSkipElement(a)) return;
+            t.push(a);
           } else
-            o.querySelectorAll("input, textarea, select").forEach((d) => {
-              this.shouldSkipElement(d) || t.push(d);
+            a.querySelectorAll("input, textarea, select").forEach((g) => {
+              this.shouldSkipElement(g) || t.push(g);
             });
         });
       } else if (e instanceof HTMLElement || e instanceof Element)
@@ -186,35 +193,35 @@ class F {
           }
           t.push(e);
         } else
-          e.querySelectorAll("input, textarea, select").forEach((i) => {
-            this.shouldSkipElement(i) || t.push(i);
+          e.querySelectorAll("input, textarea, select").forEach((c) => {
+            this.shouldSkipElement(c) || t.push(c);
           });
     } else
-      document.querySelectorAll("input, textarea, select").forEach((i) => {
-        this.shouldSkipElement(i) || t.push(i);
+      document.querySelectorAll("input, textarea, select").forEach((c) => {
+        this.shouldSkipElement(c) || t.push(c);
       });
-    const n = this.settings.mode ?? "auto", r = [];
-    for (const s of t) {
-      const o = s.getAttribute("data-gofakeit");
-      typeof o == "string" && o.trim().toLowerCase() === "false" || n === "manual" && !o || r.push(s);
+    const n = this.settings.mode ?? "auto", s = [];
+    for (const r of t) {
+      const a = r.getAttribute("data-gofakeit");
+      typeof a == "string" && a.trim().toLowerCase() === "false" || n === "manual" && !a || s.push(r);
     }
-    const a = [];
-    for (const s of r) {
-      const o = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-      a.push({
-        id: o,
-        name: s.getAttribute("name") || "",
-        element: s,
-        type: this.getElementType(s),
+    const o = [];
+    for (const r of s) {
+      const a = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      o.push({
+        id: a,
+        name: r.getAttribute("name") || "",
+        element: r,
+        type: this.getElementType(r),
         function: "",
-        search: this.getElementSearch(s),
+        search: this.getElementSearch(r),
         value: "",
         error: ""
       });
     }
-    this.state.elements = a, a.length > 0 && this.debug(
+    this.state.elements = o, o.length > 0 && this.debug(
       "info",
-      `Found ${a.length} elements to generate data for`
+      `Found ${o.length} elements to generate data for`
     );
   }
   // Check if an element should be skipped (hidden, disabled, or readonly)
@@ -227,34 +234,34 @@ class F {
   }
   // Get search query parts for an element
   getElementSearch(e) {
-    const t = [], n = [], r = e.id, a = e.getAttribute("aria-labelledby");
-    if (a && a.split(/\s+/).forEach((l) => {
-      const f = document.getElementById(l);
+    const t = [], n = [], s = e.id, o = e.getAttribute("aria-labelledby");
+    if (o && o.split(/\s+/).forEach((u) => {
+      const f = document.getElementById(u);
       f && f.textContent && n.push(f.textContent);
-    }), r) {
-      const l = document.querySelector(
-        'label[for="' + r.replace(/"/g, '\\"') + '"]'
+    }), s) {
+      const u = document.querySelector(
+        'label[for="' + s.replace(/"/g, '\\"') + '"]'
       );
-      l && l.textContent && n.push(l.textContent);
+      u && u.textContent && n.push(u.textContent);
     }
-    const s = e.closest("label");
-    s && s.textContent && n.push(s.textContent);
-    const o = e.previousElementSibling;
-    o && o.tagName === "LABEL" && o.textContent && n.push(o.textContent), n.forEach((l) => {
-      l && l.trim() && t.push(l.trim().toLowerCase());
+    const r = e.closest("label");
+    r && r.textContent && n.push(r.textContent);
+    const a = e.previousElementSibling;
+    a && a.tagName === "LABEL" && a.textContent && n.push(a.textContent), n.forEach((u) => {
+      u && u.trim() && t.push(u.trim().toLowerCase());
     });
-    const i = e instanceof HTMLInputElement ? e.type.toLowerCase() : "";
-    i && i.trim() && t.push(i);
-    const u = e.getAttribute("name") || "";
-    u && u.trim() && t.push(u.toLowerCase());
-    const d = e.id || "";
+    const c = e instanceof HTMLInputElement ? e.type.toLowerCase() : "";
+    c && c.trim() && t.push(c);
+    const l = e.getAttribute("name") || "";
+    l && l.trim() && t.push(l.toLowerCase());
+    const g = e.id || "";
+    g && g.trim() && t.push(g.toLowerCase());
+    const d = e instanceof HTMLInputElement && e.placeholder || "";
     d && d.trim() && t.push(d.toLowerCase());
-    const h = e instanceof HTMLInputElement && e.placeholder || "";
-    h && h.trim() && t.push(h.toLowerCase());
     const b = e instanceof HTMLInputElement && e.autocomplete || "";
     b && b.trim() && t.push(b.toLowerCase());
     const p = e.getAttribute("aria-label") || "";
-    return p && p.trim() && t.push(p.toLowerCase()), t.filter((l) => l && l.trim());
+    return p && p.trim() && t.push(p.toLowerCase()), t.filter((u) => u && u.trim());
   }
   // ============================================================================
   // Step 2: Determine functions for elements that need search
@@ -265,37 +272,37 @@ class F {
       `Determining functions for ${this.state.elements.length} elements`
     ), e) {
       this.debug("info", `Using function override: ${e}`);
-      for (const r of this.state.elements)
-        r.function = e, t && (r.params = t);
+      for (const s of this.state.elements)
+        s.function = e, t && (s.params = t);
       return;
     }
     const n = [];
-    for (const r of this.state.elements) {
-      const a = this.getElementFunction(r.element);
-      a !== null ? r.function = a : n.push(r);
+    for (const s of this.state.elements) {
+      const o = this.getElementFunction(s.element);
+      o !== null ? s.function = o : n.push(s);
     }
     if (n.length > 0) {
       this.debug(
         "info",
         `${n.length} elements need function search`
       );
-      const r = n.map((s, o) => ({
-        id: s.element.id || s.element.getAttribute("name") || `input_${o}`,
-        queries: s.search
-      })), a = await A(r);
-      if (a.results && !a.error) {
-        const s = Array.isArray(a.results) ? a.results : [a.results];
-        for (let o = 0; o < s.length && o < n.length; o++) {
-          const i = s[o], u = n[o];
-          i.results && i.results.length > 0 ? u.function = i.results[0].name : u.function = this.getElementFunctionFallback(u.element);
+      const s = n.map((r, a) => ({
+        id: r.element.id || r.element.getAttribute("name") || `input_${a}`,
+        queries: r.search
+      })), o = await M(s);
+      if (o.results && !o.error) {
+        const r = Array.isArray(o.results) ? o.results : [o.results];
+        for (let a = 0; a < r.length && a < n.length; a++) {
+          const c = r[a], l = n[a];
+          c.results && c.results.length > 0 ? l.function = c.results[0].name : l.function = this.getElementFunctionFallback(l.element);
         }
-        for (let o = s.length; o < n.length; o++)
-          n[o].function = this.getElementFunctionFallback(
-            n[o].element
+        for (let a = r.length; a < n.length; a++)
+          n[a].function = this.getElementFunctionFallback(
+            n[a].element
           );
       } else
-        for (const s of n)
-          s.function = this.getElementFunctionFallback(s.element);
+        for (const r of n)
+          r.function = this.getElementFunctionFallback(r.element);
     }
     this.debug("info", "Function determination complete");
   }
@@ -331,8 +338,8 @@ class F {
         case "datetime-local":
         case "month":
         case "week": {
-          const n = e.getAttribute("min"), r = e.getAttribute("max");
-          return n || r ? "daterange" : "date";
+          const n = e.getAttribute("min"), s = e.getAttribute("max");
+          return n || s ? "daterange" : "date";
         }
         case "time":
           return "time";
@@ -350,7 +357,7 @@ class F {
           return "word";
         case "number":
         case "range": {
-          const n = e.getAttribute("min"), r = e.getAttribute("max");
+          const n = e.getAttribute("min"), s = e.getAttribute("max");
           return "number";
         }
         case "color":
@@ -377,7 +384,7 @@ class F {
   async getElementValues() {
     this.debug("info", "Starting value generation...");
     const e = this.state.elements.filter(
-      (s) => s.function && !s.error
+      (r) => r.function && !r.error
     );
     if (e.length === 0) {
       this.debug("info", "No elements need value generation");
@@ -387,62 +394,62 @@ class F {
       "info",
       `Getting values for ${e.length} elements from API`
     );
-    const t = [], n = [], r = [];
-    for (const s of e) {
-      if (s.type === "radio" && s.name && n.includes(s.name))
+    const t = [], n = [], s = [];
+    for (const r of e) {
+      if (r.type === "radio" && r.name && n.includes(r.name))
         continue;
-      const o = {
-        id: s.id,
-        func: s.function
+      const a = {
+        id: r.id,
+        func: r.function
       };
-      if (s.params)
-        o.params = s.params;
+      if (r.params)
+        a.params = r.params;
       else
-        switch (s.type) {
+        switch (r.type) {
           case "select":
-            o.params = this.paramsSelect(s.element);
+            a.params = this.paramsSelect(r.element);
             break;
           case "radio": {
-            const i = e.filter(
-              (u) => u.type === "radio" && u.name === s.name
+            const c = e.filter(
+              (l) => l.type === "radio" && l.name === r.name
             );
-            o.params = this.paramsRadio(i), s.name && n.push(s.name);
+            a.params = this.paramsRadio(c), r.name && n.push(r.name);
             break;
           }
           case "date":
           case "datetime-local":
           case "month": {
-            const i = this.paramsDate(s);
-            i && (i.startdate || i.enddate) && (o.func = "daterange"), o.params = i;
+            const c = this.paramsDate(r);
+            c && (c.startdate || c.enddate) && (a.func = "daterange"), a.params = c;
             break;
           }
           case "time": {
-            o.params = { format: "HH:mm" };
+            a.params = { format: "HH:mm" };
             break;
           }
           case "week": {
-            const i = this.paramsWeek(s);
-            i && (i.startdate || i.enddate) ? (o.func = "daterange", o.params = i) : (o.func = "date", o.params = i);
+            const c = this.paramsWeek(r);
+            c && (c.startdate || c.enddate) ? (a.func = "daterange", a.params = c) : (a.func = "date", a.params = c);
             break;
           }
           case "number":
           case "range": {
-            const i = this.paramsNumber(s);
-            o.params = i;
+            const c = this.paramsNumber(r);
+            a.params = c;
             break;
           }
         }
-      t.push(o), r.push(s);
+      t.push(a), s.push(r);
     }
-    const a = await x(t);
-    if (a.results && !a.error)
-      for (let s = 0; s < a.results.length; s++) {
-        const o = a.results[s], i = r[s];
-        o.value !== null && o.value !== void 0 ? i.value = String(o.value) : o.error ? i.error = o.error : i.error = "Unknown API error";
+    const o = await I(t);
+    if (o.results && !o.error)
+      for (let r = 0; r < o.results.length; r++) {
+        const a = o.results[r], c = s[r];
+        a.value !== null && a.value !== void 0 ? c.value = String(a.value) : a.error ? c.error = a.error : c.error = "Unknown API error";
       }
     else
-      for (const s of e)
-        s.error = a.error || "API request failed";
+      for (const r of e)
+        r.error = o.error || "API request failed";
     this.debug("info", "Value generation complete");
   }
   // ============================================================================
@@ -458,37 +465,37 @@ class F {
     const e = [];
     for (let t = 0; t < this.state.elements.length; t++) {
       const n = this.state.elements[t];
-      let r = null;
+      let s = null;
       switch (n.type) {
         case "radio":
-          n.name && !e.includes(n.name) && (e.push(n.name), r = this.setRadioGroup(n));
+          n.name && !e.includes(n.name) && (e.push(n.name), s = this.setRadioGroup(n));
           break;
         default:
-          n.value !== void 0 && n.value !== null && !n.error && this.setElementValue(n), r = n;
+          n.value !== void 0 && n.value !== null && !n.error && this.setElementValue(n), s = n;
           break;
       }
-      this.settings.badges && this.settings.badges > 0 && r && this.showBadge(r), this.settings.stagger && this.settings.stagger > 0 && t < this.state.elements.length - 1 && await new Promise(
-        (a) => setTimeout(a, this.settings.stagger)
+      this.settings.badges && this.settings.badges > 0 && s && this.showBadge(s), this.settings.stagger && this.settings.stagger > 0 && t < this.state.elements.length - 1 && await new Promise(
+        (o) => setTimeout(o, this.settings.stagger)
       );
     }
     this.debug("info", "Value application complete");
   }
   setRadioGroup(e) {
     const n = this.state.elements.filter(
-      (r) => r.type === "radio" && r.name === e.name
-    ).find((r) => {
-      const a = r.element;
-      if ((a.hasAttribute("value") || a.value !== "on") && a.value === e.value)
+      (s) => s.type === "radio" && s.name === e.name
+    ).find((s) => {
+      const o = s.element;
+      if ((o.hasAttribute("value") || o.value !== "on") && o.value === e.value)
         return !0;
-      const o = document.querySelector(`label[for="${a.id}"]`);
-      return !!(o && o.textContent && o.textContent.trim() === e.value || a.id === e.value);
+      const a = document.querySelector(`label[for="${o.id}"]`);
+      return !!(a && a.textContent && a.textContent.trim() === e.value || o.id === e.value);
     });
     if (n && !n.error) {
-      const r = n.element.name;
-      return r && document.querySelectorAll(
-        `input[type="radio"][name="${r}"]`
-      ).forEach((s) => {
-        s.checked = !1;
+      const s = n.element.name;
+      return s && document.querySelectorAll(
+        `input[type="radio"][name="${s}"]`
+      ).forEach((r) => {
+        r.checked = !1;
       }), n.element.checked = !0, n.element.dispatchEvent(
         new Event("change", { bubbles: !0 })
       ), n;
@@ -535,35 +542,35 @@ class F {
   }
   setRadioValue(e, t) {
     if (t === "true" || t === !0) {
-      const r = e.name;
-      r && document.querySelectorAll(
-        `input[type="radio"][name="${r}"]`
-      ).forEach((s) => {
-        s !== e && (s.checked = !1);
+      const s = e.name;
+      s && document.querySelectorAll(
+        `input[type="radio"][name="${s}"]`
+      ).forEach((r) => {
+        r !== e && (r.checked = !1);
       }), e.checked = !0, e.dispatchEvent(new Event("change", { bubbles: !0 }));
     } else
       e.checked = !1, e.dispatchEvent(new Event("change", { bubbles: !0 }));
   }
   setSelectValue(e, t) {
     if (Array.from(e.options).find(
-      (s) => s.value === t
+      (r) => r.value === t
     )) {
       e.value = t, e.dispatchEvent(new Event("change", { bubbles: !0 }));
       return;
     }
-    const r = Array.from(e.options).find(
-      (s) => s.textContent?.toLowerCase().includes(t.toLowerCase())
+    const s = Array.from(e.options).find(
+      (r) => r.textContent?.toLowerCase().includes(t.toLowerCase())
     );
-    if (r) {
-      e.value = r.value, e.dispatchEvent(new Event("change", { bubbles: !0 }));
+    if (s) {
+      e.value = s.value, e.dispatchEvent(new Event("change", { bubbles: !0 }));
       return;
     }
-    const a = Array.from(e.options).filter(
-      (s) => s.value && s.value.trim() !== ""
+    const o = Array.from(e.options).filter(
+      (r) => r.value && r.value.trim() !== ""
     );
-    if (a.length > 0) {
-      const s = a[Math.floor(Math.random() * a.length)];
-      e.value = s.value, e.dispatchEvent(new Event("change", { bubbles: !0 }));
+    if (o.length > 0) {
+      const r = o[Math.floor(Math.random() * o.length)];
+      e.value = r.value, e.dispatchEvent(new Event("change", { bubbles: !0 }));
     }
   }
   showBadge(e) {
@@ -572,49 +579,49 @@ class F {
     t.id = `gofakeit-badge-${e.id}`;
     const n = !!(e.error && e.error.trim() !== "");
     t.textContent = n ? e.error : e.function;
-    const r = {
+    const s = {
       position: "fixed",
       zIndex: "999999",
-      padding: `${v.quarter}px ${v.half}px`,
-      borderRadius: `${L.radius}px`,
-      fontSize: `${S.size}px`,
+      padding: `${T.quarter}px ${T.half}px`,
+      borderRadius: `${F.radius}px`,
+      fontSize: `${k.size}px`,
       fontWeight: "bold",
-      fontFamily: S.family,
+      fontFamily: k.family,
       boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
       pointerEvents: "none",
       userSelect: "none",
       transition: "opacity 0.3s ease-in-out",
       opacity: "0",
       whiteSpace: "nowrap",
-      backgroundColor: n ? E.error : E.primary,
-      color: n ? E.white : E.text
+      backgroundColor: n ? w.error : w.primary,
+      color: n ? w.white : w.text
     };
-    Object.assign(t.style, r), document.body.appendChild(t);
-    let a = null, s = null, o = !0, i = 0;
-    const u = 100, d = this.getScrollableParents(e.element), h = /* @__PURE__ */ new Map(), b = (l) => {
-      const f = l.getBoundingClientRect();
+    Object.assign(t.style, s), document.body.appendChild(t);
+    let o = null, r = null, a = !0, c = 0;
+    const l = 100, g = this.getScrollableParents(e.element), d = /* @__PURE__ */ new Map(), b = (u) => {
+      const f = u.getBoundingClientRect();
       if (f.top < 0 || f.left < 0 || f.bottom > window.innerHeight || f.right > window.innerWidth)
         return !1;
-      for (const g of d) {
-        let m = h.get(g);
-        if (m || (m = g.getBoundingClientRect(), h.set(g, m)), f.top < m.top || f.left < m.left || f.bottom > m.bottom || f.right > m.right)
+      for (const y of g) {
+        let h = d.get(y);
+        if (h || (h = y.getBoundingClientRect(), d.set(y, h)), f.top < h.top || f.left < h.left || f.bottom > h.bottom || f.right > h.right)
           return !1;
       }
       return !0;
     }, p = () => {
-      const l = e.element.getBoundingClientRect();
-      if (!a || l.top !== a.top || l.left !== a.left || l.width !== a.width || l.height !== a.height) {
-        a = l;
-        const g = performance.now();
-        if (g - i > u && (o = b(e.element), i = g, h.clear()), o) {
-          const m = l.top - 30, T = l.left;
-          t.style.cssText += `top:${m}px;left:${T}px;display:block;`;
+      const u = e.element.getBoundingClientRect();
+      if (!o || u.top !== o.top || u.left !== o.left || u.width !== o.width || u.height !== o.height) {
+        o = u;
+        const y = performance.now();
+        if (y - c > l && (a = b(e.element), c = y, d.clear()), a) {
+          const h = u.top - 30, A = u.left;
+          t.style.cssText += `top:${h}px;left:${A}px;display:block;`;
         } else
           t.style.display = "none";
       }
-      s = requestAnimationFrame(p);
+      r = requestAnimationFrame(p);
     };
-    p(), t._animationId = s, requestAnimationFrame(() => {
+    p(), t._animationId = r, requestAnimationFrame(() => {
       t.style.opacity = "1";
     }), setTimeout(() => {
       this.removeBadge(e.id);
@@ -625,8 +632,8 @@ class F {
     const t = [];
     let n = e.parentElement;
     for (; n && n !== document.body; ) {
-      const r = getComputedStyle(n), a = r.overflow + r.overflowY + r.overflowX;
-      (a.includes("scroll") || a.includes("auto")) && t.push(n), n = n.parentElement;
+      const s = getComputedStyle(n), o = s.overflow + s.overflowY + s.overflowX;
+      (o.includes("scroll") || o.includes("auto")) && t.push(n), n = n.parentElement;
     }
     return t;
   }
@@ -653,11 +660,11 @@ class F {
   }
   paramsRadio(e) {
     const t = e.map((n) => {
-      const r = n.element;
-      if (r.hasAttribute("value") || r.value && r.value.trim() !== "" && r.value !== "on")
-        return r.value;
-      const s = document.querySelector(`label[for="${r.id}"]`);
-      return s && s.textContent ? s.textContent.trim() : r.id;
+      const s = n.element;
+      if (s.hasAttribute("value") || s.value && s.value.trim() !== "" && s.value !== "on")
+        return s.value;
+      const r = document.querySelector(`label[for="${s.id}"]`);
+      return r && r.textContent ? r.textContent.trim() : s.id;
     }).filter((n) => n !== "");
     if (t.length > 0)
       return {
@@ -666,10 +673,10 @@ class F {
   }
   convertDateToWeek(e) {
     try {
-      const t = /* @__PURE__ */ new Date(e + "T00:00:00"), n = t.getFullYear(), r = new Date(n, 0, 1), a = Math.floor(
-        (t.getTime() - r.getTime()) / (1440 * 60 * 1e3)
-      ), s = Math.ceil((a + r.getDay() + 1) / 7);
-      return `${n}-W${s.toString().padStart(2, "0")}`;
+      const t = /* @__PURE__ */ new Date(e + "T00:00:00"), n = t.getFullYear(), s = new Date(n, 0, 1), o = Math.floor(
+        (t.getTime() - s.getTime()) / (1440 * 60 * 1e3)
+      ), r = Math.ceil((o + s.getDay() + 1) / 7);
+      return `${n}-W${r.toString().padStart(2, "0")}`;
     } catch {
       return `${(/* @__PURE__ */ new Date()).getFullYear()}-W01`;
     }
@@ -679,44 +686,44 @@ class F {
       const t = e.match(/^(\d{4})-W(\d{2})$/);
       if (!t)
         throw new Error("Invalid week format");
-      const n = parseInt(t[1]), r = parseInt(t[2]), a = new Date(n, 0, 1), s = (r - 1) * 7, o = new Date(
-        a.getTime() + s * 24 * 60 * 60 * 1e3
-      ), i = (o.getMonth() + 1).toString().padStart(2, "0"), u = o.getDate().toString().padStart(2, "0");
-      return `${n}-${i}-${u}`;
+      const n = parseInt(t[1]), s = parseInt(t[2]), o = new Date(n, 0, 1), r = (s - 1) * 7, a = new Date(
+        o.getTime() + r * 24 * 60 * 60 * 1e3
+      ), c = (a.getMonth() + 1).toString().padStart(2, "0"), l = a.getDate().toString().padStart(2, "0");
+      return `${n}-${c}-${l}`;
     } catch {
       return `${(/* @__PURE__ */ new Date()).getFullYear()}-01-01`;
     }
   }
   paramsDate(e) {
-    const t = e.element, n = t.getAttribute("min"), r = t.getAttribute("max");
-    let a;
+    const t = e.element, n = t.getAttribute("min"), s = t.getAttribute("max");
+    let o;
     switch (e.type) {
       case "datetime-local":
-        a = "yyyy-MM-ddTHH:mm";
+        o = "yyyy-MM-ddTHH:mm";
         break;
       case "month":
-        a = "yyyy-MM";
+        o = "yyyy-MM";
         break;
       case "date":
       default:
-        a = "yyyy-MM-dd";
+        o = "yyyy-MM-dd";
         break;
     }
-    const s = {
-      format: a
+    const r = {
+      format: o
     };
-    return !n && !r || (n && (s.startdate = n), r && (s.enddate = r)), s;
+    return !n && !s || (n && (r.startdate = n), s && (r.enddate = s)), r;
   }
   paramsWeek(e) {
-    const t = e.element, n = t.getAttribute("min"), r = t.getAttribute("max"), a = {
+    const t = e.element, n = t.getAttribute("min"), s = t.getAttribute("max"), o = {
       format: "yyyy-MM-dd"
       // Week inputs use date format for API calls
     };
-    return n && (a.startdate = this.convertWeekToDate(n)), r && (a.enddate = this.convertWeekToDate(r)), a;
+    return n && (o.startdate = this.convertWeekToDate(n)), s && (o.enddate = this.convertWeekToDate(s)), o;
   }
   paramsNumber(e) {
-    const t = e.element, n = t.getAttribute("min"), r = t.getAttribute("max"), a = {};
-    return n && (a.min = parseInt(n, 10)), r && (a.max = parseInt(r, 10)), a;
+    const t = e.element, n = t.getAttribute("min"), s = t.getAttribute("max"), o = {};
+    return n && (o.min = parseInt(n, 10)), s && (o.max = parseInt(s, 10)), o;
   }
   // ============================================================================
   // MISC UTILITY FUNCTIONS
@@ -754,8 +761,8 @@ class F {
   }
   results() {
     const e = this.state.elements.filter(
-      (r) => r.value && !r.error
-    ), t = this.state.elements.filter((r) => r.error), n = {
+      (s) => s.value && !s.error
+    ), t = this.state.elements.filter((s) => s.error), n = {
       success: e.length,
       failed: t.length,
       elements: this.state.elements
@@ -773,11 +780,233 @@ class F {
     ) : this.debug("warning", "No fields were processed"), n;
   }
 }
-export {
-  F as Autofill,
-  M as AutofillStatus,
-  C as fetchFunc,
-  x as fetchFuncMulti,
-  A as fetchFuncSearch
+function B() {
+  const i = document.getElementById("sidebar"), e = document.getElementById("sidebarToggle"), t = document.getElementById("sidebarOverlay");
+  function n() {
+    i.classList.add("open"), t.classList.add("active"), e.classList.add("active"), document.body.style.overflow = "hidden";
+  }
+  function s() {
+    i.classList.remove("open"), t.classList.remove("active"), e.classList.remove("active"), document.body.style.overflow = "";
+  }
+  e && e.addEventListener("click", () => {
+    i.classList.contains("open") ? s() : n();
+  }), t && t.addEventListener("click", s), document.addEventListener("keydown", (a) => {
+    a.key === "Escape" && i.classList.contains("open") && s();
+  });
+  function o() {
+    window.innerWidth <= 768 && n();
+  }
+  document.querySelectorAll(
+    'button[onclick*="autofill"]'
+  ).forEach((a) => {
+    a.addEventListener("click", o);
+  });
+}
+document.addEventListener("DOMContentLoaded", B);
+function v(i, e = 0) {
+  if (!i)
+    return;
+  if (window.innerWidth <= 768) {
+    const n = document.querySelector(".mobile-header"), r = (n ? n.offsetHeight : 60) + 16, a = i.style.scrollMarginTop;
+    i.style.scrollMarginTop = r + "px", i.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    }), setTimeout(() => {
+      i.style.scrollMarginTop = a;
+    }, 500);
+  } else
+    i.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+}
+window.autofill = async (i) => {
+  try {
+    const e = S();
+    if (i)
+      if (typeof i == "string") {
+        const t = document.querySelector(i);
+        t ? (v(t), setTimeout(async () => {
+          await new E(e).fill(i), m(
+            `✅ ${i} section filled successfully!`,
+            "success"
+          );
+        }, 500)) : m("❌ Element not found: " + i, "error");
+      } else
+        await new E(e).fill(i), m("✅ Element filled successfully!", "success");
+    else
+      await new E(e).fill(void 0), m("✅ All fields filled successfully!", "success");
+  } catch (e) {
+    m("❌ Error filling fields: " + e.message, "error");
+  }
 };
+window.handleCategorySelection = async () => {
+  const i = document.getElementById("categorySelector"), e = i.value;
+  if (e)
+    try {
+      const n = {
+        "person-category": "👤 Person Category",
+        "address-category": "🏠 Address Category",
+        "company-category": "🏢 Company Category",
+        "payment-category": "💳 Payment Category",
+        "internet-category": "🌐 Internet Category",
+        "time-category": "⏰ Time Category",
+        "language-category": "🗣️ Language Category",
+        "word-category": "📝 Word Category",
+        "color-category": "🎨 Color Category",
+        "animal-category": "🐾 Animal Category",
+        "food-category": "🍕 Food Category",
+        "car-category": "🚗 Car Category",
+        "product-category": "📦 Product Category",
+        "game-category": "🎮 Game Category",
+        "misc-category": "🎲 Misc Category"
+      }[e];
+      let s = null;
+      if (n) {
+        const o = document.querySelectorAll("h4");
+        for (const r of o)
+          if (r.textContent?.includes(n)) {
+            s = r;
+            break;
+          }
+      }
+      if (s)
+        v(s);
+      else {
+        const o = document.getElementById("categories");
+        o && v(o);
+      }
+      setTimeout(async () => {
+        const o = document.getElementById(e);
+        if (!o) {
+          m("❌ Category container not found!", "error");
+          return;
+        }
+        try {
+          const r = S();
+          await new E(r).fill(o);
+          let c = 0;
+          o.querySelectorAll(
+            "input, textarea, select"
+          ).forEach((d) => {
+            d instanceof HTMLInputElement ? d.type === "checkbox" || d.type === "radio" ? d.checked && c++ : d.value && c++ : (d instanceof HTMLTextAreaElement || d instanceof HTMLSelectElement) && d.value && c++;
+          });
+          const g = i.options[i.selectedIndex].text;
+          m(
+            `✅ ${g} filled successfully! (${c} fields)`,
+            "success"
+          );
+        } catch (r) {
+          console.warn("Failed to fill category:", r), m(
+            "❌ Error filling category: " + r.message,
+            "error"
+          );
+        }
+        i.value = "";
+      }, 500);
+    } catch (t) {
+      m("❌ Error filling category: " + t.message, "error"), i.value = "";
+    }
+};
+function S() {
+  const i = document.querySelector('input[name="mode"]:checked').value, e = parseInt(document.getElementById("stagger").value), t = parseInt(document.getElementById("badges").value), n = document.getElementById("debugMode").checked;
+  return {
+    mode: i,
+    stagger: e,
+    badges: t,
+    debug: n,
+    onStatusChange: (s, o) => {
+      if (n) {
+        const a = (/* @__PURE__ */ new Date()).toLocaleTimeString();
+        console.log(
+          `%c[Status ${a}] ${s === "error" ? "❌" : "🔄"} ${s.toUpperCase()}:`,
+          "color: #9c27b0; font-weight: bold; background: #f3e5f5; padding: 2px 4px; border-radius: 3px;",
+          o
+        );
+      }
+      if (s === L.STARTING) {
+        const a = document.getElementById("sidebar"), c = document.getElementById("sidebarOverlay"), l = document.getElementById("sidebarToggle");
+        a && a.classList.contains("open") && (a.classList.remove("open"), c && c.classList.remove("active"), l && l.classList.remove("active"), document.body.style.overflow = "");
+      }
+      const r = document.getElementById("status");
+      if (r) {
+        const a = {
+          starting: "Starting...",
+          found: "Found...",
+          determined: "Determined...",
+          generated: "Generated...",
+          set: "Set...",
+          completed: "Completed!",
+          error: "Error occurred"
+        }[s] || s;
+        r.textContent = a, r.className = `status ${s}`;
+      }
+      if (s === "generated" || s === "set") {
+        const a = o.filter(
+          (l) => l.value || l.error
+        ).length, c = o.length;
+        c > 0 && m(
+          `Processing ${a}/${c} fields...`,
+          "info"
+        );
+      }
+    }
+  };
+}
+window.autofillWithCurrentSettings = async () => {
+  try {
+    const i = S();
+    await new E(i).fill(void 0);
+    const t = i.mode === "auto" ? "Auto Mode" : "Manual Mode", n = i.stagger > 0 ? ` (${i.stagger}ms stagger)` : " (no stagger)";
+    m(
+      `✅ All fields filled with ${t}${n}!`,
+      "success"
+    );
+  } catch (i) {
+    m("❌ Error filling fields: " + i.message, "error");
+  }
+};
+document.addEventListener("DOMContentLoaded", function() {
+  const i = document.getElementById("stagger"), e = document.getElementById("staggerValue"), t = document.getElementById("badges"), n = document.getElementById("badgesValue"), s = document.getElementById("themeToggle"), o = s.querySelector(".theme-icon");
+  if (i && e && i.addEventListener("input", function() {
+    e.textContent = this.value + "ms";
+  }), t && n && t.addEventListener("input", function() {
+    n.textContent = this.value + "ms";
+  }), s) {
+    const r = localStorage.getItem("theme"), a = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    r === "light" || r === null && !a ? (document.documentElement.setAttribute("data-theme", "light"), o.textContent = "🌙") : o.textContent = "☀️", s.addEventListener("click", function() {
+      document.documentElement.hasAttribute("data-theme") && document.documentElement.getAttribute("data-theme") === "light" ? (document.documentElement.removeAttribute("data-theme"), localStorage.setItem("theme", "dark"), o.textContent = "☀️") : (document.documentElement.setAttribute("data-theme", "light"), localStorage.setItem("theme", "light"), o.textContent = "🌙");
+    }), window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function(l) {
+      localStorage.getItem("theme") === null && (l.matches ? (document.documentElement.removeAttribute("data-theme"), o.textContent = "☀️") : (document.documentElement.setAttribute("data-theme", "light"), o.textContent = "🌙"));
+    });
+  }
+});
+window.clearAll = () => {
+  const i = document.querySelector(".main-content");
+  if (!i) return;
+  i.querySelectorAll("input, textarea, select").forEach((t) => {
+    t.type === "checkbox" || t.type === "radio" ? t.checked = !1 : t.value = "";
+  }), m("🧹 All fields cleared!", "success");
+};
+window.clearBadges = () => {
+  document.querySelectorAll(
+    '[data-gofakeit-badge="true"]'
+  ).forEach((e) => e.remove()), m("🎯 All badges cleared!", "success");
+};
+function m(i, e) {
+  const t = document.getElementById("status");
+  t.textContent = i, t.className = `status ${e}`;
+}
+console.log("🎯 Gofakeit Fill Comprehensive Testing loaded!");
+console.log(
+  "This page tests the search API with various input contexts and categories."
+);
+console.log(
+  "Check the browser network tab to see search API calls in action!"
+);
+console.log(
+  "New features: Badge system, debug mode, and improved error handling!"
+);
 //# sourceMappingURL=gofakeit.es.js.map
