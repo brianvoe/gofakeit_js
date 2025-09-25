@@ -23,7 +23,7 @@ export default defineConfig({
     sourcemap: true,
     minify: true,
     outDir: '../../dist',
-    emptyOutDir: false,
+    emptyOutDir: true,
   },
   plugins: [
     dts({
