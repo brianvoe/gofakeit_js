@@ -32,4 +32,16 @@ export default defineConfig({
       outDir: '../../dist',
     }),
   ],
+  // @ts-ignore - test config is valid for Vitest
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['src/gofakeit/test/setup.ts'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      include: ['src/gofakeit/**/*.ts'],
+      exclude: ['node_modules/', 'src/gofakeit/test/', 'dist/', '**/*.d.ts'],
+    },
+  },
 });
