@@ -2,6 +2,7 @@ import { fileURLToPath } from 'url';
 import { resolve, dirname } from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import vue from '@vitejs/plugin-vue';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -19,6 +20,7 @@ export default defineConfig({
     minify: true,
   },
   plugins: [
+    vue(),
     dts({
       insertTypesEntry: true,
       rollupTypes: true,
