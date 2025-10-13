@@ -1,0 +1,79 @@
+:root {
+  /* Colors - Dark Theme (Default) */
+  --primary-color: #4dabf7;
+  --primary-hover: #74c0fc;
+  --secondary-color: #adb5bd;
+  --secondary-hover: #ced4da;
+  --success-color: #51cf66;
+  --success-hover: #69db7c;
+  --info-color: #66d9e8;
+  --info-hover: #99e9f2;
+  --warning-color: #ffd43b;
+  --warning-hover: #fcc419;
+  --danger-color: #ff6b6b;
+  --light-gray: #343a40;
+  --border-color: #495057;
+  --text-muted: #adb5bd;
+  --text-dark: #f8f9fa;
+  --text-medium: #dee2e6;
+  --bg-light: #495057;
+  --bg-info-light: #1e3a5f;
+  --bg-main: #212529;
+  --bg-container: #343a40;
+  --text-primary: #f8f9fa;
+  --text-secondary: #adb5bd;
+  --border-main: #495057;
+
+  /* Spacing */
+  --spacing-sm: 8px;
+  --spacing-md: 14px;
+  --spacing-lg: 20px;
+
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  /* Font sizes */
+  --font-xs: 10px;
+  --font-sm: 12px;
+  --font-base: 16px;
+
+  /* Shadows */
+  --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --shadow-medium: -2px 0 10px rgba(0, 0, 0, 0.1);
+
+  /* Scrollbar colors */
+  --scrollbar-track: var(--bg-light);
+  --scrollbar-thumb: var(--text-muted);
+  --scrollbar-thumb-hover: var(--text-secondary);
+
+  /* Misc */
+  --timing: 0.3s;
+}
+
+[data-theme='light'] {
+  --primary-color: #007bff;
+  --primary-hover: #0056b3;
+  --secondary-color: #6c757d;
+  --secondary-hover: #545b62;
+  --success-color: #28a745;
+  --success-hover: #1e7e34;
+  --info-color: #17a2b8;
+  --info-hover: #138496;
+  --warning-color: #ffc107;
+  --warning-hover: #e0a800;
+  --danger-color: #dc3545;
+  --light-gray: #f5f5f5;
+  --border-color: #ddd;
+  --text-muted: #666;
+  --text-dark: #333;
+  --text-medium: #555;
+  --bg-light: #f8f9fa;
+  --bg-info-light: #e7f3ff;
+  --bg-main: #f5f5f5;
+  --bg-container: #ffffff;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --border-main: #ddd;
+}

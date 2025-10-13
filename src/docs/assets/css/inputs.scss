@@ -1,0 +1,210 @@
+label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: color var(--timing) ease;
+  font-size: var(--font-sm);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  margin: 0;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-base);
+  background-color: var(--bg-container);
+  color: var(--text-primary);
+  transition:
+    border-color var(--timing),
+    background-color var(--timing),
+    color var(--timing);
+  box-sizing: border-box;
+}
+
+/* Focus states */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+input[type='color'] {
+  height: 50px;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-container);
+  transition:
+    border-color var(--timing),
+    background-color var(--timing);
+  &:hover {
+    border-color: var(--primary-color);
+  }
+}
+
+/* Enhanced select styling / arrow */
+select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  /* Dark mode select arrow (default) */
+  &:not([data-theme='light']) {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  }
+
+  option {
+    background-color: var(--bg-container);
+    color: var(--text-primary);
+  }
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--primary-color);
+  background-color: var(--bg-container);
+  border: 2px solid var(--border-color);
+  transition:
+    border-color var(--timing),
+    background-color var(--timing);
+}
+
+/* Checkbox/Radio groups */
+.checkbox-group,
+.radio-group {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.checkbox-item,
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--bg-hover);
+  }
+
+  input[type='checkbox'],
+  input[type='radio'] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+    appearance: none;
+    border: 2px solid var(--border-color);
+    background-color: var(--bg-primary);
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  input[type='checkbox']:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+
+  input[type='checkbox']:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+  }
+
+  input[type='radio'] {
+    border-radius: 50%;
+  }
+
+  input[type='radio']:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background-color: white;
+    border-radius: 50%;
+  }
+
+  label {
+    margin: 0;
+    font-weight: normal;
+    cursor: pointer;
+    color: var(--text-primary);
+    transition: color 0.2s ease;
+  }
+
+  &:hover label {
+    color: var(--text-primary);
+  }
+}
+
+/* Toggle controls */
+.toggle {
+  display: flex;
+  background: var(--bg-container);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  position: relative;
+  min-width: 80px;
+  width: 100%;
+  max-width: 130px;
+
+  .option {
+    padding: 6px 12px;
+    font-size: var(--font-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--timing) ease;
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    text-align: center;
+    flex: 1;
+
+    /* Hide native inputs inside option labels */
+    input {
+      display: none;
+    }
+
+    /* Checked state styles for label-wrapped inputs */
+    &:has(input[type='radio']:checked),
+    &:has(input[type='checkbox']:checked) {
+      background: var(--primary-color);
+      color: white;
+    }
+  }
+}
