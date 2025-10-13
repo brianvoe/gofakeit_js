@@ -1,23 +1,32 @@
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
-  extends: ['eslint:recommended', 'prettier'],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
-  parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'prettier', 'import'],
+  env: { browser: true, es2021: true, node: true },
+  parser: 'vue-eslint-parser',
+  parserOptions: {
+    parser: '@typescript-eslint/parser',
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    extraFileExtensions: ['.vue'],
+  },
+  plugins: ['@typescript-eslint', 'vue'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:vue/vue3-recommended',
+    'plugin:prettier/recommended',
+  ],
   rules: {
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    '@typescript-eslint/no-explicit-any': 'off',
-    'prefer-const': 'error',
-    'no-var': 'error',
-    'prettier/prettier': 'error',
-    'import/newline-after-import': 'error',
-    'import/order': [
-      'warn',
-      {
-        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-        'newlines-between': 'never',
-      },
+    'vue/component-tags-order': [
+      'error',
+      { order: ['script', 'style', 'template'] },
     ],
   },
+  overrides: [
+    {
+      files: ['*.vue'],
+      rules: {
+        '@typescript-eslint/no-unused-vars': 'off',
+      },
+    },
+  ],
 };
