@@ -140,6 +140,62 @@ describe('Autofill Input Filling', () => {
       expect(element.value).toMatch(/^#[0-9A-Fa-f]{6}$/);
       expect(element.value).not.toBe('');
     });
+
+    it('should fill pattern-based text input using regex function', async () => {
+      const autofill = new Autofill();
+
+      document.body.innerHTML = `
+        <form>
+          <input
+            type="text"
+            name="orderCode"
+            pattern="^[A-Z]{2}-\\d{4}$"
+            data-gofakeit="true"
+          />
+        </form>
+      `;
+
+      const fetchSpy = vi
+        .spyOn(globalThis, 'fetch')
+        .mockImplementation(
+          async (url: RequestInfo | URL, init?: RequestInit) => {
+            if (typeof url === 'string' && url.endsWith('/funcs/multi')) {
+              const body = JSON.parse(String(init?.body || '[]'));
+              const responses = body.map((request: any) => ({
+                id: request.id,
+                value: request.func === 'regex' ? 'AB-1234' : 'fallback',
+              }));
+
+              return new Response(JSON.stringify(responses), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' },
+              });
+            }
+
+            return new Response(null, { status: 200 });
+          }
+        );
+
+      const element = document.querySelector(
+        'input[name="orderCode"]'
+      ) as HTMLInputElement;
+      const result = await autofill.fill(element);
+
+      expect(result.success).toBeGreaterThan(0);
+      expect(element.value).toBe('AB-1234');
+
+      const multiRequest = fetchSpy.mock.calls.find(
+        ([url]) => typeof url === 'string' && url.endsWith('/funcs/multi')
+      );
+      expect(multiRequest).toBeTruthy();
+      const multiBody = multiRequest
+        ? JSON.parse(String(multiRequest[1]?.body ?? '[]'))
+        : [];
+      const regexCall = multiBody.find((req: any) => req.func === 'regex');
+      expect(regexCall?.params?.str).toBe('^[A-Z]{2}-\\d{4}$');
+
+      fetchSpy.mockRestore();
+    });
   });
 
   describe('Number Input Filling', () => {
@@ -886,6 +942,58 @@ describe('Autofill Input Filling', () => {
 
       expect(result.success).toBe(0); // No elements to fill, so returns false
       expect(element.value).toBe(''); // Should remain empty - not filled
+    });
+
+    it('should surface errors when regex pattern generation fails', async () => {
+      const autofill = new Autofill();
+
+      document.body.innerHTML = `
+        <input type="text" name="sku" pattern="^SKU-\\d{3}$" />
+      `;
+
+      const fetchSpy = vi
+        .spyOn(globalThis, 'fetch')
+        .mockImplementation(
+          async (url: RequestInfo | URL, init?: RequestInit) => {
+            if (typeof url === 'string' && url.endsWith('/funcs/multi')) {
+              const body = JSON.parse(String(init?.body || '[]'));
+              const responses = body.map((request: any) => ({
+                id: request.id,
+                error: request.func === 'regex' ? 'Pattern failed' : undefined,
+                value: request.func === 'regex' ? null : 'fallback',
+              }));
+
+              return new Response(JSON.stringify(responses), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' },
+              });
+            }
+
+            return new Response(null, { status: 200 });
+          }
+        );
+
+      const result = await autofill.fill();
+      expect(result.failed).toBeGreaterThan(0);
+
+      const patternElement = autofill.state.elements.find(
+        el =>
+          el.element instanceof HTMLInputElement && el.element.name === 'sku'
+      );
+      expect(patternElement?.function).toBe('regex');
+      expect(patternElement?.error).toBe('Pattern failed');
+
+      const multiRequest = fetchSpy.mock.calls.find(
+        ([url]) => typeof url === 'string' && url.endsWith('/funcs/multi')
+      );
+      expect(multiRequest).toBeTruthy();
+      const multiBody = multiRequest
+        ? JSON.parse(String(multiRequest[1]?.body ?? '[]'))
+        : [];
+      const regexCall = multiBody.find((req: any) => req.func === 'regex');
+      expect(regexCall?.params?.str).toBe('^SKU-\\d{3}$');
+
+      fetchSpy.mockRestore();
     });
 
     it('should fill inputs without data-gofakeit attribute in auto mode', async () => {

@@ -48,6 +48,7 @@ export interface AutofillElement {
   function: string; // function that will be used to autofill the element
   params?: Record<string, any>; // parameters for the function
   search: string[]; // search queries that will be used to autofill the element
+  pattern: string; // pattern of the element
   value: string; // value of the autofill result
   error: string; // error message
 }
@@ -240,6 +241,7 @@ export class Autofill {
         type: this.getElementType(element),
         function: '',
         search: this.getElementSearch(element),
+        pattern: this.getElementPattern(element),
         value: '',
         error: '',
       });
@@ -278,6 +280,28 @@ export class Autofill {
       return 'select';
     }
     return 'unknown';
+  }
+
+  private getElementPattern(element: Element): string {
+    const pattern = element.getAttribute('pattern') || '';
+    if (!pattern) {
+      return '';
+    }
+
+    const normalized = pattern.replace(/\\\\/g, '\\');
+    return this.convertJsRegexToRe2(normalized);
+  }
+
+  private convertJsRegexToRe2(pattern: string): string {
+    // Collapse double-escaped shorthand back to single so downstream sees familiar tokens
+    pattern = pattern.replace(/\\\\d/g, '\\d');
+    pattern = pattern.replace(/\\\\D/g, '\\D');
+    pattern = pattern.replace(/\\\\w/g, '\\w');
+    pattern = pattern.replace(/\\\\W/g, '\\W');
+    pattern = pattern.replace(/\\\\s/g, '\\s');
+    pattern = pattern.replace(/\\\\S/g, '\\S');
+
+    return pattern;
   }
 
   // Get search query parts for an element
@@ -468,22 +492,15 @@ export class Autofill {
 
   public getElementFunction(element: Element): string | null {
     const gofakeitFunc = element.getAttribute('data-gofakeit');
+    const pattern = this.getElementPattern(element);
     const elementType = this.getElementType(element);
 
+    // If the fuction has a value and it's not 'true', use it directly
     if (gofakeitFunc && gofakeitFunc !== 'true') {
       // Specific function provided - use it directly
       return gofakeitFunc;
-    } else if (gofakeitFunc === 'true') {
-      // Function is 'true' - check if element type needs search
-      const needsSearch = this.elementTypeNeedsSearch(elementType);
-
-      if (needsSearch) {
-        // Element type needs search - return null
-        return null;
-      } else {
-        // Element type doesn't need search - use fallback function even with data-gofakeit="true"
-        return this.getElementFunctionFallback(element);
-      }
+    } else if (pattern && pattern.trim() !== '') {
+      return 'regex';
     } else {
       // No function specified - check if element type needs search
       const needsSearch = this.elementTypeNeedsSearch(elementType);
@@ -614,6 +631,8 @@ export class Autofill {
       // Use custom params if provided, otherwise use default parameter logic
       if (el.params) {
         request.params = el.params;
+      } else if (el.function === 'regex') {
+        request.params = { lang: 'js', str: el.pattern };
       } else {
         // Add parameters based on element type
         switch (el.type) {
@@ -971,7 +990,7 @@ export class Autofill {
       boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
       pointerEvents: 'none',
       userSelect: 'none',
-      transition: 'opacity 0.3s ease-in-out',
+      transition: 'opacity var(--timing) ease-in-out',
       opacity: '0',
       whiteSpace: 'nowrap',
       backgroundColor: isError

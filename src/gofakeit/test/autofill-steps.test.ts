@@ -302,6 +302,95 @@ describe('Autofill Step-by-Step Process', () => {
       );
       expect(testInput?.error).toBeDefined();
     });
+
+    it('should prioritize pattern-based regex generation before searching', async () => {
+      document.body.innerHTML = `
+        <form>
+          <input type="text" name="order" pattern="^[A-Z]{2}-\\d{4}$" />
+          <input type="text" name="search" data-gofakeit="true" />
+        </form>
+      `;
+
+      const fetchSpy = vi
+        .spyOn(globalThis, 'fetch')
+        .mockImplementation(
+          async (url: RequestInfo | URL, init?: RequestInit) => {
+            const body = init?.body ? JSON.parse(init.body as string) : [];
+            if (typeof url === 'string' && url.endsWith('/funcs/multi')) {
+              const results = body.map((req: any) => ({
+                id: req.id,
+                value: req.func === 'regex' ? 'AB-1234' : 'search-result',
+              }));
+              return new Response(JSON.stringify(results), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' },
+              });
+            }
+
+            return new Response(null, { status: 200 });
+          }
+        );
+
+      const result = await autofill.fill();
+
+      expect(result.success).toBeGreaterThan(0);
+      const patternElement = autofill.state.elements.find(
+        el => el.name === 'order'
+      );
+      expect(patternElement?.function).toBe('regex');
+      expect(patternElement?.value).toBe('AB-1234');
+
+      const multiRequest = fetchSpy.mock.calls.find(
+        ([url]) => typeof url === 'string' && url.endsWith('/funcs/multi')
+      );
+      expect(multiRequest).toBeTruthy();
+      const multiBody = multiRequest
+        ? JSON.parse(String(multiRequest[1]?.body ?? '[]'))
+        : [];
+      const regexCall = multiBody.find((req: any) => req.func === 'regex');
+      expect(regexCall?.params?.str).toBe('^[A-Z]{2}-\\d{4}$');
+
+      const searchRequest = fetchSpy.mock.calls.find(
+        ([url]) => typeof url === 'string' && url.endsWith('/funcs/search')
+      );
+      expect(searchRequest).toBeTruthy();
+
+      fetchSpy.mockRestore();
+    });
+
+    it('should set error when regex API call fails for pattern inputs', async () => {
+      document.body.innerHTML = `
+        <input type="text" name="code" pattern="^[A-Z]{2}-\\d{4}$" />
+      `;
+
+      const fetchSpy = vi
+        .spyOn(globalThis, 'fetch')
+        .mockImplementation(async (url: RequestInfo | URL) => {
+          if (typeof url === 'string' && url.endsWith('/funcs/multi')) {
+            return new Response(
+              JSON.stringify([{ id: '1', error: 'regex failed' }]),
+              {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' },
+              }
+            );
+          }
+
+          return new Response(null, { status: 200 });
+        });
+
+      await autofill.fill();
+
+      const patternElement = autofill.state.elements.find(
+        el =>
+          el.element instanceof HTMLInputElement && el.element.name === 'code'
+      );
+
+      expect(patternElement?.function).toBe('regex');
+      expect(patternElement?.error).toBe('regex failed');
+
+      fetchSpy.mockRestore();
+    });
   });
 
   describe('Step 4: Value Application', () => {

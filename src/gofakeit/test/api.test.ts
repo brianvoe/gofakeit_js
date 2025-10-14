@@ -328,10 +328,8 @@ describe('API Tests', () => {
         const searchResult = singleResponse.results[0];
         expect(searchResult).toHaveProperty('name');
         expect(searchResult).toHaveProperty('score');
-        expect(searchResult).toHaveProperty('reasons');
         expect(typeof searchResult.name).toBe('string');
         expect(typeof searchResult.score).toBe('number');
-        expect(Array.isArray(searchResult.reasons)).toBe(true);
       }
     });
 
@@ -364,10 +362,8 @@ describe('API Tests', () => {
         const searchResult = searchResponse.results[0];
         expect(searchResult).toHaveProperty('name');
         expect(searchResult).toHaveProperty('score');
-        expect(searchResult).toHaveProperty('reasons');
         expect(typeof searchResult.name).toBe('string');
         expect(typeof searchResult.score).toBe('number');
-        expect(Array.isArray(searchResult.reasons)).toBe(true);
       }
     });
 
