@@ -20,6 +20,7 @@ module.exports = {
       'error',
       { order: ['script', 'style', 'template'] },
     ],
+    '@typescript-eslint/no-explicit-any': 'off',
   },
   overrides: [
     {
