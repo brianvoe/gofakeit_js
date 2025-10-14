@@ -154,8 +154,8 @@ export default defineComponent({
     </button>
     <h1 class="title">Gofakeit Autofill</h1>
     <button class="theme-btn" title="Toggle theme" @click="toggleTheme">
-      <span v-if="isLight">🌞</span>
-      <span v-else>🌙</span>
+      <span v-if="isLight">🌙</span>
+      <span v-else>🌞</span>
     </button>
   </header>
 
