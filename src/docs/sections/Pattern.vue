@@ -73,88 +73,142 @@ export default defineComponent({
       </div>
       <div class="row">
         <div class="form-group">
-          <label for="orderCode">
-            Order Code
-            <span class="field-note">Format: AA-1234</span>
-          </label>
+          <label for="orderCode"> Order Code </label>
           <input
             id="orderCode"
             type="text"
-            pattern="^[A-Z]{2}-\\d{4}$"
+            pattern="^[A-Z]{2}-\d{4}$"
             placeholder="AA-1234"
             required
           />
+          <p class="field-note">Pattern: <code>^[A-Z]{2}-\d{4}$</code></p>
         </div>
         <div class="form-group">
-          <label for="license">
-            License Key
-            <span class="field-note">Format: ABCD-1234-EF</span>
-          </label>
+          <label for="license"> License Key </label>
           <input
             id="license"
             type="text"
-            pattern="^[A-Z]{4}-\\d{4}-[A-Z]{2}$"
+            pattern="^[A-Z]{4}-\d{4}-[A-Z]{2}$"
             placeholder="ABCD-1234-EF"
             required
           />
+          <p class="field-note">
+            Pattern: <code>^[A-Z]{4}-\d{4}-[A-Z]{2}$</code>
+          </p>
         </div>
       </div>
 
       <div class="row">
         <div class="form-group">
-          <label for="sku">
-            SKU
-            <span class="field-note">Format: prd-xx-999</span>
-          </label>
+          <label for="zip"> US ZIP Code </label>
           <input
-            id="sku"
+            id="zip"
             type="text"
-            pattern="^prd-[a-z]{2}-\\d{3}$"
-            placeholder="prd-ab-123"
+            pattern="^\d{5}(?:-\d{4})?$"
+            placeholder="12345-6789"
             required
           />
+          <p class="field-note">Pattern: <code>^\d{5}(?:-\d{4})?$</code></p>
         </div>
         <div class="form-group">
-          <label for="colorHex">
-            Short Hex
-            <span class="field-note">Format: #abc or #a1f</span>
-          </label>
+          <label for="postal"> Canadian Postal Code </label>
           <input
-            id="colorHex"
+            id="postal"
             type="text"
-            pattern="^#[0-9a-fA-F]{3}$"
-            placeholder="#abc"
+            pattern="^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z]\s?\d[ABCEGHJ-NPRSTV-Z]\d$"
+            placeholder="K1A 0B1"
             required
           />
+          <p class="field-note">
+            Pattern:
+            <code
+              >^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z]\s?\d[ABCEGHJ-NPRSTV-Z]\d$</code
+            >
+          </p>
         </div>
       </div>
 
       <div class="row">
         <div class="form-group">
-          <label for="ticket">
-            Ticket ID
-            <span class="field-note">Format: TKT-YYYY-####</span>
-          </label>
+          <label for="ipv4"> IPv4 Address </label>
+          <input
+            id="ipv4"
+            type="text"
+            pattern="^(?:(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)$"
+            placeholder="192.168.0.1"
+            required
+          />
+          <p class="field-note">
+            Pattern:
+            <code
+              >^(?:(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)$</code
+            >
+          </p>
+        </div>
+        <div class="form-group">
+          <label for="hexColor"> Hex Color </label>
+          <input
+            id="hexColor"
+            type="text"
+            pattern="^#[0-9a-fA-F]{6}$"
+            placeholder="#1f75fe"
+            required
+          />
+          <p class="field-note">Pattern: <code>^#[0-9a-fA-F]{6}$</code></p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label for="phone"> International Phone </label>
+          <input
+            id="phone"
+            type="tel"
+            pattern="^\+\d{1,3}\s?\d{4,14}$"
+            placeholder="+44 2081234567"
+            required
+          />
+          <p class="field-note">Pattern: <code>^\+\d{1,3}\s?\d{4,14}$</code></p>
+        </div>
+        <div class="form-group">
+          <label for="ticket"> Event Ticket </label>
           <input
             id="ticket"
             type="text"
-            pattern="^TKT-\\d{4}-\\d{4}$"
-            placeholder="TKT-2025-0042"
+            pattern="^EVT-[A-Z]{3}-\d{6}$"
+            placeholder="EVT-NYC-202501"
             required
           />
+          <p class="field-note">Pattern: <code>^EVT-[A-Z]{3}-\d{6}$</code></p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label for="slug"> URL Slug </label>
+          <input
+            id="slug"
+            type="text"
+            pattern="^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            placeholder="marketing-site-launch"
+            required
+          />
+          <p class="field-note">
+            Pattern: <code>^[a-z0-9]+(?:-[a-z0-9]+)*$</code>
+          </p>
         </div>
         <div class="form-group">
-          <label for="username">
-            Username
-            <span class="field-note">Format: user_xx99</span>
-          </label>
+          <label for="isbn"> ISBN-13 </label>
           <input
-            id="username"
+            id="isbn"
             type="text"
-            pattern="^user_[a-z]{2}\\d{2}$"
-            placeholder="user_ab12"
+            pattern="^97[89]-\d-\d{2,5}-\d{2,7}-\d$"
+            placeholder="978-1-4028-9462-6"
             required
           />
+          <p class="field-note">
+            Pattern: <code>^97[89]-\d-\d{2,5}-\d{2,7}-\d$</code>
+          </p>
         </div>
       </div>
 
