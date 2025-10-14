@@ -288,20 +288,7 @@ export class Autofill {
       return '';
     }
 
-    const normalized = pattern.replace(/\\\\/g, '\\');
-    return this.convertJsRegexToRe2(normalized);
-  }
-
-  private convertJsRegexToRe2(pattern: string): string {
-    // Collapse double-escaped shorthand back to single so downstream sees familiar tokens
-    pattern = pattern.replace(/\\\\d/g, '\\d');
-    pattern = pattern.replace(/\\\\D/g, '\\D');
-    pattern = pattern.replace(/\\\\w/g, '\\w');
-    pattern = pattern.replace(/\\\\W/g, '\\W');
-    pattern = pattern.replace(/\\\\s/g, '\\s');
-    pattern = pattern.replace(/\\\\S/g, '\\S');
-
-    return pattern;
+    return pattern.replace(/\\\\/g, '\\');
   }
 
   // Get search query parts for an element
