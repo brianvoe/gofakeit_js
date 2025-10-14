@@ -48,7 +48,7 @@ export interface AutofillElement {
   function: string; // function that will be used to autofill the element
   params?: Record<string, any>; // parameters for the function
   search: string[]; // search queries that will be used to autofill the element
-  pattern: string; // pattern of the element
+  pattern?: string; // pattern of the element
   value: string; // value of the autofill result
   error: string; // error message
 }
@@ -619,7 +619,7 @@ export class Autofill {
       if (el.params) {
         request.params = el.params;
       } else if (el.function === 'regex') {
-        request.params = { lang: 'js', str: el.pattern };
+        request.params = { lang: 'js', str: el.pattern || '' };
       } else {
         // Add parameters based on element type
         switch (el.type) {
