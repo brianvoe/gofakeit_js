@@ -106,7 +106,7 @@ export default defineComponent({
       setTimeout(() => this.autofill(container), 500);
     },
     clearAll() {
-      const mainContent = document.querySelector('.main-content');
+      const mainContent = document.querySelector('.sections');
       if (!mainContent) return;
       const inputs = mainContent.querySelectorAll('input, textarea, select');
       inputs.forEach(input => {
