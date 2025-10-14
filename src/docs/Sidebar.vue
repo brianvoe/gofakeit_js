@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'Sidebar',
@@ -25,54 +25,54 @@ export default defineComponent({
   data() {
     return {
       isOpen: this.open as boolean,
-    };
+    }
   },
   mounted() {
-    document.addEventListener('keydown', this.handleKeydown);
+    document.addEventListener('keydown', this.handleKeydown)
   },
   beforeUnmount() {
-    document.removeEventListener('keydown', this.handleKeydown);
+    document.removeEventListener('keydown', this.handleKeydown)
   },
   watch: {
     open(newVal: boolean) {
-      this.isOpen = newVal;
-      document.body.style.overflow = newVal ? 'hidden' : '';
+      this.isOpen = newVal
+      document.body.style.overflow = newVal ? 'hidden' : ''
     },
   },
   methods: {
     isMobile(): boolean {
-      return window.innerWidth <= 768;
+      return window.innerWidth <= 768
     },
     onMenuClick(callback: () => void) {
-      callback();
-      if (this.isMobile()) this.closeSidebar();
+      callback()
+      if (this.isMobile()) this.closeSidebar()
     },
     onCategoryChange(event: Event) {
-      const target = event.target as HTMLSelectElement;
-      const value = target.value;
-      if (!value) return;
-      this.$emit('autofillCategory', value);
-      target.value = '';
-      if (this.isMobile()) this.closeSidebar();
+      const target = event.target as HTMLSelectElement
+      const value = target.value
+      if (!value) return
+      this.$emit('autofillCategory', value)
+      target.value = ''
+      if (this.isMobile()) this.closeSidebar()
     },
     openSidebar() {
-      this.isOpen = true;
-      document.body.style.overflow = 'hidden';
+      this.isOpen = true
+      document.body.style.overflow = 'hidden'
     },
     closeSidebar() {
-      this.isOpen = false;
-      this.$emit('update:open', false);
-      document.body.style.overflow = '';
+      this.isOpen = false
+      this.$emit('update:open', false)
+      document.body.style.overflow = ''
     },
     toggleSidebar() {
-      this.isOpen ? this.closeSidebar() : this.openSidebar();
-      this.$emit('update:open', this.isOpen);
+      this.isOpen ? this.closeSidebar() : this.openSidebar()
+      this.$emit('update:open', this.isOpen)
     },
     handleKeydown(e: KeyboardEvent) {
-      if (e.key === 'Escape' && this.isOpen) this.closeSidebar();
+      if (e.key === 'Escape' && this.isOpen) this.closeSidebar()
     },
   },
-});
+})
 </script>
 
 <style lang="scss">

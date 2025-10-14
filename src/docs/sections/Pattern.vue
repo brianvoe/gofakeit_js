@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'Pattern',
@@ -7,29 +7,29 @@ export default defineComponent({
     return {
       formStatus: 'Fill out the form and click submit to validate patterns.',
       formStatusType: 'info' as 'info' | 'success' | 'error',
-    };
+    }
   },
   methods: {
     handleSubmit(event: Event) {
-      const form = event.target as HTMLFormElement | null;
+      const form = event.target as HTMLFormElement | null
       if (!form) {
-        return;
+        return
       }
 
-      const isValid = form.checkValidity();
-      form.reportValidity();
+      const isValid = form.checkValidity()
+      form.reportValidity()
 
       if (isValid) {
-        this.formStatus = '✅ All inputs match their regex patterns.';
-        this.formStatusType = 'success';
+        this.formStatus = '✅ All inputs match their regex patterns.'
+        this.formStatusType = 'success'
       } else {
         this.formStatus =
-          '❌ Pattern mismatch detected. Check highlighted fields.';
-        this.formStatusType = 'error';
+          '❌ Pattern mismatch detected. Check highlighted fields.'
+        this.formStatusType = 'error'
       }
     },
   },
-});
+})
 </script>
 
 <style lang="scss">

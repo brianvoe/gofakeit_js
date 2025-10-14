@@ -9,20 +9,20 @@ export const GOFAKEIT_COLORS = {
   text: '#333333',
   border: '#686868',
   background: '#22272e',
-};
+}
 
 export const GOFAKEIT_SPACING = {
   base: 16, // px
   half: 8, // px
   quarter: 4, // px
-};
+}
 
 export const GOFAKEIT_BORDER = {
   radius: 4, // px
   width: 2, // px
-};
+}
 
 export const GOFAKEIT_FONT = {
   size: 12, // px
   family: 'Helvetica, Arial, sans-serif',
-};
+}

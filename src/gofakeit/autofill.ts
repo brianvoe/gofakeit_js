@@ -4,13 +4,13 @@ import {
   fetchFuncSearch,
   FetchFuncSearchRequest,
   FetchFuncParams,
-} from './api';
+} from './api'
 import {
   GOFAKEIT_COLORS,
   GOFAKEIT_SPACING,
   GOFAKEIT_BORDER,
   GOFAKEIT_FONT,
-} from './styles';
+} from './styles'
 
 export enum AutofillStatus {
   STARTING = 'starting',
@@ -23,50 +23,47 @@ export enum AutofillStatus {
 }
 
 export interface AutofillSettings {
-  mode?: 'auto' | 'manual';
-  stagger?: number;
-  badges?: number;
-  debug?: boolean;
+  mode?: 'auto' | 'manual'
+  stagger?: number
+  badges?: number
+  debug?: boolean
 
   // Callbacks
-  onStatusChange?: (
-    status: AutofillStatus,
-    elements: AutofillElement[]
-  ) => void;
+  onStatusChange?: (status: AutofillStatus, elements: AutofillElement[]) => void
 }
 
 export interface AutofillState {
-  status?: AutofillStatus;
-  elements: AutofillElement[];
+  status?: AutofillStatus
+  elements: AutofillElement[]
 }
 
 export interface AutofillElement {
-  id: string; // id of the element
-  name: string; // name of the element
-  element: Element; // element to autofill
-  type: string; // element type
-  function: string; // function that will be used to autofill the element
-  params?: Record<string, any>; // parameters for the function
-  search: string[]; // search queries that will be used to autofill the element
-  pattern?: string; // pattern of the element
-  value: string; // value of the autofill result
-  error: string; // error message
+  id: string // id of the element
+  name: string // name of the element
+  element: Element // element to autofill
+  type: string // element type
+  function: string // function that will be used to autofill the element
+  params?: Record<string, any> // parameters for the function
+  search: string[] // search queries that will be used to autofill the element
+  pattern?: string // pattern of the element
+  value: string // value of the autofill result
+  error: string // error message
 }
 
 export interface AutofillResult {
-  elements: AutofillElement[];
-  error?: string;
+  elements: AutofillElement[]
+  error?: string
 }
 
 export interface AutofillResults {
-  success: number;
-  failed: number;
-  elements: AutofillElement[];
+  success: number
+  failed: number
+  elements: AutofillElement[]
 }
 
 export class Autofill {
-  public settings: AutofillSettings;
-  public state: AutofillState;
+  public settings: AutofillSettings
+  public state: AutofillState
 
   constructor(settings: AutofillSettings = {}) {
     this.settings = {
@@ -75,15 +72,15 @@ export class Autofill {
       badges: 3000,
       debug: false,
       ...settings,
-    };
+    }
 
     this.state = {
       elements: [],
-    };
+    }
   }
 
   public updateSettings(settings: AutofillSettings): void {
-    this.settings = { ...this.settings, ...settings };
+    this.settings = { ...this.settings, ...settings }
   }
 
   // ============================================================================
@@ -95,33 +92,33 @@ export class Autofill {
     functionName?: string,
     params?: Record<string, any>
   ): Promise<AutofillResults> {
-    this.state.elements = []; // Clear previous elements
-    this.updateStatus(AutofillStatus.STARTING);
+    this.state.elements = [] // Clear previous elements
+    this.updateStatus(AutofillStatus.STARTING)
 
     // Step 1: Set all target elements based on the target parameter
-    this.setElements(target);
+    this.setElements(target)
     if (this.state.elements.length === 0) {
-      this.debug('info', 'No form fields found to fill');
-      this.updateStatus(AutofillStatus.COMPLETED);
-      return this.results();
+      this.debug('info', 'No form fields found to fill')
+      this.updateStatus(AutofillStatus.COMPLETED)
+      return this.results()
     }
-    this.updateStatus(AutofillStatus.FOUND);
+    this.updateStatus(AutofillStatus.FOUND)
 
     // Step 2: Determine functions for elements that need search
-    await this.setElementFunctions(functionName, params);
-    this.updateStatus(AutofillStatus.DETERMINED);
+    await this.setElementFunctions(functionName, params)
+    this.updateStatus(AutofillStatus.DETERMINED)
 
     // Step 3: Get values for all elements via multi-function API
-    await this.getElementValues();
-    this.updateStatus(AutofillStatus.GENERATED);
+    await this.getElementValues()
+    this.updateStatus(AutofillStatus.GENERATED)
 
     // Step 4: set values to the actual form elements
-    await this.setElementValues();
-    this.updateStatus(AutofillStatus.SET);
+    await this.setElementValues()
+    this.updateStatus(AutofillStatus.SET)
 
     // Return the results
-    this.updateStatus(AutofillStatus.COMPLETED);
-    return this.results();
+    this.updateStatus(AutofillStatus.COMPLETED)
+    return this.results()
   }
 
   // ============================================================================
@@ -130,17 +127,17 @@ export class Autofill {
 
   // Public method to set form elements based on target parameter
   public setElements(target?: HTMLElement | Element | string): void {
-    const allFormElements: Element[] = [];
+    const allFormElements: Element[] = []
 
     if (target) {
       if (typeof target === 'string') {
         // For string selectors, get the matching elements and search within them
-        const elements = document.querySelectorAll(target);
+        const elements = document.querySelectorAll(target)
         if (elements.length === 0) {
-          this.debug('error', `No element found with selector: "${target}"`);
-          this.updateStatus(AutofillStatus.ERROR);
-          this.state.elements = [];
-          return;
+          this.debug('error', `No element found with selector: "${target}"`)
+          this.updateStatus(AutofillStatus.ERROR)
+          this.state.elements = []
+          return
         }
         // Search within each matching element for form elements
         elements.forEach(el => {
@@ -150,20 +147,20 @@ export class Autofill {
             el instanceof HTMLSelectElement
           ) {
             // If the element itself is a form element, add it
-            if (this.shouldSkipElement(el)) return;
-            allFormElements.push(el);
+            if (this.shouldSkipElement(el)) return
+            allFormElements.push(el)
           } else {
             // If it's not a form element, search within it for form elements
-            const selector = 'input, textarea, select';
-            const nodeList = el.querySelectorAll(selector);
+            const selector = 'input, textarea, select'
+            const nodeList = el.querySelectorAll(selector)
 
             nodeList.forEach(formEl => {
               // Skip hidden, disabled, or readonly elements
-              if (this.shouldSkipElement(formEl)) return;
-              allFormElements.push(formEl);
-            });
+              if (this.shouldSkipElement(formEl)) return
+              allFormElements.push(formEl)
+            })
           }
-        });
+        })
       } else if (target instanceof HTMLElement || target instanceof Element) {
         // For element targets, check if the element itself is a form element
         if (
@@ -173,65 +170,65 @@ export class Autofill {
         ) {
           // Skip hidden, disabled, or readonly elements
           if (this.shouldSkipElement(target)) {
-            this.state.elements = [];
-            return;
+            this.state.elements = []
+            return
           }
-          allFormElements.push(target);
+          allFormElements.push(target)
         } else {
           // If it's not a form element, search within it
-          const selector = 'input, textarea, select';
-          const nodeList = target.querySelectorAll(selector);
+          const selector = 'input, textarea, select'
+          const nodeList = target.querySelectorAll(selector)
 
           nodeList.forEach(el => {
             // Skip hidden, disabled, or readonly elements
-            if (this.shouldSkipElement(el)) return;
-            allFormElements.push(el);
-          });
+            if (this.shouldSkipElement(el)) return
+            allFormElements.push(el)
+          })
         }
       }
     } else {
       // No target specified, search the entire document
-      const selector = 'input, textarea, select';
-      const nodeList = document.querySelectorAll(selector);
+      const selector = 'input, textarea, select'
+      const nodeList = document.querySelectorAll(selector)
 
       nodeList.forEach(el => {
         // Skip hidden, disabled, or readonly elements
-        if (this.shouldSkipElement(el)) return;
-        allFormElements.push(el);
-      });
+        if (this.shouldSkipElement(el)) return
+        allFormElements.push(el)
+      })
     }
 
     // Step 3: Filter elements based on mode and data-gofakeit attributes
-    const mode = this.settings.mode ?? 'auto';
-    const filteredElements: Element[] = [];
+    const mode = this.settings.mode ?? 'auto'
+    const filteredElements: Element[] = []
 
     for (const element of allFormElements) {
-      const gofakeitFunc = element.getAttribute('data-gofakeit');
+      const gofakeitFunc = element.getAttribute('data-gofakeit')
 
       // Skip if explicitly disabled
       if (
         typeof gofakeitFunc === 'string' &&
         gofakeitFunc.trim().toLowerCase() === 'false'
       ) {
-        continue;
+        continue
       }
 
       // In manual mode, only include elements with data-gofakeit attribute
       if (mode === 'manual' && !gofakeitFunc) {
-        continue;
+        continue
       }
 
       // In auto mode, include all elements (with or without data-gofakeit)
-      filteredElements.push(element);
+      filteredElements.push(element)
     }
 
     // Loop through filteredElements and create AutofillElement objects
-    const autofillElements: AutofillElement[] = [];
+    const autofillElements: AutofillElement[] = []
     for (const element of filteredElements) {
       // random 8 digit alphanumeric string
       const id =
         Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15);
+        Math.random().toString(36).substring(2, 15)
 
       // add new element to the autofillElements array
       autofillElements.push({
@@ -244,131 +241,130 @@ export class Autofill {
         pattern: this.getElementPattern(element),
         value: '',
         error: '',
-      });
+      })
     }
 
-    this.state.elements = autofillElements;
+    this.state.elements = autofillElements
 
     // Debug output for element selection
     if (autofillElements.length > 0) {
       this.debug(
         'info',
         `Found ${autofillElements.length} elements to generate data for`
-      );
+      )
     }
   }
 
   // Check if an element should be skipped (hidden, disabled, or readonly)
   public shouldSkipElement(element: Element): boolean {
     if (element instanceof HTMLInputElement) {
-      return element.type === 'hidden' || element.disabled || element.readOnly;
+      return element.type === 'hidden' || element.disabled || element.readOnly
     } else if (element instanceof HTMLTextAreaElement) {
-      return element.disabled || element.readOnly;
+      return element.disabled || element.readOnly
     } else if (element instanceof HTMLSelectElement) {
-      return element.disabled;
+      return element.disabled
     }
-    return false;
+    return false
   }
 
   // Get the element type
   private getElementType(element: Element): string {
     if (element instanceof HTMLInputElement) {
-      return element.type.toLowerCase();
+      return element.type.toLowerCase()
     } else if (element instanceof HTMLTextAreaElement) {
-      return 'textarea';
+      return 'textarea'
     } else if (element instanceof HTMLSelectElement) {
-      return 'select';
+      return 'select'
     }
-    return 'unknown';
+    return 'unknown'
   }
 
   private getElementPattern(element: Element): string {
-    const pattern = element.getAttribute('pattern') || '';
+    const pattern = element.getAttribute('pattern') || ''
     if (!pattern) {
-      return '';
+      return ''
     }
 
-    return pattern.replace(/\\\\/g, '\\');
+    return pattern.replace(/\\\\/g, '\\')
   }
 
   // Get search query parts for an element
   public getElementSearch(el: Element): string[] {
-    const queries: string[] = [];
+    const queries: string[] = []
 
     // Get label text from various sources (prioritized by relevance)
-    const labelTexts: string[] = [];
-    const id = el.id;
+    const labelTexts: string[] = []
+    const id = el.id
 
     // aria-labelledby (highest priority - explicit accessibility)
-    const labelledBy = el.getAttribute('aria-labelledby');
+    const labelledBy = el.getAttribute('aria-labelledby')
     if (labelledBy) {
       labelledBy.split(/\s+/).forEach(ref => {
-        const labelEl = document.getElementById(ref);
-        if (labelEl && labelEl.textContent)
-          labelTexts.push(labelEl.textContent);
-      });
+        const labelEl = document.getElementById(ref)
+        if (labelEl && labelEl.textContent) labelTexts.push(labelEl.textContent)
+      })
     }
 
     // explicit label[for] (high priority - semantic association)
     if (id) {
       const lbl = document.querySelector(
         'label[for="' + id.replace(/"/g, '\\"') + '"]'
-      ) as HTMLLabelElement | null;
-      if (lbl && lbl.textContent) labelTexts.push(lbl.textContent);
+      ) as HTMLLabelElement | null
+      if (lbl && lbl.textContent) labelTexts.push(lbl.textContent)
     }
 
     // implicit parent label (medium priority)
-    const closestLabel = el.closest('label');
+    const closestLabel = el.closest('label')
     if (closestLabel && closestLabel.textContent)
-      labelTexts.push(closestLabel.textContent);
+      labelTexts.push(closestLabel.textContent)
 
     // previous sibling label (lower priority)
-    const prev = el.previousElementSibling as HTMLElement | null;
+    const prev = el.previousElementSibling as HTMLElement | null
     if (prev && prev.tagName === 'LABEL' && prev.textContent)
-      labelTexts.push(prev.textContent);
+      labelTexts.push(prev.textContent)
 
     // Add each label text as a separate query
     labelTexts.forEach(labelText => {
       if (labelText && labelText.trim()) {
-        queries.push(labelText.trim().toLowerCase());
+        queries.push(labelText.trim().toLowerCase())
       }
-    });
+    })
 
     // Get additional element attributes and add each as separate queries
-    const type = el instanceof HTMLInputElement ? el.type.toLowerCase() : '';
+    const type = el instanceof HTMLInputElement ? el.type.toLowerCase() : ''
     if (type && type.trim()) {
-      queries.push(type);
+      queries.push(type)
     }
 
-    const name = el.getAttribute('name') || '';
+    const name = el.getAttribute('name') || ''
     if (name && name.trim()) {
-      queries.push(name.toLowerCase());
+      queries.push(name.toLowerCase())
     }
 
-    const elementId = el.id || '';
+    const elementId = el.id || ''
     if (elementId && elementId.trim()) {
-      queries.push(elementId.toLowerCase());
+      queries.push(elementId.toLowerCase())
     }
 
     const placeholder =
-      el instanceof HTMLInputElement ? el.placeholder || '' : '';
+      el instanceof HTMLInputElement ? el.placeholder || '' : ''
     if (placeholder && placeholder.trim()) {
-      queries.push(placeholder.toLowerCase());
+      queries.push(placeholder.toLowerCase())
     }
 
     const autocomplete =
-      el instanceof HTMLInputElement ? el.autocomplete || '' : '';
+      el instanceof HTMLInputElement ? el.autocomplete || '' : ''
     if (autocomplete && autocomplete.trim()) {
-      queries.push(autocomplete.toLowerCase());
+      queries.push(autocomplete.toLowerCase())
     }
 
-    const ariaLabel = el.getAttribute('aria-label') || '';
+    const ariaLabel = el.getAttribute('aria-label') || ''
     if (ariaLabel && ariaLabel.trim()) {
-      queries.push(ariaLabel.toLowerCase());
+      queries.push(ariaLabel.toLowerCase())
     }
 
     // Filter out empty queries and return
-    return queries.filter(query => query && query.trim());
+    return queries.filter(query => query && query.trim())
   }
 
   // ============================================================================
@@ -382,32 +378,32 @@ export class Autofill {
     this.debug(
       'info',
       `Determining functions for ${this.state.elements.length} elements`
-    );
+    )
 
     // If function override is provided, apply it to all elements
     if (functionOverride) {
-      this.debug('info', `Using function override: ${functionOverride}`);
+      this.debug('info', `Using function override: ${functionOverride}`)
       for (const el of this.state.elements) {
-        el.function = functionOverride;
+        el.function = functionOverride
         if (params) {
-          el.params = params;
+          el.params = params
         }
       }
-      return;
+      return
     }
 
     // Step 1: Loop through elements and set functions for types that don't need search
-    const elementsNeedingSearch: AutofillElement[] = [];
+    const elementsNeedingSearch: AutofillElement[] = []
 
     for (const el of this.state.elements) {
-      const functionName = this.getElementFunction(el.element);
+      const functionName = this.getElementFunction(el.element)
 
       if (functionName !== null) {
         // Function determined - use it directly
-        el.function = functionName;
+        el.function = functionName
       } else {
         // Function needs search - add to search array
-        elementsNeedingSearch.push(el);
+        elementsNeedingSearch.push(el)
       }
     }
 
@@ -416,7 +412,7 @@ export class Autofill {
       this.debug(
         'info',
         `${elementsNeedingSearch.length} elements need function search`
-      );
+      )
 
       // Create search requests using separate query parts
       const searchRequests: FetchFuncSearchRequest[] =
@@ -427,16 +423,16 @@ export class Autofill {
               el.element.getAttribute('name') ||
               `input_${index}`,
             queries: el.search,
-          };
-        });
+          }
+        })
 
-      const response = await fetchFuncSearch(searchRequests);
+      const response = await fetchFuncSearch(searchRequests)
 
       if (response.results && !response.error) {
         // Handle both single object and array responses
         const searchResults = Array.isArray(response.results)
           ? response.results
-          : [response.results];
+          : [response.results]
 
         // Map results back to elements - use first result regardless of score
         for (
@@ -444,15 +440,15 @@ export class Autofill {
           i < searchResults.length && i < elementsNeedingSearch.length;
           i++
         ) {
-          const searchResult = searchResults[i];
-          const el = elementsNeedingSearch[i];
+          const searchResult = searchResults[i]
+          const el = elementsNeedingSearch[i]
 
           if (searchResult.results && searchResult.results.length > 0) {
             // Use the first result, not based on score
-            el.function = searchResult.results[0].name;
+            el.function = searchResult.results[0].name
           } else {
             // Fallback to type-specific function if no search results
-            el.function = this.getElementFunctionFallback(el.element);
+            el.function = this.getElementFunctionFallback(el.element)
           }
         }
 
@@ -464,40 +460,40 @@ export class Autofill {
         ) {
           elementsNeedingSearch[i].function = this.getElementFunctionFallback(
             elementsNeedingSearch[i].element
-          );
+          )
         }
       } else {
         // Fallback to type-specific functions if search fails
         for (const el of elementsNeedingSearch) {
-          el.function = this.getElementFunctionFallback(el.element);
+          el.function = this.getElementFunctionFallback(el.element)
         }
       }
     }
 
-    this.debug('info', 'Function determination complete');
+    this.debug('info', 'Function determination complete')
   }
 
   public getElementFunction(element: Element): string | null {
-    const gofakeitFunc = element.getAttribute('data-gofakeit');
-    const pattern = this.getElementPattern(element);
-    const elementType = this.getElementType(element);
+    const gofakeitFunc = element.getAttribute('data-gofakeit')
+    const pattern = this.getElementPattern(element)
+    const elementType = this.getElementType(element)
 
     // If the fuction has a value and it's not 'true', use it directly
     if (gofakeitFunc && gofakeitFunc !== 'true') {
       // Specific function provided - use it directly
-      return gofakeitFunc;
+      return gofakeitFunc
     } else if (pattern && pattern.trim() !== '') {
-      return 'regex';
+      return 'regex'
     } else {
       // No function specified - check if element type needs search
-      const needsSearch = this.elementTypeNeedsSearch(elementType);
+      const needsSearch = this.elementTypeNeedsSearch(elementType)
 
       if (needsSearch) {
         // Element type needs search - return null
-        return null;
+        return null
       } else {
         // Element type doesn't need search - use fallback function
-        return this.getElementFunctionFallback(element);
+        return this.getElementFunctionFallback(element)
       }
     }
   }
@@ -519,15 +515,15 @@ export class Autofill {
       'datetime-local',
       'month',
       'color',
-    ];
-    return !skipSearchTypes.includes(elementType);
+    ]
+    return !skipSearchTypes.includes(elementType)
   }
 
   // If the element doesnt have a function and search doesnt return a function,
   // we will use a fallback function
   private getElementFunctionFallback(element: Element): string {
     if (element instanceof HTMLInputElement) {
-      const elementType = element.type.toLowerCase();
+      const elementType = element.type.toLowerCase()
 
       switch (elementType) {
         case 'date':
@@ -535,47 +531,47 @@ export class Autofill {
         case 'month':
         case 'week': {
           // Check if input has min/max attributes to determine if it should use daterange
-          const min = element.getAttribute('min');
-          const max = element.getAttribute('max');
-          return min || max ? 'daterange' : 'date';
+          const min = element.getAttribute('min')
+          const max = element.getAttribute('max')
+          return min || max ? 'daterange' : 'date'
         }
         case 'time':
-          return 'time';
+          return 'time'
         case 'text':
-          return 'word';
+          return 'word'
         case 'email':
-          return 'email';
+          return 'email'
         case 'tel':
-          return 'phone';
+          return 'phone'
         case 'url':
-          return 'url';
+          return 'url'
         case 'password':
-          return 'password';
+          return 'password'
         case 'search':
-          return 'word';
+          return 'word'
         case 'number':
         case 'range': {
           // Check if input has min/max attributes to determine if it should use number with parameters
-          const min = element.getAttribute('min');
-          const max = element.getAttribute('max');
-          return min || max ? 'number' : 'number'; // Both use 'number' function, but with different parameters
+          const min = element.getAttribute('min')
+          const max = element.getAttribute('max')
+          return min || max ? 'number' : 'number' // Both use 'number' function, but with different parameters
         }
         case 'color':
-          return 'hexcolor';
+          return 'hexcolor'
         case 'checkbox':
-          return 'bool';
+          return 'bool'
         case 'radio':
-          return 'randomstring';
+          return 'randomstring'
         default:
-          return 'word';
+          return 'word'
       }
     } else if (element instanceof HTMLTextAreaElement) {
-      return 'sentence';
+      return 'sentence'
     } else if (element instanceof HTMLSelectElement) {
-      return 'randomstring';
+      return 'randomstring'
     }
 
-    return 'word';
+    return 'word'
   }
 
   // ============================================================================
@@ -584,129 +580,129 @@ export class Autofill {
 
   // Get values for all elements via multi-function API
   public async getElementValues(): Promise<void> {
-    this.debug('info', 'Starting value generation...');
+    this.debug('info', 'Starting value generation...')
     const elementsNeedingValues = this.state.elements.filter(
       el => el.function && !el.error
-    );
+    )
 
     if (elementsNeedingValues.length === 0) {
-      this.debug('info', 'No elements need value generation');
-      return;
+      this.debug('info', 'No elements need value generation')
+      return
     }
 
     this.debug(
       'info',
       `Getting values for ${elementsNeedingValues.length} elements from API`
-    );
+    )
 
-    const requests: FetchFuncMultiRequest[] = [];
-    const processedNames: string[] = []; // Track processed radio group names
-    const requestToElementMap: AutofillElement[] = []; // Map requests to elements
+    const requests: FetchFuncMultiRequest[] = []
+    const processedNames: string[] = [] // Track processed radio group names
+    const requestToElementMap: AutofillElement[] = [] // Map requests to elements
 
     // Process each element, adding parameters based on function type
     for (const el of elementsNeedingValues) {
       // Skip radio elements that are part of a group we've already processed
       if (el.type === 'radio' && el.name && processedNames.includes(el.name)) {
-        continue;
+        continue
       }
 
       const request: FetchFuncMultiRequest = {
         id: el.id,
         func: el.function,
-      };
+      }
 
       // Use custom params if provided, otherwise use default parameter logic
       if (el.params) {
-        request.params = el.params;
+        request.params = el.params
       } else if (el.function === 'regex') {
-        request.params = { lang: 'js', str: el.pattern || '' };
+        request.params = { lang: 'js', str: el.pattern || '' }
       } else {
         // Add parameters based on element type
         switch (el.type) {
           case 'select':
-            request.params = this.paramsSelect(el.element as HTMLSelectElement);
-            break;
+            request.params = this.paramsSelect(el.element as HTMLSelectElement)
+            break
           case 'radio': {
             // For radio groups, get all radio elements with the same name
             const radioGroup = elementsNeedingValues.filter(
               otherEl => otherEl.type === 'radio' && otherEl.name === el.name
-            );
-            request.params = this.paramsRadio(radioGroup);
+            )
+            request.params = this.paramsRadio(radioGroup)
             // Mark this radio group as processed
             if (el.name) {
-              processedNames.push(el.name);
+              processedNames.push(el.name)
             }
-            break;
+            break
           }
           case 'date':
           case 'datetime-local':
           case 'month': {
-            const params = this.paramsDate(el);
+            const params = this.paramsDate(el)
             if (params && (params.startdate || params.enddate)) {
-              request.func = 'daterange';
-              request.params = params;
+              request.func = 'daterange'
+              request.params = params
             } else {
-              request.params = params;
+              request.params = params
             }
-            break;
+            break
           }
           case 'time': {
             // For time inputs, use 'time' function with format
-            request.params = { format: 'HH:mm' };
-            break;
+            request.params = { format: 'HH:mm' }
+            break
           }
           case 'week': {
-            const params = this.paramsWeek(el);
+            const params = this.paramsWeek(el)
             if (params && (params.startdate || params.enddate)) {
-              request.func = 'daterange';
-              request.params = params;
+              request.func = 'daterange'
+              request.params = params
             } else {
-              request.func = 'date';
-              request.params = params;
+              request.func = 'date'
+              request.params = params
             }
-            break;
+            break
           }
           case 'number':
           case 'range': {
-            const params = this.paramsNumber(el);
-            request.params = params;
-            break;
+            const params = this.paramsNumber(el)
+            request.params = params
+            break
           }
           // Add other element type cases here as needed
           default:
             // No special parameters needed
-            break;
+            break
         }
       }
 
-      requests.push(request);
-      requestToElementMap.push(el);
+      requests.push(request)
+      requestToElementMap.push(el)
     }
 
-    const response = await fetchFuncMulti(requests);
+    const response = await fetchFuncMulti(requests)
 
     if (response.results && !response.error) {
       // Map results back to elements using the correct mapping
       for (let i = 0; i < response.results.length; i++) {
-        const result = response.results[i];
-        const el = requestToElementMap[i];
+        const result = response.results[i]
+        const el = requestToElementMap[i]
 
         if (result.value !== null && result.value !== undefined) {
-          el.value = String(result.value);
+          el.value = String(result.value)
         } else if (result.error) {
-          el.error = result.error;
+          el.error = result.error
         } else {
-          el.error = 'Unknown API error';
+          el.error = 'Unknown API error'
         }
       }
     } else {
       // Set error for all elements if the request failed
       for (const el of elementsNeedingValues) {
-        el.error = response.error || 'API request failed';
+        el.error = response.error || 'API request failed'
       }
     }
 
-    this.debug('info', 'Value generation complete');
+    this.debug('info', 'Value generation complete')
   }
 
   // ============================================================================
@@ -715,38 +711,38 @@ export class Autofill {
 
   // Set values to the actual form elements
   public async setElementValues(): Promise<void> {
-    this.debug('info', 'Starting value application...');
+    this.debug('info', 'Starting value application...')
     if (this.state.elements.length === 0) {
-      this.debug('info', 'No elements to apply values to');
-      return;
+      this.debug('info', 'No elements to apply values to')
+      return
     }
 
-    this.debug('info', `Processing ${this.state.elements.length} elements`);
+    this.debug('info', `Processing ${this.state.elements.length} elements`)
 
     // Track processed radio group names to avoid duplicate badges
-    const processedRadioNames: string[] = [];
+    const processedRadioNames: string[] = []
 
     // Process all elements with optional staggering and show badges for each
     for (let i = 0; i < this.state.elements.length; i++) {
-      const el = this.state.elements[i];
-      let elementToShowBadge: AutofillElement | null = null;
+      const el = this.state.elements[i]
+      let elementToShowBadge: AutofillElement | null = null
 
       // Handle different element types
       switch (el.type) {
         case 'radio':
           // Only process if we haven't already processed this radio group
           if (el.name && !processedRadioNames.includes(el.name)) {
-            processedRadioNames.push(el.name);
-            elementToShowBadge = this.setRadioGroup(el);
+            processedRadioNames.push(el.name)
+            elementToShowBadge = this.setRadioGroup(el)
           }
-          break;
+          break
         default:
           // Only set value if el has a valid value and no error
           if (el.value !== undefined && el.value !== null && !el.error) {
-            this.setElementValue(el);
+            this.setElementValue(el)
           }
-          elementToShowBadge = el;
-          break;
+          elementToShowBadge = el
+          break
       }
 
       // Show badge for the appropriate element
@@ -755,7 +751,7 @@ export class Autofill {
         this.settings.badges > 0 &&
         elementToShowBadge
       ) {
-        this.showBadge(elementToShowBadge);
+        this.showBadge(elementToShowBadge)
       }
 
       // Add delay between applications (except for the last one) if stagger is enabled
@@ -764,91 +760,89 @@ export class Autofill {
         this.settings.stagger > 0 &&
         i < this.state.elements.length - 1
       ) {
-        await new Promise(resolve =>
-          setTimeout(resolve, this.settings.stagger)
-        );
+        await new Promise(resolve => setTimeout(resolve, this.settings.stagger))
       }
     }
 
-    this.debug('info', 'Value application complete');
+    this.debug('info', 'Value application complete')
   }
 
   private setRadioGroup(el: AutofillElement): AutofillElement | null {
     // Find all radio elements in the same group
     const radioGroup = this.state.elements.filter(
       otherEl => otherEl.type === 'radio' && otherEl.name === el.name
-    );
+    )
 
     // Find the radio element that matches the returned value
     const selectedRadio = radioGroup.find(radioEl => {
-      const input = radioEl.element as HTMLInputElement;
+      const input = radioEl.element as HTMLInputElement
 
       // Check if the value attribute is explicitly set
-      const hasExplicitValue = input.hasAttribute('value');
+      const hasExplicitValue = input.hasAttribute('value')
 
       // First try to match by value attribute if it's explicitly set or not the default "on"
       if (
         (hasExplicitValue || input.value !== 'on') &&
         input.value === el.value
       ) {
-        return true;
+        return true
       }
 
       // If value is "on" (default) or no match, try to match by label text
-      const label = document.querySelector(`label[for="${input.id}"]`);
+      const label = document.querySelector(`label[for="${input.id}"]`)
       if (label && label.textContent && label.textContent.trim() === el.value) {
-        return true;
+        return true
       }
 
       // Final fallback: match by id
       if (input.id === el.value) {
-        return true;
+        return true
       }
 
-      return false;
-    });
+      return false
+    })
 
     if (selectedRadio && !selectedRadio.error) {
       // Uncheck all radios in the same group first
-      const radioName = (selectedRadio.element as HTMLInputElement).name;
+      const radioName = (selectedRadio.element as HTMLInputElement).name
       if (radioName) {
         const otherRadios = document.querySelectorAll(
           `input[type="radio"][name="${radioName}"]`
-        );
+        )
         otherRadios.forEach(radio => {
-          (radio as HTMLInputElement).checked = false;
-        });
+          ;(radio as HTMLInputElement).checked = false
+        })
       }
 
       // Check the selected radio button
-      (selectedRadio.element as HTMLInputElement).checked = true;
-      (selectedRadio.element as HTMLInputElement).dispatchEvent(
+      ;(selectedRadio.element as HTMLInputElement).checked = true
+      ;(selectedRadio.element as HTMLInputElement).dispatchEvent(
         new Event('change', { bubbles: true })
-      );
+      )
 
       // Return the selected radio element for badge display
-      return selectedRadio;
+      return selectedRadio
     } else if (el.error) {
       // Return the original element if there's an error
-      return el;
+      return el
     }
 
-    return null;
+    return null
   }
 
   private setElementValue(el: AutofillElement): void {
-    const element = el.element;
+    const element = el.element
 
     if (element instanceof HTMLInputElement) {
-      const elementType = element.type.toLowerCase();
+      const elementType = element.type.toLowerCase()
 
       switch (elementType) {
         case 'checkbox':
-          this.setCheckboxValue(element, el.value);
-          break;
+          this.setCheckboxValue(element, el.value)
+          break
         case 'radio':
-          this.setRadioValue(element, el.value);
-          break;
+          this.setRadioValue(element, el.value)
+          break
         case 'number':
         case 'range':
         case 'date':
@@ -856,19 +850,19 @@ export class Autofill {
         case 'datetime-local':
         case 'month':
         case 'color':
-          this.setGeneralValue(element, el.value);
-          break;
+          this.setGeneralValue(element, el.value)
+          break
         case 'week':
           // Convert date value to week format
-          this.setGeneralValue(element, this.convertDateToWeek(el.value));
-          break;
+          this.setGeneralValue(element, this.convertDateToWeek(el.value))
+          break
         default:
-          this.setGeneralValue(element, el.value);
+          this.setGeneralValue(element, el.value)
       }
     } else if (element instanceof HTMLTextAreaElement) {
-      this.setGeneralValue(element, el.value);
+      this.setGeneralValue(element, el.value)
     } else if (element instanceof HTMLSelectElement) {
-      this.setSelectValue(element, el.value);
+      this.setSelectValue(element, el.value)
     }
   }
 
@@ -880,45 +874,45 @@ export class Autofill {
     element: HTMLInputElement | HTMLTextAreaElement,
     value: string
   ): void {
-    element.value = value;
-    element.dispatchEvent(new Event('input', { bubbles: true }));
-    element.dispatchEvent(new Event('change', { bubbles: true }));
+    element.value = value
+    element.dispatchEvent(new Event('input', { bubbles: true }))
+    element.dispatchEvent(new Event('change', { bubbles: true }))
   }
 
   private setCheckboxValue(
     element: HTMLInputElement,
     value: string | boolean
   ): void {
-    const boolValue = value === 'true' || value === true;
-    element.checked = boolValue;
-    element.dispatchEvent(new Event('change', { bubbles: true }));
+    const boolValue = value === 'true' || value === true
+    element.checked = boolValue
+    element.dispatchEvent(new Event('change', { bubbles: true }))
   }
 
   private setRadioValue(
     element: HTMLInputElement,
     value: string | boolean
   ): void {
-    const boolValue = value === 'true' || value === true;
+    const boolValue = value === 'true' || value === true
 
     if (boolValue) {
       // Uncheck other radios in the same group
-      const radioName = element.name;
+      const radioName = element.name
       if (radioName) {
         const otherRadios = document.querySelectorAll(
           `input[type="radio"][name="${radioName}"]`
-        );
+        )
         otherRadios.forEach(radio => {
           if (radio !== element) {
-            (radio as HTMLInputElement).checked = false;
+            ;(radio as HTMLInputElement).checked = false
           }
-        });
+        })
       }
 
-      element.checked = true;
-      element.dispatchEvent(new Event('change', { bubbles: true }));
+      element.checked = true
+      element.dispatchEvent(new Event('change', { bubbles: true }))
     } else {
-      element.checked = false;
-      element.dispatchEvent(new Event('change', { bubbles: true }));
+      element.checked = false
+      element.dispatchEvent(new Event('change', { bubbles: true }))
     }
   }
 
@@ -926,44 +920,44 @@ export class Autofill {
     // Try to find an option with the exact value
     const exactMatch = Array.from(element.options).find(
       option => option.value === value
-    );
+    )
     if (exactMatch) {
-      element.value = value;
-      element.dispatchEvent(new Event('change', { bubbles: true }));
-      return;
+      element.value = value
+      element.dispatchEvent(new Event('change', { bubbles: true }))
+      return
     }
 
     // Try to find an option with matching text content
     const textMatch = Array.from(element.options).find(option =>
       option.textContent?.toLowerCase().includes(value.toLowerCase())
-    );
+    )
     if (textMatch) {
-      element.value = textMatch.value;
-      element.dispatchEvent(new Event('change', { bubbles: true }));
-      return;
+      element.value = textMatch.value
+      element.dispatchEvent(new Event('change', { bubbles: true }))
+      return
     }
 
     // Fallback: select a random non-empty option
     const nonEmptyOptions = Array.from(element.options).filter(
       option => option.value && option.value.trim() !== ''
-    );
+    )
     if (nonEmptyOptions.length > 0) {
       const randomOption =
-        nonEmptyOptions[Math.floor(Math.random() * nonEmptyOptions.length)];
-      element.value = randomOption.value;
-      element.dispatchEvent(new Event('change', { bubbles: true }));
+        nonEmptyOptions[Math.floor(Math.random() * nonEmptyOptions.length)]
+      element.value = randomOption.value
+      element.dispatchEvent(new Event('change', { bubbles: true }))
     }
   }
 
   private showBadge(el: AutofillElement): void {
     // Remove any existing badge for this element
-    this.removeBadge(el.id);
+    this.removeBadge(el.id)
 
     // Create badge element with optimized styling
-    const badge = document.createElement('div');
-    badge.id = `gofakeit-badge-${el.id}`;
-    const isError = Boolean(el.error && el.error.trim() !== '');
-    badge.textContent = isError ? el.error : el.function;
+    const badge = document.createElement('div')
+    badge.id = `gofakeit-badge-${el.id}`
+    const isError = Boolean(el.error && el.error.trim() !== '')
+    badge.textContent = isError ? el.error : el.function
 
     // Batch all style changes to minimize reflows
     const badgeStyles = {
@@ -984,28 +978,28 @@ export class Autofill {
         ? GOFAKEIT_COLORS.error
         : GOFAKEIT_COLORS.primary,
       color: isError ? GOFAKEIT_COLORS.white : GOFAKEIT_COLORS.text,
-    };
+    }
 
     // Apply all styles at once
-    Object.assign(badge.style, badgeStyles);
+    Object.assign(badge.style, badgeStyles)
 
     // Append badge to body
-    document.body.appendChild(badge);
+    document.body.appendChild(badge)
 
     // Performance optimizations
-    let lastRect: DOMRect | null = null;
-    let animationId: number | null = null;
-    let isVisible = true;
-    let lastVisibilityCheck = 0;
-    const VISIBILITY_CHECK_INTERVAL = 100; // Check visibility every 100ms instead of every frame
+    let lastRect: DOMRect | null = null
+    let animationId: number | null = null
+    let isVisible = true
+    let lastVisibilityCheck = 0
+    const VISIBILITY_CHECK_INTERVAL = 100 // Check visibility every 100ms instead of every frame
 
     // Cache scrollable parents to avoid repeated DOM traversal
-    const scrollableParents = this.getScrollableParents(el.element);
-    const parentRects = new Map<Element, DOMRect>();
+    const scrollableParents = this.getScrollableParents(el.element)
+    const parentRects = new Map<Element, DOMRect>()
 
     // Function to check if element is visible (optimized)
     const checkElementVisibility = (element: Element): boolean => {
-      const rect = element.getBoundingClientRect();
+      const rect = element.getBoundingClientRect()
 
       // Quick window viewport check first
       if (
@@ -1014,15 +1008,15 @@ export class Autofill {
         rect.bottom > window.innerHeight ||
         rect.right > window.innerWidth
       ) {
-        return false;
+        return false
       }
 
       // Check cached scrollable parents
       for (const parent of scrollableParents) {
-        let parentRect = parentRects.get(parent);
+        let parentRect = parentRects.get(parent)
         if (!parentRect) {
-          parentRect = parent.getBoundingClientRect();
-          parentRects.set(parent, parentRect);
+          parentRect = parent.getBoundingClientRect()
+          parentRects.set(parent, parentRect)
         }
 
         // Check if element is within parent bounds
@@ -1032,16 +1026,16 @@ export class Autofill {
           rect.bottom > parentRect.bottom ||
           rect.right > parentRect.right
         ) {
-          return false;
+          return false
         }
       }
 
-      return true;
-    };
+      return true
+    }
 
     // Optimized position update function
     const updateBadgePosition = () => {
-      const rect = el.element.getBoundingClientRect();
+      const rect = el.element.getBoundingClientRect()
 
       // Check if element has moved (position or size changed)
       const hasMoved =
@@ -1049,100 +1043,100 @@ export class Autofill {
         rect.top !== lastRect.top ||
         rect.left !== lastRect.left ||
         rect.width !== lastRect.width ||
-        rect.height !== lastRect.height;
+        rect.height !== lastRect.height
 
       if (hasMoved) {
-        lastRect = rect;
+        lastRect = rect
 
         // Only check visibility periodically to reduce DOM queries
-        const now = performance.now();
+        const now = performance.now()
         if (now - lastVisibilityCheck > VISIBILITY_CHECK_INTERVAL) {
-          isVisible = checkElementVisibility(el.element);
-          lastVisibilityCheck = now;
+          isVisible = checkElementVisibility(el.element)
+          lastVisibilityCheck = now
           // Clear parent rects cache periodically
-          parentRects.clear();
+          parentRects.clear()
         }
 
         if (isVisible) {
           // Position badge above the element
-          const top = rect.top - 30; // Offset based upon badge size
-          const left = rect.left;
+          const top = rect.top - 30 // Offset based upon badge size
+          const left = rect.left
 
           // Batch style updates to minimize reflows
-          badge.style.cssText += `top:${top}px;left:${left}px;display:block;`;
+          badge.style.cssText += `top:${top}px;left:${left}px;display:block;`
         } else {
           // Hide badge if element is not visible
-          badge.style.display = 'none';
+          badge.style.display = 'none'
         }
       }
 
       // Continue the animation loop
-      animationId = requestAnimationFrame(updateBadgePosition);
-    };
+      animationId = requestAnimationFrame(updateBadgePosition)
+    }
 
     // Start the position tracking loop
-    updateBadgePosition();
+    updateBadgePosition()
 
     // Store animation ID for cleanup
-    (badge as any)._animationId = animationId;
+    ;(badge as any)._animationId = animationId
 
     // Trigger fade-in animation
     requestAnimationFrame(() => {
-      badge.style.opacity = '1';
-    });
+      badge.style.opacity = '1'
+    })
 
     // Auto-remove after duration with fade-out animation
     setTimeout(() => {
-      this.removeBadge(el.id);
-    }, this.settings.badges);
+      this.removeBadge(el.id)
+    }, this.settings.badges)
   }
 
   // Helper method to cache scrollable parents
   private getScrollableParents(element: Element): Element[] {
-    const scrollableParents: Element[] = [];
-    let parent = element.parentElement;
+    const scrollableParents: Element[] = []
+    let parent = element.parentElement
 
     while (parent && parent !== document.body) {
-      const style = getComputedStyle(parent);
-      const overflow = style.overflow + style.overflowY + style.overflowX;
+      const style = getComputedStyle(parent)
+      const overflow = style.overflow + style.overflowY + style.overflowX
 
       if (overflow.includes('scroll') || overflow.includes('auto')) {
-        scrollableParents.push(parent);
+        scrollableParents.push(parent)
       }
 
-      parent = parent.parentElement;
+      parent = parent.parentElement
     }
 
-    return scrollableParents;
+    return scrollableParents
   }
 
   private removeBadge(autofillElementId: string): void {
     const existingBadge = document.getElementById(
       `gofakeit-badge-${autofillElementId}`
-    );
+    )
 
     // If badge doesn't exist, return
     if (!existingBadge) {
-      return;
+      return
     }
 
     // Clean up animation frame immediately
-    const animationId = (existingBadge as any)._animationId;
+    const animationId = (existingBadge as any)._animationId
     if (animationId) {
-      cancelAnimationFrame(animationId);
-      (existingBadge as any)._animationId = null; // Clear reference
+      cancelAnimationFrame(animationId)
+      ;(existingBadge as any)._animationId = null // Clear reference
     }
 
     // Trigger fade-out animation
-    existingBadge.style.opacity = '0';
+    existingBadge.style.opacity = '0'
 
     // Remove element after animation completes
     setTimeout(() => {
       // Double-check badge still exists before removing
       if (existingBadge.parentNode) {
-        existingBadge.remove();
+        existingBadge.remove()
       }
-    }, 300); // Match the transition duration
+    }, 300) // Match the transition duration
   }
 
   // ============================================================================
@@ -1154,14 +1148,14 @@ export class Autofill {
   ): FetchFuncParams | undefined {
     const options = Array.from(element.options)
       .map(option => option.value)
-      .filter(value => value !== ''); // Filter out empty values
+      .filter(value => value !== '') // Filter out empty values
 
     if (options.length > 0) {
       return {
         strs: options,
-      };
+      }
     }
-    return undefined;
+    return undefined
   }
 
   private paramsRadio(
@@ -1169,166 +1163,166 @@ export class Autofill {
   ): FetchFuncParams | undefined {
     const values = radioGroup
       .map(el => {
-        const input = el.element as HTMLInputElement;
+        const input = el.element as HTMLInputElement
 
         // Check if the value attribute is explicitly set
-        const hasExplicitValue = input.hasAttribute('value');
+        const hasExplicitValue = input.hasAttribute('value')
 
         // Use value attribute if it's explicitly set or if it's not the default "on"
         if (
           hasExplicitValue ||
           (input.value && input.value.trim() !== '' && input.value !== 'on')
         ) {
-          return input.value;
+          return input.value
         }
 
         // Fallback to label text
-        const label = document.querySelector(`label[for="${input.id}"]`);
+        const label = document.querySelector(`label[for="${input.id}"]`)
         if (label && label.textContent) {
-          return label.textContent.trim();
+          return label.textContent.trim()
         }
 
         // Final fallback to id
-        return input.id;
+        return input.id
       })
-      .filter(value => value !== ''); // Filter out empty values
+      .filter(value => value !== '') // Filter out empty values
 
     if (values.length > 0) {
       return {
         strs: values,
-      };
+      }
     }
-    return undefined;
+    return undefined
   }
 
   private convertDateToWeek(dateValue: string): string {
     // Convert date string (yyyy-MM-dd) to week format (yyyy-Www)
     try {
-      const date = new Date(dateValue + 'T00:00:00');
-      const year = date.getFullYear();
+      const date = new Date(dateValue + 'T00:00:00')
+      const year = date.getFullYear()
 
       // Get the week number using ISO week calculation
-      const startOfYear = new Date(year, 0, 1);
+      const startOfYear = new Date(year, 0, 1)
       const days = Math.floor(
         (date.getTime() - startOfYear.getTime()) / (24 * 60 * 60 * 1000)
-      );
-      const weekNumber = Math.ceil((days + startOfYear.getDay() + 1) / 7);
+      )
+      const weekNumber = Math.ceil((days + startOfYear.getDay() + 1) / 7)
 
       // Format as yyyy-Www (with leading zero for week number)
-      return `${year}-W${weekNumber.toString().padStart(2, '0')}`;
+      return `${year}-W${weekNumber.toString().padStart(2, '0')}`
     } catch (error) {
       // If conversion fails, return a default week value
-      const currentYear = new Date().getFullYear();
-      return `${currentYear}-W01`;
+      const currentYear = new Date().getFullYear()
+      return `${currentYear}-W01`
     }
   }
 
   private convertWeekToDate(weekValue: string): string {
     // Convert week format (yyyy-Www) to date format (yyyy-MM-dd)
     try {
-      const match = weekValue.match(/^(\d{4})-W(\d{2})$/);
+      const match = weekValue.match(/^(\d{4})-W(\d{2})$/)
       if (!match) {
-        throw new Error('Invalid week format');
+        throw new Error('Invalid week format')
       }
 
-      const year = parseInt(match[1]);
-      const week = parseInt(match[2]);
+      const year = parseInt(match[1])
+      const week = parseInt(match[2])
 
       // Calculate the date for the first day of the week
-      const jan1 = new Date(year, 0, 1);
-      const daysToAdd = (week - 1) * 7;
+      const jan1 = new Date(year, 0, 1)
+      const daysToAdd = (week - 1) * 7
       const targetDate = new Date(
         jan1.getTime() + daysToAdd * 24 * 60 * 60 * 1000
-      );
+      )
 
       // Format as yyyy-MM-dd
-      const month = (targetDate.getMonth() + 1).toString().padStart(2, '0');
-      const day = targetDate.getDate().toString().padStart(2, '0');
-      return `${year}-${month}-${day}`;
+      const month = (targetDate.getMonth() + 1).toString().padStart(2, '0')
+      const day = targetDate.getDate().toString().padStart(2, '0')
+      return `${year}-${month}-${day}`
     } catch (error) {
       // If conversion fails, return a default date
-      const currentYear = new Date().getFullYear();
-      return `${currentYear}-01-01`;
+      const currentYear = new Date().getFullYear()
+      return `${currentYear}-01-01`
     }
   }
 
   private paramsDate(el: AutofillElement): FetchFuncParams | undefined {
-    const input = el.element as HTMLInputElement;
-    const min = input.getAttribute('min');
-    const max = input.getAttribute('max');
+    const input = el.element as HTMLInputElement
+    const min = input.getAttribute('min')
+    const max = input.getAttribute('max')
 
     // Determine format based on input type
-    let format: string;
+    let format: string
     switch (el.type) {
       case 'datetime-local':
-        format = 'yyyy-MM-ddTHH:mm';
-        break;
+        format = 'yyyy-MM-ddTHH:mm'
+        break
       case 'month':
-        format = 'yyyy-MM';
-        break;
+        format = 'yyyy-MM'
+        break
       case 'date':
       default:
-        format = 'yyyy-MM-dd';
-        break;
+        format = 'yyyy-MM-dd'
+        break
     }
 
     const params: any = {
       format: format,
-    };
+    }
 
     // If no min/max attributes, return just format
     if (!min && !max) {
-      return params;
+      return params
     }
 
     // Set startdate (min) or allow api to use default
     if (min) {
-      params.startdate = min;
+      params.startdate = min
     }
 
     // Set enddate (max) or allow api to use default
     if (max) {
-      params.enddate = max;
+      params.enddate = max
     }
 
-    return params;
+    return params
   }
 
   private paramsWeek(el: AutofillElement): FetchFuncParams {
-    const input = el.element as HTMLInputElement;
-    const min = input.getAttribute('min');
-    const max = input.getAttribute('max');
+    const input = el.element as HTMLInputElement
+    const min = input.getAttribute('min')
+    const max = input.getAttribute('max')
 
     const params: any = {
       format: 'yyyy-MM-dd', // Week inputs use date format for API calls
-    };
+    }
 
     // Convert week format min/max attributes to date format for API
     if (min) {
-      params.startdate = this.convertWeekToDate(min);
+      params.startdate = this.convertWeekToDate(min)
     }
 
     if (max) {
-      params.enddate = this.convertWeekToDate(max);
+      params.enddate = this.convertWeekToDate(max)
     }
 
-    return params;
+    return params
   }
 
   private paramsNumber(el: AutofillElement): FetchFuncParams {
-    const input = el.element as HTMLInputElement;
-    const min = input.getAttribute('min');
-    const max = input.getAttribute('max');
+    const input = el.element as HTMLInputElement
+    const min = input.getAttribute('min')
+    const max = input.getAttribute('max')
 
-    const params: any = {};
+    const params: any = {}
 
     if (min) {
-      params.min = parseInt(min, 10);
+      params.min = parseInt(min, 10)
     }
     if (max) {
-      params.max = parseInt(max, 10);
+      params.max = parseInt(max, 10)
     }
-    return params;
+    return params
   }
 
   // ============================================================================
@@ -1338,19 +1332,19 @@ export class Autofill {
   // Debug logging function controlled by settings.debug
   private debug(type: 'warning' | 'error' | 'info', message: string): void {
     if (this.settings.debug) {
-      const prefix = `[Gofakeit] ${type.toUpperCase()}:`;
+      const prefix = `[Gofakeit] ${type.toUpperCase()}:`
 
       switch (type) {
         case 'error':
-          console.error(prefix, message);
-          break;
+          console.error(prefix, message)
+          break
         case 'warning':
-          console.warn(prefix, message);
-          break;
+          console.warn(prefix, message)
+          break
         case 'info':
         default:
-          console.log(prefix, message);
-          break;
+          console.log(prefix, message)
+          break
       }
     }
   }
@@ -1359,57 +1353,57 @@ export class Autofill {
   public resetState(): void {
     this.state = {
       elements: [],
-    };
+    }
   }
 
   // Update status and trigger callback
   private updateStatus(status: AutofillStatus): void {
-    this.state.status = status;
+    this.state.status = status
     if (this.settings.onStatusChange) {
       // Create a copy of elements to prevent reference issues
-      const elementsCopy = [...this.state.elements];
-      this.settings.onStatusChange(status, elementsCopy);
+      const elementsCopy = [...this.state.elements]
+      this.settings.onStatusChange(status, elementsCopy)
     }
   }
 
   private results(): AutofillResults {
     const successfulElements = this.state.elements.filter(
       element => element.value && !element.error
-    );
-    const failedElements = this.state.elements.filter(element => element.error);
+    )
+    const failedElements = this.state.elements.filter(element => element.error)
 
     // Prepare results data for callback
     const resultsData: AutofillResults = {
       success: successfulElements.length,
       failed: failedElements.length,
       elements: this.state.elements,
-    };
+    }
 
-    this.debug('info', `\n🎯 Autofill Results Summary:`);
-    this.debug('info', `   Total elements: ${this.state.elements.length}`);
-    this.debug('info', `   Successful: ${successfulElements.length}`);
-    this.debug('info', `   Failed: ${failedElements.length}`);
+    this.debug('info', `\n🎯 Autofill Results Summary:`)
+    this.debug('info', `   Total elements: ${this.state.elements.length}`)
+    this.debug('info', `   Successful: ${successfulElements.length}`)
+    this.debug('info', `   Failed: ${failedElements.length}`)
 
     // Show notification
     if (successfulElements.length > 0 && failedElements.length === 0) {
       this.debug(
         'warning',
         `Successfully generated data for ${successfulElements.length} fields!`
-      );
+      )
     } else if (successfulElements.length > 0 && failedElements.length > 0) {
       this.debug(
         'warning',
         `Generated data for ${successfulElements.length} fields, ${failedElements.length} failed`
-      );
+      )
     } else if (failedElements.length > 0) {
       this.debug(
         'error',
         `Failed to generate data for ${failedElements.length} fields`
-      );
+      )
     } else {
-      this.debug('warning', 'No fields were processed');
+      this.debug('warning', 'No fields were processed')
     }
 
-    return resultsData;
+    return resultsData
   }
 }

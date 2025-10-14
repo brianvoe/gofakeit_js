@@ -1,7 +1,7 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 
-export default defineComponent({ name: 'DateTimeInputs' });
+export default defineComponent({ name: 'DateTimeInputs' })
 </script>
 
 <template>

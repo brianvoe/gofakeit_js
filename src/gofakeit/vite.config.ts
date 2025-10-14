@@ -1,9 +1,9 @@
-import { fileURLToPath } from 'url';
-import { resolve, dirname } from 'path';
-import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
+import { fileURLToPath } from 'url'
+import { resolve, dirname } from 'path'
+import { defineConfig } from 'vite'
+import dts from 'vite-plugin-dts'
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
   build: {
@@ -32,7 +32,6 @@ export default defineConfig({
       outDir: '../../dist',
     }),
   ],
-  // @ts-ignore - test config is valid for Vitest
   test: {
     globals: true,
     environment: 'jsdom',
@@ -44,4 +43,4 @@ export default defineConfig({
       exclude: ['node_modules/', 'src/gofakeit/test/', 'dist/', '**/*.d.ts'],
     },
   },
-});
+})

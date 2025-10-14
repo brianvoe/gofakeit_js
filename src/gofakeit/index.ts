@@ -9,7 +9,7 @@ export {
   type AutofillElement,
   type AutofillResult,
   type AutofillResults,
-} from './autofill';
+} from './autofill'
 
 // API functions
 export {
@@ -25,4 +25,4 @@ export {
   type FetchFuncSearchResponse,
   type FetchFuncSearchResponseItem,
   type FetchFuncSearchResult,
-} from './api';
+} from './api'
