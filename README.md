@@ -27,6 +27,9 @@ await autofill.fill('#myForm'); // Target by ID
 await autofill.fill('.form-container'); // Target by class
 ```
 
+<details>
+<summary>Browser Usage (UMD/IIFE)</summary>
+
 ### Browser (UMD)
 ```html
 <script src="https://unpkg.com/gofakeit/dist/gofakeit.umd.js"></script>
@@ -45,6 +48,8 @@ await autofill.fill('.form-container'); // Target by class
 </script>
 ```
 
+</details>
+
 ## Features
 
 - 🎯 **Smart Detection**: Automatically detects and fills form fields based on context and labels
@@ -53,6 +58,7 @@ await autofill.fill('.form-container'); // Target by class
 - 🎨 **Visual Feedback**: Function badges show which gofakeit function was used
 - 📅 **Date/Time Support**: All date/time input types with min/max constraints
 - 🔢 **Number Support**: Number and range inputs with min/max parameters
+- 🔢 **Pattern Support**: Pattern inputs using regex
 - ✅ **Form Controls**: Checkboxes, radio buttons, and select elements
 - 🚫 **Error Handling**: Visual feedback for invalid functions
 - 🔧 **TypeScript**: Full TypeScript support with type definitions
@@ -69,9 +75,6 @@ await autofill.fill('.form-container'); // Target by class
 
 - **File inputs**: `file` - Currently Not supported by the Gofakeit API
 - **Image inputs**: `image` - Currently Not supported by the Gofakeit API
-- **Button inputs**: `button` - Not a valid input type for autofill
-- **Submit inputs**: `submit` - Not a valid input type for autofill
-- **Reset inputs**: `reset` - Not a valid input type for autofill
 
 ## Advanced Usage
 
@@ -298,28 +301,11 @@ const searchResult = await fetchFuncSearch({
     results: [
       {
         name: "email",
-        score: 7751,
-        reasons: [
-          "idsmash_exact_alias",
-          "exact_display",
-          "exact_keyword",
-          "query_contains_name",
-          "phrase_exact_alias",
-          "exact_name",
-          "partial_alias",
-          "description"
-        ]
+        score: 7751
       },
       {
         name: "email_text",
-        score: 2202,
-        reasons: [
-          "partial_name",
-          "partial_display",
-          "partial_alias",
-          "exact_keyword",
-          "description"
-        ]
+        score: 2202
       }
     ]
   }
@@ -338,16 +324,7 @@ const searchResultWithId = await fetchFuncSearch({
     results: [
       {
         name: "email",
-        score: 7751,
-        reasons: [
-          "idsmash_exact_alias",
-          "exact_display",
-          "exact_keyword",
-          "query_contains_name",
-          "phrase_exact_alias",
-          "exact_name",
-          "partial_alias",
-          "description"
+        score: 7751
         ]
       }
     ]
@@ -374,27 +351,11 @@ const searchResults = await fetchFuncSearch([
       results: [
         {
           name: "email",
-          score: 2495,
-          reasons: [
-            "query_contains_name",
-            "idsmash_exact_display",
-            "idsmash_exact_name",
-            "exact_name",
-            "exact_display",
-            "partial_alias",
-            "exact_keyword"
-          ]
+          score: 2495
         },
         {
           name: "email_text",
-          score: 1101,
-          reasons: [
-            "partial_alias",
-            "exact_keyword",
-            "description",
-            "partial_name",
-            "partial_display"
-          ]
+          score: 1101
         }
       ]
     },
@@ -403,30 +364,12 @@ const searchResults = await fetchFuncSearch([
       results: [
         {
           name: "firstname",
-          score: 8108,
-          reasons: [
-            "idsmash_exact_display",
-            "idsmash_exact_alias",
-            "idsmash_exact_name",
-            "partial_display",
-            "partial_alias",
-            "exact_keyword",
-            "phrase_exact_display",
-            "phrase_exact_alias",
-            "partial_name",
-            "description"
+          score: 8108
           ]
         },
         {
           name: "name",
-          score: 2755,
-          reasons: [
-            "exact_keyword",
-            "exact_name",
-            "exact_display",
-            "partial_alias",
-            "description",
-            "query_contains_name"
+          score: 2755
           ]
         }
       ]
@@ -436,28 +379,12 @@ const searchResults = await fetchFuncSearch([
       results: [
         {
           name: "phone",
-          score: 4458,
-          reasons: [
-            "description",
-            "phrase_exact_alias",
-            "idsmash_exact_alias",
-            "exact_name",
-            "exact_display",
-            "query_contains_name",
-            "partial_alias",
-            "exact_keyword"
+          score: 4458
           ]
         },
         {
           name: "phoneformatted",
-          score: 2411,
-          reasons: [
-            "partial_alias",
-            "exact_keyword",
-            "description",
-            "phrase_in_description",
-            "partial_name",
-            "partial_display"
+          score: 2411
           ]
         }
       ]
@@ -641,60 +568,6 @@ The plugin provides comprehensive error handling with visual feedback:
 ```html
 <!-- Invalid function names will show error badges -->
 <input type="text" data-gofakeit="invalidFunction" />
-```
-
-## Quick Reference
-
-### API Function Summary
-
-| Function | Input | Output | Use Case |
-|----------|-------|--------|----------|
-| `fetchFunc(func, params?)` | Function name + optional params | `{result?: string, error?: string}` | Single function calls |
-| `fetchFuncMulti(requests[])` | Array of function requests | `{results?: Array<{id, value, error?}>, error?: string}` | Batch function calls |
-| `fetchFuncSearch(request\|requests[])` | Search request(s) with queries | `{results?: SearchResult\|SearchResult[], error?: string}` | Find functions by description |
-
-### Common Function Names
-
-```typescript
-// Personal Information
-'firstname', 'lastname', 'name', 'email', 'phone', 'ssn', 'ein'
-
-// Address Information
-'street', 'city', 'state', 'zip', 'country', 'address'
-
-// Business Information
-'company', 'jobtitle', 'industry', 'product', 'price'
-
-// Technical Data
-'uuid', 'password', 'url', 'ipv4', 'macaddress', 'useragent'
-
-// Date/Time
-'date', 'time', 'datetime', 'year', 'month', 'day'
-
-// Numbers
-'number', 'int', 'float', 'price', 'age', 'year'
-```
-
-### Response Structure Examples
-
-```typescript
-// Single function success
-{ result: "john.doe@example.com" }
-
-// Single function error
-{ error: "Function not found" }
-
-// Multi function success
-{ results: [{ id: "req_0", value: "John" }, { id: "req_1", value: "Smith" }] }
-
-// Multi function error
-{ error: "No functions provided" }
-
-// Search success (single)
-{ results: { id: "search_0", results: [{ name: "email", score: 1945, reasons: [...] }] } }
-
-// Search success (batch)
-{ results: [{ id: "search_0", results: [...] }, { id: "search_1", results: [...] }] }
 ```
 
 ## Contributing
