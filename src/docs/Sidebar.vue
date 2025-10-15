@@ -79,8 +79,9 @@ export default defineComponent({
 .sidebar {
   /* Desktop sidebar */
   flex: 1 1 auto;
-  width: 300px;
-  min-width: 300px;
+  width: 100%;
+  min-width: 200px;
+  max-width: 300px;
   background: var(--bg-container);
   padding: var(--spacing-lg);
   position: sticky;

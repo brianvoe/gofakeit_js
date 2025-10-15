@@ -123,11 +123,13 @@ body {
     grid-row: 2;
     display: flex;
     flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
     width: 100%;
-    max-width: 1200px;
     margin: 0 auto;
     gap: var(--spacing-lg);
     height: calc(100vh - 60px);
+    overflow-x: hidden;
     overflow-y: auto;
 
     .sections {
@@ -136,10 +138,16 @@ body {
       display: flex;
       flex-direction: column;
       width: 100%;
+      min-width: 0;
+      max-width: 1000px;
       margin: var(--spacing-lg) 0 0 0;
       gap: var(--spacing-lg);
       box-shadow: var(--shadow-light);
       transition: background-color var(--timing) ease;
+
+      @media (max-width: 768px) {
+        padding: 0 var(--spacing-sm);
+      }
 
       .section {
         flex: 1 1 auto;
