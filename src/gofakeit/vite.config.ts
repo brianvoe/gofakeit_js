@@ -37,12 +37,18 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['src/gofakeit/test/setup.ts'],
+    setupFiles: ['test/setup.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      include: ['src/gofakeit/**/*.ts'],
-      exclude: ['node_modules/', 'src/gofakeit/test/', 'dist/', '**/*.d.ts'],
+      include: ['**/*.ts'],
+      exclude: [
+        'node_modules/',
+        'test/',
+        'dist/',
+        '**/*.d.ts',
+        'vite.config.ts',
+      ],
     },
   },
 })
