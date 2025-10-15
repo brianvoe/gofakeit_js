@@ -78,6 +78,12 @@ export default defineComponent({
     },
     async autofill(target?: string | Element) {
       try {
+        // Default to .sections container when no target specified (Fill All)
+        if (!target || target === '') {
+          target = document.querySelector('.sections') as Element
+        }
+
+        // Always create a fresh Autofill instance to avoid settings pollution
         const manager = new Autofill({
           debug: this.debug,
           mode: this.mode,
