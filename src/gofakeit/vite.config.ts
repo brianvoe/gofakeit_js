@@ -6,6 +6,7 @@ import dts from 'vite-plugin-dts'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
+  root: __dirname,
   build: {
     lib: {
       entry: resolve(__dirname, './index.ts'),
@@ -28,8 +29,9 @@ export default defineConfig({
   plugins: [
     dts({
       insertTypesEntry: true,
-      rollupTypes: true,
       outDir: '../../dist',
+      include: ['*.ts'],
+      exclude: ['test/**', '**/*.test.ts', 'vite.config.ts'],
     }),
   ],
   test: {
