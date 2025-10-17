@@ -140,7 +140,7 @@ async function main() {
         '❌ Please update the documentation before continuing with the release.',
         'red'
       )
-      log('   You can run: npm run build-docs', 'cyan')
+      log('   You can run: npm run build:docs', 'cyan')
     }
   } while (!docConfirmed)
 
