@@ -12,6 +12,7 @@ describe('Autofill Step-by-Step Process', () => {
   })
 
   afterEach(() => {
+    autofill.cleanup()
     document.body.innerHTML = ''
   })
 

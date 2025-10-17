@@ -10,6 +10,7 @@ describe('Autofill Individual Functions', () => {
   })
 
   afterEach(() => {
+    autofill.cleanup()
     document.body.innerHTML = ''
   })
 

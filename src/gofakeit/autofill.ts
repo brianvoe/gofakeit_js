@@ -64,6 +64,7 @@ export interface AutofillResults {
 export class Autofill {
   public settings: AutofillSettings
   public state: AutofillState
+  private badgeTimeouts: Map<string, number> = new Map()
 
   constructor(settings: AutofillSettings = {}) {
     this.settings = {
@@ -81,6 +82,12 @@ export class Autofill {
 
   public updateSettings(settings: AutofillSettings): void {
     this.settings = { ...this.settings, ...settings }
+  }
+
+  public cleanup(): void {
+    // Clear all pending badge timeouts
+    this.badgeTimeouts.forEach(timeoutId => clearTimeout(timeoutId))
+    this.badgeTimeouts.clear()
   }
 
   // ============================================================================
@@ -1086,9 +1093,12 @@ export class Autofill {
     })
 
     // Auto-remove after duration with fade-out animation
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       this.removeBadge(el.id)
-    }, this.settings.badges)
+    }, this.settings.badges) as unknown as number
+
+    // Store timeout ID for cleanup
+    this.badgeTimeouts.set(el.id, timeoutId)
   }
 
   // Helper method to cache scrollable parents
@@ -1111,6 +1121,18 @@ export class Autofill {
   }
 
   private removeBadge(autofillElementId: string): void {
+    // Clear any pending timeout for this badge
+    const timeoutId = this.badgeTimeouts.get(autofillElementId)
+    if (timeoutId !== undefined) {
+      clearTimeout(timeoutId)
+      this.badgeTimeouts.delete(autofillElementId)
+    }
+
+    // Check if document is available (may not be in test teardown)
+    if (typeof document === 'undefined') {
+      return
+    }
+
     const existingBadge = document.getElementById(
       `gofakeit-badge-${autofillElementId}`
     )
@@ -1132,8 +1154,8 @@ export class Autofill {
 
     // Remove element after animation completes
     setTimeout(() => {
-      // Double-check badge still exists before removing
-      if (existingBadge.parentNode) {
+      // Double-check document and badge still exist before removing
+      if (typeof document !== 'undefined' && existingBadge.parentNode) {
         existingBadge.remove()
       }
     }, 300) // Match the transition duration
